@@ -1,0 +1,11 @@
+HTML, body, div, h1, h2, h3, h4, h5, h6, ul, ol, dl, li, dt, dd, p, blockquote, pre, form, fieldset, table, th, td {
+  font-family: PingFangSC-Semibold, PingFang SC !important;
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+  font-weight: 400;
+}
+html, body, #app {
+  height: 100%;
+}
+.el-popover { min-width: 80px !important; }

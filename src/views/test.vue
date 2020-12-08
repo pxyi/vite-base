@@ -1,0 +1,25 @@
+<template>
+  <template ref="slot">
+    <el-button>取消</el-button>
+    <el-button type="primary" @click="handle">确定</el-button>
+  </template>
+</template>
+
+<script>
+import { ref, onMounted } from 'vue';
+import emitter from './../utils/mitt';
+
+export default {
+  name: 'HelloWorld',
+  props: {
+    msg: String
+  },
+  setup(props, ctx) {
+    let slot = ref(null);
+    onMounted(() => { emitter.emit('slot', slot); })
+
+    let handle = () => { console.log(slot); }
+    return { slot, handle } 
+  }
+}
+</script>
