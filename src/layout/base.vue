@@ -6,7 +6,7 @@
       <el-main>
         <router-view v-slot="{ Component }">
           <transition :name="transitionName">
-            <div>
+            <div class="container">
               <component :is="Component" />
             </div>
           </transition>
@@ -29,12 +29,6 @@ export default {
   setup() {
     let transitionName: { value: string } = ref('slide-right');
     onBeforeRouteUpdate((to, from) => {
-      // transitionName.value = 'slide-right';
-      // if (to.meta.index > from.meta.index){
-      //   transitionName.value = 'slide-left';
-      // } else{
-      //   transitionName.value = 'slide-right';
-      // }
       const toDepth = to.path.split('/').length
       const fromDepth = from.path.split('/').length
       transitionName.value = toDepth < fromDepth ? 'slide-right' : 'slide-left'
@@ -49,11 +43,15 @@ export default {
 }
 .el-header {
   height: 60px;
+  clear: #fff;
   line-height: 60px;
-  box-shadow: 0px 1px 2px 0px rgba(45, 113, 183, 0.15);
+  background: #1AAFA7;
 }
 .el-aside {
-  box-shadow: 2px 0px 8px 0px rgba(45, 113, 183, 0.15);
+  overflow: initial;
+}
+.el-main {
+  background: #F4F5F9;
 }
 .container {
   height: 100%;

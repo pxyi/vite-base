@@ -15,7 +15,7 @@ export default {
     msg: String
   },
   setup(props, ctx) {
-    let slot = ref(null);
+    let slot = ref();
     onMounted(() => { emitter.emit('slot', slot); })
 
     let handle = () => { console.log(slot); }

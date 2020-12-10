@@ -53,9 +53,16 @@ export default {
 .lay__header__container {
   display: flex;
   .el-breadcrumb {
+    .el-breadcrumb__inner, 
+    .el-breadcrumb__separator {
+      color: #fff;
+    }
     line-height: 60px;
   }
   .header-user {
+    .el-dropdown {
+      color: #fff;
+    }
     margin-left: auto;
     cursor: pointer;
   }

@@ -22,7 +22,7 @@ const MenuList: RouterConf[] = [
     children: [
       {
         title: '测试',
-        key: '/test/test',
+        key: '/test/test1',
         isLeaf: true
       },
       {
@@ -35,36 +35,6 @@ const MenuList: RouterConf[] = [
         key: '/test/tree',
         isLeaf: true
       },
-      {
-        title: '年级管理',
-        key: '/education/grade',
-        isLeaf: true
-      },
-      {
-        title: '学期管理',
-        key: '/education/semester',
-        isLeaf: true
-      },
-      {
-        title: '教材版本',
-        key: '/education/version',
-        isLeaf: true
-      },
-      {
-        title: '课程体系',
-        key: '/education/course-system',
-        isLeaf: true
-      },
-      {
-        title: '章节体系',
-        key: '/education/chapter-system',
-        isLeaf: true
-      },
-      {
-        title: '知识点体系',
-        key: '/education/knowledge',
-        isLeaf: true
-      }
     ]
   },
   {

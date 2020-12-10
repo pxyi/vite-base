@@ -55,6 +55,7 @@ $--menu--item-height: 45px;
   position: relative;
   overflow: hidden;
   background: #fff;
+  box-shadow: 2px 0px 8px 0px rgba(45, 113, 183, 0.15);
   .logo {
     height: 120px;
     background: url('./../assets/menu/logo-bg.png') no-repeat 0 0;

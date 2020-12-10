@@ -1,4 +1,5 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw, RouterView } from 'vue-router';
+import Transition from './transition.vue';
 
 const routes: RouteRecordRaw[] = [
   {
@@ -13,15 +14,15 @@ const routes: RouteRecordRaw[] = [
         component: () => import('/@/views/index.vue')
       },
       {
-        path: '/test',
+        path: 'test',
         name: 'test',
-        component: RouterView,
+        component: Transition,
         meta: { title: '测试' },
         children: [
           {
-            path: 'test',
-            name: 'test',
-            meta: { title: '测试' },
+            path: 'test1',
+            name: 'test1',
+            meta: { title: '测试1' },
             component: () => import('/@/views/test.vue'),
           },
           {
