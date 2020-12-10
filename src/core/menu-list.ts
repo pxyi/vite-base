@@ -16,23 +16,23 @@ const MenuList: RouterConf[] = [
     icon: import('./../assets/menu/icon-1.png')
   },
   {
-    title: '教学基础管理',
-    key: '/education',
+    title: '测试',
+    key: '/test',
     icon: import('./../assets/menu/icon-2.png'),
     children: [
       {
-        title: '年份管理',
-        key: '/education/year',
+        title: '测试',
+        key: '/test/test',
         isLeaf: true
       },
       {
-        title: '学科管理',
-        key: '/education/subject',
+        title: 'ckeditor',
+        key: '/test/ckeditor',
         isLeaf: true
       },
       {
-        title: '班型管理',
-        key: '/education/class-type',
+        title: 'tree',
+        key: '/test/tree',
         isLeaf: true
       },
       {

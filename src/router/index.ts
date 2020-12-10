@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory, RouteRecordRaw, RouterView } from 'vue-router';
+import { createRouter, createWebHashHistory, RouteRecordRaw, RouterView } from 'vue-router';
 
 const routes: RouteRecordRaw[] = [
   {
@@ -13,16 +13,28 @@ const routes: RouteRecordRaw[] = [
         component: () => import('/@/views/index.vue')
       },
       {
-        path: '/education',
-        name: 'education',
+        path: '/test',
+        name: 'test',
         component: RouterView,
-        meta: { title: '教学基础管理' },
+        meta: { title: '测试' },
         children: [
           {
-            path: 'year',
-            name: 'year',
-            meta: { title: '年份管理' },
+            path: 'test',
+            name: 'test',
+            meta: { title: '测试' },
             component: () => import('/@/views/test.vue'),
+          },
+          {
+            path: 'editor',
+            name: 'editor',
+            meta: { title: 'editor' },
+            component: () => import('/@/views/editor.vue'),
+          },
+          {
+            path: 'tree',
+            name: 'tree',
+            meta: { title: 'tree' },
+            component: () => import('/@/views/tree.vue'),
           }
         ]
       },
@@ -33,9 +45,8 @@ const routes: RouteRecordRaw[] = [
   //   redirect: '/error'
   // }
 ]
-
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHashHistory(process.env.BASE_URL),
   routes
 })
 

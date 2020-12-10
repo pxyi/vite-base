@@ -9,9 +9,12 @@ import 'element-plus/lib/theme-chalk/index.css';
 
 import Axios from './core/axios';
 
+import Components from './components';
+
 const app = createApp(RouterView);
 
 app.use(ElementPlus)
 .use(Axios)
 .use(router)
+.use(Components)
 .mount('#app');
