@@ -2,10 +2,10 @@ import { createApp } from 'vue'
 import router from './router'
 import { RouterView } from 'vue-router';
 
-import './index.scss'
+import './index.scss';
+import './element-variables.scss'
 
 import ElementPlus from 'element-plus';
-import 'element-plus/lib/theme-chalk/index.css';
 
 import Axios from './core/axios';
 

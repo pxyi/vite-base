@@ -1,22 +1,16 @@
 <template>
   <h1>index</h1>
-  <button @click="count++">count is: {{ count }}</button>
-  <p>Edit <code>components/HelloWorld.vue</code> to test hot module replacement.</p>
-
-
-  
+  <i class="el-icon-edit"></i>
+  <el-button type="primary">测试</el-button>
 </template>
 
-<script>
+<script lang="ts">
+import { getCurrentInstance } from 'vue';
+
+import axios from 'axios'
 export default {
-  name: 'HelloWorld',
-  props: {
-    msg: String
-  },
-  data() {
-    return {
-      count: 0
-    }
+  setup() {
+    // axios.post('/xxxx')
   }
 }
 </script>

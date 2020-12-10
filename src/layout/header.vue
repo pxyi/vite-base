@@ -56,6 +56,9 @@ export default {
     .el-breadcrumb__inner, 
     .el-breadcrumb__separator {
       color: #fff;
+      &:hover {
+        color: #fff;
+      }
     }
     line-height: 60px;
   }
