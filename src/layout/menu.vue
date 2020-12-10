@@ -1,12 +1,11 @@
 <template>
   <div class="lay__menu__container">
-    
     <div class="logo">
       <img src="/@/assets/menu/logo.png" alt="logo">
     </div>
     <div class="menu-content">
       <template v-for="(menu) in list" :key="menu.key">
-        <div class="menu-item" :class="{ 'is-closed': menu.closed }">
+        <div class="menu-item" :class="{ 'is-closed': !menu.closed }">
           <div class="menu-title" 
             @click="menu.isLeaf && !$route.path.includes(menu.key) ? $router.push(menu.key) : (menu.closed = !menu.closed)"
             :class="{ 'active': $route.path.includes(menu.key) }"
@@ -27,15 +26,22 @@
 <script lang="ts">
 import { reactive, ref } from 'vue';
 import MenuList, { RouterConf } from './../core/menu-list';
+import { useRoute } from 'vue-router';
 
 export default {
   name: 'lay-menu',
   setup() {
     let list: { value: RouterConf[] } = ref([]);
 
-    MenuList.map(async res => {res.icon = (await res.icon).default; list.value.push(res)});
+    let initPath = useRoute().path;
 
-    return { list }
+    MenuList.map(async (res: any) => {
+      res.icon = (await res.icon).default; 
+      res.closed = initPath.includes(res.key);
+      list.value.push(res);
+    });
+
+    return { list, initPath }
   }
 }
 </script>
@@ -48,7 +54,7 @@ $--menu--item-height: 45px;
   height: 100%;
   position: relative;
   overflow: hidden;
-  background: #232323;
+  background: #fff;
   .logo {
     height: 120px;
     background: url('./../assets/menu/logo-bg.png') no-repeat 0 0;
@@ -67,7 +73,7 @@ $--menu--item-height: 45px;
   flex: auto;
   overflow: auto;
   .menu-item {
-    color: #DDDDDD;
+    color: #333;
     line-height: $--menu--item-height;
     position: relative;
     cursor: pointer;
@@ -114,12 +120,12 @@ $--menu--item-height: 45px;
       overflow: hidden;
     }
     .menu-sub .menu-sub-item {
-      color: #fff;
+      color: #77808D;
       padding-left: 48px;
       line-height: $--menu--item-height;
       transition: all .1s;
       &:hover, &.active {
-        background: #1AAFA7;
+        background: rgba(26, 175, 167, 0.1);
       }
       &.active {
         pointer-events: none;

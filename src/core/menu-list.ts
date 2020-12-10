@@ -27,7 +27,7 @@ const MenuList: RouterConf[] = [
       },
       {
         title: 'ckeditor',
-        key: '/test/ckeditor',
+        key: '/test/editor',
         isLeaf: true
       },
       {

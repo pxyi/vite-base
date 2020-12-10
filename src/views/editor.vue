@@ -1,5 +1,5 @@
 <template>
-  <cus-editor v-model="value" />
+  <div><cus-editor v-model="value" /></div>
 </template>
 
 <script>

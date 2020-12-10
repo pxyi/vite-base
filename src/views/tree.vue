@@ -1,6 +1,8 @@
 <template>
-  <!-- <cus-tree :data-set="dataset" ref="treeRef" :show-checkbox="true" @on-fold="foldHandle" @on-check="checkHandle" :load="loadHandle" /> -->
-  <cus-tree :data-set="dataset" allow-select />
+  <div>
+    <!-- <cus-tree :data-set="dataset" ref="treeRef" :show-checkbox="true" @on-fold="foldHandle" @on-check="checkHandle" :load="loadHandle" /> -->
+    <cus-tree :data-set="dataset" allow-select />
+  </div>
 </template>
 
 <script lang="ts">

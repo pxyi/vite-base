@@ -54,9 +54,7 @@ export default {
     provide('allowSelect', props.allowSelect);
     provide('showCheckbox', props.showCheckbox);
 
-    mitt.on(`event-${uuid}`, ({ type, data }) => {
-      emit(`on-${type}`, data);
-    })
+    mitt.on(`event-${uuid}`, ({ type, data }) => emit(`on-${type}`, data) );
 
     store.commit('set_data', JSON.parse(JSON.stringify(unref(props.dataSet))));
 
