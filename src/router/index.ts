@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory, RouteRecordRaw, RouterView } from 'vue-router';
+import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 import Transition from './transition.vue';
 
 const routes: RouteRecordRaw[] = [
@@ -6,6 +6,9 @@ const routes: RouteRecordRaw[] = [
     path: '/',
     redirect: '/index',
     component: () => import('/@/layout/base.vue'),
+    beforeEnter: (to, from, next) => {
+      localStorage.getItem('token') ? next() : next('/login');
+    },
     children: [
       {
         path: 'index',
@@ -41,10 +44,15 @@ const routes: RouteRecordRaw[] = [
       },
     ]
   },
-  // {
-  //   path: '/:pathMatch(.*)*',
-  //   redirect: '/error'
-  // }
+  {
+    path: '/login',
+    name: 'login',
+    component: () => import('/@/views/login.vue')
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    redirect: '/login'
+  }
 ]
 const router = createRouter({
   history: createWebHashHistory(process.env.BASE_URL),

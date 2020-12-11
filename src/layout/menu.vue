@@ -36,7 +36,7 @@ export default {
     let initPath = useRoute().path;
 
     MenuList.map(async (res: any) => {
-      res.icon = (await res.icon).default; 
+      res.icon = typeof res.icon === 'string' ? res.icon : (await res.icon).default; 
       res.closed = initPath.includes(res.key);
       list.value.push(res);
     });
