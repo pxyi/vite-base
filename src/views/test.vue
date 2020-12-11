@@ -18,6 +18,12 @@ export default {
     let slot = ref();
     onMounted(() => { emitter.emit('slot', slot); })
 
+    const getList = (subject) => {
+      // axios.post('/xxxx', {}).then
+      console.log(subject, '子组件打印')
+    }
+    emitter.emit('effect', [ getList ])
+
     let handle = () => { console.log(slot); }
     return { slot, handle } 
   }

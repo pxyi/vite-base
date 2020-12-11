@@ -5,10 +5,15 @@
         <div class="age__class"><span>小学数学</span><i class="el-icon-arrow-down" /></div>
       </template>
       <div class="class__container">
-        <div v-for="grade in subjects" :key="grade.id">
+        <div v-for="grade in subjectList" :key="grade.id">
           <h4>{{ grade.name }}</h4>
           <div class="grade__content">
-            <div v-for="course in grade.child" :key="course.id">{{ course.name }}</div>
+            <div 
+              v-for="course in grade.child" 
+              :key="course.code" 
+              :class="{ 'active': subjectCode === course.code }"
+              @click="setSubjectCode(course.code)"
+            >{{ course.name }}</div>
           </div>
         </div>
       </div>
@@ -35,13 +40,26 @@
 </template>
 
 <script lang="ts">
-import { computed, ref, onMounted, watch, onBeforeUnmount } from 'vue';
+import { computed, ref, onMounted, watch, onBeforeUnmount, Ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import emitter from './../utils/mitt';
 import { useStore } from 'vuex';
 import axios from 'axios';
-import { REMOVE_USER_INFO } from '../store/types';
+import { REMOVE_USER_INFO, SET_SUBJECT, SET_SUBJECT_LIST } from '../store/types';
 import { AxResponse } from '../core/axios';
+
+const getSubjectList = (store): Promise<any> => {
+  return new Promise(async resolve => {
+    if (store.getters.subjectList) {
+      resolve(store.getters.subjectList);
+    } else {
+      let res = await axios.post<any, AxResponse>('/permission/user/userDataSubjects');
+      store.commit(SET_SUBJECT_LIST, res.json);
+      store.commit(SET_SUBJECT, res.json[0].child[0].code);
+      resolve(res.json);
+    }
+  })
+}
 
 export default {
   name: 'lay-header',
@@ -51,20 +69,28 @@ export default {
     let router = useRouter();
     let store = useStore();
 
-    let breadcrumb = computed(
-      () => route.matched.reduce((t: string[], c) => { c.meta.title && t.push(c.meta.title); return t; }, [])
-    );
+    let breadcrumb = computed( () => route.matched.reduce((t: string[], c) => { c.meta.title && t.push(c.meta.title); return t; }, []) );
 
     /* 接受组件传递内容插入至 slot, 路由变更时，清空 slot 内容 */
     let slot: { value: HTMLElement | null } = ref(null);
-    emitter.on('slot', s => slot.value?.append(...s.value.children) );
+    const __setSlot = s => slot.value?.append(...s.value.children)
+    emitter.on('slot', __setSlot );
     watch(() => route.path, (e) => ( (slot.value as HTMLElement).innerHTML = '' ));
 
-    let effectList = [];
-    emitter.on('effect', (fns) => effectList = typeof fns === 'function' ? [fns] : fns);
+    /* 接受 组件传递的方法，如果已存在 subjectCode 则只需 */
+    let effectList: (([key]: string) => void)[] = [];
+    const __setFns = (fns) => { 
+      effectList = typeof fns === 'function' ? [ fns ] : fns; 
+      subjectCode.value && effectList.map(fn => fn(subjectCode.value));
+    }
+    emitter.on('effect', __setFns);
 
-    let subjects = ref([]);
-    axios.post<any, AxResponse>('/permission/user/userDataSubjects').then(res => subjects.value = res.json)
+    /* 获取 sbujectList，并监听subjectCode 变更，执行组件传递来的方法 */
+    let subjectList = ref([]);
+    getSubjectList(store).then(res => { subjectList.value = res; });
+    let subjectCode: Ref<string> = computed(() => store.getters.subject);
+    watch(subjectCode, () => effectList.map(fn => fn(subjectCode.value)) );
+    const setSubjectCode = (code) => store.commit(SET_SUBJECT, code);
 
     let commandList = new Map([
       ['logout', () => {
@@ -73,7 +99,12 @@ export default {
       }]
     ]);
 
-    return { breadcrumb, slot, commandList, subjects }
+    onBeforeUnmount(() => {
+      emitter.off('slot', __setSlot );
+      emitter.off('effect', __setFns );
+    });
+
+    return { breadcrumb, slot, commandList, subjectList, subjectCode, setSubjectCode }
   }
 }
 </script>

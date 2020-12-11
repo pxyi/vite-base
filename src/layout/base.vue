@@ -2,7 +2,7 @@
   <el-container>
     <el-aside width="200px"><lay-menu /></el-aside>
     <el-container>
-      <el-header height="60px"><lay-header /></el-header>
+      <el-header height="60px" v-if="!hideHeader"><lay-header /></el-header>
       <el-main>
         <router-view v-slot="{ Component }">
           <transition :name="transitionName">
@@ -20,8 +20,8 @@
 import LayMenu from './menu.vue';
 import LayHeader from './header.vue';
 import TreeItem from '../components/tree/components/tree-item.vue';
-import { ref, watch } from 'vue';
-import { onBeforeRouteUpdate } from 'vue-router';
+import { ref, watch, computed } from 'vue';
+import { onBeforeRouteUpdate, useRoute } from 'vue-router';
 
 export default {
   name: 'lay-base',
@@ -32,8 +32,10 @@ export default {
       const toDepth = to.path.split('/').length
       const fromDepth = from.path.split('/').length
       transitionName.value = toDepth < fromDepth ? 'slide-right' : 'slide-left'
-    })
-    return { transitionName }
+    });
+    let hideHeader = computed(() => ['/index'].includes(useRoute().path));
+    
+    return { transitionName, hideHeader }
   }
 }
 </script>

@@ -13,12 +13,6 @@ export default {
   setup() {
     // axios.post('/xxxx')
 
-    const getList = (subject) => {
-      // axios.post('/xxxx', {}).then
-    }
-
-    emitter.emit('effect', [ getList ])
-
   }
 }
 </script>

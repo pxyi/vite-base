@@ -10,11 +10,11 @@ const state = {
   accessToken: ''
 }
 const mutations = {
-  [SET_USER_INFO](state: UserState, payload: any) {
+  [ SET_USER_INFO ] (state: UserState, payload: any) {
     state.userInfo = payload;
     window.localStorage.setItem('userinfo', JSON.stringify(payload))
   },
-  [REMOVE_USER_INFO](state: UserState) {
+  [ REMOVE_USER_INFO ] (state: UserState) {
     state.userInfo = null;
     window.localStorage.removeItem('userinfo');
     window.localStorage.removeItem('token');
