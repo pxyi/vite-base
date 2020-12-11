@@ -11,8 +11,9 @@ import axios from 'axios';
 
 export default {
   setup() {
-    // axios.post('/xxxx')
-
+    axios.post('/permission/user/userDataSubjects', {a: 1}).catch(err => console.log('err', err));
+    axios.post('/permission/user/userDataSubjects', {a: 1}).catch(err => console.log('err2', err));
+    axios.get('/permission/user/userDataSubjects', {params: {aa: 11}}).catch(err => console.log('err2', err));
   }
 }
 </script>

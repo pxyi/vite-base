@@ -16,6 +16,9 @@ axios.interceptors.request.use((res: AxiosRequestConfig) => {
   res.headers['accessToken'] = window.localStorage.getItem('token');
   res.headers['userId'] = Store.getters.userInfo ? Store.getters.userInfo.user.id : null;
   res.data = res.data ? stringify(res.data) : res.data;
+
+  /* 设置 request token 该请求可被取消 */
+  res.cancelToken = new axios.CancelToken( cancel =>  requestAbort(res.url, res.data, res.params, cancel) );
   return res;
 });
 
@@ -25,9 +28,16 @@ axios.interceptors.response.use(res => {
     useRouter().push('/login');
     ElMessage({ type: 'warning', message: res.data.message });
   }
+  /* 1s 内禁止重复请求 */
+  setTimeout(() => { delete requestMap[res.config.url as string]; }, 1000);
   return res.data;
 }, err => {
-  ElMessage({ type: 'error', message: '服务器开小差了~！' });
+  if (axios.isCancel(err)) {
+    let [url, reason] = err.message.split('##');
+    console.error(`${url}`, reason === 'Duplicate' ? '因请求重复被取消' : '被新请求覆盖');
+  } else {
+    ElMessage({ type: 'error', message: '服务器开小差了~！' });
+  }
   return err;
 });
 
@@ -45,4 +55,20 @@ export interface AxResponse {
   msg: string;
   json?: any;
   record?: any;
+}
+
+let requestMap = {};
+const requestAbort = function (url, data, params, cancel) {
+  /* 请求地址存在 */
+  if (requestMap[url]) {
+    /* 参数一致则取消本次请求,否则取消上次请求 */
+    if (requestMap[url].data === data && JSON.stringify(requestMap[url].params) === JSON.stringify(params)) {
+      cancel(`${url}##Duplicate`)
+    } else {
+      requestMap[url].cancel(`${url}##Covered`);
+      delete requestMap[url];
+    }
+  } else {
+    requestMap[url] = { data, params, cancel };
+  }
 }

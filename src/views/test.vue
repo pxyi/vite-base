@@ -8,6 +8,7 @@
 <script>
 import { ref, onMounted } from 'vue';
 import emitter from './../utils/mitt';
+import axios from 'axios'
 
 export default {
   name: 'HelloWorld',
@@ -17,10 +18,9 @@ export default {
   setup(props, ctx) {
     let slot = ref();
     onMounted(() => { emitter.emit('slot', slot); })
-
     const getList = (subject) => {
-      // axios.post('/xxxx', {}).then
-      console.log(subject, '子组件打印')
+      // axios.post('/xxxx', {})
+      // console.log(subject, '子组件打印')
     }
     emitter.emit('effect', [ getList ])
 
