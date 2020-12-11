@@ -27,13 +27,14 @@ export default {
   name: 'lay-base',
   components: { LayMenu, LayHeader, TreeItem },
   setup() {
+    let route = useRoute()
     let transitionName: { value: string } = ref('slide-right');
     onBeforeRouteUpdate((to, from) => {
       const toDepth = to.path.split('/').length
       const fromDepth = from.path.split('/').length
       transitionName.value = toDepth < fromDepth ? 'slide-right' : 'slide-left'
     });
-    let hideHeader = computed(() => ['/index'].includes(useRoute().path));
+    let hideHeader = computed(() => ['/index'].includes(route.path));
     
     return { transitionName, hideHeader }
   }

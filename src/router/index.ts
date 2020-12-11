@@ -50,8 +50,13 @@ const routes: RouteRecordRaw[] = [
     component: () => import('/@/views/login.vue')
   },
   {
+    path: '/error',
+    name: 'error',
+    component: () => import('/@/views/error.vue')
+  },
+  {
     path: '/:pathMatch(.*)*',
-    redirect: '/login'
+    redirect: '/error'
   }
 ]
 const router = createRouter({
