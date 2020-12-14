@@ -3,7 +3,7 @@
     <el-aside width="200px"><lay-menu /></el-aside>
     <el-container>
       <el-header height="60px" v-if="!hideHeader"><lay-header /></el-header>
-      <el-main>
+      <el-main :class="{ is__index: hideHeader}">
         <router-view v-slot="{ Component }">
           <transition :name="transitionName">
             <div class="container">
@@ -55,37 +55,12 @@ export default {
 }
 .el-main {
   background: #F4F5F9;
+  &.is__index {
+    background: #fff;
+  }
 }
 .container {
   height: 100%;
   overflow: auto;
-}
-
-
-
-.slide-right-enter-active,
-.slide-right-leave-active,
-.slide-left-enter-active,
-.slide-left-leave-active {
-  width: 100%;
-  transition: all 300ms;
-  position: absolute;
-  z-index: 1;
-}
-.slide-right-enter {
-  opacity: 0;
-  transform: translate3d(-10%, 0, 0);
-}
-.slide-right-leave-active {
-  opacity: 0;
-  transform: translate3d(10%, 0, 0);
-}
-.slide-left-enter {
-  opacity: 0;
-  transform: translate3d(10%, 0, 0);
-}
-.slide-left-leave-active {
-  opacity: 0;
-  transform: translate3d(-10%, 0, 0);
 }
 </style>

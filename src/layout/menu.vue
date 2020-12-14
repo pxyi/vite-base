@@ -19,6 +19,9 @@
           </div>
         </div>
       </template>
+      <div class="menu-item">
+        <div class="menu-title" @click="goSystem"><img src="/@/assets/menu/icon-system.png" alt="进入后台"><span>进入后台</span></div>
+      </div>
     </div>
   </div>
 </template>
@@ -41,7 +44,9 @@ export default {
       list.value.push(res);
     });
 
-    return { list, initPath }
+    const goSystem = () => { window.location.href = import.meta.env.VITE_APP_SYSTEM_URL as string }
+    
+    return { list, initPath, goSystem }
   }
 }
 </script>
@@ -141,5 +146,9 @@ $--menu--item-height: 45px;
       margin-top: -10px;
     }
   }
+}
+
+@media only screen and (min-width: 1680px) {
+  .menu-title, .menu-sub-item { font-size: 16px; }
 }
 </style>
