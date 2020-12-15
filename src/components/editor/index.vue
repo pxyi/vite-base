@@ -15,7 +15,12 @@ export default {
 
     let editor = null;
 
-    onMounted(() => {
+    onMounted(async () => {
+      await new Promise(resolve => {
+        let scriptDom = document.querySelector('#ckeditorScript');
+        scriptDom ? resolve() : appendEditorJs(resolve);
+      });
+
       editor = window.CKEDITOR.inline(`editor${instanceId.value}`);
       editor.setData(props.modelValue || '')
       editor.on('change', () => emit('update:modelValue', editor.getData()) );
@@ -27,5 +32,12 @@ export default {
 
     return { instanceId }
   }
+}
+const appendEditorJs = (resolve) => {
+  let s = document.createElement('script');
+  s.src = import.meta.env.VITE_EDITOR_PATH;
+  s.id = 'ckeditorScript';
+  s.onload = () => resolve();
+  document.body.appendChild(s);
 }
 </script>
