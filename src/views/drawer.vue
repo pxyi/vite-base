@@ -9,10 +9,13 @@ import emitter from './../utils/mitt';
 
 export default {
   setup() {
-    const save = (resolve, reject) => { 
+    const save = (resolve, reject) => {
       setTimeout(() => {
-        resolve({ msg: '操作成功' })
-      }, 2000);
+        reject()
+      }, 1000);
+      // setTimeout(() => {
+      //   resolve({ msg: '操作成功' })
+      // }, 2000);
     }
     return { name: 'phuhoang', save }
   }

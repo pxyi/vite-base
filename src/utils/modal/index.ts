@@ -40,17 +40,16 @@ const create = (opt: ModalCreate) => {
     }
 
     if (options.footed) {
-      let modalFooter = createElement('div', { className: 'modal-footer' });
       let closeBtn = createElement('button', { className: 'modal-close-btn', on: { click: () => remove() } }, createElement('span', {}, '取消'));
       let saveOnClick = () => {
         if (vm['save'] && vm['save'].constructor === Function) {
           new Promise((resolve, reject) => {
             vm['save'](resolve, reject);
-            saveBtn.innerHTML = `<i class="el-icon-loading"></i><span>加载中</span>`;
-            saveBtn.classList.add('loading')
+            saveBtn.classList.add('loading');
+            saveBtn.insertBefore(createElement('i', { className: 'el-icon-loading' }), saveBtn.children[0]);
           }).then(remove).catch(err => {
-            saveBtn.innerHTML = `<span>确定</span>`;
-            saveBtn.classList.remove('loading')
+            saveBtn.querySelector('i').remove()
+            saveBtn.classList.remove('loading');
           })
         } else {
           remove();
@@ -59,8 +58,7 @@ const create = (opt: ModalCreate) => {
       }
       let saveBtn = createElement('button', { className: 'modal-save-btn', on: { click: saveOnClick } }, createElement('span', {}, '确定'));
 
-      modalFooter.appendChild(closeBtn)
-      modalFooter.appendChild(saveBtn)
+      let modalFooter = createElement('div', { className: 'modal-footer' }, [ closeBtn, saveBtn ]);
       modalBox.appendChild(modalFooter);
     }
 

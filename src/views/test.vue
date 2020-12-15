@@ -27,7 +27,7 @@ export default {
     }
     emitter.emit('effect', [ getList ])
 
-    let handle = () => { console.log(slot); Modal.create({component: com, title: '标题'}) }
+    let handle = () => { console.log(slot); Drawer.create({component: com, title: '标题'}) }
 
     // let pca = async () => { let res = await import('./../utils/pca'); return res.default};
     // console.log(pca())

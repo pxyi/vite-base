@@ -1,5 +1,6 @@
 import { Component, createApp } from 'vue';
 import FormComponent from './../modal/form.vue';
+import createElement from './../createElement';
 import './drawer.scss';
 
 const create = (opt: DrawerCreate): Promise<any> => {
@@ -12,7 +13,7 @@ const create = (opt: DrawerCreate): Promise<any> => {
     mask: typeof opt.mask === 'undefined' ? true : opt.mask,
     maskClosable: typeof opt.maskClosable === 'undefined' ? true : opt.maskClosable,
     closable: typeof opt.closable === 'undefined' ? true : opt.closable,
-    footed: typeof opt.footed === 'undefined' ? false : opt.footed
+    footed: typeof opt.footed === 'undefined' ? true : opt.footed
   }
 
   return new Promise((resolve) => {
@@ -46,21 +47,20 @@ const create = (opt: DrawerCreate): Promise<any> => {
         if (vm['save'] && vm['save'].constructor === Function) {
           new Promise((resolve, reject) => {
             vm['save'](resolve, reject);
-            saveBtn.innerHTML = `<i class="el-icon-loading"></i><span>加载中</span>`;
-            saveBtn.className = 'drawer-save-btn loading';
+            saveBtn.classList.add('loading');
+            saveBtn.insertBefore(createElement('i', { className: 'el-icon-loading' }), saveBtn.children[0]);
           }).then(remove).catch(err => {
-            saveBtn.innerHTML = `<span>确定</span>`;
-            saveBtn.className = 'drawer-save-btn';
+            saveBtn.querySelector('i').remove()
+            saveBtn.classList.remove('loading');
           })
         } else {
           console.warn(`请在 ${options.component.name} Component 中定义 save 方法`);
         }
       }
-      let drawerFooter = createElement('div', { className: 'drawer-footer' });
       let closeBtn = createElement('button', { className: 'drawer-close-btn', on: { click: () => remove() } }, createElement('span', {}, '取消'));
       let saveBtn = createElement('button', { className: 'drawer-save-btn', on: { click: saveOnClick } }, createElement('span', {}, '确定'));
-      drawerFooter.appendChild(closeBtn)
-      drawerFooter.appendChild(saveBtn)
+
+      let drawerFooter = createElement('div', { className: 'drawer-footer' }, [closeBtn, saveBtn]);
       drawerBox.appendChild(drawerFooter);
     }
 
@@ -77,7 +77,6 @@ const create = (opt: DrawerCreate): Promise<any> => {
     document.body.appendChild(container);
   });
 
-  
 }
 
 export default { create };
@@ -89,22 +88,6 @@ export default { create };
  * @param options?: { attrs: object, className: string | string[], style: object, on: Object<EventListener> }
  * @param content?: string | HTMLElement
  */
-export const createElement = (tagName, options?, content?) => {
-  let { attrs, className, style, on } = options || {};
-  let element = document.createElement(tagName);
-  attrs && Object.keys(attrs).map(key => element.setAttribute(key, attrs[key]));
-  className && (typeof className === 'string' ? element.classList.add(className) : className.map(c => element.classList.add(c)));
-  style && Object.keys(style).map(key => element.style[key] = style[key]);
-  on && Object.keys(on).map(event => element[`on${event}`] = on[event]);
-  if (!content) {
-    return element;
-  } else if (content instanceof HTMLElement) {
-    element.appendChild(content)
-  } else {
-    element.innerHTML = content
-  }
-  return element;
-}
 
 
 interface DrawerCreate {
