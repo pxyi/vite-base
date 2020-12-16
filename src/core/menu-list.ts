@@ -38,23 +38,23 @@ const MenuList: RouterConf[] = [
     ]
   },
   {
-    title: '员工管理',
-    key: '/customer',
+    title: '教研中台',
+    key: '/teaching',
     icon: import('./../assets/menu/icon-3.png'),
     children: [
       {
-        title: '校区管理',
-        key: '/customer/campus',
+        title: '试卷库',
+        key: '/teaching/test-paper',
         isLeaf: true
       },
       {
         title: '教师管理',
-        key: '/customer/teacher',
+        key: '/teaching/teacher',
         isLeaf: true
       },
       {
         title: '角色管理',
-        key: '/customer/role',
+        key: '/teaching/role',
         isLeaf: true
       },
     ]

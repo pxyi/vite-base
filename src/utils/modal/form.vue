@@ -13,6 +13,11 @@
           <el-option v-for="option in node.options" :key="option[node.valueKey || 'id']" :label="option[node.labelKey || 'name']" :value="option[node.valueKey || 'id']" />
         </el-select>
       </template>
+      <template v-else-if="node.type === 'radio'">
+        <el-radio-group  v-model="formGroup[node.key]">
+          <el-radio v-for="option in node.options" :key="option[node.valueKey || 'id']" :label="option[node.valueKey || 'id']">{{ option[node.labelKey || 'name'] }}</el-radio>
+        </el-radio-group>
+      </template>
       <template v-else-if="node.type === 'datepicker'">
         <el-date-picker type="date" :value-format="node.format || 'yyyy-MM-dd'" v-model="formGroup[node.key]" :placeholder="node.placeholder || `请选择${node.label}`" />
       </template>
@@ -38,12 +43,13 @@
   </el-form>
 </template>
 <script lang="ts">
-import { PropType, reactive} from 'vue';
-import { ElForm, ElFormItem, ElInput, ElInputNumber, ElSelect, ElOption, ElDatePicker } from 'element-plus';
+import { PropType, reactive, ref } from 'vue';
+import { ElForm, ElFormItem, ElInput, ElInputNumber, ElSelect, ElOption, ElDatePicker, ElRadioGroup, ElRadio } from 'element-plus';
 import axios from 'axios';
 type INodes = PropType<(NInput | NNumber | NBetween | NSelect | NDatepicker | NRangepicker)[]>;
 
 export default {
+  name: 'cus-form',
   props: {
     nodes: {
       type: Array as INodes,
@@ -58,7 +64,7 @@ export default {
       default: () => ({})
     }
   },
-  components: { ElForm, ElFormItem, ElInput, ElInputNumber, ElSelect, ElOption, ElDatePicker },
+  components: { ElForm, ElFormItem, ElInput, ElInputNumber, ElSelect, ElOption, ElDatePicker, ElRadioGroup, ElRadio },
   setup(props) {
     let pca = () => import('area-data');
     let formGroup = reactive(props.nodes.reduce((group, node) => {
@@ -75,12 +81,13 @@ export default {
       }
       return group;
     }, {}))
-
+    let formRef = ref()
     const save = (resolve, reject) => {
-      console.log(formGroup)
-      reject()
+      formRef.value.validate(valid => {
+        valid ? resolve(formGroup) : reject()
+      })
     }
-    return { formGroup, save }
+    return { formRef, formGroup, save }
   } 
 }
 

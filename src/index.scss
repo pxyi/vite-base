@@ -6,6 +6,9 @@ HTML, body, div, h1, h2, h3, h4, h5, h6, ul, ol, dl, li, dt, dd, p, blockquote, 
   font-weight: 400;
   box-sizing: border-box;
 }
+img {
+  display: block;
+}
 html, body, #app {
   height: 100%;
   font-size: 14px;
@@ -15,4 +18,8 @@ html, body, #app {
   content: '';
   display: table;
   clear: both;
+}
+
+.el-popconfirm__main {
+  margin-bottom: 12px;
 }

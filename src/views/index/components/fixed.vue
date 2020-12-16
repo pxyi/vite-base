@@ -210,7 +210,7 @@ export default {
       list-style: none;
       border-radius: 10px;
       position: relative;
-      background: #F8F8F9 url('/@/assets/index/timetable-1.png') no-repeat 18px center;
+      background: #F8F8F9 url('./../../../assets/index/timetable-1.png') no-repeat 18px center;
       background-size: 36px 36px;
       transition: all .25s;
       cursor: pointer;
@@ -232,17 +232,17 @@ export default {
       }
       &.type__cp {
         color: #5944BE;
-        background: #F6F4FF url('/@/assets/index/timetable-2.png') no-repeat 18px center;
+        background: #F6F4FF url('./../../../assets/index/timetable-2.png') no-repeat 18px center;
         background-size: 36px 36px;
       }
       &.type__nj {
         color: #FA5F1D;
-        background: #FFECE6 url('/@/assets/index/timetable-3.png') no-repeat 18px center;
+        background: #FFECE6 url('./../../../assets/index/timetable-3.png') no-repeat 18px center;
         background-size: 36px 36px;
       }
       &.type__tx {
         color: #1956AF;
-        background: #ECF6FF url('/@/assets/index/timetable-4.png') no-repeat 18px center;
+        background: #ECF6FF url('./../../../assets/index/timetable-4.png') no-repeat 18px center;
         background-size: 36px 36px;
       }
       h6 {

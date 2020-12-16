@@ -71,6 +71,7 @@ export default {
 
     let breadcrumb = computed( () => route.matched.reduce((t: string[], c) => { c.meta.title && t.push(c.meta.title); return t; }, []) );
 
+
     /* 接受组件传递内容插入至 slot, 路由变更时，清空 slot 内容 */
     let slot: { value: HTMLElement | null } = ref(null);
     const __setSlot = s => slot.value?.append(...s.value.children)
@@ -80,10 +81,11 @@ export default {
     /* 接受 组件传递的方法，如果已存在 subjectCode 则只需 */
     let effectList: (([key]: string) => void)[] = [];
     const __setFns = (fns) => { 
-      effectList = typeof fns === 'function' ? [ fns ] : fns; 
+      effectList = typeof fns === 'function' ? [ fns, ...effectList ] : [ ...fns, ...effectList]; 
       subjectCode.value && effectList.map(fn => fn(subjectCode.value));
     }
     emitter.on('effect', __setFns);
+    watch(() => route.path, (to, from) => to !== from && (effectList = []))
 
     /* 获取 sbujectList，并监听subjectCode 变更，执行组件传递来的方法 */
     let subjectList = ref([]);
@@ -131,7 +133,7 @@ export default {
 }
 .cus__slot {
   flex: auto;
-  padding: 0 40px;
+  padding: 0 30px;
 }
 .age__class {
   margin-left: 20px;

@@ -20,7 +20,7 @@
 import LayMenu from './menu.vue';
 import LayHeader from './header.vue';
 import TreeItem from '../components/tree/components/tree-item.vue';
-import { ref, watch, computed } from 'vue';
+import { ref, watch, computed, Ref } from 'vue';
 import { onBeforeRouteUpdate, useRoute } from 'vue-router';
 
 export default {
@@ -28,7 +28,7 @@ export default {
   components: { LayMenu, LayHeader, TreeItem },
   setup() {
     let route = useRoute()
-    let transitionName: { value: string } = ref('slide-right');
+    let transitionName: Ref<string> = ref('slide-right');
     onBeforeRouteUpdate((to, from) => {
       const toDepth = to.path.split('/').length
       const fromDepth = from.path.split('/').length

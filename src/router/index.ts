@@ -42,6 +42,20 @@ const routes: RouteRecordRaw[] = [
           }
         ]
       },
+      {
+        path: 'teaching',
+        name: 'teaching',
+        component: Transition,
+        meta: { title: '教研中台' },
+        children: [
+          {
+            path: 'test-paper',
+            name: 'test-paper',
+            meta: { title: '试卷库' },
+            component: () => import('/@/views/test-paper/index.vue')
+          }
+        ]
+      }
     ]
   },
   {

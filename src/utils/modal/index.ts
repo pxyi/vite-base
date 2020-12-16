@@ -48,7 +48,7 @@ const create = (opt: ModalCreate) => {
             saveBtn.classList.add('loading');
             saveBtn.insertBefore(createElement('i', { className: 'el-icon-loading' }), saveBtn.children[0]);
           }).then(remove).catch(err => {
-            saveBtn.querySelector('i').remove()
+            saveBtn.querySelector('i')?.remove()
             saveBtn.classList.remove('loading');
           })
         } else {

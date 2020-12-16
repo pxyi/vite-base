@@ -1,8 +1,10 @@
 import { App } from 'vue';
 import CusTree from './tree/index.vue';
+import CusList from './list/index.vue';
 
 const AppComponents: any = {
-  CusTree
+  CusTree,
+  CusList
 };
 
 const install = (Vue: App) => {

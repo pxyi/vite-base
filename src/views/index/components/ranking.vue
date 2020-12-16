@@ -262,7 +262,7 @@ $--rank-sort-3: #F8662F;
       flex: 1;
       height: 360px;
       text-align: center;
-      background: url('/@/assets/index/teacher-bg.png') no-repeat;
+      background: url('./../../../assets/index/teacher-bg.png') no-repeat;
       background-size: 100% 100%;
       &:not(:last-child) {
         margin-right: 25px;
@@ -286,7 +286,7 @@ $--rank-sort-3: #F8662F;
         width: 80%;
         height: 80px;
         margin: 0 auto;
-        background: url('/@/assets/index/num-up.png') no-repeat;
+        background: url('./../../../assets/index/num-up.png') no-repeat;
         background-size: 100% 100%;
       }
       .n__b_icon {
@@ -300,27 +300,27 @@ $--rank-sort-3: #F8662F;
           height: 24px;
           margin-right: 4px;
           vertical-align: middle;
-          background: url('/@/assets/index/icon-up.png') no-repeat;
+          background: url('./../../../assets/index/icon-up.png') no-repeat;
           background-size: contain;
         }
       }
       &.is__down {
         .n__b_num {
-          background: url('/@/assets/index/num-down.png') no-repeat;
+          background: url('./../../../assets/index/num-down.png') no-repeat;
           background-size: 100% 100%;
         }
         .n__b_icon::before {
-          background: url('/@/assets/index/icon-down.png') no-repeat;
+          background: url('./../../../assets/index/icon-down.png') no-repeat;
           background-size: contain;
         }
       }
       &.is__cn {
         .n__b_num {
-          background: url('/@/assets/index/num-current.png') no-repeat;
+          background: url('./../../../assets/index/num-current.png') no-repeat;
           background-size: 100% 100%;
         }
         .n__b_icon::before {
-          background: url('/@/assets/index/icon-cn.png') no-repeat;
+          background: url('./../../../assets/index/icon-cn.png') no-repeat;
           background-size: contain;
         }
       }
