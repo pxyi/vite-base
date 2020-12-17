@@ -15,10 +15,12 @@ axios.defaults.baseURL = import.meta.env.VITE_APP_BASE_URL as string;
 axios.interceptors.request.use((res: AxiosRequestConfig) => {
   res.headers['accessToken'] = window.localStorage.getItem('token');
   res.headers['userId'] = Store.getters.userInfo ? Store.getters.userInfo.user.id : null;
-  res.data = res.data ? stringify(res.data) : res.data;
-
+  
   /* 设置 request token 该请求可被取消 */
-  res.cancelToken = new axios.CancelToken( cancel =>  requestAbort(res.url, res.data, res.params, cancel) );
+  if (res.headers['Content-Type'] === 'application/x-www-form-urlencoded') {
+    res.data = res.data ? stringify(res.data) : res.data;
+    res.cancelToken = new axios.CancelToken(cancel => requestAbort(res.url, res.data, res.params, cancel));
+  }
   return res;
 });
 

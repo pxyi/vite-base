@@ -337,7 +337,6 @@ $--rank-sort-3: #F8662F;
     .rank__points {
       .points__chart { 
         width: 160px; 
-        & > div > div { width: 80px; }
         & > div::after { top: 20%; }
         h4 { font-size: 18px; }
         h3 { font-size: 24px; line-height: 1.4; }

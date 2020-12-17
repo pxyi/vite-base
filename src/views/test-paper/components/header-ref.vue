@@ -9,13 +9,24 @@
       <el-input clearable placeholder="按题干搜索" prefix-icon="el-icon-search" v-model="searchText" @keydown.enter="searchHandle" />
     </div>
     <div class="btns">
-      <el-button round>组卷</el-button>
-      <el-button round>上传试卷</el-button>
+      <el-button round @click="addPaper">组卷</el-button>
+      <el-button round>
+        <label for="paperUploadBtn">
+          <span>上传试卷</span>
+          <input type="file" ref="uploadRef" id="paperUploadBtn" @change="upload" multiple accept=".docx,.doc,.pdf">
+        </label>
+      </el-button>
     </div>
   </div>
 </template>
 <script lang="ts">
 import { ref } from 'vue';
+import OrganizingPapers from './organizing-papers.vue';
+import emitter from './../../../utils/mitt';
+import Modal from './../../../utils/modal';
+import { ElMessage } from 'element-plus';
+import axios from 'axios';
+import { AxResponse } from './../../../core/axios';
 
 export default {
   setup(props, { emit }) {
@@ -24,9 +35,33 @@ export default {
     const classChange = (e) => { classType.value = e; emit('type-change', e) };
 
     let searchText = ref(null);
-    const searchHandle = () => emit('search', searchText)
+    const searchHandle = () => emit('search', searchText);
 
-    return { classType, classList, classChange, searchText, searchHandle }
+    let queryClass = {};
+    emitter.on('queryClass', (e) => queryClass = e)
+
+    const addPaper = () => {
+      Modal.create({ title: '组卷', width: 640, component: OrganizingPapers, props: { queryClass } })
+    }
+
+    let uploadRef = ref();
+    const upload = () => {
+      let files: File[] = Array.from(uploadRef.value.files);
+      uploadRef.value.files
+      let accept = ['pdf', 'doc', 'docx', 'pptx']
+      files.filter(file => {
+        let idx = file.name.lastIndexOf('.')
+        let ext = file.name.substr(idx + 1);
+        return accept.includes(ext);
+      });
+      if (!files.length) {
+        ElMessage.warning(`请选择指定${accept.join('、')}格式文件`);
+      } else {
+        Modal.create({ title: '上传试卷', width: 480, component: OrganizingPapers, props: { queryClass, files } });
+      }
+    }
+
+    return { classType, classList, classChange, searchText, searchHandle, addPaper, uploadRef, upload }
   }
 }
 </script>
@@ -77,6 +112,12 @@ export default {
     button {
       color: #1AAFA7;
       padding: 10px 23px;
+      label {
+        cursor: pointer;
+      }
+      input {
+        display: none;
+      }
     }
   }
 }

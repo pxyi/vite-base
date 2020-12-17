@@ -1,6 +1,9 @@
+import ElementPlus from 'element-plus';
 import { Component, createApp } from 'vue';
 import ModalForm from './form.vue';
 import createElement from './../createElement';
+import Components from './../../components';
+import Store from './../../store';
 import './modal.scss';
 
 const create = (opt: ModalCreate) => {
@@ -19,7 +22,6 @@ const create = (opt: ModalCreate) => {
   }
 
   return new Promise(resolve => {
-    
 
     const container = createElement('div');
     let maskEl = createElement('div', { className: 'modal-mask', style: { zIndex: `${options.zIndex}` }, on: { click: () => options.maskClosable && remove() } })
@@ -66,13 +68,16 @@ const create = (opt: ModalCreate) => {
       maskEl.classList.add('active');
       modalBox.classList.add('active');
       setTimeout(() => {
+        app.unmount(modalBody);
         document.body.removeChild(container);
       }, 500);
-      app.unmount(modalBody);
       val && resolve(val);
     };
 
     const app = createApp(options.component, { ...options.props });
+    app.use(Components);
+    app.use(Store);
+    app.use(ElementPlus)
     const vm = app.mount(modalBody);
 
     document.body.appendChild(container);
@@ -80,8 +85,12 @@ const create = (opt: ModalCreate) => {
   })
 }
 
+const confirm = (opt) => {
 
-export default { create };
+}
+
+
+export default { create, confirm };
 
 interface ModalCreate {
   title?: string;

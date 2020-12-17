@@ -1,6 +1,7 @@
 import { Component, createApp } from 'vue';
 import FormComponent from './../modal/form.vue';
 import createElement from './../createElement';
+import Components from './../../components';
 import './drawer.scss';
 
 const create = (opt: DrawerCreate): Promise<any> => {
@@ -24,6 +25,7 @@ const create = (opt: DrawerCreate): Promise<any> => {
     let drawerBody = createElement('div', { className: 'drawer-body' });
 
     const app = createApp(options.component, { ...options.props });
+    app.use(Components)
     const vm = app.mount(drawerBody);
 
     drawerBox.appendChild(drawerBody);

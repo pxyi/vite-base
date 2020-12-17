@@ -43,9 +43,11 @@ export default {
     const getRules = async (subjectCode) => {
       let userId = store.getters.userInfo.user.id;
       let res = await axios.post<any, AxResponse>('/permission/user/userDataRules', { userId, subjectCode });
+      let sources = [{ name: '单元测试', id: 1 }, { name: '月考', id: 2 }, { name: '期中', id: 3 }, { name: '期末', id: 4 }, { name: '竞赛', id: 5 }, { name: '错题本', id: 6 }]
+      emitter.emit('queryClass', { years:  res.json.years, grades: res.json.grades, sources })
       res.json.years = [ { name: '全部', id: null }, ...res.json.years ];
       res.json.grades = [ { name: '全部', id: null }, ...res.json.grades ];
-      res.json.sources = [ { name: '全部', id: null }, { name: '单元测试', id: 1 }, { name: '月考', id: 2 }, { name: '期中', id: 3 }, { name: '期末', id: 4 }, { name: '竞赛', id: 5 }, { name: '错题本', id: 6 } ]
+      res.json.sources = [ { name: '全部', id: null }, ...sources ]
       searchRules.value = res.json;
     }
     emitter.emit('effect', getRules);
