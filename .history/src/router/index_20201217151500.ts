@@ -53,15 +53,9 @@ const routes: RouteRecordRaw[] = [
             name: 'test-paper',
             meta: { title: '试卷库' },
             component: () => import('/@/views/test-paper/index.vue')
-          },
-          {
-            path: 'prepare-teach',
-            name: 'prepare-teach',
-            meta: { title: '备授课' },
-            component: () => import('/@/views/prepare-teach/index.vue')
           }
         ]
-      },
+      }
     ]
   },
   {

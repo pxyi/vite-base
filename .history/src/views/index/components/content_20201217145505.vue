@@ -7,7 +7,7 @@
     <img class="m__head_bg" src="/@/assets/index/head-bg.png" alt="爱学标品" />
     <div class="m__menu">
       <div class="m__inline_title">快捷入口:</div>
-      <div class="m__menu_cell" @click="$router.push('prepare')">备授课</div>
+      <div class="m__menu_cell">备授课</div>
       <div class="m__menu_cell">我的班级</div>
       <div class="m__menu_cell">题库</div>
       <div class="m__menu_cell">资料库</div>

@@ -62,6 +62,15 @@ const routes: RouteRecordRaw[] = [
           }
         ]
       },
+      {
+        path: 'prepare',
+        name: 'prepare',
+        component: Transition,
+        meta: { title: '备授课' },
+        children: [
+          
+        ]
+      }
     ]
   },
   {

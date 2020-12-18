@@ -58,7 +58,7 @@ const routes: RouteRecordRaw[] = [
             path: 'prepare-teach',
             name: 'prepare-teach',
             meta: { title: '备授课' },
-            component: () => import('/@/views/prepare-teach/index.vue')
+            component: () => import('/@/views/prepare-teach/index1.vue')
           }
         ]
       },
