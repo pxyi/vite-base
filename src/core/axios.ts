@@ -38,6 +38,7 @@ axios.interceptors.response.use(res => {
     let [url, reason] = err.message.split('##');
     console.error(`${url}`, reason === 'Duplicate' ? '因请求重复被取消' : '被新请求覆盖');
   } else {
+    requestMap = {};
     ElMessage({ type: 'error', message: '服务器开小差了~！' });
   }
   return err;

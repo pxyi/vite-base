@@ -30,6 +30,7 @@
 import { reactive, ref } from 'vue';
 import MenuList, { RouterConf } from './../core/menu-list';
 import { useRoute } from 'vue-router';
+import { ElMessageBox } from 'element-plus';
 
 export default {
   name: 'lay-menu',
@@ -37,14 +38,16 @@ export default {
     let list: { value: RouterConf[] } = ref([]);
 
     let initPath = useRoute().path;
-
     MenuList.map(async (res: any) => {
       res.icon = typeof res.icon === 'string' ? res.icon : (await res.icon).default; 
       res.closed = initPath.includes(res.key);
       list.value.push(res);
     });
 
-    const goSystem = () => { window.location.href = import.meta.env.VITE_APP_SYSTEM_URL as string }
+    const goSystem = async () => { 
+      let confirm = await ElMessageBox.confirm('是否进入后台管理系统？', '进入后台', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' })
+      confirm && (window.location.href = import.meta.env.VITE_APP_SYSTEM_URL as string);
+    }
     
     return { list, initPath, goSystem }
   }

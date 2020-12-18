@@ -10,11 +10,9 @@
     </div>
     <div class="btns">
       <el-button round @click="addPaper">组卷</el-button>
-      <el-button round>
-        <label for="paperUploadBtn">
-          <span>上传试卷</span>
-          <input type="file" ref="uploadRef" id="paperUploadBtn" @change="upload" multiple accept=".docx,.doc,.pdf">
-        </label>
+      <el-button round @click="$refs.uploadRef.click()">
+        <span>上传试卷</span>
+        <input type="file" ref="uploadRef" @change="upload" multiple accept=".docx,.doc,.pdf">
       </el-button>
     </div>
   </div>
@@ -38,17 +36,17 @@ export default {
     const searchHandle = () => emit('search', searchText);
 
     let queryClass = {};
-    emitter.on('queryClass', (e) => queryClass = e)
+    emitter.on('queryClass', (e) => queryClass = e);
 
     const addPaper = () => {
-      Modal.create({ title: '组卷', width: 640, component: OrganizingPapers, props: { queryClass } })
+      Modal.create({ title: '组卷', width: 640, component: OrganizingPapers, props: { queryClass } });
     }
 
     let uploadRef = ref();
     const upload = () => {
       let files: File[] = Array.from(uploadRef.value.files);
-      uploadRef.value.files
-      let accept = ['pdf', 'doc', 'docx', 'pptx']
+      uploadRef.value.value = '';
+      let accept = ['pdf', 'doc', 'docx', 'pptx'];
       files.filter(file => {
         let idx = file.name.lastIndexOf('.')
         let ext = file.name.substr(idx + 1);
@@ -112,9 +110,6 @@ export default {
     button {
       color: #1AAFA7;
       padding: 10px 23px;
-      label {
-        cursor: pointer;
-      }
       input {
         display: none;
       }

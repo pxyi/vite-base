@@ -133,7 +133,9 @@ export default {
 }
 .cus__slot {
   flex: auto;
+  height: 100%;
   padding: 0 30px;
+  overflow: hidden;
 }
 .age__class {
   margin-left: 20px;

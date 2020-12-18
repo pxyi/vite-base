@@ -1,22 +1,25 @@
 <template>
-  <div class="cus__list__container" v-loading="loading">
-    <div class="cus__list__main">
-      <div class="cus__list__item" v-for="(node) in list" :key="node.id">
-        <div class="cus__list__avatar"><slot name="avatar" /></div>
-        <div class="cus__list__content"><slot :data="node" /></div>
-        <div class="cus__list__actions"><slot name="actions" :data="node" /></div>
+  <div class="cus__list__container">
+    <cus-skeleton :loading="loading" avatar>
+      <div class="cus__list__main">
+        <div class="cus__list__item" v-for="(node) in list" :key="node.id">
+          <div class="cus__list__avatar"><slot name="avatar" /></div>
+          <div class="cus__list__content"><slot :data="node" /></div>
+          <div class="cus__list__actions"><slot name="actions" :data="node" /></div>
+        </div>
+        <cus-empty v-if="!list.length" />
       </div>
-    </div>
 
-    <template v-if="hasPage && list.length">
-      <el-pagination 
-        v-model:current-page="page.current" 
-        v-model:page-size="page.size" 
-        :total="page.total"
-        @current-change="request()"
-        layout="prev, pager, next"
-      />
-    </template>
+      <template v-if="hasPage && list.length">
+        <el-pagination 
+          v-model:current-page="page.current" 
+          v-model:page-size="page.size" 
+          :total="page.total"
+          @current-change="request()"
+          layout="prev, pager, next"
+        />
+      </template>
+    </cus-skeleton>
   </div>
 </template>
 <script lang="ts">

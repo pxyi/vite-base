@@ -1,45 +1,17 @@
 <template>
-  <template ref="slot">
-    <el-button>取消</el-button>
-    <el-button type="primary" @click="handle">确定</el-button>
-  </template>
+  <cus-query :nodes="nodeList"></cus-query>
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
-import emitter from './../utils/mitt';
-import axios from 'axios';
-import Drawer from './../utils/drawer'
-import Modal from './../utils/modal';
-import com from './drawer.vue';
-
 export default {
-  name: 'HelloWorld',
-  props: {
-    msg: String
-  },
   setup(props, ctx) {
-    let slot = ref();
-    onMounted(() => { emitter.emit('slot', slot); })
-    const getList = (subject) => {
-      // axios.post('/xxxx', {})
-      // console.log(subject, '子组件打印')
-    }
-    emitter.emit('effect', [ getList ])
+    let nodeList = [
+    { label: '校区名称', key: 'name', type: 'input' },
+    // { label: '角色名称', key: 'roleId', type: 'select', placeholder: '请输入小区名称', url: '/api/getRole' },
+    { label: '状态', key: 'status', type: 'select', labelKey: 'label', valueKey: 'value', options: [ { label: '启用', value: 1 }, { label: '禁用', value: 0 }, ] }
+  ];
 
-    let handle = () => { console.log(slot); Drawer.create({component: com, title: '标题'}) }
-
-    // let pca = async () => { let res = await import('./../utils/pca'); return res.default};
-    // console.log(pca())
-    // Modal.create({component: 'form', title: '标题', props: { 
-    //   nodes: [
-    //     { type: 'input', key: 'name', label: '姓名' },
-    //     { type: 'between', keys: ['s', 'n'], label: '区间' }
-    //   ]
-    // }}).then(console.log)
-    // Modal.create({component: com, title: '标题'})
-
-    return { slot, handle } 
+    return { nodeList } 
   }
 }
 </script>

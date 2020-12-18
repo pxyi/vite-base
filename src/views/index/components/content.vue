@@ -1,7 +1,7 @@
 <template>
   <div class="index__user">
     <h1>Hello, {{ nickName }}</h1>
-    <h2>Welcome back to aixue education</h2>
+    <h2>Welcome back 1111to aixue education</h2>
   </div>
   <div class="c__main">
     <img class="m__head_bg" src="/@/assets/index/head-bg.png" alt="爱学标品" />

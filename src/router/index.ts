@@ -17,30 +17,10 @@ const routes: RouteRecordRaw[] = [
         component: () => import('/@/views/index/index.vue')
       },
       {
-        path: 'test',
-        name: 'test',
-        component: Transition,
-        meta: { title: '测试' },
-        children: [
-          {
-            path: 'test1',
-            name: 'test1',
-            meta: { title: '测试1' },
-            component: () => import('/@/views/test.vue'),
-          },
-          {
-            path: 'editor',
-            name: 'editor',
-            meta: { title: 'editor' },
-            component: () => import('/@/views/editor.vue'),
-          },
-          {
-            path: 'tree',
-            name: 'tree',
-            meta: { title: 'tree' },
-            component: () => import('/@/views/tree.vue'),
-          }
-        ]
+        path: 'testing',
+        name: 'testing',
+        component: () => import('/@/views/test.vue'),
+        meta: { title: '测试' }
       },
       {
         path: 'teaching',

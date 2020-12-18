@@ -1,8 +1,10 @@
+import ElementPlus from 'element-plus';
 import { Component, createApp } from 'vue';
 import FormComponent from './../modal/form.vue';
 import createElement from './../createElement';
 import Components from './../../components';
 import './drawer.scss';
+import Store from './../../store';
 
 const create = (opt: DrawerCreate): Promise<any> => {
   let options = {
@@ -24,7 +26,21 @@ const create = (opt: DrawerCreate): Promise<any> => {
     let drawerBox = createElement('div', { className: 'drawer-box', style: { width: `${options.width}px`, zIndex: `${options.zIndex + 1}` } });
     let drawerBody = createElement('div', { className: 'drawer-body' });
 
+    const remove = (val?) => {
+      maskEl.classList.add('active');
+      drawerBox.classList.add('active');
+      setTimeout(() => {
+        document.body.removeChild(container);
+      }, 500);
+      app.unmount(drawerBody);
+      val && resolve(val);
+    };
+
     const app = createApp(options.component, { ...options.props });
+    app.use(Components);
+    app.use(Store);
+    app.use(ElementPlus);
+    app.provide('close', remove);
     app.use(Components)
     const vm = app.mount(drawerBody);
 
@@ -66,15 +82,6 @@ const create = (opt: DrawerCreate): Promise<any> => {
       drawerBox.appendChild(drawerFooter);
     }
 
-    const remove = (val?) => {
-      maskEl.classList.add('active');
-      drawerBox.classList.add('active');
-      setTimeout(() => {
-        document.body.removeChild(container);
-      }, 500);
-      app.unmount(drawerBody);
-      val && resolve(val);
-    };
 
     document.body.appendChild(container);
   });

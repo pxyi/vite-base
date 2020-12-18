@@ -25,19 +25,20 @@ import axios from 'axios';
 import emitter from './../../../utils/mitt';
 import { AxResponse } from './../../../core/axios';
 import { reactive, ref } from 'vue';
-import { useStore } from 'vuex'
+import { useStore } from 'vuex';
+import { ElLoading } from 'element-plus';
 
 export default {
   setup(props, { emit }) {
     let store = useStore();
 
-    let loading = ref(true);
+    const loading = ElLoading.service();
 
     let queryForm = reactive({
       year: null,
       gradeId: null,
       source: null
-    })
+    });
 
     let searchRules = ref({});
     const getRules = async (subjectCode) => {
@@ -47,8 +48,9 @@ export default {
       emitter.emit('queryClass', { years:  res.json.years, grades: res.json.grades, sources })
       res.json.years = [ { name: '全部', id: null }, ...res.json.years ];
       res.json.grades = [ { name: '全部', id: null }, ...res.json.grades ];
-      res.json.sources = [ { name: '全部', id: null }, ...sources ]
+      res.json.sources = [ { name: '全部', id: null }, ...sources ];
       searchRules.value = res.json;
+      loading.close();
     }
     emitter.emit('effect', getRules);
 

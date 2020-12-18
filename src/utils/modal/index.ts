@@ -10,7 +10,7 @@ const create = (opt: ModalCreate) => {
   let options = {
     title: opt.title || null,
     width: opt.width || 720,
-    component: opt.component === 'form' ? ModalForm : opt.component,
+    component: opt.component === 'form' || !opt.component ? ModalForm : opt.component,
     props: opt.props || {},
     zIndex: opt.zIndex || 200,
     mask: typeof opt.mask === 'undefined' ? true : opt.mask,
@@ -77,7 +77,8 @@ const create = (opt: ModalCreate) => {
     const app = createApp(options.component, { ...options.props });
     app.use(Components);
     app.use(Store);
-    app.use(ElementPlus)
+    app.use(ElementPlus);
+    app.provide('close', remove);
     const vm = app.mount(modalBody);
 
     document.body.appendChild(container);
@@ -85,17 +86,46 @@ const create = (opt: ModalCreate) => {
   })
 }
 
-const confirm = (opt) => {
+const confirm = (opt: ModalConfirm): Promise<boolean> => {
+  let options = {
+    title: opt.title || '提示',
+    message: opt.message,
+    width: opt.width || 400,
+    maskClosable: typeof opt.maskClosable === 'undefined' ? true : opt.maskClosable,
+  }
+  return new Promise((resolve, reject) => {
+    let maskEl = createElement('div', { className: 'modal-mask', style: { zIndex: `999` }, on: { click: () => close(false) } })
+    let modalBody = createElement('div', { className: 'modal-body' }, options.message);
 
+    let closeBtn = createElement('button', { className: 'modal-close-btn', on: { click: () => close(false) } }, createElement('span', {}, '取消'));
+    let saveBtn = createElement('button', { className: 'modal-save-btn', on: { click: () => close(true) } }, createElement('span', {}, '确定'));
+    let modalFooter = createElement('div', { className: 'modal-footer' }, [closeBtn, saveBtn]);
+
+    let modalBox = createElement('div', { className: 'modal-box', style: { width: `${options.width}px`, zIndex: `1000` } }, [modalBody, modalFooter]);
+    const container = createElement('div', { className: 'modal-confirm' }, [maskEl, modalBox]);
+
+    let ModalHeader = createElement('div', { className: 'modal-header' }, createElement('span', {}, options.title));
+    let iconEl = createElement('i', { className: 'el-icon-close', on: { click: () => close(false) } });
+    ModalHeader.appendChild(iconEl);
+    modalBox.insertBefore(ModalHeader, modalBox.children[0]);
+    document.body.appendChild(container);
+
+    const close = (is) => { container.remove(); is ? resolve(true) : reject(false); }
+  })
 }
 
 
 export default { create, confirm };
-
+interface ModalConfirm {
+  title?: string;
+  message: string | HTMLElement;
+  width?: number;
+  maskClosable?: boolean;
+}
 interface ModalCreate {
   title?: string;
   width?: number;
-  component: Component | 'form';     // 子组件
+  component?: Component | 'form';     // 子组件
   mask?: boolean;          // 是否展示遮罩
   zIndex?: number;
   maskClosable?: boolean;  // 点击蒙层是否允许关闭
