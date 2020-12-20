@@ -5,7 +5,7 @@
         <li v-for="p in classList" :key="p.id" :class="{ active: classType === p.id }" @click="classChange(p.id)">{{ p.name }}</li>
       </ul>
     </div>
-    <div class="search">
+    <div class="search" v-if="searchShow == 1">
       <el-input clearable placeholder="按课程名称搜索" prefix-icon="el-icon-search" v-model="searchText" @keydown.enter="searchHandle" />
     </div>
   </div>
@@ -20,10 +20,16 @@ import axios from 'axios';
 import { AxResponse } from './../../../core/axios';
 
 export default {
+  props:{
+    searchShow:{
+      type: Number,
+      default: 1
+    }
+  },
   setup(props, { emit }) {
     let classType = ref(1);
     let classList = [ { name: '近期备课', id: 0 }, { name: '全部课程', id: 1 } ];
-    const classChange = (e) => { classType.value = e; emit('type-change', e) };
+    const classChange = (e) => { classType.value = e; emit('type-change', e);};
     let searchText = ref(null);
     const searchHandle = () => emit('search', searchText);
 
