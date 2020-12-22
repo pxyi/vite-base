@@ -56,7 +56,6 @@ export default {
     const getRules = async (subjectCode) => {
       let userId = store.getters.userInfo.user.id;
       let res = await axios.post<any, AxResponse>('/permission/user/userDataRules', { userId, subjectCode });
-      console.log( res.json.grades)
       emitter.emit('queryClass', { years:  res.json.years, grades: res.json.grades, terms: res.json.terms, courseTypes: res.json.courseTypes })
       res.json.years = [ { name: '全部', id: null }, ...res.json.years ];
       res.json.grades = [ { name: '全部', id: null }, ...res.json.grades ];

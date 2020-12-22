@@ -57,7 +57,10 @@ export interface AxResponse {
   msg: string;
   json?: any;
   record?: any;
+  total?: any;
+  records?: any; //接口直接返回的total跟records
 }
+
 
 let requestMap = {};
 const requestAbort = function (url, data, params, cancel) {

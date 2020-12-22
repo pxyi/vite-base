@@ -6,7 +6,7 @@
     <QueryClassComponent @query="request($event)" :searchShow='listShow'/>
     <div>
       <div class="cus-list clearfix" v-if="listShow == 1"  v-loading='loading'>
-        <div class="course-list" v-for="item in courseList" :key="item">
+        <div class="course-list" v-for="item in courseList" :key="item" @click.stop.prevent="godetails(item)">
           <div class="course-info">
             <div class="course-info-top">
               <p class="course-title">{{item.courseName}}</p>
@@ -22,29 +22,30 @@
             <img src="/@/assets/prepare-teach/enter.png" width="16" height="16" alt="">
           </div>
         </div>
+        <div v-if="courseList.length == 0" class="noData">暂无数据</div>
       </div>
       <div  v-if="listShow == 0">
-          <div class="near-list" v-loading='nearLoading'>
-              <ul>
-                <li v-for="item in courseDatials" :key="item">
-                    <div class="near-list-left" >  
-                        <div class="courseTitle">
-                            <img src="/@/assets/prepare-teach/book_logo.png" width="36"  alt="">
-                            <div class="title">{{item.courseName}}</div>
-                        </div>
-                        <div class="session" >{{item.courseIndexName}}</div>
-                        <div class="time">上次保存时间：{{item.lastSaveDate ||'无'}}</div>
-                    </div>
-                     <div class="menu">
-                      <el-button size="small" >继续备课</el-button>
-                      <el-button size="small" >已备课</el-button>
-                    </div>
-                </li>  
-              </ul>
-          </div>
+        <div class="near-list" v-loading='nearLoading'>
+          <ul>
+            <li v-for="item in courseDatials" :key="item">
+              <div class="near-list-left" >  
+                <div class="courseTitle">
+                  <img src="/@/assets/prepare-teach/book_logo.png" width="36"  alt="">
+                  <div class="title">{{item.courseName}}</div>
+                </div>
+                <div class="session" >{{item.courseIndexName}}</div>
+                <div class="time">上次保存时间：{{item.lastSaveDate ||'无'}}</div>
+              </div>
+                <div class="menu">
+                <el-button size="small" v-if="item.checkStaus == 0"  @click="courseDetailFileList(item,index)">继续备课</el-button>
+                <el-button size="small" v-if="item.checkStaus == 1"  @click="courseDetailFileList(item,index)">查看备课</el-button>
+              </div>  
+            </li>     
+          </ul>
+          <!-- <div  v-if="courseDatial.length == 0" class="noData">暂无数据</div> -->
+        </div>
       </div>
-    </div>
-    
+    </div>   
   </div>
 </template>
 
@@ -52,93 +53,120 @@
   import { ref, onMounted, Ref, reactive, watch } from 'vue';
   import HeaderRefComponent from './components/header-ref.vue';
   import QueryClassComponent from './components/query-class.vue';
+  import PreparePapers from './components/prepare-papers.vue';
+  import CurriculumPapers from './components/curriculum-papers.vue';
   import emitter from './../../utils/mitt';
   import axios from 'axios';
-  import { ElMessage, ElLoading } from 'element-plus'
+  import { ElMessage, ElLoading } from 'element-plus';
   import { AxResponse } from './../../core/axios';
   import createElement from './../../utils/createElement';
   import Modal from './../../utils/modal';
+  import { useStore } from 'vuex';
+
 
 
 
   export default {
-    components: { HeaderRefComponent, QueryClassComponent },
+    components: { HeaderRefComponent, QueryClassComponent, PreparePapers, CurriculumPapers },
     
     setup(props,{ emit }) {
+      let store = useStore()
       let headerRef = ref();
       onMounted(() => emitter.emit('slot', headerRef));
 
       let params: Ref<any> = ref({});
-      let subjectId = ''
-      emitter.emit('effect', (id) => subjectId = id)
+      let subjectId: Ref<any> = ref()
+      emitter.emit('effect', (id) => subjectId.value = id)
 
       
       let listShow = ref(1)
       const typeChange = (e:any) =>{
-          listShow.value = e
-          if(e == 1){
-            request(params)
-          }else if(e == 0){
-            nearRequest(nearParams)
-          }
+        listShow.value = e
+        if (e == 1) {
+          request(params)
+        } else if (e == 0) {
+          nearRequest(nearParams)
+        }
       }
       
       //全部课程
       let courseList = ref([])
-      let loading = ref(false);
       let page = reactive({
         current: 1,
         size: 10,
         total: courseList.value.length,
-      });   
+      });
+      let loading = ref(true)
       const request = async (params?) => {
-        loading.value = true;
-        let res = await axios.post<any,AxResponse>('/course/queryByPage', { ...params, current: page.current, size: page.size, subjectId: subjectId }, { headers: { type: 1, 'Content-Type': 'application/json'}});
+        loading.value = true
+        let res = await axios.post<any,AxResponse>(
+          '/course/queryByPage', 
+          { ...params, current: page.current, size: page.size, subjectId: subjectId.value }, 
+          { headers: { type: 1, 'Content-Type': 'application/json' }});
         if (res.result) {
-            page.total = res.json.total;
-            courseList.value = res.json.records;
+          page.total = res.json.total;
+          courseList.value = res.json.records;
         }
-        loading.value = false;
+        loading.value = false
       }
 
       //最近备课
-      let courseDatials = ref([
-          {
-            courseName: '十以内加法',
-            courseIndexName:'十以内加法十以内加法十以内加法十以内加法十以内加法十以内加法十以内加法十以内加法',
-            lastSaveDate:'10点10点10点10点10点10点10点10点10点10点'
-          }
-      ]) 
-      let nearLoading = ref(false)
+      let courseDatials = ref([]) 
       let nearParams = {
-            startTime: null,
-            endTime: null,
-            current: 1,
-            size: 10,    
-        }
-        const nearRequest = async (nearParams?) =>{
-            let res = await axios.post<any,AxResponse>('/admin/prepareLesson/queryPage',{ ...nearParams, subjectId: subjectId },{ headers: { type: 1, 'Content-Type': 'application/json'}});
-            if (res.result) {
-                page.total = res.json.total;
-                courseDatials.value = res.json.records;
-            }
-        }
-        setTimeout(() => {
-          request(params)  
-          nearRequest(nearParams)
-        }, 1000);
+        current: 1,
+        size: 10,    
+      }
+      let nearLoading = ref(true)
+      let creatorId = store.getters.userInfo.user.id
+      const nearRequest = async (nearParams?) => {
+        nearLoading.value = true
+        let res = await axios.post<any,AxResponse>(
+          '/admin/prepareLesson/queryPage',
+          { ...nearParams, subjectCode: subjectId.value, creatorId: creatorId },
+          { headers: { type: 1, }}
+        );
+          page.total = res.total;
+          courseDatials.value = res.records;
+          nearLoading.value = false
+      }
 
-      return { headerRef, params, request, loading, courseList, courseDatials, nearLoading, typeChange, listShow, nearRequest }
+      // 学科改动，刷新数据
+      watch(subjectId, () => {request(params);nearRequest(nearParams)});
+
+      setTimeout(() => {
+        request(params)  
+        nearRequest(nearParams)
+      }, 100);
+
+      // 课程详情弹窗
+      const godetails = (item) => {
+        let courseId = item.id
+        Modal.create({ title: item.courseName, width: 640, footed: false , component: PreparePapers, props: { courseId }})
+      }
+
+      const courseDetailFileList = (item,index) => {
+        let id = listShow.value == 0 ? item.courseIndex : item.id;
+        Modal.create({ title: item.courseName,  component: CurriculumPapers, props: {  }})
+      }
+
+      return { 
+        headerRef, params, request, courseList, loading, courseDatials, typeChange, listShow, nearRequest, godetails, nearLoading,
+        courseDetailFileList
+       }
     }
   }
 </script>
 
 <style lang="scss" scoped>
-.clearfix{
+  .clearfix{
     content: '';
     clear: both;
     overflow: hidden;
-}
+  }
+  .noData{
+    text-align: center;
+    margin-top: 10px;
+  }
   .cus-list {
     background: #fff;
     border: 1px solid rgb(235, 240, 252);
@@ -216,68 +244,69 @@
     border-radius: 6px;
     padding: 10px 30px;
     ul{
-        li{
-            cursor: pointer;
-            padding: 0 30px 0 10px;
-            min-height: 60px;
+      min-height: 30px;
+      li{
+        cursor: pointer;
+        padding: 0 30px 0 10px;
+        min-height: 60px;
+        display: flex;
+        justify-content: space-between;
+        border: 1px solid #DEE4F1;
+        margin: 15px 0px;
+        border-radius: 10px;
+        .near-list-left{
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+          width: 70%;
+          line-height: 58px;
+          .courseTitle{
             display: flex;
             justify-content: space-between;
-            border: 1px solid #DEE4F1;
-            margin: 15px 0px;
-            border-radius: 10px;
-            .near-list-left{
-              display: flex;
-              justify-content: flex-start;
-              align-items: center;
-              width: 70%;
-              line-height: 58px;
-              .courseTitle{
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                img{
-                  margin-right: 20px;
-                }
-              }
-              .title{
-                width: 200px;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-                font-size: 16px;
-                font-weight: 400;
-                color: #333333;
-              }
-              .session{
-                width: 40%;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-                font-size: 16px;
-                font-weight: 500;
-                color: #1A2633;
-              }
-              .time{
-                width: 300px;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-                font-size: 14px;
-                font-weight: 400;
-                color: #909399;
-              }
+            align-items: center;
+            img{
+              margin-right: 20px;
             }
-            .menu{
-              display: flex;
-              justify-content: flex-end;
-              width: 30%;
-              align-items: center;
-            }
+          }
+          .title{
+            width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 16px;
+            font-weight: 400;
+            color: #333333;
+          }
+          .session{
+            width: 40%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 16px;
+            font-weight: 500;
+            color: #1A2633;
+          }
+          .time{
+            width: 300px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 14px;
+            font-weight: 400;
+            color: #909399;
+          }
         }
-        li:hover{
-            background: #E1E6F2;
-            box-shadow: 0px 2px 4px 0px rgba(69, 90, 247, 0.05), 0px 0px 8px 0px rgba(69, 90, 247, 0.06);
+        .menu{
+          display: flex;
+          justify-content: flex-end;
+          width: 30%;
+          align-items: center;
         }
+      }
+      li:hover{
+        background: #E1E6F2;
+        box-shadow: 0px 2px 4px 0px rgba(69, 90, 247, 0.05), 0px 0px 8px 0px rgba(69, 90, 247, 0.06);
+      }
     }
     
   }
