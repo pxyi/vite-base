@@ -1,5 +1,6 @@
 <template>
-  <cus-query :nodes="nodeList"></cus-query>
+  <!-- <cus-query :nodes="nodeList"></cus-query> -->
+  <div></div>
 </template>
 
 <script>

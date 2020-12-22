@@ -5,6 +5,7 @@ import CusForm from './form/index.vue';
 import CusEmpty from './empty/index.vue';
 import CusSkeleton from './skeleton/index.vue';
 import CusQuery from './query/index.vue';
+import CusCondition from './condition/index.vue';
 
 const AppComponents: any = {
   CusTree,
@@ -12,7 +13,8 @@ const AppComponents: any = {
   CusForm,
   CusEmpty,
   CusSkeleton,
-  CusQuery
+  CusQuery,
+  CusCondition
 };
 
 const install = (Vue: App) => {

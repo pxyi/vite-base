@@ -1,0 +1,223 @@
+<template>
+  <div class="container">
+    <div class="header">
+      <div class="cell" 
+        @click="orderChange(cell.key)" 
+        v-for="cell in [{key: 0, text: '上传时间'}, {key: 1, text: '试题难度'}, {key: 2, text: '引用次数'}]" 
+        :key="cell.key"
+      >
+        <span>{{ cell.text }}</span>
+        <i v-show="pageAorder.order === cell.key" :class="[ `el-icon-${ pageAorder.orderType === 1 ? 'bottom' : 'top' }` ]" />
+      </div>
+      <div class="statistics">
+        <span>共计<i>{{ pageAorder.total }}</i>道相关试题</span>
+        <div><i class="el-icon-view" />查看答案</div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="item" v-for="data in dataset" :key="data.id">
+        <div class="update-icon"><i class="el-icon-edit-outline" /></div>
+        <div class="content">
+          <div class="title" v-html="data.title"></div>
+        </div>
+        <div class="footer">
+          <p>填空题</p>
+          <p><span>收录：</span><span>{{ data.createTime }}</span></p>
+          <p><span>难度：</span><span>{{ data.difficult }}</span></p>
+          <p><span>引用：</span><span>{{ data.useCount }}</span></p>
+          <div>
+            <p><i>解析</i></p>
+            <p><i>相似题</i></p>
+            <a href="javascript:;">加入试题篮</a>
+          </div>
+        </div>
+      </div>
+      <cus-skeleton :loading="loading"></cus-skeleton>
+
+      <template v-if="!dataset.length && !loading">
+        <cus-empty />
+      </template>
+      <template v-else>
+        <el-pagination 
+          v-model:current-page="pageAorder.current" 
+          v-model:page-size="pageAorder.size" 
+          :total="pageAorder.total"
+          @current-change="request()"
+          layout="prev, pager, next"
+        />
+      </template>
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import { ref, Ref, reactive } from 'vue';
+import axios from 'axios';
+import { AxResponse } from './../../../core/axios';
+
+const difficultFilter = (v) => ([{ name: '易', id: 11 }, { name: '较易', id: 12 }, { name: '中档', id: 13 }, { name: '较难', id: 14 }, { name: '难', id: 15 }].find(i => i.id === v)?.name);
+
+export default {
+  setup() {
+
+    let dataset: Ref<any[]> = ref([]);
+
+    let pageAorder = reactive({
+      order: 0,                   // 0：时间排序  1：试题难度  2：引用次数
+      orderType: 1,               // 时间排序 1：降序 0：升序
+      searchType: 2,
+      current: 1,
+      size: 10,
+      total: 0
+    });
+
+    let __params = {};
+
+    let loading = ref(false);
+    const request = async (params?) => {
+      loading.value = true;
+      params && (__params = params);
+      let res = await axios.post<null, AxResponse>(`/tiku/question/queryPage`, { ...__params, ...pageAorder}, { headers: { 'Content-Type': 'application/json' } });
+      dataset.value = res.json.records.map(n => ({
+         ...n, 
+         ...{ createTime: n.createTime.split('-').join('/'), difficult: difficultFilter(n.difficult) } 
+        })
+      );
+      pageAorder.total = res.json.total;
+      loading.value = false;
+    }
+
+    const orderChange = (order) => {
+      pageAorder.order === order ? (pageAorder.orderType = pageAorder.orderType === 1 ? 0 : 1) : (pageAorder.order = order);
+      request();
+    }
+
+    return { request, loading, dataset, pageAorder, orderChange }
+  }
+}
+</script>
+
+<style lang="scss" scope>
+.container {
+  flex: auto;
+  display: flex;
+  flex-direction: column;
+  .header {
+    padding: 0 28px;
+    color: #fff;
+    line-height: 34px;
+    background: #1AAFA7;
+    border-radius: 6px 6px 0px 0px;
+    border: 1px solid #EBF0FC;
+    .cell {
+      width: 76px;
+      white-space: nowrap;
+      display: inline-block;
+      margin-right: 20px;
+      cursor: pointer;
+      i {
+        color: #FAAD14;
+        margin: 0 3px;
+      }
+    }
+    .statistics {
+      float: right;
+      span {
+        display: inline-block;
+        height: 16px;
+        line-height: 16px;
+        padding-right: 10px;
+        margin-right: 10px;
+        border-right: solid 1px #fff;
+        vertical-align: middle;
+      }
+      i {
+        color: #FAAD14;
+        margin: 0 3px;
+        font-style: normal;
+      }
+      div {
+        display: inline-block;
+        cursor: pointer;
+      }
+    }
+  }
+  .section {
+    flex: 1 1 36px;
+    background: #fff;
+    padding: 20px 28px;
+    .item {
+      padding: 20px 20px 0;
+      box-shadow: 0px 2px 11px 0px rgba(23, 18, 45, 0.2);
+      border-radius: 10px;
+      border: 1px solid #EBEEF6;
+      position: relative;
+      &:not(:last-child) {
+        margin-bottom: 20px;
+      }
+      &:hover {
+        box-shadow: 0px 2px 11px 0px rgba(23, 18, 45, 0.2);
+      }
+      .update-icon {
+        width: 40px;
+        color: #1AAFA7;
+        font-size: 24px;
+        line-height: 34px;
+        text-align: center;
+        border-bottom-left-radius: 10px;
+        border-top-right-radius: 10px;
+        background: #F2F1F6;
+        position: absolute;
+        top: 0;
+        right: 0;
+        cursor: pointer;
+        &:active > i {
+          transform: scale(.95);
+        }
+      }
+      .content {
+      }
+      .footer {
+        height: 36px;
+        margin: 20px -20px 0;
+        font-size: 12px;
+        line-height: 36px;
+        background: #F2F1F6;
+        border-bottom-left-radius: 8px;
+        border-bottom-right-radius: 8px;
+        border-top: solid 1px #EBF0FC;
+        p {
+          float: left;
+          margin-left: 18px;
+          color: #1A2633;
+          span {
+            color: #77808D;
+          }
+          i {
+            color: #382A74;
+          }
+        }
+        div {
+          float: right;
+          a {
+            display: inline-block;
+            padding: 0 10px;
+            margin-left: 20px;
+            margin-right: 30px;
+            color: #1AAFA7;
+            line-height: 20px;
+            border: solid 1px #1AAFA7;
+            border-radius: 12px;
+            transition: all .25s;
+            &.active {
+              color: #FAAD14;
+              border: solid 1px #FAAD14;
+              background: #FFF7E9;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+</style>

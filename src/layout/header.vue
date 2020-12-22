@@ -2,7 +2,7 @@
   <div class="lay__header__container">
     <el-popover placement="bottom-start" :width="200" trigger="click">
       <template #reference>
-        <div class="age__class"><span>小学数学</span><i class="el-icon-arrow-down" /></div>
+        <div class="age__class"><span>{{ subject.name }}</span><i class="el-icon-arrow-down" /></div>
       </template>
       <div class="class__container">
         <div v-for="grade in subjectList" :key="grade.id">
@@ -11,8 +11,8 @@
             <div 
               v-for="course in grade.child" 
               :key="course.code" 
-              :class="{ 'active': subjectCode === course.code }"
-              @click="setSubjectCode(course.code)"
+              :class="{ 'active': subject.code === course.code }"
+              @click="setSubject(course.name,course.code)"
             >{{ course.name }}</div>
           </div>
         </div>
@@ -55,7 +55,7 @@ const getSubjectList = (store): Promise<any> => {
     } else {
       let res = await axios.post<any, AxResponse>('/permission/user/userDataSubjects');
       store.commit(SET_SUBJECT_LIST, res.json);
-      store.commit(SET_SUBJECT, res.json[0].child[0].code);
+      store.commit(SET_SUBJECT, res.json[0].child[0]);
       resolve(res.json);
     }
   })
@@ -78,21 +78,24 @@ export default {
     emitter.on('slot', __setSlot );
     watch(() => route.path, (e) => ( (slot.value as HTMLElement).innerHTML = '' ));
 
-    /* 接受 组件传递的方法，如果已存在 subjectCode 则只需 */
+    /* 接受 组件传递的方法，如果已存在 subject 则只需 */
     let effectList: (([key]: string) => void)[] = [];
-    const __setFns = (fns) => { 
-      effectList = typeof fns === 'function' ? [ fns, ...effectList ] : [ ...fns, ...effectList]; 
-      subjectCode.value && effectList.map(fn => fn(subjectCode.value));
+    const __setFns = (calls) => {
+      let fns = typeof calls === 'function' ? [ calls ] : calls;
+      effectList = [ ...effectList, ...fns ];
+      subject.value.code && fns.map(fn => fn(subject.value.code));
     }
     emitter.on('effect', __setFns);
     watch(() => route.path, (to, from) => to !== from && (effectList = []))
 
-    /* 获取 sbujectList，并监听subjectCode 变更，执行组件传递来的方法 */
+    /* 获取 sbujectList，并监听subject 变更，执行组件传递来的方法 */
     let subjectList = ref([]);
     getSubjectList(store).then(res => { subjectList.value = res; });
-    let subjectCode: Ref<string> = computed(() => store.getters.subject);
-    watch(subjectCode, () => effectList.map(fn => fn(subjectCode.value)) );
-    const setSubjectCode = (code) => store.commit(SET_SUBJECT, code);
+    let subject: Ref<{ name, code }> = computed(() => store.getters.subject);
+    watch(subject, () => effectList.map(fn => fn(subject.value.code)) );
+
+    let subjectName = ref('');
+    const setSubject = (name, code) => store.commit(SET_SUBJECT, { name, code });
 
     let commandList = new Map([
       ['logout', () => {
@@ -106,7 +109,7 @@ export default {
       emitter.off('effect', __setFns );
     });
 
-    return { breadcrumb, slot, commandList, subjectList, subjectCode, setSubjectCode }
+    return { breadcrumb, slot, commandList, subjectList, subject, setSubject }
   }
 }
 </script>

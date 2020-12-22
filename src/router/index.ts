@@ -33,6 +33,12 @@ const routes: RouteRecordRaw[] = [
             name: 'test-paper',
             meta: { title: '试卷库' },
             component: () => import('/@/views/test-paper/index.vue')
+          },
+          {
+            path: 'question',
+            name: 'question',
+            meta: { title: '题库' },
+            component: () => import('/@/views/question/index.vue')
           }
         ]
       }

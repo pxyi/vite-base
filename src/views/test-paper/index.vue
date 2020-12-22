@@ -4,7 +4,14 @@
   </template>
 
   <div>
-    <QueryClassComponent @query="$refs.list.request($event)" />
+    <cus-condition 
+      :node-list="[
+        { label: '年份', key: 'year' },
+        { label: '年级', key: 'gradeId' },
+        { label: '来源', key: 'source' },
+      ]"
+      @submit="$refs.list.request($event)" 
+    />
 
     <div class="cus-list">
       <cus-list ref="list" has-page url="/tiku/paper/queryPaperPage" :default="params" :auto-request="false">

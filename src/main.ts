@@ -17,7 +17,6 @@ Basics();
 
 import { EventBus } from './utils/mitt';
 
-
 const app = createApp(RouterView);
 
 app.use(ElementPlus)
@@ -29,4 +28,4 @@ app.use(ElementPlus)
 .mount('#app');
 
 
-window.addEventListener('unhandledrejection', event => { console.log(event.reason) });
+// window.addEventListener('unhandledrejection', event => { console.log(event.reason) });

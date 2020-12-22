@@ -55,7 +55,7 @@ export default {
 
     let formGroup = reactive({
       mobile: '15701215206',
-      md5Password: '123123'
+      md5Password: '15701215206'
     });
     let rules = {
       mobile: [{ required: true, message: '请输入用户名' }],

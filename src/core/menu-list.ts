@@ -27,6 +27,11 @@ const MenuList: RouterConf[] = [
     icon: import('./../assets/menu/icon-3.png'),
     children: [
       {
+        title: '题库',
+        key: '/teaching/question',
+        isLeaf: true
+      },
+      {
         title: '试卷库',
         key: '/teaching/test-paper',
         isLeaf: true
