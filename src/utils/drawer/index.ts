@@ -1,8 +1,10 @@
+import ElementPlus from 'element-plus';
 import { Component, createApp } from 'vue';
 import FormComponent from './../modal/form.vue';
 import createElement from './../createElement';
 import Components from './../../components';
 import './drawer.scss';
+import Store from './../../store';
 
 const create = (opt: DrawerCreate): Promise<any> => {
   let options = {
@@ -21,10 +23,24 @@ const create = (opt: DrawerCreate): Promise<any> => {
 
     const container = createElement('div');
 
-    let drawerBox = createElement('div', { className: 'drawer-box', style: { width: `${options.width}px`, zIndex: `${options.zIndex + 1}` } });
+    let drawerBox = createElement('div', { className: 'drawer-box', style: { width: options.width > 0 ? `${options.width}px` : options.width, zIndex: `${options.zIndex + 1}` } });
     let drawerBody = createElement('div', { className: 'drawer-body' });
 
+    const remove = (val?) => {
+      maskEl.classList.add('active');
+      drawerBox.classList.add('active');
+      setTimeout(() => {
+        document.body.removeChild(container);
+      }, 500);
+      app.unmount(drawerBody);
+      val && resolve(val);
+    };
+
     const app = createApp(options.component, { ...options.props });
+    app.use(Components);
+    app.use(Store);
+    app.use(ElementPlus);
+    app.provide('close', remove);
     app.use(Components)
     const vm = app.mount(drawerBody);
 
@@ -66,15 +82,6 @@ const create = (opt: DrawerCreate): Promise<any> => {
       drawerBox.appendChild(drawerFooter);
     }
 
-    const remove = (val?) => {
-      maskEl.classList.add('active');
-      drawerBox.classList.add('active');
-      setTimeout(() => {
-        document.body.removeChild(container);
-      }, 500);
-      app.unmount(drawerBody);
-      val && resolve(val);
-    };
 
     document.body.appendChild(container);
   });
@@ -94,7 +101,7 @@ export default { create };
 
 interface DrawerCreate {
   title?: string;
-  width?: number;
+  width?: number | string;
   component: Component | 'form';     // 子组件
   mask?: boolean;          // 是否展示遮罩
   zIndex?: number;

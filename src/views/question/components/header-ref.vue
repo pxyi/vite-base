@@ -9,57 +9,34 @@
       <el-input clearable placeholder="按题干搜索" prefix-icon="el-icon-search" v-model="searchText" @keydown.enter="searchHandle" />
     </div>
     <div class="btns">
-      <el-button round @click="addPaper">组卷</el-button>
-      <el-button round @click="$refs.uploadRef.click()">
-        <span>上传试卷</span>
-        <input type="file" ref="uploadRef" @change="upload" multiple accept=".docx,.doc,.pdf">
-      </el-button>
+      <el-button round @click="add">添加题目</el-button>
     </div>
   </div>
 </template>
 <script lang="ts">
 import { ref } from 'vue';
-import OrganizingPapers from './organizing-papers.vue';
 import emitter from './../../../utils/mitt';
 import Modal from './../../../utils/modal';
 import { ElMessage } from 'element-plus';
 import axios from 'axios';
 import { AxResponse } from './../../../core/axios';
+import Drawer from './../../../utils/drawer';
+import UpdateComponent from './update.vue';
 
 export default {
   setup(props, { emit }) {
-    let classType = ref(null);
-    let classList = [ { name: '全部试卷', id: null }, { name: '我的试卷', id: 2 }, { name: '标准试卷', id: 1 } ];
+    let classType = ref(2);
+    let classList = [ { name: '区域精品', id: 2 }, { name: '我的题库', id: 3 }, { name: '菁优网', id: 1 } ];
     const classChange = (e) => { classType.value = e; emit('type-change', e) };
 
     let searchText = ref(null);
     const searchHandle = () => emit('search', searchText);
 
-    let queryClass = {};
-    emitter.on('queryClass', (e) => queryClass = e);
-
-    const addPaper = () => {
-      Modal.create({ title: '组卷', width: 640, component: OrganizingPapers, props: { queryClass } });
+    const add = () => {
+      Drawer.create({ title: '添加题目', width: 'calc(100% - 200px)', component: UpdateComponent });
     }
 
-    let uploadRef = ref();
-    const upload = () => {
-      let files: File[] = Array.from(uploadRef.value.files);
-      uploadRef.value.value = '';
-      let accept = ['pdf', 'doc', 'docx', 'pptx'];
-      files.filter(file => {
-        let idx = file.name.lastIndexOf('.')
-        let ext = file.name.substr(idx + 1);
-        return accept.includes(ext);
-      });
-      if (!files.length) {
-        ElMessage.warning(`请选择指定${accept.join('、')}格式文件`);
-      } else {
-        Modal.create({ title: '上传试卷', width: 480, component: OrganizingPapers, props: { queryClass, files } });
-      }
-    }
-
-    return { classType, classList, classChange, searchText, searchHandle, addPaper, uploadRef, upload }
+    return { classType, classList, classChange, searchText, searchHandle, add }
   }
 }
 </script>

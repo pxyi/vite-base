@@ -17,31 +17,20 @@ const MenuList: RouterConf[] = [
   },
   {
     title: '测试',
-    key: '/test',
+    key: '/testing',
+    isLeaf: true,
     icon: import('./../assets/menu/icon-2.png'),
-    children: [
-      {
-        title: '测试',
-        key: '/test/test1',
-        isLeaf: true
-      },
-      {
-        title: 'ckeditor',
-        key: '/test/editor',
-        isLeaf: true
-      },
-      {
-        title: 'tree',
-        key: '/test/tree',
-        isLeaf: true
-      },
-    ]
   },
   {
     title: '教研中台',
     key: '/teaching',
     icon: import('./../assets/menu/icon-3.png'),
     children: [
+      {
+        title: '题库',
+        key: '/teaching/question',
+        isLeaf: true
+      },
       {
         title: '试卷库',
         key: '/teaching/test-paper',

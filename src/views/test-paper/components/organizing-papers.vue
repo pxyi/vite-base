@@ -31,7 +31,7 @@
   </template>
 </template>
 <script lang="ts">
-import { ref, Ref, PropType, onMounted } from 'vue';
+import { ref, Ref, PropType, onMounted, inject } from 'vue';
 import { AxResponse } from './../../../core/axios';
 import axios from 'axios';
 import { useStore } from 'vuex';
@@ -60,7 +60,7 @@ export default {
       Promise.all(props.files.map(file => {
         let formdata = new FormData();
         formdata.append('file', file);
-        return axios.post('/system/file/uploadFile', formdata, { headers: { 'Content-Type': 'multipart/form-data' } })
+        return axios.post('/system/file/uploadFile', formdata, { headers: { 'Content-Type': 'multipart/form-data' } });
       })).then((list: any[]) => {
         fileList.value = list.map(res => ({ name: res.json.oriFilename, url: res.json.filePath }))
       });

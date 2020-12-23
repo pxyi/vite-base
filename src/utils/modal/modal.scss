@@ -1,5 +1,45 @@
 @import './../../cus-var.scss';
-
+.modal-confirm *:not(i) {
+  font-family: Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,SimSun,sans-serif !important;
+}
+.modal-confirm {
+  .modal-header {
+    padding: 15px 15px 10px;
+    margin-bottom: 0;
+    border-bottom: 0;
+    span {
+      font-size: 18px;
+      line-height: 1;
+      color: #303133;
+      font-weight: 400;
+    }
+    i {
+      font-size: 16px;
+    }
+  }
+  .modal-body {
+    padding: 10px 15px;
+    color: #606266;
+    font-size: 14px;
+  }
+  .modal-footer {
+    height: auto;
+    line-height: 1;
+    padding: 5px 15px 10px;
+    text-align: right;
+    border-top: 0;
+    button {
+      padding: 0 15px;
+      height: 32px;
+      font-size: 12px;
+      line-height: 32px;
+      border-radius: 3px;
+    }
+    .modal-save-btn {
+      margin-right: 0;
+    }
+  }
+}
 .modal-mask {
   position: fixed;
   left: 0;
