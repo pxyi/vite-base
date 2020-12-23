@@ -1,46 +1,48 @@
 <template>
   <div class="cus__condition__container">
-    <div class="cus__condition__content">
-      <template v-for="node in showNodeList" :key="node.key">
-        <div class="cus__class__item" v-show="!node.hide || isOpened">
-          <div class="cus__class__label">{{ node.label }}</div>
-          <div class="cus__class__box">
-            <div 
-              :class="{ active: cell.id === formGroup[node.key], 'cus__class__cell': true }"
-              v-for="cell in (node.options || list[mapping.find(i => i.text === node.label).key])" 
-              :key="cell.id" 
-              @click="setQueryValue(node.key, cell.id)" 
-            >
-              <span>{{ cell.name }}</span>
-            </div>
-          </div>
-        </div>
-      </template>
-      <template v-if="showMoreBtn">
-        <div class="cus__condition--hide-list" ref="hideRef" v-show="isOpened">
-          <template v-for="node in hideNodeList" :key="node.key">
-            <div class="cus__class__item">
-              <div class="cus__class__label">{{ node.label }}</div>
-              <div class="cus__class__box">
-                <div 
-                  :class="{ active: cell.id === formGroup[node.key], 'cus__class__cell': true }"
-                  v-for="cell in (node.options || list[mapping.find(i => i.text === node.label).key])" 
-                  :key="cell.id" 
-                  @click="setQueryValue(node.key, cell.id)" 
-                >
-                  <span>{{ cell.name }}</span>
-                </div>
+    <cus-skeleton :loading="loading">
+      <div class="cus__condition__content">
+        <template v-for="node in showNodeList" :key="node.key">
+          <div class="cus__class__item" v-show="!node.hide || isOpened">
+            <div class="cus__class__label">{{ node.label }}</div>
+            <div class="cus__class__box">
+              <div 
+                :class="{ active: cell.id === formGroup[node.key], 'cus__class__cell': true }"
+                v-for="cell in (node.options || list[mapping.find(i => i.text === node.label).key])" 
+                :key="cell.id" 
+                @click="setQueryValue(node.key, cell.id)" 
+              >
+                <span>{{ cell.name }}</span>
               </div>
             </div>
-          </template>
-        </div>
+          </div>
+        </template>
+        <template v-if="showMoreBtn">
+          <div class="cus__condition--hide-list" ref="hideRef" v-show="isOpened">
+            <template v-for="node in hideNodeList" :key="node.key">
+              <div class="cus__class__item">
+                <div class="cus__class__label">{{ node.label }}</div>
+                <div class="cus__class__box">
+                  <div 
+                    :class="{ active: cell.id === formGroup[node.key], 'cus__class__cell': true }"
+                    v-for="cell in (node.options || list[mapping.find(i => i.text === node.label).key])" 
+                    :key="cell.id" 
+                    @click="setQueryValue(node.key, cell.id)" 
+                  >
+                    <span>{{ cell.name }}</span>
+                  </div>
+                </div>
+              </div>
+            </template>
+          </div>
 
-        <div class="cus__condition--toggle" @click="isOpened = !isOpened">
-          <span>高级筛选</span>
-          <i :class="[`el-icon-caret-${isOpened ? 'top' : 'bottom'}`]" />
-        </div>
-      </template>
-    </div>
+          <div class="cus__condition--toggle" @click="isOpened = !isOpened">
+            <span>高级筛选</span>
+            <i :class="[`el-icon-caret-${isOpened ? 'top' : 'bottom'}`]" />
+          </div>
+        </template>
+      </div>
+    </cus-skeleton>
   </div>
 </template>
 <script lang="ts">
@@ -49,7 +51,6 @@ import emitter from './../../utils/mitt';
 import { AxResponse } from './../../core/axios';
 import { reactive, ref, Ref, PropType, onUnmounted } from 'vue';
 import { useStore } from 'vuex';
-import { ElLoading } from 'element-plus';
 
 interface ICondition {
   label : string;
@@ -104,11 +105,12 @@ export default {
     onUnmounted(() => { emitter.off('effect', getRules) } );
 
     let list = ref({});
+    let loading = ref(true);
     const getRules = async (subjectCode) => {
-      let loading = ElLoading.service();
+      loading.value = true;
       let userId = store.getters.userInfo.user.id;
       list.value = await getCondition(userId, subjectCode, props.nodeList);
-      loading.close();
+      loading.value = false;
     }
     emitter.emit('effect', getRules);
 
@@ -123,7 +125,7 @@ export default {
     let hideRef: Ref<HTMLElement | null> = ref(null);
     let isOpened = ref(false);
 
-    return { list, showNodeList, hideNodeList,  formGroup, setQueryValue, mapping, showMoreBtn, hideRef, isOpened }
+    return { list, showNodeList, hideNodeList,  formGroup, setQueryValue, mapping, showMoreBtn, hideRef, isOpened, loading }
   }
 }
 

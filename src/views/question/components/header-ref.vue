@@ -20,6 +20,8 @@ import Modal from './../../../utils/modal';
 import { ElMessage } from 'element-plus';
 import axios from 'axios';
 import { AxResponse } from './../../../core/axios';
+import Drawer from './../../../utils/drawer';
+import UpdateComponent from './update.vue';
 
 export default {
   setup(props, { emit }) {
@@ -31,7 +33,7 @@ export default {
     const searchHandle = () => emit('search', searchText);
 
     const add = () => {
-      // Modal.create({ title: '组卷', width: 640, component: OrganizingPapers, props: { queryClass } });
+      Drawer.create({ title: '添加题目', width: 'calc(100% - 200px)', component: UpdateComponent });
     }
 
     return { classType, classList, classChange, searchText, searchHandle, add }

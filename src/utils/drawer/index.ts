@@ -23,7 +23,7 @@ const create = (opt: DrawerCreate): Promise<any> => {
 
     const container = createElement('div');
 
-    let drawerBox = createElement('div', { className: 'drawer-box', style: { width: `${options.width}px`, zIndex: `${options.zIndex + 1}` } });
+    let drawerBox = createElement('div', { className: 'drawer-box', style: { width: options.width > 0 ? `${options.width}px` : options.width, zIndex: `${options.zIndex + 1}` } });
     let drawerBody = createElement('div', { className: 'drawer-body' });
 
     const remove = (val?) => {
@@ -101,7 +101,7 @@ export default { create };
 
 interface DrawerCreate {
   title?: string;
-  width?: number;
+  width?: number | string;
   component: Component | 'form';     // 子组件
   mask?: boolean;          // 是否展示遮罩
   zIndex?: number;

@@ -15,29 +15,30 @@
       </div>
     </div>
     <div class="section">
-      <div class="item" v-for="data in dataset" :key="data.id">
-        <div class="update-icon"><i class="el-icon-edit-outline" /></div>
-        <div class="content">
-          <div class="title" v-html="data.title"></div>
-        </div>
-        <div class="footer">
-          <p>填空题</p>
-          <p><span>收录：</span><span>{{ data.createTime }}</span></p>
-          <p><span>难度：</span><span>{{ data.difficult }}</span></p>
-          <p><span>引用：</span><span>{{ data.useCount }}</span></p>
-          <div>
-            <p><i>解析</i></p>
-            <p><i>相似题</i></p>
-            <a href="javascript:;">加入试题篮</a>
+      <cus-skeleton :loading="loading">
+        <div class="item" v-for="data in dataset" :key="data.id">
+          <div class="update-icon"><i class="el-icon-edit-outline" /></div>
+          <div class="content">
+            <div class="title" v-html="data.title"></div>
+          </div>
+          <div class="footer">
+            <p>填空题</p>
+            <p><span>收录：</span><span>{{ data.createTime }}</span></p>
+            <p><span>难度：</span><span>{{ data.difficult }}</span></p>
+            <p><span>引用：</span><span>{{ data.useCount }}</span></p>
+            <div>
+              <p><i>解析</i></p>
+              <p><i @click="similarPreview(data.id)">相似题</i></p>
+              <a @click.prevent="addCart(data)" :class="{ active: !!cartList.find(i => i.id === data.id) }" />
+            </div>
           </div>
         </div>
-      </div>
-      <cus-skeleton :loading="loading"></cus-skeleton>
+      </cus-skeleton>
 
       <template v-if="!dataset.length && !loading">
         <cus-empty />
       </template>
-      <template v-else>
+      <template v-if="dataset.length && !loading">
         <el-pagination 
           v-model:current-page="pageAorder.current" 
           v-model:page-size="pageAorder.size" 
@@ -71,7 +72,7 @@ export default {
       total: 0
     });
 
-    let __params = {};
+    let __params: any = {};
 
     let loading = ref(false);
     const request = async (params?) => {
@@ -87,12 +88,24 @@ export default {
       loading.value = false;
     }
 
+    /* ------------- 排序设置 ------------- */
     const orderChange = (order) => {
       pageAorder.order === order ? (pageAorder.orderType = pageAorder.orderType === 1 ? 0 : 1) : (pageAorder.order = order);
       request();
     }
+    /* ------------- 查看相似题 ------------- */
+    const similarPreview = async (id) => {
+      let res = await axios.post<null, AxResponse>('/tiku/question/querySimilar', { id, subject: __params.subject, count: 10 })
+    }
 
-    return { request, loading, dataset, pageAorder, orderChange }
+    /* ------------- 加入购物车 ------------- */
+    let cartList: Ref<any[]> = ref([]);
+    const addCart = (data) => {
+      let index = cartList.value.findIndex(c => c.id === data.id);
+      index > -1 ? cartList.value.splice(index, 1) : cartList.value.push(data);
+    }
+
+    return { request, loading, dataset, pageAorder, orderChange, similarPreview, cartList, addCart }
   }
 }
 </script>
@@ -148,10 +161,10 @@ export default {
     padding: 20px 28px;
     .item {
       padding: 20px 20px 0;
-      box-shadow: 0px 2px 11px 0px rgba(23, 18, 45, 0.2);
       border-radius: 10px;
       border: 1px solid #EBEEF6;
       position: relative;
+      transition: all .25s;
       &:not(:last-child) {
         margin-bottom: 20px;
       }
@@ -175,8 +188,8 @@ export default {
           transform: scale(.95);
         }
       }
-      .content {
-      }
+      /* .content {
+      } */
       .footer {
         height: 36px;
         margin: 20px -20px 0;
@@ -195,6 +208,10 @@ export default {
           }
           i {
             color: #382A74;
+            cursor: pointer;
+            &:active {
+              opacity: .6;
+            }
           }
         }
         div {
@@ -209,10 +226,18 @@ export default {
             border: solid 1px #1AAFA7;
             border-radius: 12px;
             transition: all .25s;
+            cursor: pointer;
             &.active {
               color: #FAAD14;
               border: solid 1px #FAAD14;
               background: #FFF7E9;
+              &::before {
+                content: '移出试题篮'
+              }
+            }
+            &::before {
+              content: '加入试题篮';
+              display: inline-block;
             }
           }
         }

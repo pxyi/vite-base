@@ -48,6 +48,8 @@ $--background-color: #f2f2f2;
 @keyframes ant-skeleton-loading{0%{background-position:100% 50%}to{background-position:0 50%}}
 .cus__skeleton__loading {
   display: flex;
+  background: #fff;
+  padding: 10px 20px 20px;
   .cus__skeleton__header {
     padding-right: 16px;
     vertical-align: top;

@@ -1,6 +1,17 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 import Transition from './transition.vue';
 
+
+import { defineAsyncComponent, h } from 'vue';
+import TimeoutComponent from './../views/timeout.vue';
+
+const AsyncComponent = (loader) => defineAsyncComponent({
+  loader,
+  errorComponent: () => h('div', { id: 'timeout' }, '页面请求超时，请刷新页面重试！！！'),
+  loadingComponent: () => h('div', { id: 'loading' }, h('i', { class: 'el-icon-loading' })),
+  timeout: 3000,
+})
+
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
@@ -14,13 +25,13 @@ const routes: RouteRecordRaw[] = [
         path: 'index',
         name: 'index',
         meta: { title: '首页' },
-        component: () => import('/@/views/index/index.vue')
+        component: AsyncComponent(() => import('/@/views/index/index.vue'))
       },
       {
         path: 'testing',
         name: 'testing',
-        component: () => import('/@/views/test.vue'),
-        meta: { title: '测试' }
+        meta: { title: '测试' },
+        component: AsyncComponent(() => import('/@/views/test.vue'))
       },
       {
         path: 'teaching',
@@ -32,13 +43,13 @@ const routes: RouteRecordRaw[] = [
             path: 'test-paper',
             name: 'test-paper',
             meta: { title: '试卷库' },
-            component: () => import('/@/views/test-paper/index.vue')
+            component: AsyncComponent(() => import('/@/views/test-paper/index.vue'))
           },
           {
             path: 'question',
             name: 'question',
             meta: { title: '题库' },
-            component: () => import('/@/views/question/index.vue')
+            component: AsyncComponent(() => import('/@/views/question/index.vue'))
           }
         ]
       }
@@ -47,12 +58,12 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/login',
     name: 'login',
-    component: () => import('/@/views/login.vue')
+    component: AsyncComponent(() => import('/@/views/login.vue'))
   },
   {
     path: '/error',
     name: 'error',
-    component: () => import('/@/views/error.vue')
+    component: AsyncComponent(() => import('/@/views/error.vue'))
   },
   {
     path: '/:pathMatch(.*)*',

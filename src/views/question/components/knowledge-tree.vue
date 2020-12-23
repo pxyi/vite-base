@@ -1,5 +1,5 @@
 <template>
-  <el-input placeholder="按知识点搜索" prefix-icon="el-icon-search" v-model="filterText" class="search-input" />
+  <el-input placeholder="按知识点搜索" prefix-icon="el-icon-search" v-model="filterText" class="search-input" v-if="!hideSearch" />
 
   <el-tree 
     class="knowledge-tree"
@@ -21,6 +21,7 @@ import { AxResponse } from './../../../core/axios';
 import { debounce } from 'lodash'
 
 export default {
+  props: { hideSearch: { type: Boolean, default: () => false } },
   emits: ['check-change'],
   setup(props, { emit }) {
     let dateset: Ref<any[]> = ref([]);

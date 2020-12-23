@@ -1,6 +1,6 @@
 <template>
   <!-- <cus-query :nodes="nodeList"></cus-query> -->
-  <div></div>
+  <div>内容给过过过过过</div>
 </template>
 
 <script>
