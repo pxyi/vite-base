@@ -55,10 +55,10 @@
         </div>
         <div v-if="courseDatials" class="pagination">
           <el-pagination 
-            v-model:current-page="nearPage.current" 
-            v-model:page-size="nearPage.size" 
-            :total="nearPage.total"
-            @current-change="nearRequest()"
+            v-model:current-page="nearParams.current" 
+            v-model:page-size="nearParams.size" 
+            :total="nearParams.total"
+            @current-change="request()"
             layout="prev, pager, next"
           />
         </div>
@@ -103,7 +103,7 @@
         if (e == 1) {
           request(params)
         } else if (e == 0) {
-          nearRequest()
+          nearRequest(nearParams)
         }
       }
       
@@ -130,18 +130,18 @@
 
       //最近备课
       let courseDatials = ref([]) 
-      let nearPage = reactive({
+      let nearParams = {
         current: 1,
         size: 10,    
-      })
+      }
 
       let nearLoading = ref(true)
       let creatorId = store.getters.userInfo.user.id
-      const nearRequest = async () => {
+      const nearRequest = async (nearParams?) => {
         nearLoading.value = true
         let res = await axios.post<any,AxResponse>(
           '/admin/prepareLesson/queryPage',
-          { current: nearPage.current, size: nearPage.size, subjectCode: subjectId.value, creatorId: creatorId },
+          { ...nearParams, subjectCode: subjectId.value, creatorId: creatorId },
           { headers: { type: 1 }}
         );
           page.total = res.total;
@@ -150,11 +150,11 @@
       }
 
       // 学科改动，刷新数据
-      watch(subjectId, () => {request(params);nearRequest()});
+      watch(subjectId, () => {request(params);nearRequest(nearParams)});
 
       setTimeout(() => {
         // request(params)  
-        nearRequest()
+        nearRequest(nearParams)
       }, 100);
 
       // 课程详情弹窗
@@ -170,7 +170,7 @@
 
       return { 
         headerRef, params, request, courseList, loading, courseDatials, typeChange, listShow, nearRequest, godetails, nearLoading,
-        courseDetailFileList, page, nearPage
+        courseDetailFileList, page
        }
     }
   }

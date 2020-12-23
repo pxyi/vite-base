@@ -58,7 +58,7 @@
             v-model:current-page="nearPage.current" 
             v-model:page-size="nearPage.size" 
             :total="nearPage.total"
-            @current-change="nearRequest()"
+            @current-change="request()"
             layout="prev, pager, next"
           />
         </div>
@@ -137,11 +137,11 @@
 
       let nearLoading = ref(true)
       let creatorId = store.getters.userInfo.user.id
-      const nearRequest = async () => {
+      const nearRequest = async (nearPage?) => {
         nearLoading.value = true
         let res = await axios.post<any,AxResponse>(
           '/admin/prepareLesson/queryPage',
-          { current: nearPage.current, size: nearPage.size, subjectCode: subjectId.value, creatorId: creatorId },
+          { nearPage, subjectCode: subjectId.value, creatorId: creatorId },
           { headers: { type: 1 }}
         );
           page.total = res.total;
@@ -150,11 +150,11 @@
       }
 
       // 学科改动，刷新数据
-      watch(subjectId, () => {request(params);nearRequest()});
+      watch(subjectId, () => {request(params);nearRequest(nearParams)});
 
       setTimeout(() => {
         // request(params)  
-        nearRequest()
+        nearRequest(nearParams)
       }, 100);
 
       // 课程详情弹窗
@@ -170,7 +170,7 @@
 
       return { 
         headerRef, params, request, courseList, loading, courseDatials, typeChange, listShow, nearRequest, godetails, nearLoading,
-        courseDetailFileList, page, nearPage
+        courseDetailFileList, page
        }
     }
   }

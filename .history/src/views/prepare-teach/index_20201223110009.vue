@@ -58,7 +58,7 @@
             v-model:current-page="nearPage.current" 
             v-model:page-size="nearPage.size" 
             :total="nearPage.total"
-            @current-change="nearRequest()"
+            @current-change="request()"
             layout="prev, pager, next"
           />
         </div>

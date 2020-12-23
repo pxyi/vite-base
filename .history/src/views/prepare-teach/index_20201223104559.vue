@@ -23,7 +23,7 @@
           </div>
         </div>
         <div v-if="courseList.length == 0" class="noData">暂无数据</div>
-        <div v-if="courseList.length" class="pagination">
+        <div v-if="courseList.length">
           <el-pagination 
             v-model:current-page="page.current" 
             v-model:page-size="page.size" 
@@ -52,15 +52,6 @@
             </li>     
           </ul>
           <!-- <div  v-if="courseDatial.length == 0" class="noData">暂无数据</div> -->
-        </div>
-        <div v-if="courseDatials" class="pagination">
-          <el-pagination 
-            v-model:current-page="nearPage.current" 
-            v-model:page-size="nearPage.size" 
-            :total="nearPage.total"
-            @current-change="nearRequest()"
-            layout="prev, pager, next"
-          />
         </div>
       </div>
     </div>   
@@ -103,7 +94,7 @@
         if (e == 1) {
           request(params)
         } else if (e == 0) {
-          nearRequest()
+          nearRequest(nearParams)
         }
       }
       
@@ -130,18 +121,17 @@
 
       //最近备课
       let courseDatials = ref([]) 
-      let nearPage = reactive({
+      let nearParams = {
         current: 1,
         size: 10,    
-      })
-
+      }
       let nearLoading = ref(true)
       let creatorId = store.getters.userInfo.user.id
-      const nearRequest = async () => {
+      const nearRequest = async (nearParams?) => {
         nearLoading.value = true
         let res = await axios.post<any,AxResponse>(
           '/admin/prepareLesson/queryPage',
-          { current: nearPage.current, size: nearPage.size, subjectCode: subjectId.value, creatorId: creatorId },
+          { ...nearParams, subjectCode: subjectId.value, creatorId: creatorId },
           { headers: { type: 1 }}
         );
           page.total = res.total;
@@ -150,11 +140,11 @@
       }
 
       // 学科改动，刷新数据
-      watch(subjectId, () => {request(params);nearRequest()});
+      watch(subjectId, () => {request(params);nearRequest(nearParams)});
 
       setTimeout(() => {
-        // request(params)  
-        nearRequest()
+        request(params)  
+        nearRequest(nearParams)
       }, 100);
 
       // 课程详情弹窗
@@ -170,7 +160,7 @@
 
       return { 
         headerRef, params, request, courseList, loading, courseDatials, typeChange, listShow, nearRequest, godetails, nearLoading,
-        courseDetailFileList, page, nearPage
+        courseDetailFileList, page
        }
     }
   }
@@ -191,8 +181,7 @@
     border: 1px solid rgb(235, 240, 252);
     box-shadow: raba(91, 125, 255, 0.08) 0 1px 6px 0;
     border-radius: 6px;
-    padding: 5px 0px 50px 30px;
-    position: relative;
+    padding: 5px 0px 30px 30px;
     .course-list {
       width: 275px;
       float: left;
@@ -253,13 +242,9 @@
         }
       }
     }
+
     .course-list:hover {
       box-shadow: 0px 2px 11px 0px rgba(23, 18, 45, 0.2);
-    }
-    .pagination{
-      position: absolute;
-      right: 100px;
-      bottom: 10px;
     }
   }
   .near-list{
@@ -334,5 +319,5 @@
     }
     
   }
-  
+
 </style>
