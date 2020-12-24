@@ -1,7 +1,7 @@
 
 <template>
   <template ref="headerRef">
-    <HeaderRefComponent @type-change="query('dataType', $event)" @search="query('title', $event)" />
+    <HeaderRefComponent @type-change="query('dataType', $event)" @search="query('title', $event)" @add-success="contentRef.request()" />
   </template>
   <div class="question-container">
     <div class="knowledge-tree">

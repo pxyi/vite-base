@@ -1,16 +1,18 @@
 <template>
-  <el-input placeholder="按知识点搜索" prefix-icon="el-icon-search" v-model="filterText" class="search-input" v-if="!hideSearch" />
+  <cus-skeleton :loading="loading">
+    <el-input placeholder="按知识点搜索" prefix-icon="el-icon-search" v-model="filterText" class="search-input" v-if="!hideSearch" />
 
-  <el-tree 
-    class="knowledge-tree"
-    ref="knowledgeTree"
-    :data="dateset"
-    show-checkbox
-    node-key="id"
-    :props="{ children: 'childs', label: 'name' }"
-    :filter-node-method="filterNode"
-    @check="checkChange"
-  />
+    <el-tree 
+      class="knowledge-tree"
+      ref="knowledgeTree"
+      :data="dateset"
+      show-checkbox
+      node-key="id"
+      :props="{ children: 'childs', label: 'name' }"
+      :filter-node-method="filterNode"
+      @check="checkChange"
+    />
+  </cus-skeleton>
 </template>
 
 <script lang="ts">
@@ -24,10 +26,13 @@ export default {
   props: { hideSearch: { type: Boolean, default: () => false } },
   emits: ['check-change'],
   setup(props, { emit }) {
+    let loading = ref(true);
+
     let dateset: Ref<any[]> = ref([]);
     emitter.emit('effect', async (subjectId) => {
       let res = await axios.post<any, AxResponse>('/tiku/knowledge/queryTree', { subjectId });
       dateset.value = res.json;
+      loading.value = false;
     });
 
     /* 搜索 */
@@ -38,7 +43,7 @@ export default {
     
     const checkChange = (target, { checkedKeys }) => { emit('check-change', checkedKeys) }
 
-    return { filterText, dateset, filterNode, knowledgeTree, checkChange }
+    return { filterText, dateset, filterNode, knowledgeTree, checkChange, loading };
   }
 }
 </script>

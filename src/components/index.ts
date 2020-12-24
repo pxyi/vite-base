@@ -1,4 +1,5 @@
 import { App } from 'vue';
+import CusEditor from './editor/index.vue';
 import CusTree from './tree/index.vue';
 import CusList from './list/index.vue';
 import CusForm from './form/index.vue';
@@ -8,6 +9,7 @@ import CusQuery from './query/index.vue';
 import CusCondition from './condition/index.vue';
 
 const AppComponents: any = {
+  CusEditor,
   CusTree,
   CusList,
   CusForm,

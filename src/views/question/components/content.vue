@@ -14,40 +14,40 @@
         <div><i class="el-icon-view" />查看答案</div>
       </div>
     </div>
-    <div class="section">
-      <cus-skeleton :loading="loading">
-        <div class="item" v-for="data in dataset" :key="data.id">
-          <div class="update-icon"><i class="el-icon-edit-outline" /></div>
-          <div class="content">
-            <div class="title" v-html="data.title"></div>
-          </div>
-          <div class="footer">
-            <p>填空题</p>
-            <p><span>收录：</span><span>{{ data.createTime }}</span></p>
-            <p><span>难度：</span><span>{{ data.difficult }}</span></p>
-            <p><span>引用：</span><span>{{ data.useCount }}</span></p>
-            <div>
-              <p><i>解析</i></p>
-              <p><i @click="similarPreview(data.id)">相似题</i></p>
-              <a @click.prevent="addCart(data)" :class="{ active: !!cartList.find(i => i.id === data.id) }" />
+    <cus-skeleton :loading="loading">
+      <div class="section">
+          <div class="item" v-for="data in dataset" :key="data.id">
+            <div class="update-icon" @click="update(data.id)"><i class="el-icon-edit-outline" /></div>
+            <div class="content">
+              <div class="title" v-html="data.title"></div>
+            </div>
+            <div class="footer">
+              <p>{{ data.basicQuestionTypeName }}</p>
+              <p><span>收录：</span><span>{{ data.createTime }}</span></p>
+              <p><span>难度：</span><span>{{ data.difficult }}</span></p>
+              <p><span>引用：</span><span>{{ data.useCount }}</span></p>
+              <div>
+                <p><i>解析</i></p>
+                <!-- <p><i @click="similarPreview(data.id)">相似题</i></p> -->
+                <a @click.prevent="addCart(data)" :class="{ active: !!cartList.find(i => i.id === data.id) }" />
+              </div>
             </div>
           </div>
-        </div>
-      </cus-skeleton>
 
-      <template v-if="!dataset.length && !loading">
-        <cus-empty />
-      </template>
-      <template v-if="dataset.length && !loading">
-        <el-pagination 
-          v-model:current-page="pageAorder.current" 
-          v-model:page-size="pageAorder.size" 
-          :total="pageAorder.total"
-          @current-change="request()"
-          layout="prev, pager, next"
-        />
-      </template>
-    </div>
+        <template v-if="!dataset.length && !loading">
+          <cus-empty />
+        </template>
+        <template v-if="dataset.length && !loading">
+          <el-pagination 
+            v-model:current-page="pageAorder.current" 
+            v-model:page-size="pageAorder.size" 
+            :total="pageAorder.total"
+            @current-change="request()"
+            layout="prev, pager, next"
+          />
+        </template>
+      </div>
+    </cus-skeleton>
   </div>
 </template>
 
@@ -55,6 +55,8 @@
 import { ref, Ref, reactive } from 'vue';
 import axios from 'axios';
 import { AxResponse } from './../../../core/axios';
+import Modal from './../../../utils/modal';
+import updateComponent from './update.vue';
 
 const difficultFilter = (v) => ([{ name: '易', id: 11 }, { name: '较易', id: 12 }, { name: '中档', id: 13 }, { name: '较难', id: 14 }, { name: '难', id: 15 }].find(i => i.id === v)?.name);
 
@@ -105,7 +107,11 @@ export default {
       index > -1 ? cartList.value.splice(index, 1) : cartList.value.push(data);
     }
 
-    return { request, loading, dataset, pageAorder, orderChange, similarPreview, cartList, addCart }
+    const update = (id) => {
+      Modal.create({ title: '编辑题目', component: updateComponent, width: 950, props: { id } }).then(_ => request() );
+    }
+
+    return { request, loading, dataset, pageAorder, orderChange, similarPreview, cartList, addCart, update }
   }
 }
 </script>

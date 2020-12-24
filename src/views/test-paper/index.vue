@@ -47,7 +47,6 @@
 <script lang="ts">
 import { ref, onMounted, Ref } from 'vue';
 import HeaderRefComponent from './components/header-ref.vue';
-import QueryClassComponent from './components/query-class.vue';
 import emitter from './../../utils/mitt';
 import axios from 'axios';
 import { ElMessage, ElLoading } from 'element-plus'
@@ -58,7 +57,7 @@ import Screen from './../../utils/screen';
 import UpdateComponent from './update/index.vue';
 
 export default { 
-  components: { HeaderRefComponent, QueryClassComponent },
+  components: { HeaderRefComponent },
   setup() {
     let headerRef = ref();
     onMounted(() => emitter.emit('slot', headerRef));

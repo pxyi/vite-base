@@ -10,6 +10,7 @@ const create = (opt: DrawerCreate): Promise<any> => {
   let options = {
     title: opt.title || null,
     width: opt.width || 720,
+    maxWidth: opt.maxWidth || 'auto',
     component: opt.component === 'form' ? FormComponent : opt.component,
     props: opt.props || {},
     zIndex: opt.zIndex || 200,
@@ -21,9 +22,9 @@ const create = (opt: DrawerCreate): Promise<any> => {
 
   return new Promise((resolve) => {
 
-    const container = createElement('div');
+    const container = createElement('div', { className: `__drawer__${ Date.now() }` });
 
-    let drawerBox = createElement('div', { className: 'drawer-box', style: { width: options.width > 0 ? `${options.width}px` : options.width, zIndex: `${options.zIndex + 1}` } });
+    let drawerBox = createElement('div', { className: 'drawer-box', style: { width: options.width > 0 ? `${options.width}px` : options.width, maxWidth: options.maxWidth > 0 ? `${options.maxWidth}px` : options.maxWidth, zIndex: `${options.zIndex + 1}` } });
     let drawerBody = createElement('div', { className: 'drawer-body' });
 
     const remove = (val?) => {
@@ -62,13 +63,13 @@ const create = (opt: DrawerCreate): Promise<any> => {
 
     if (options.footed) {
       let saveOnClick = () => {
-        if (vm['save'] && vm['save'].constructor === Function) {
+        if (vm['save']) {
           new Promise((resolve, reject) => {
             vm['save'](resolve, reject);
             saveBtn.classList.add('loading');
             saveBtn.insertBefore(createElement('i', { className: 'el-icon-loading' }), saveBtn.children[0]);
-          }).then(remove).catch(err => {
-            saveBtn.querySelector('i').remove()
+          }).then((res) => remove(res || true)).catch(err => {
+            saveBtn.querySelector('i')?.remove()
             saveBtn.classList.remove('loading');
           })
         } else {
@@ -102,6 +103,7 @@ export default { create };
 interface DrawerCreate {
   title?: string;
   width?: number | string;
+  maxWidth?: number | string;
   component: Component | 'form';     // 子组件
   mask?: boolean;          // 是否展示遮罩
   zIndex?: number;
