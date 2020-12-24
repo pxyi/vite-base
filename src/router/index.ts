@@ -50,6 +50,12 @@ const routes: RouteRecordRaw[] = [
             name: 'question',
             meta: { title: '题库' },
             component: AsyncComponent(() => import('/@/views/question/index.vue'))
+          },
+          {
+            path: 'recording',
+            name: 'recording',
+            meta: { title: '批量录题' },
+            component: AsyncComponent(() => import('/@/views/recording/index.vue'))
           }
         ]
       }

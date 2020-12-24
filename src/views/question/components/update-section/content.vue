@@ -2,7 +2,7 @@
 <cus-skeleton :loading="loading">
   <div class="content">
     <div class="section">
-      <div class="label">题干{{ baseType }}</div>
+      <div class="label">题干</div>
       <div class="title" @click="log">这里填写题目描述</div>
       <cus-editor min-height="80px" v-model="formGroup.title"></cus-editor>
       <div class="tip" v-if="valid && !formGroup.title">请输入题目描述！</div>

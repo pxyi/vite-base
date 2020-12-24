@@ -37,8 +37,8 @@ const MenuList: RouterConf[] = [
         isLeaf: true
       },
       {
-        title: '教师管理',
-        key: '/teaching/teacher',
+        title: '批量录题',
+        key: '/teaching/recording',
         isLeaf: true
       },
       {

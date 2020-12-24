@@ -96,6 +96,7 @@ export default {
   text-align: right;
   cursor: pointer;
   img {
+    display: inline-block;
     width: 36px;
     vertical-align: middle;
   }

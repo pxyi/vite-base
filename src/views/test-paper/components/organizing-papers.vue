@@ -77,7 +77,6 @@ export default {
     }
 
     const save = (resolve, reject) => {
-      console.log(fileList.value)
       formRef.value.validate(valid => {
         valid ? resolve(valid) : reject();
       })

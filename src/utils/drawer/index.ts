@@ -31,9 +31,9 @@ const create = (opt: DrawerCreate): Promise<any> => {
       maskEl.classList.add('active');
       drawerBox.classList.add('active');
       setTimeout(() => {
+        app.unmount(drawerBody);
         document.body.removeChild(container);
       }, 500);
-      app.unmount(drawerBody);
       val && resolve(val);
     };
 

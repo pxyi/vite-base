@@ -1,5 +1,11 @@
 <template>
-  <div :id="`editor${instanceId}`" class="cus__editor" :class="{ 'is__focus': isFocus }" contenteditable="true" :style="{ minHeight, height }"></div>
+  <div 
+    :id="`editor${instanceId}`" 
+    class="cus__editor" 
+    :class="{ 'is__focus': isFocus, 'is__hide__border': hideBorder }" 
+    contenteditable="true" 
+    :style="{ minHeight, height }"
+  />
 </template>
 
 <script>
@@ -10,7 +16,8 @@ export default {
   props: {
     modelValue: String,
     height: String,
-    minHeight: String
+    minHeight: String,
+    hideBorder: Boolean
   },
   setup(props, { emit }) {
     let instanceId = ref(`${Math.random()}`.substring(2, 10));
@@ -54,6 +61,10 @@ const appendEditorJs = (resolve) => {
   transition: border-color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1) 0s;
   &.is__focus {
     border-color: #1aafa7;
+  }
+  &.is__hide__border {
+    padding: 0;
+    border-color: rgba($color: #fff, $alpha: 0);
   }
 }
 </style>

@@ -1,19 +1,109 @@
 <template>
-  <div class="cus__query__container">
-    <input type="text" style="display:none" />
-
-    <div class="query__cell" v-for="node in nodes" :key="node.key" :data-before="node.label">
-
-    </div>
+  <div class="cus__table__container">
+    <el-table v-loading="loading" :data="dataset">
+      <slot />
+    </el-table>
+    <template v-if="hasPage && dataset.length && page.total > page.size">
+      <el-pagination 
+        v-model:current-page="page.current" 
+        v-model:page-size="page.size" 
+        :total="page.total"
+        @current-change="request()"
+        layout="prev, pager, next"
+      />
+    </template>
   </div>
 </template>
 <script lang="ts">
+import { ref, reactive, watch, PropType } from 'vue';
+import axios from 'axios';
+import { AxResponse } from './../../core/axios';
+
 export default {
+  name: 'cus-table',
+  props: {
+    url: String,
+    method: {
+      type: String,
+      default: 'post',
+    },
+    size: {
+      type: String as PropType<'default' | 'medium' | 'small' | 'mini'>,
+      default: 'default'
+    },
+    dataSet: {
+      type: Array as PropType<any[]>,
+      default: () => []
+    },
+    autoRequest: {
+      type: Boolean,
+      default: true
+    },
+    default: {
+      type: Object,
+      default: () => ({})
+    },
+    init: {
+      type: Object,
+      default: () => ({})
+    },
+    hasPage: {
+      type: Boolean,
+      default: true
+    }
+  },
   setup(props) {
+    let dataset = ref(props.dataSet);
+
+    let loading = ref(false);
+
+    let page = reactive({
+      current: 1,
+      size: 10,
+      total: props.dataSet.length
+    });
+    watch(() => props.default, () => { page.current = 1; request() });
+
+    let __params = {};
+    const request = async (params?) => {
+      params && (page.current = 1, __params = params);
+      loading.value = true;
+      let res = await axios.post<any, AxResponse>(props.url!, { ...props.default, ...__params, current: page.current, size: page.size });
+      if (res.result) {
+        page.total = res.json.total;
+        dataset.value = res.json.records;
+      }
+      loading.value = false;
+    }
+    props.url && props.autoRequest && request(props.default);
     
+    return { dataset, page, request, loading }
   } 
 }
 </script>
 <style lang="scss" scoped>
-
+.cus__table__container {
+  background: #FFFFFF;
+  box-shadow: 0px -2px 6px 0px rgba(91, 125, 255, 0.08);
+  border-radius: 6px;
+  border: 1px solid #EBF0FC;
+  overflow: hidden;
+  :deep(.el-table__header-wrapper) {
+    th {
+      background: #fff;
+    }
+  }
+  :deep(.el-table__body-wrapper) {
+    .el-table__body tr td {
+      border-bottom: 0;
+    }
+  }
+  :deep(.el-table::before) {
+    display: none;
+  }
+  .el-pagination {
+    margin: 20px 0;
+    text-align: right;
+  }
+}
 </style>

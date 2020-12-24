@@ -55,7 +55,7 @@ export default {
   components: { KnowledgeTreeComponent },
   setup(props, { emit }) {
     let store = useStore();
-    let formGroup = reactive({
+    let formGroup: any = reactive({
       knowledgePoints: [],
       type: 2,
       difficult: 11,

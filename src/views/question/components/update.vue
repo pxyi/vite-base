@@ -5,8 +5,8 @@
 
 <script lang="ts">
 import { ref, Ref, reactive, computed, getCurrentInstance, onMounted } from 'vue';
-import HeaderComponent from './update-components/header.vue';
-import ContentComponent from './update-components/content.vue';
+import HeaderComponent from './update-section/header.vue';
+import ContentComponent from './update-section/content.vue';
 import axios from 'axios';
 import { AxResponse } from './../../../core/axios';
 import { useStore } from 'vuex';
@@ -46,7 +46,12 @@ export default {
     }
     const __init = (info) => {
       let { knowledgePoints, type, difficult, year, source, category, title, analysis, basicQuestionType } = info;
-      headerRef.value.formGroup = { knowledgePoints: knowledgePoints || [], type, difficult, year, source, category };
+      headerRef.value.formGroup.knowledgePoints = knowledgePoints || [];
+      headerRef.value.formGroup.type = type;
+      headerRef.value.formGroup.difficult = difficult;
+      headerRef.value.formGroup.year = year;
+      headerRef.value.formGroup.source = source;
+      headerRef.value.formGroup.category = category;
 
       contentRef.value.formGroup.title = title;
       contentRef.value.formGroup.analysis = analysis;

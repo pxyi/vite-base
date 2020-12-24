@@ -30,7 +30,6 @@ import HeaderRefComponent from './components/header-ref.vue';
 import ContentComponent from './components/content.vue';
 import KnowledgeTree from './components/knowledge-tree.vue';
 import emitter from './../../utils/mitt';
-import axios from 'axios';
 import { useStore } from 'vuex';
 
 export default {
