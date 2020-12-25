@@ -16,6 +16,10 @@ export default new Vuex.Store({
     'set_is_sync'(state, payload) {
       state.isSync = payload;
     },
+    'delete_data'(state, payload) {
+      state.focusData = null;
+      state.dataSet = state.dataSet.filter((i: {id}) => i.id !== payload);
+    },
     'reset'(state) {
       state.focusData = null;
       state.dataSet = [];

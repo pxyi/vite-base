@@ -23,7 +23,7 @@
           <div>
             <a>缺少答案</a>
             <a>重复率80%</a>
-            <i :class="[`el-icon-${data.loading ? 'loading' : 'delete'}`]" />
+            <i :class="[`el-icon-${data.loading ? 'loading' : 'delete'}`]" @click="remove(data)" />
           </div>
         </div>
       </div>
@@ -34,6 +34,8 @@
 <script lang="ts">
 import { ref, computed } from 'vue';
 import store from './../store';
+import axios from 'axios';
+
 export default {
   setup() {
     let dataset = computed(() => store.state.dataSet);
@@ -42,7 +44,13 @@ export default {
 
     const focusChange = (data) => store.commit('set_focus_data', data);
 
-    return { dataset, focusData, focusChange }
+    const remove = async (data) => { 
+      data.loading = true;
+      let res = await axios.post<null, { result: boolean }>('/tiku/question/delete', { id: data.id });
+      res.result && store.commit('delete_data', data.id);
+    }
+
+    return { dataset, focusData, focusChange, remove }
   }
 }
 </script>

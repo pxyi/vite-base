@@ -63,8 +63,8 @@
       </div>
     </div>
     <template v-if="data.questionSources">
-      <div class="source-box" v-for="s in data.questionSources" :key="s">
-        <h6>来源<span>1</span></h6>
+      <div class="source-box" v-for="(s, idx) in data.questionSources" :key="s">
+        <h6><span>来源{{ idx + 1 }}</span><i class="el-icon-circle-close" @click="delSource(idx)" /></h6>
         <div class="source-item">
           <el-select placeholder="选择年份" size="medium" v-model="s.year"></el-select>
           <el-select placeholder="选择来源" size="medium" v-model="s.dictSourceId"></el-select>
@@ -77,7 +77,7 @@
         </div>
       </div>
     </template>
-    <div class="add-source-btn"><el-button icon="el-icon-circle-plus" size="medium">添加来源</el-button></div>
+    <div class="add-source-btn"><el-button icon="el-icon-circle-plus" size="medium" @click="addSource">添加来源</el-button></div>
   </div>
 
   <div class="turn-sync-switch">
@@ -116,15 +116,26 @@ export default {
       sourceList: [ { name: '单元测试', id: 1 }, { name: '月考', id: 2 }, { name: '期中', id: 3 }, { name: '期末', id: 4 }, { name: '竞赛', id: 5 }, { name: '错题本', id: 6 } ],
       categoryList: [ { name: '真题', id: 1 }, { name: '好题', id: 2 }, { name: '常考题', id: 3 }, { name: '压轴题', id: 4 }, { name: '易错题', id: 5 } ],
     });
-    let subject = computed(() => baseStore.getters.subject.code).value;
-    let userId = computed(() => baseStore.getters.userInfo.user.id).value;
-    axios.post<null, AxResponse>('/tiku/questionType/queryTypeBySubject', { subject }).then(res => selectMap.questionTypeList = res.json );
-    axios.post<null, AxResponse>('/permission/user/userDataRules', { userId, subjectCode: subject }).then(res => {
-      selectMap.gradeList = res.json.grades;
-      selectMap.yearList = res.json.years;
-    });
+    (getters => {
+      let subject = computed(() => getters.subject.code).value;
+      let userId = computed(() => getters.userInfo.user.id).value;
+      axios.post<null, AxResponse>('/tiku/questionType/queryTypeBySubject', { subject }).then(res => selectMap.questionTypeList = res.json );
+      axios.post<null, AxResponse>('/permission/user/userDataRules', { userId, subjectCode: subject }).then(res => {
+        selectMap.gradeList = res.json.grades;
+        selectMap.yearList = res.json.years;
+      });
+    })(baseStore.getters);
 
-    return { data, dataset, index, indexChange, isSync, isSyncChange, selectMap }
+    const addSource = () => {
+      let init = {};
+      data.value.questionSources ? data.value.questionSources.push(init) : (data.value.questionSources = [ init ]);
+    }
+
+    const delSource = (index) => {
+      data.value.questionSources.splice(index, 1);
+    }
+
+    return { data, dataset, index, indexChange, isSync, isSyncChange, selectMap, addSource, delSource }
   }
 }
 </script>
@@ -192,6 +203,12 @@ export default {
     margin-bottom: 20px;
     h6 {
       margin-bottom: 10px;
+      i {
+        float: right;
+        color: #999;
+        font-size: 16px;
+        cursor: pointer;
+      }
     }
     .source-item {
       display: flex;

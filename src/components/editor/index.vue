@@ -26,16 +26,17 @@ export default {
 
     let isFocus = ref(false);
     onMounted(() => {
-      new Promise(resolve => {
-        let scriptDom = document.querySelector('#ckeditorScript');
-        !!scriptDom ? setTimeout(() => resolve(window.CKEDITOR), 1000 ) : appendEditorJs(resolve);
-      }).then(ck => {
+      // new Promise(resolve => {
+      //   let scriptDom = document.querySelector('#ckeditorScript');
+      //   !!scriptDom ? setTimeout(() => resolve(window.CKEDITOR), 1000 ) : appendEditorJs(resolve);
+      // }).then(ck => {
         editor = window.CKEDITOR.inline(`editor${instanceId.value}`);
-        editor.setData(props.modelValue || '')
+        editor.setData(props.modelValue || '');
+        editor.on('init', () => console.log('init'))
         editor.on('change', () => emit('update:modelValue', editor.getData()) );
         editor.on('focus', () => { emit('focus', editor.getData()); isFocus.value = true; } );
         editor.on('blur', () => { emit('blur', editor.getData()); isFocus.value = false; } );
-      })
+      // })
     });
 
     onUnmounted(() => editor.destroy());
