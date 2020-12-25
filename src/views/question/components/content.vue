@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="header">
+    <div class="fixed-header">
       <div class="cell" 
         @click="orderChange(cell.key)" 
         v-for="cell in [{key: 0, text: '上传时间'}, {key: 1, text: '试题难度'}, {key: 2, text: '引用次数'}]" 
@@ -11,43 +11,51 @@
       </div>
       <div class="statistics">
         <span>共计<i>{{ pageAorder.total }}</i>道相关试题</span>
-        <div><i class="el-icon-view" />查看答案</div>
+        <div @click="showAnswer = !showAnswer"><i class="el-icon-view" />查看答案</div>
       </div>
     </div>
-    <div class="section">
-      <cus-skeleton :loading="loading">
+    <cus-skeleton :loading="loading">
+      <div class="section">
         <div class="item" v-for="data in dataset" :key="data.id">
-          <div class="update-icon"><i class="el-icon-edit-outline" /></div>
+          <div class="update-icon" @click="update(data.id)"><i class="el-icon-edit-outline" /></div>
           <div class="content">
             <div class="title" v-html="data.title"></div>
           </div>
+          <div class="flex-box" v-show="showAnswer">
+            <div class="label">答案</div>
+            <div class="flex-main" v-html="data.answer"></div>
+          </div>
+          <div class="flex-box" v-show="data.showAnalysis">
+            <div class="label">解析</div>
+            <div class="flex-main" v-html="data.analysis"></div>
+          </div>
           <div class="footer">
-            <p>填空题</p>
+            <p>{{ data.basicQuestionTypeName }}</p>
             <p><span>收录：</span><span>{{ data.createTime }}</span></p>
             <p><span>难度：</span><span>{{ data.difficult }}</span></p>
             <p><span>引用：</span><span>{{ data.useCount }}</span></p>
             <div>
-              <p><i>解析</i></p>
-              <p><i @click="similarPreview(data.id)">相似题</i></p>
+              <p><i @click="data.showAnalysis = !data.showAnalysis">解析</i></p>
+              <!-- <p><i @click="similarPreview(data.id)">相似题</i></p> -->
               <a @click.prevent="addCart(data)" :class="{ active: !!cartList.find(i => i.id === data.id) }" />
             </div>
           </div>
         </div>
-      </cus-skeleton>
 
-      <template v-if="!dataset.length && !loading">
-        <cus-empty />
-      </template>
-      <template v-if="dataset.length && !loading">
-        <el-pagination 
-          v-model:current-page="pageAorder.current" 
-          v-model:page-size="pageAorder.size" 
-          :total="pageAorder.total"
-          @current-change="request()"
-          layout="prev, pager, next"
-        />
-      </template>
-    </div>
+        <template v-if="!dataset.length && !loading">
+          <cus-empty />
+        </template>
+        <template v-if="dataset.length && !loading">
+          <el-pagination 
+            v-model:current-page="pageAorder.current" 
+            v-model:page-size="pageAorder.size" 
+            :total="pageAorder.total"
+            @current-change="request()"
+            layout="prev, pager, next"
+          />
+        </template>
+      </div>
+    </cus-skeleton>
   </div>
 </template>
 
@@ -55,6 +63,8 @@
 import { ref, Ref, reactive } from 'vue';
 import axios from 'axios';
 import { AxResponse } from './../../../core/axios';
+import Modal from './../../../utils/modal';
+import updateComponent from './update.vue';
 
 const difficultFilter = (v) => ([{ name: '易', id: 11 }, { name: '较易', id: 12 }, { name: '中档', id: 13 }, { name: '较难', id: 14 }, { name: '难', id: 15 }].find(i => i.id === v)?.name);
 
@@ -62,6 +72,8 @@ export default {
   setup() {
 
     let dataset: Ref<any[]> = ref([]);
+
+    let showAnswer = ref(false);
 
     let pageAorder = reactive({
       order: 0,                   // 0：时间排序  1：试题难度  2：引用次数
@@ -81,7 +93,12 @@ export default {
       let res = await axios.post<null, AxResponse>(`/tiku/question/queryPage`, { ...__params, ...pageAorder}, { headers: { 'Content-Type': 'application/json' } });
       dataset.value = res.json.records.map(n => ({
          ...n, 
-         ...{ createTime: n.createTime.split('-').join('/'), difficult: difficultFilter(n.difficult) } 
+         ...{ 
+            createTime: n.createTime.split('-').join('/'), 
+            difficult: difficultFilter(n.difficult),
+            answer: n.basicQuestionType < 3 ? n.rightAnswer.map(a => String.fromCharCode(a.no + 64)).join('、') :
+                    n.basicQuestionType === 3 ? n.rightAnswer.map(a => a.no).join('、') || '-' : n.rightAnswer[0].content
+           } 
         })
       );
       pageAorder.total = res.json.total;
@@ -105,7 +122,11 @@ export default {
       index > -1 ? cartList.value.splice(index, 1) : cartList.value.push(data);
     }
 
-    return { request, loading, dataset, pageAorder, orderChange, similarPreview, cartList, addCart }
+    const update = (id) => {
+      Modal.create({ title: '编辑题目', component: updateComponent, width: 950, props: { id } }).then(_ => request() );
+    }
+
+    return { request, loading, dataset, pageAorder, orderChange, similarPreview, cartList, addCart, update, showAnswer }
   }
 }
 </script>
@@ -115,7 +136,7 @@ export default {
   flex: auto;
   display: flex;
   flex-direction: column;
-  .header {
+  & > .fixed-header {
     padding: 0 28px;
     color: #fff;
     line-height: 34px;
@@ -190,6 +211,24 @@ export default {
       }
       /* .content {
       } */
+      .flex-box {
+        font-size: 13px;
+        display: flex;
+        margin-top: 20px;
+        .label {
+          display: inline-block;
+          padding: 0 7px;
+          color: #3ABAB3;
+          font-size: 12px;
+          line-height: 20px;
+          background: rgba(58, 186, 179, 0.15);
+          border-radius: 4px;
+          margin-right: 8px;
+        }
+        .flex-main {
+          flex: auto;
+        }
+      }
       .footer {
         height: 36px;
         margin: 20px -20px 0;

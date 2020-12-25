@@ -23,7 +23,7 @@ CKEDITOR.editorConfig = function( config ) {
         //文本颜色     背景颜色
         ['TextColor', 'BGColor'],
         //全屏           显示区块
-        ['Maximize', '-']
+        ['Maximize']
     ];
     /*开启工具栏“图像”中文件上传功能，后面的url为图片上传要指向的的action或servlet*/
     config.filebrowserImageUploadUrl = "/test/system/ueditor/uploadimage";

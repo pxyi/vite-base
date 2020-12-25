@@ -23,7 +23,7 @@ const create = (opt: ModalCreate) => {
 
   return new Promise(resolve => {
 
-    const container = createElement('div');
+    const container = createElement('div', { className: `__modal__${ Date.now() }` });
     let maskEl = createElement('div', { className: 'modal-mask', style: { zIndex: `${options.zIndex}` }, on: { click: () => options.maskClosable && remove() } })
     options.mask && container.appendChild(maskEl);
     let modalBox = createElement('div', { className: 'modal-box', style: { width: `${options.width}px`, zIndex: `${options.zIndex + 1}` } });
@@ -44,12 +44,12 @@ const create = (opt: ModalCreate) => {
     if (options.footed) {
       let closeBtn = createElement('button', { className: 'modal-close-btn', on: { click: () => remove() } }, createElement('span', {}, '取消'));
       let saveOnClick = () => {
-        if (vm['save'] && vm['save'].constructor === Function) {
+        if (vm['save']) {
           new Promise((resolve, reject) => {
             vm['save'](resolve, reject);
             saveBtn.classList.add('loading');
             saveBtn.insertBefore(createElement('i', { className: 'el-icon-loading' }), saveBtn.children[0]);
-          }).then(remove).catch(err => {
+          }).then((res) => remove(res || true)).catch(err => {
             saveBtn.querySelector('i')?.remove()
             saveBtn.classList.remove('loading');
           })

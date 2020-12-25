@@ -1,7 +1,7 @@
 
 <template>
   <template ref="headerRef">
-    <HeaderRefComponent @type-change="query('dataType', $event)" @search="query('title', $event)" />
+    <HeaderRefComponent @type-change="query('dataType', $event)" @search="query('title', $event)" @add-success="contentRef.request()" />
   </template>
   <div class="question-container">
     <div class="knowledge-tree">
@@ -30,7 +30,6 @@ import HeaderRefComponent from './components/header-ref.vue';
 import ContentComponent from './components/content.vue';
 import KnowledgeTree from './components/knowledge-tree.vue';
 import emitter from './../../utils/mitt';
-import axios from 'axios';
 import { useStore } from 'vuex';
 
 export default {

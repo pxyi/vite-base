@@ -8,7 +8,7 @@ const create = (component, props = {}) => {
   
   return new Promise((resolve, reject) => {
 
-    let body = createElement('div', { style: { overflow: 'auto', height: '100%', background: '#fff' } });
+    let body = createElement('div', { className: `__screen__${ Date.now() }`, style: { overflow: 'auto', height: '100%', background: '#fff' } });
 
     let closeBtn = createElement('div', { 
       className: 'el-icon-back', 

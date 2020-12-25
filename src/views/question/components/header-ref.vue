@@ -33,7 +33,7 @@ export default {
     const searchHandle = () => emit('search', searchText);
 
     const add = () => {
-      Drawer.create({ title: '添加题目', width: 'calc(100% - 200px)', component: UpdateComponent });
+      Drawer.create({ title: '添加题目', width: 'calc(100% - 200px)', maxWidth: 1080, component: UpdateComponent }).then(_ => emit('add-success'));
     }
 
     return { classType, classList, classChange, searchText, searchHandle, add }
