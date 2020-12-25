@@ -1,7 +1,9 @@
 <template>
   <div class="paper__update__container">
     <div class="header">
-      <div class="tabs_box">{{ title }}</div>
+      <div class="tabs_box">
+        {{title}}
+      </div>
       <div class="btns">
         <el-button round @click="savePrepareClass" :disabled="prepareLesson === '' && prepareLesson.id === null " v-if="!prepareLesson.checkStatus || prepareLesson.checkStatus === 0">提交备课</el-button>
         <el-button round @click="savePrepareClass" v-if="prepareLesson.checkStatus === 1"  >已提交</el-button>
@@ -11,7 +13,7 @@
     <div class="content">
       <div class="content-top">
         <div class="course-img">
-          <img src="/@/assets/prepare-teach/course-bg.png" style="width: 130px" alt="">
+          <img src="/@/assets/prepare-teach/courseBg.png" style="width: 130px" alt="">
         </div>
         <div class="class-top">
           <h2>{{courseDto.courseName}}</h2>
@@ -31,8 +33,8 @@
          <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
           <el-tab-pane v-for="item in tabCountList" :key="item"  :name="item.nameKey">
           <template #label>
-            <span>{{ item.name }}</span>
-            <span class="num">{{ item.num }}</span>
+            <span>{{item.name}}</span>
+            <span class="num">{{item.num}}</span>
           </template>
             <div class="btn-box">
               <el-button type="primary" round @click="uploadMyPlan(item)" >上传我的教案</el-button>
@@ -50,7 +52,7 @@
             <div class="btn-group">
               <div class="btn-box">
                 <div>
-                  <el-button size="mini" icon="el-icon-search" @click="preview(item)" round >预览</el-button>
+                  <el-button size="mini" icon="el-icon-search" round >预览</el-button>
                 </div>
               </div>
               <div class="private">
@@ -85,7 +87,7 @@ export default {
     let close: any = inject('close')
     let activeName = ref('totalCount')
     console.log(props.id)
-    /*---------获取上部展示数据------------*/
+    // 获取上部展示数据
     let courseDto: any = ref({})
     let prepareLesson: any = ref({})
       axios.post<any,AxResponse>('/admin/prepareLesson/queryPrepareLessonByCourseIndexId', { courseIndexId: props.id}).then(res => {
@@ -175,7 +177,6 @@ export default {
         }
       }) 
     }
-
     return { 
       close, activeName, tabCountList, courseDto, request, allFileList, handleClick, prepareLesson, uploadMyPlan,
       tabCountRequest, uploadMyVideo, savePrepareClass, type

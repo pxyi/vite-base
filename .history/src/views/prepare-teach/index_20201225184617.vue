@@ -93,7 +93,6 @@
       flex-wrap: wrap ;
     }
     :deep(.cus__list__item){
-      min-width: 200px;
       border-radius: 10px;
       border: 1px solid #DEE4F1;
       padding: 20px;
