@@ -3,4 +3,8 @@ node_modules
 dist
 *.local
 yarn.lock
+<<<<<<< HEAD
+=======
+.history
+>>>>>>> 8bd7444ace74e6ffc08a1a5dcc088b03db98a143
 .idea

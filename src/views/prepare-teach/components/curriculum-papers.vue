@@ -52,7 +52,7 @@
             <div class="btn-group">
               <div class="btn-box">
                 <div>
-                  <el-button size="mini" icon="el-icon-search" @click="preview(item)" round >预览</el-button>
+                  <el-button size="mini" icon="el-icon-search" round >预览</el-button>
                 </div>
               </div>
               <div class="private">
@@ -64,12 +64,6 @@
             </div>
           </el-tab-pane>
         </el-tabs>
-        <DataPreview
-          v-if="isPreview"
-          :dataName="dataName"
-          :dataPath="dataPath"
-          :ext="ext"
-        />
       </div> 
     </div>
   </div>
@@ -82,7 +76,6 @@ import Modal from './../../../utils/modal';
 import MyPlanUpload from './my-plan-upload.vue'
 import MyVideoUpload from './my-video-upload.vue'
 import { ElMessage } from 'element-plus'
-import DataPreview from "../model-box.vue/index.vue";
 
 
 export default {
@@ -90,7 +83,6 @@ export default {
     id: String,
     title: String,
   },
-  components: { DataPreview },
   setup(props) {
     let close: any = inject('close')
     let activeName = ref('totalCount')
@@ -185,25 +177,9 @@ export default {
         }
       }) 
     }
-
-    let isPreview = ref(false)
-    let dataName = ref()
-    let dataPath = ref()
-    let ext = ref()
-
-    const preview = (item) => {
-      setTimeout(() => {
-        dataName.value = item.fileName;
-        dataPath.value  = item.filePath;
-        ext.value  = item.ext;
-        isPreview.value = true;
-      },1000)
-      
-    }
-
     return { 
       close, activeName, tabCountList, courseDto, request, allFileList, handleClick, prepareLesson, uploadMyPlan,
-      tabCountRequest, uploadMyVideo, savePrepareClass, type, preview, isPreview, dataName, dataPath, ext
+      tabCountRequest, uploadMyVideo, savePrepareClass, type
     }
   }
 }
