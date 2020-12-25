@@ -1,0 +1,20 @@
+<template>
+    <div class="right-content">
+内容区域
+    </div>
+</template>
+
+<script tang='ts'>
+    export default {
+        setup() {
+            
+        }
+    }
+</script>
+
+<style lang="scss" scoped>
+.right-content{
+    background-color: #fff;
+    height: 100%;
+}
+</style>

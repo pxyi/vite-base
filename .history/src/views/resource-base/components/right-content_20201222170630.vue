@@ -1,0 +1,327 @@
+<template>
+   <div class="right-content">
+        <div class="right-content-sortBox">
+          <ul>
+            <el-upload
+              style="display: inline-block"
+              :action="active"
+              :disabled="isShow"
+              :on-change="okUpDate"
+              :file-list="upDateList"
+              :accept='upLoadDate'
+            >
+              <el-tooltip placement="bottom">
+                <div slot="content" class="tooltip">
+                  课件支持的格式：.ppt .pptx <br />讲义支持的格式：.doc .docx
+                  .pdf<br />
+                  说课视频支持的格式：.mp4（H264）<br />其他支持的格式：.png，.jpg
+                  .jpeg .mp3，zip，rar<br />
+                </div>
+                <li @click="uploadInfo('zl')">上传资料</li>
+              </el-tooltip>
+              <el-tooltip placement="bottom">
+                <div slot="content" class="tooltip">
+                  标准教案支持的格式：doc，docx。
+                </div>
+                <li class="upJiaoAn" @click="uploadInfo('ja')">上传教案</li>
+              </el-tooltip>
+            </el-upload>
+          </ul>
+        </div>
+        <div class="right-content-searchWrap">
+          <div class="right-content-searchWrap-header">
+            <div class="tab">
+              <nav>
+                <a
+                  v-for="(item, index) in fileTypeAndCount"
+                  :style="{ 'z-index': item.id === activeId ? 9 : 1 }"
+                  :class="{ active: item.id == activeId }"
+                  :key="index"
+                  @click.prevent="selectActive(item)"
+                >
+                  {{ item.name }}
+                  <span class="num">
+                    {{ item.count }}
+                  </span>
+                </a>
+              </nav>
+            </div>
+            <!-- <ul>
+              <li
+                v-for="(item,index) in switchDataTypeList"
+                :key="index"
+                :class="{'headerActive':switchDataTypeIndex === index}"
+                @click="switchDataType(item,index)"
+              >{{item.name}}</li>
+            </ul>
+            <div>
+              <div class="hoverWrap" ref="ele_hoverWrap">
+                <img src="../../assets/images/shape.png" alt />
+                <inputSearch
+                  class="inputSearchStyle"
+                  ref="ele_inputSearchStyle"
+                  @getData="getValue"
+                  :placeholderStr="'按名称搜索'"
+                />
+              </div>
+            </div> -->
+          </div>
+        </div>
+
+        <div class="right-content-mainList" v-if="tableData.length">
+          <div class="tableWrap">
+            <div class="tableHeader">
+              <span class="nameOrType">文件名</span>
+              <div class="right-content-sortBox-rightBox">
+                <span>
+                  共计<span>{{ total }}</span
+                  >个相关文件
+                </span>
+              </div>
+              <!-- <span class="dataTotal">共查出{{total}}个资料</span> -->
+              <!-- <span class="uploadedBy">上传人</span>
+              <span class="createTime">更新时间</span>
+              <span class="visibleRange">可见范围</span> -->
+            </div>
+            <ul class="tableMain">
+              <li
+                v-for="(item, index) in tableData"
+                :key="index"
+                @mouseleave="mouseleaveisShow(item)"
+              >
+                <div class="thumbnailWrap">
+                  <img
+                    v-if="
+                      item.ext !== 'mp3' &&
+                        item.ext !== 'zip' &&
+                        item.ext !== 'rar'
+                    "
+                    class="imgCover"
+                    :src="`/test${item.imgPath}`"
+                    alt=""
+                  />
+                  <img
+                    v-else
+                    src="../../assets/images/icon_d44l6421sgu/weizhiwenjian.png"
+                    alt=""
+                  />
+                </div>
+                <!-- <p class="dataName">{{item.fileName}} -->
+                <!-- <el-input
+                    @blur="renameBlur(item)"
+                    size="small"
+                    v-if="item.renameBol"
+                    v-model="item.fileName"
+                    type="textarea"
+                    :autosize="{ minRows: 2, maxRows: 2}"
+                    placeholder="请输入内容"
+                    style="width: 70%;max-height:50px"
+                  ></el-input> -->
+                <p class="content-list-box-item-title">
+                  {{ item.fileName }}.{{ item.ext }}
+                </p>
+                <!-- </p> -->
+
+                <div
+                  class="changeTdOperation"
+                  v-show="item.isShow"
+                  @mouseleave="mouseleaveisShow(item)"
+                >
+                  <span @click="handleClick(item, 1)">重命名</span>
+                  <span @click="handleClick(item, 2)">下载</span>
+                  <span @click="handleClick(item, 3)">删除</span>
+                  <div class="triangle"></div>
+                </div>
+
+                <div class="floating-layer">
+                  <div
+                    class="imageOperation"
+                    @click="changeTdOperation(item)"
+                  ></div>
+                  <div class="btn-group">
+                    <div>
+                      <el-button size="mini" @click="preview(item)" round
+                        ><img
+                          src="../../assets/images/previewIcon.png"
+                          alt
+                        />预览</el-button
+                      >
+                    </div>
+                    <div>
+                      <el-button size="mini" @click="handleClick(item, 0)" round
+                        >添加到备课</el-button
+                      >
+                    </div>
+                  </div>
+                  <div class="private">
+                    <i
+                      class="el-icon-lock"
+                      v-if="item.isPublic == 0"
+                      style="font-size:12px"
+                    ></i>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div class="paginationFY">
+            <el-pagination
+              background
+              layout="prev, pager, next"
+              @current-change="changeCurrent"
+              :page-size="pageParam.size"
+              :total="total"
+              :hide-on-single-page="true"
+            >
+            </el-pagination>
+          </div>
+        </div>
+        <p v-else style="text-align:center;margin-top: 10%;">暂无数据</p>
+      </div>
+</template>
+
+<script lang="ts">
+import { ref, reactive, Ref } from "vue";
+import axios from "axios";
+import { useStore } from "vuex";
+import { AxResponse } from "../../../core/axios";
+import emitter from "../../../utils/mitt";
+import { ElMessage, ElLoading } from "element-plus";
+export default {
+  setup() {
+    let params = reactive({
+      chapterId: [],
+      courseId: "",
+      ext: null,
+      fileName: "",
+      isPublic: 1,
+      lastLevelId: [],
+      subject: "chinese3",
+    });
+    let tableData: Ref<any> = ref([]);
+    axios
+      .post<any, AxResponse>(
+        `admin/material/queryPage?size=${20}&current=${1}`,
+        params,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            type: "1",
+          },
+        }
+      )
+      .then((res) => {
+        tableData.value = res.json.records;
+        console.log(tableData);
+      });
+    let isShow = ref(false);
+
+    const mouseleaveisShow = (item) => {
+      item = isShow;
+      console.log(item.value);
+    };
+
+    return { tableData, mouseleaveisShow };
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+.right-content {
+  background-color: #fff;
+  height: 100%;
+  .tableMain {
+    > li {
+      width: 160px;
+      height: 148px;
+      border-radius: 4px;
+      float: left;
+      margin-right: 19px;
+      margin-top: 24px;
+      box-shadow: 2px 2px 4px grey;
+      margin: 14px 8px;
+      position: relative;
+      list-style: none;
+      .thumbnailWrap {
+        margin: 12px auto 8px;
+        overflow: hidden;
+        width: 117px;
+        height: 87px;
+        box-shadow: 1px 1px 2px grey;
+        img.imgCover {
+          object-fit: cover;
+          width: 100%;
+          height: 100%;
+        }
+      }
+      .content-list-box-item-title {
+        width: 140px;
+        margin: 0 auto;
+        font-size: 14px;
+        font-family: PingFangSC-Regular, PingFang SC;
+        font-weight: 400;
+        color: #333333;
+        overflow: hidden;
+        word-break: break-all;
+        word-wrap: break-word;
+        // white-space: pre-wrap;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+        text-align: center;
+        margin-top: 15px;
+        line-height: 15px;
+      }
+      .imageOperation {
+        position: absolute;
+        right: 4px;
+        top: 4px;
+        cursor: pointer;
+        width: 16px;
+        height: 16px;
+        background: url("../../assets/images/icon_d44l6421sgu/caozuo.png")
+          no-repeat center;
+      }
+      .changeTdOperation {
+        width: 168px;
+        position: absolute;
+        right: -25px;
+        top: 28px;
+        z-index: 9;
+
+        background: #fff;
+        width: 170px;
+        box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.06);
+        border: 1px solid #e4e7ed;
+        span {
+          width: 100%;
+          float: left;
+          display: block;
+          height: 34px;
+          line-height: 34px;
+          text-indent: 19px;
+          font-weight: 400;
+          color: #606266;
+          cursor: pointer;
+        }
+        span:hover {
+          color: #1aafa7;
+          background: #e9f7f7;
+        }
+        .triangle {
+          display: inline-block;
+          border: 5px solid transparent;
+          border-bottom-color: #fff;
+          position: absolute;
+          top: -10px;
+          right: 30px;
+          box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.06);
+        }
+      }
+    }
+
+  }
+}
+</style>

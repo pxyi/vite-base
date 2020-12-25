@@ -1,0 +1,110 @@
+<template>
+  <div class="tab">
+    <nav>
+      <a
+        v-for="(item, index) in fileTypeAndCount"
+        :style="{ 'z-index': item.id === activeId ? 9 : 1 }"
+        :class="{ active: item.id == activeId }"
+        :key="index"
+      >
+        {{ item.name }}
+        <span class="num">
+          {{ item.count }}
+        </span>
+      </a>
+    </nav>
+  </div>
+</template>
+
+<script lang="ts">
+import { ref, reactive, Ref } from "vue";
+import axios from "axios";
+import { useStore } from "vuex";
+import { AxResponse } from "../../../core/axios";
+import emitter from "../../../utils/mitt";
+import { ElMessage, ElLoading } from "element-plus";
+export default {
+  setup() {
+    let activeId: Number = 5;
+    let params = reactive({
+      subject: "chinese3",
+      chapterId: [],
+      isPublic: 1,
+    });
+    let fileTypeAndCount: Array<any> = reactive([]);
+    console.log(params);
+
+    axios
+      .post<any, AxResponse>("/admin/material/queryCountByType", params, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((res) => {
+        // console.log(res);
+        if (res.result) {
+          res.json.allCount = eval(Object.values(res.json).join("+"));
+          let i = 1;
+          for (let keys in res.json) {
+            let obj = {
+              name: keys,
+              count: res.json[keys],
+              id: i,
+              type: [],
+              order: 0,
+            };
+            switch (keys) {
+              case "allCount":
+                obj.type = [];
+                obj.order = 1;
+                obj.name = "全部";
+                break;
+              case "courseWareCount":
+                obj.order = 2;
+                obj.name = "课件";
+                break;
+              case "handoutCount":
+                obj.order = 3;
+                obj.name = "讲义";
+                break;
+              case "teachplanCount":
+                obj.order = 4;
+                obj.name = "教案";
+                break;
+              case "mediaCount":
+                obj.order = 5;
+                obj.name = "说课视频";
+                break;
+              case "otherCount":
+                obj.order = 6;
+                obj.name = "其他";
+                break;
+            }
+            fileTypeAndCount.push(obj);
+            i += 1;
+          }
+          fileTypeAndCount.sort((a, b) => a.order - b.order);
+        }
+        fileTypeAndCount.values = res.json;
+        // console.log(res.json);
+      });
+
+    return { fileTypeAndCount, activeId };
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+.tab{
+  nav{
+    a{
+      width: 141px;
+      height: 50px;
+      // background-color: skyblue;
+      display: inline-block;
+      text-align: center;
+      line-height: 50px;
+    }
+  }
+}
+</style>
