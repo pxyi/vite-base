@@ -66,7 +66,6 @@ export default {
   },
   components: { ElForm, ElFormItem, ElInput, ElInputNumber, ElSelect, ElOption, ElDatePicker, ElRadioGroup, ElRadio },
   setup(props) {
-    let pca = () => import('area-data');
     let formGroup = reactive(props.nodes.reduce((group, node) => {
       if (node.type === 'between') {
         group[node.keys[0]] = props.data[node.keys[0]];
