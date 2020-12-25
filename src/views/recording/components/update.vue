@@ -5,7 +5,7 @@
       <el-button round>保留原卷</el-button>
     </div>
     <div class="content">
-      <div class="main"><MainComponent /></div>
+      <div class="main" @click="blur"><MainComponent /></div>
       <div class="toolbar"><ToolbarComponent /></div>
     </div>
   </div>
@@ -25,10 +25,16 @@ export default {
   setup(props) {
     let loading = ElLoading.service();
 
+    store.commit('reset');
+
     axios.post<null, { json: any[] }>('/admin/questionImportLog/queryQuestionByImportId', { importId: props.id }).then(res => {
       store.commit('set_data_set', res.json[1]);
       loading.close();
-    })
+    });
+
+    const blur = () => store.commit('set_focus_data', null);
+
+    return { blur };
 
   }
 }
@@ -58,9 +64,11 @@ export default {
   .content {
     display: flex;
     flex: 1 1 60px;
+    height: 100%;
     background: #F4F5F9;
+    overflow: hidden;
     .main {
-      flex: auto;
+      flex: 1 1 340px;
       height: 100%;
       padding: 20px;
       overflow: auto;

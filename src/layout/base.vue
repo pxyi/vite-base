@@ -50,7 +50,6 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-
 .el-container {
   height: 100%;
 }

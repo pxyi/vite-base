@@ -65,6 +65,7 @@ const appendEditorJs = (resolve) => {
   &.is__hide__border {
     padding: 0;
     border-color: rgba($color: #fff, $alpha: 0);
+    background: rgba($color: #fff, $alpha: 0);
   }
 }
 </style>
