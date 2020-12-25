@@ -1,6 +1,6 @@
 <template>
   <div class="tree__container">
-    <tree-item v-for="item in dataset" :key="item.key" :data="item" />
+    <tree-item v-for="item in dataset" :key="item.key" :data="item"  />
   </div>
 </template>
 
@@ -60,6 +60,8 @@ export default {
 
     let dataset = computed(() => store.state.data);
 
+    console.log(props.dataSet);
+    
     return { dataset }
   }
 }

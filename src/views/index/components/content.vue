@@ -10,7 +10,7 @@
       <div class="m__menu_cell">备授课</div>
       <div class="m__menu_cell">我的班级</div>
       <div class="m__menu_cell">题库</div>
-      <div class="m__menu_cell">资料库</div>
+      <div class="m__menu_cell" >资料库</div>
       <div class="m__menu_cell">试卷库</div>
       <div class="m__menu_cell">课程管理</div>
     </div>

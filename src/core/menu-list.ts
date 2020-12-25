@@ -46,6 +46,11 @@ const MenuList: RouterConf[] = [
         key: '/teaching/role',
         isLeaf: true
       },
+      {
+        title: '资料库',
+        key: '/teaching/resource-base',
+        isLeaf: true
+      },
     ]
   },
   {
