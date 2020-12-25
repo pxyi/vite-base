@@ -68,6 +68,8 @@ const mapping = [
   { text: '来源', key: 'sourceList' },
   { text: '题类', key: 'categoryList' },
   { text: '知识点', key: 'lnowledgeList' },
+  { text: '学期', key: 'termList' },
+  { text: '班型', key: 'courseTypeList' },
 ]
 
 export default {
@@ -151,6 +153,7 @@ const getCondition = (userId, subjectCode, nodeList): Promise<any> => {
           res.json.bookVersions && (condition.bookVersionList = [{ name: '全部', id: null }, ...res.json.bookVersions ]);
           res.json.courseTypes && (condition.courseTypeList = [{ name: '全部', id: null }, ...res.json.courseTypes ]);
           res.json.terms && (condition.termList = [{ name: '全部', id: null }, ...res.json.terms ]);
+
         }
       });
       resolve(condition)

@@ -47,6 +47,18 @@ const MenuList: RouterConf[] = [
         isLeaf: true
       },
     ]
+  },
+  {
+    title: '日常教学',
+    key: '/daily',
+    icon: import('./../assets/menu/icon-3.png'),
+    children: [
+      {
+        title: '班级备授课',
+        key: '/daily/prepare-teach',
+        isLeaf: true
+      },
+    ]
   }
 ]
 

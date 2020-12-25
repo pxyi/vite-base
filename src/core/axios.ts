@@ -63,6 +63,7 @@ export interface AxResponse {
   record?: any;
 }
 
+
 let requestMap = {};
 const requestAbort = function (url, data, params, cancel) {
   /* 请求地址存在 */
