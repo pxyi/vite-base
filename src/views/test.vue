@@ -3,7 +3,7 @@
   <div>内容给过过过过过</div>
 </template>
 
-<script>
+<script lang="ts">
 export default {
   setup(props, ctx) {
     let nodeList = [

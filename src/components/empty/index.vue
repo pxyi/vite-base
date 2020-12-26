@@ -4,7 +4,7 @@
     <p><slot>暂无数据</slot></p>
   </div>
 </template>
-<script>
+<script lang="ts">
 export default {
   name: 'cus-empty'
 }
@@ -12,6 +12,7 @@ export default {
 <style lang="scss" scoped>
 .cus__empty__container {
   text-align: center;
+  padding: 20px;
   div {
     height: 100px;
     margin-bottom: 8px;

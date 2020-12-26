@@ -40,7 +40,7 @@ export default {
     let store = useStore();
 
     let type = ref(null);
-    let typeList = [ { name: '手动录入', id: null }, { name: '批量录入', id: 2 }, { name: '第三方录入', id: 1 } ];
+    let typeList = [ { name: '批量录入', id: null }, { name: '第三方录入', id: 1 } ];
     const classChange = (e) => { type.value = e; emit('type-change', e) };
 
     let showRule = ref(false);

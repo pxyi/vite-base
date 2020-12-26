@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="header">
-      <el-button round>保存并返回</el-button>
+      <el-button :loading="saveLoading" round @click="save">保存并返回</el-button>
       <el-button round>保留原卷</el-button>
     </div>
     <div class="content">
@@ -12,12 +12,13 @@
 </template>
 
 <script lang="ts">
-import { ref, provide } from 'vue';
+import { ref, computed, inject, getCurrentInstance } from 'vue';
 import { ElMessage, ElLoading } from 'element-plus';
 import store from './store';
 import axios from 'axios';
 import MainComponent from './update-section/main.vue';
 import ToolbarComponent from './update-section/toolbar.vue';
+import { cloneDeep } from 'lodash';
 
 export default {
   components: { MainComponent, ToolbarComponent },
@@ -27,14 +28,54 @@ export default {
 
     store.commit('reset');
 
+    let focusData = computed(() => store.state.focusData);
+
+    let dataset = computed(() => store.state.dataSet);
+
     axios.post<null, { json: any[] }>('/admin/questionImportLog/queryQuestionByImportId', { importId: props.id }).then(res => {
-      store.commit('set_data_set', res.json[1]);
+      let questions = res.json[1].map(data => {
+        if (data.basicQuestionType === 2 || data.basicQuestionType === 3 || data.basicQuestionType === 9 || data.basicQuestionType === 10) {
+          let f = data.basicQuestionType === 2 ? ';' : ''
+          data.answer = data.rightAnswer ? data.rightAnswer.map(i => i.content).join(f) : '';
+        } else {
+          data.answer = data.rightAnswer ? data.rightAnswer[0].content : '';
+        }
+        data.questionSources && data.questionSources.map(i => { i.provinceCity = i.areaId ? [ i.provinceId, i.cityId, i.areaId ] : null; return i; })
+        return data;
+      })
+      store.commit('set_error_list', res.json[0]);
+      store.commit('set_data_set', questions);
       loading.close();
     });
 
-    const blur = () => store.commit('set_focus_data', null);
+    const blur = () => store.dispatch('focus_data_change', null);
 
-    return { blur };
+    let saveLoading = ref(false);
+    const save = async () => {
+      saveLoading.value = true;
+      let questions = cloneDeep(dataset.value).map(data => {
+        if (data.basicQuestionType === 2 || data.basicQuestionType === 3 || data.basicQuestionType === 9 || data.basicQuestionType === 10) {
+          if (data.answer) { data.answer = data.answer.replace(/<.*?>/g, '').replace(/[\r\n]/g, '') }
+          let f = data.basicQuestionType === 3 ? (data.answer.includes(';') ? ';' : '；') : '';
+          data.rightAnswer = data.answer.split(f).filter(i => !!i).map((a, idx) => ({ no: idx + 1, content: a }));
+        } else if (data.answer) {
+          data.rightAnswer = [ {no: 1, content: data.answer } ]
+        }
+        data.questionSources && data.questionSources.length && data.questionSources.map(i => {
+          if (i.provinceCity) {
+            i.provinceId = i.provinceCity[0];
+            i.cityId = i.provinceCity[1];
+            i.areaId = i.provinceCity[2];
+          };
+          return i;
+        })
+        return data;
+      })
+      await axios.post('/tiku/question/batchSaveQuestion', { questionImportLogId: props.id, questions }, { headers: { 'Content-Type': 'application/json' } });
+      (document.querySelector('.el-icon-back') as any).click();
+    }
+
+    return { blur, save, saveLoading };
 
   }
 }

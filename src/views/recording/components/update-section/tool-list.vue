@@ -1,5 +1,5 @@
 <template>
-  <div class="tool-list-content">
+  <div class="tool-list-content" v-if="!data">
     <h4>共解析出 {{ questionList.length }} 题</h4>
     <ul>
       <li v-for="(data, idx) in questionList" :key="data.id">
@@ -11,15 +11,17 @@
 </template>
 
 <script lang="ts">
-import { ref, computed } from 'vue';
+import { ref, Ref, computed } from 'vue';
 import store from './../store';
 export default {
   setup() {
     let questionList = computed(() => store.state.dataSet );
 
+    let data: Ref<any> = computed(() => store.state.focusData);
+
     let setFocusData = (data) => store.commit('set_focus_data', data);
 
-    return { questionList, setFocusData }
+    return { questionList, setFocusData, data }
   }
 }
 </script>

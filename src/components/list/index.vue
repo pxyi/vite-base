@@ -7,7 +7,7 @@
         <div class="cus__list__actions"><slot name="actions" :data="node" /></div>
       </div>
     </div>
-
+    <cus-empty v-if="!list.length && !loading" />
     <template v-if="hasPage && list.length">
       <el-pagination 
         v-model:current-page="page.current" 
@@ -90,9 +90,6 @@ export default {
   border: 1px solid #EBF0FC;
   box-shadow: 0px 1px 6px 0px rgba(91, 125, 255, 0.08);
   background: #fff;
-  .cus__list__main {
-    min-height: 120px;
-  }
   .cus__list__item {
     display: flex;
     padding: 16px 20px;

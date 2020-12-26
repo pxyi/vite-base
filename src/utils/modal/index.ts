@@ -69,7 +69,7 @@ const create = (opt: ModalCreate) => {
       modalBox.classList.add('active');
       setTimeout(() => {
         app.unmount(modalBody);
-        document.body.removeChild(container);
+        container && document.body.removeChild(container);
       }, 500);
       val && resolve(val);
     };
