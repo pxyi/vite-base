@@ -56,8 +56,9 @@ export default {
       contentRef.value.formGroup.title = title;
       contentRef.value.formGroup.analysis = analysis;
       contentRef.value.baseType = basicQuestionType;
+
       if (basicQuestionType < 3) {
-        contentRef.value.options = info.option;
+        contentRef.value.options = info.option.map(i => {i.checked = !!info.rightAnswer.find(a => a.no === i.no); return i;});
       } else if (basicQuestionType === 3) {
         contentRef.value.options = info.rightAnswer;
       } else {
