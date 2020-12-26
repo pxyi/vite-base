@@ -2,7 +2,8 @@
   <div class="toolbar-container">
     <div class="title">{{ isItem && isItem.id ? '设置标签' : '题目列表' }}</div>
     <!-- <transition name="fade" :duration="500"> -->
-      <component :is="isItem && isItem.id ? 'ToolItem' : 'ToolList'" />
+    <ToolItem />
+    <ToolList />
     <!-- </transition> -->
   </div>
 </template>

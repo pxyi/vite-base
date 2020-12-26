@@ -1,53 +1,55 @@
 <template>
   <el-form :model="formGroup" :rules="rules" ref="formRef" :style="{ width }" label-width="80px" class="cus__form__container">
     <input type="text" style="display:none" />
-    <el-form-item v-for="node in nodes" :key="node.key" :label="node.label" :prop="node.key">
-      <template v-if="node.type === 'input'">
-        <el-input clearable v-model="formGroup[node.key]" :placeholder="node.placeholder || `请输入${node.label}`" />
-      </template>
-      <template v-else-if="node.type === 'number'">
-        <el-input-number clearable controls-position="right" v-model="formGroup[node.key]" :placeholder="node.placeholder || `请输入${node.label}`" />
-      </template>
-      <template v-else-if="node.type === 'select'">
-        <el-select clearable :multiple="node.multiple" v-model="formGroup[node.key]" :placeholder="node.placeholder || `请选择${node.label}`">
-          <el-option v-for="option in node.options" :key="option[node.valueKey || 'id']" :label="option[node.labelKey || 'name']" :value="option[node.valueKey || 'id']" :disabled="option.disabled" />
-        </el-select>
-      </template>
-      <template v-else-if="node.type === 'radio'">
-        <el-radio-group  v-model="formGroup[node.key]">
-          <el-radio v-for="option in node.options" :key="option[node.valueKey || 'id']" :label="option[node.valueKey || 'id']" :disabled="option.disabled">{{ option[node.labelKey || 'name'] }}</el-radio>
-        </el-radio-group>
-      </template>
-      <template v-else-if="node.type === 'checkbox'">
-        <el-checkbox-group  v-model="formGroup[node.key]">
-          <el-checkbox v-for="option in node.options" :key="option[node.valueKey || 'id']" :label="option[node.valueKey || 'id']" :disabled="option.disabled">{{ option[node.labelKey || 'name'] }}</el-checkbox>
-        </el-checkbox-group>
-      </template>
-      <template v-else-if="node.type === 'cascader'">
-        <el-cascader v-model="formGroup[node.key]" :options="node.options" :placeholder="node.placeholder || `请选择${node.label}`" :props="{value: node.valueKey || 'id', label: node.labelKey || 'name', children: node.childKey || 'child'}" />
-      </template>
-      <template v-else-if="node.type === 'datepicker'">
-        <el-date-picker type="date" :value-format="node.format || 'yyyy-MM-dd'" v-model="formGroup[node.key]" :placeholder="node.placeholder || `请选择${node.label}`" />
-      </template>
-      <template v-else-if="node.type === 'rangepicker'">
-        <el-date-picker type="daterange" :value-format="node.format || 'yyyy-MM-dd'"
-          range-separator="~" v-model="formGroup[node.key]"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-        />
-      </template>
-      <template v-else-if="node.type === 'between'">
-        <el-input readonly value="~">
-          <template #prepend>
-            <el-input-number controls-position="right" clearable style="width: 100%" :model-value="formGroup[node?.keys[0]]" @update:modelValue="(e) => formGroup[node?.keys[0]] = e" placeholder="开始" />
-          </template>
-          <template #append>
-            <el-input-number controls-position="right" clearable style="width: 100%"  :model-value="formGroup[node?.keys[1]]" @update:modelValue="(e) => formGroup[node?.keys[1]] = e" placeholder="结束" />
-          </template>
-        </el-input>
-      </template>
-      <template v-else><div style="display: none">隐藏项</div></template>
-    </el-form-item>
+    <template v-for="node in nodes" :key="node.key">
+      <el-form-item :label="node.label" :prop="node.key" v-if="node.type !== 'hidden'">
+        <template v-if="node.type === 'input'">
+          <el-input clearable v-model="formGroup[node.key]" :placeholder="node.placeholder || `请输入${node.label}`" :disabled="node.disabled" />
+        </template>
+        <template v-else-if="node.type === 'number'">
+          <el-input-number clearable controls-position="right" v-model="formGroup[node.key]" :placeholder="node.placeholder || `请输入${node.label}`" />
+        </template>
+        <template v-else-if="node.type === 'select'">
+          <el-select clearable :multiple="node.multiple" v-model="formGroup[node.key]" :placeholder="node.placeholder || `请选择${node.label}`">
+            <el-option v-for="option in node.options" :key="option[node.valueKey || 'id']" :label="option[node.labelKey || 'name']" :value="option[node.valueKey || 'id']" :disabled="option.disabled" />
+          </el-select>
+        </template>
+        <template v-else-if="node.type === 'radio'">
+          <el-radio-group  v-model="formGroup[node.key]">
+            <el-radio v-for="option in node.options" :key="option[node.valueKey || 'id']" :label="option[node.valueKey || 'id']" :disabled="option.disabled">{{ option[node.labelKey || 'name'] }}</el-radio>
+          </el-radio-group>
+        </template>
+        <template v-else-if="node.type === 'checkbox'">
+          <el-checkbox-group  v-model="formGroup[node.key]">
+            <el-checkbox v-for="option in node.options" :key="option[node.valueKey || 'id']" :label="option[node.valueKey || 'id']" :disabled="option.disabled">{{ option[node.labelKey || 'name'] }}</el-checkbox>
+          </el-checkbox-group>
+        </template>
+        <template v-else-if="node.type === 'cascader'">
+          <el-cascader v-model="formGroup[node.key]" :options="node.options" :placeholder="node.placeholder || `请选择${node.label}`" :props="{value: node.valueKey || 'id', label: node.labelKey || 'name', children: node.childKey || 'child'}" />
+        </template>
+        <template v-else-if="node.type === 'datepicker'">
+          <el-date-picker type="date" :value-format="node.format || 'yyyy-MM-dd'" v-model="formGroup[node.key]" :placeholder="node.placeholder || `请选择${node.label}`" />
+        </template>
+        <template v-else-if="node.type === 'rangepicker'">
+          <el-date-picker type="daterange" :value-format="node.format || 'yyyy-MM-dd'"
+            range-separator="~" v-model="formGroup[node.key]"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+          />
+        </template>
+        <template v-else-if="node.type === 'between'">
+          <el-input readonly value="~">
+            <template #prepend>
+              <el-input-number controls-position="right" clearable style="width: 100%" :model-value="formGroup[node?.keys[0]]" @update:modelValue="(e) => formGroup[node?.keys[0]] = e" placeholder="开始" />
+            </template>
+            <template #append>
+              <el-input-number controls-position="right" clearable style="width: 100%"  :model-value="formGroup[node?.keys[1]]" @update:modelValue="(e) => formGroup[node?.keys[1]] = e" placeholder="结束" />
+            </template>
+          </el-input>
+        </template>
+        <template v-else><div style="display: none">隐藏项</div></template>
+      </el-form-item>
+    </template>
   </el-form>
 </template>
 <script lang="ts">

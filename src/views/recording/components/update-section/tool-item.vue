@@ -1,5 +1,5 @@
 <template>
-  <div class="tool-item-content">
+  <div class="tool-item-content" v-if="data">
     <h4>
       <i class="el-icon-arrow-left" @click.stop="indexChange(-1)" :class="{ 'is__disabled': index === 0 }" />
       <span>第<i>{{ index + 1 }}</i>题</span>
@@ -24,7 +24,7 @@
         <div class="flex-cell">
           <div class="tool-label">题型</div>
           <div class="tool-control">
-            <el-select size="medium" placeholder="选择题型" v-model="data.type" v-if="selectMap.questionTypeList.length">
+            <el-select size="medium" placeholder="选择题型" v-model="data.type" v-if="selectMap.questionTypeList.length" @change="typeChange">
               <el-option v-for="option in selectMap.questionTypeList" :key="option.jyQuestionType" :value="option.jyQuestionType" :label="option.jyQuestionTypeName" />
             </el-select>
           </div>
@@ -53,9 +53,17 @@
           <div class="tool-label">知识点</div>
           <div class="tool-control">
             <el-popover placement="bottom-start" :width="220">
-              <KnowledgeComponent @check-change="data.knowledgePoints = $event" />
+              <el-tree 
+                class="knowledge-tree"
+                :data="knowledgeList"
+                ref="knowledgeRef"
+                show-checkbox
+                node-key="id"
+                :props="{ children: 'childs', label: 'name' }"
+                @check="(target, { checkedKeys }) => { data.knowledgePoints = checkedKeys; }"
+              />
               <template #reference>
-                <el-input :model-value="data.knowledgePoints && data.knowledgePoints.length ? `已选择${data.knowledgePoints.length}项` : null" readonly placeholder="选择知识点" size="medium" />
+                <el-input @click="setTreeKey(data)" :model-value="data.knowledgePoints && data.knowledgePoints.length ? `已选择${data.knowledgePoints.length}项` : null" readonly placeholder="选择知识点" size="medium" />
               </template>
             </el-popover>
           </div>
@@ -63,30 +71,40 @@
       </div>
     </div>
     <template v-if="data.questionSources">
-      <div class="source-box" v-for="s in data.questionSources" :key="s">
-        <h6>来源<span>1</span></h6>
+      <div class="source-box" v-for="(s, idx) in data.questionSources" :key="s">
+        <h6><span>来源{{ idx + 1 }}</span><i class="el-icon-circle-close" @click="delSource(idx)" /></h6>
         <div class="source-item">
-          <el-select placeholder="选择年份" size="medium" v-model="s.year"></el-select>
-          <el-select placeholder="选择来源" size="medium" v-model="s.dictSourceId"></el-select>
+          <el-select placeholder="选择年份" size="medium" v-model="s.year">
+            <el-option v-for="option in selectMap.YEAR" :key="option.id" :value="option.id" :label="option.name" />
+          </el-select>
+          <el-select placeholder="选择来源" size="medium" v-model="s.dictSourceId">
+            <el-option v-for="option in selectMap.QUES_SOURCE" :key="option.id" :value="option.id" :label="option.name" />
+          </el-select>
         </div>
         <div class="source-item">
-          <el-select placeholder="选择省市区" size="medium"></el-select>
+          <el-cascader placeholder="选择省市区" 
+            v-model="s.provinceCity" 
+            :props="{ lazy: true, lazyLoad: getProvinceCity, label: 'name', value: 'id' }" 
+            @change="getSchoolList($event, s)"
+          />
         </div>
         <div class="source-item">
-          <el-select placeholder="选择学校" size="medium" v-model="s.publicSchoolId"></el-select>
+          <el-select placeholder="选择学校" size="medium" v-model="s.publicSchoolId">
+            <el-option v-for="option in s.schoolList" :key="option.id" :value="option.id" :label="option.name" />
+          </el-select>
         </div>
       </div>
     </template>
-    <div class="add-source-btn"><el-button icon="el-icon-circle-plus" size="medium">添加来源</el-button></div>
+    <div class="add-source-btn"><el-button icon="el-icon-circle-plus" size="medium" @click="addSource">添加来源</el-button></div>
   </div>
 
-  <div class="turn-sync-switch">
+  <div class="turn-sync-switch" v-if="data">
     <span>同步标签设置到所有题目</span><el-switch :modelValue="isSync" @update:modelValue="isSyncChange" />
   </div>
 </template>
 
 <script lang="ts">
-import { ref, Ref, computed, reactive } from 'vue';
+import { ref, Ref, computed, reactive, watch } from 'vue';
 import store from './../store';
 import axios from 'axios';
 import { AxResponse } from './../../../../core/axios';
@@ -105,7 +123,7 @@ export default {
     const isSyncChange = () => store.commit('set_is_sync', !isSync.value);
 
     const indexChange = (n: number) => {
-      store.commit('set_focus_data', dataset.value[index.value + n]);
+      store.dispatch('focus_data_change', dataset.value[index.value + n]);
     }
 
     let selectMap: any = reactive({
@@ -115,16 +133,61 @@ export default {
       yearList: [],
       sourceList: [ { name: '单元测试', id: 1 }, { name: '月考', id: 2 }, { name: '期中', id: 3 }, { name: '期末', id: 4 }, { name: '竞赛', id: 5 }, { name: '错题本', id: 6 } ],
       categoryList: [ { name: '真题', id: 1 }, { name: '好题', id: 2 }, { name: '常考题', id: 3 }, { name: '压轴题', id: 4 }, { name: '易错题', id: 5 } ],
+      YEAR: [],
+      QUES_SOURCE: [],
+      provinceList: []
     });
-    let subject = computed(() => baseStore.getters.subject.code).value;
-    let userId = computed(() => baseStore.getters.userInfo.user.id).value;
-    axios.post<null, AxResponse>('/tiku/questionType/queryTypeBySubject', { subject }).then(res => selectMap.questionTypeList = res.json );
-    axios.post<null, AxResponse>('/permission/user/userDataRules', { userId, subjectCode: subject }).then(res => {
-      selectMap.gradeList = res.json.grades;
-      selectMap.yearList = res.json.years;
-    });
+    let knowledgeList = ref([]);
+    (getters => {
+      let subject = computed(() => getters.subject.code).value;
+      let userId = computed(() => getters.userInfo.user.id).value;
+      axios.post<null, AxResponse>('/tiku/questionType/queryTypeBySubject', { subject }).then(res => selectMap.questionTypeList = res.json );
+      axios.post<null, AxResponse>('/permission/user/userDataRules', { userId, subjectCode: subject }).then(res => {
+        selectMap.gradeList = res.json.grades;
+        selectMap.yearList = res.json.years;
+      });
+      axios.post<any, AxResponse>('/tiku/knowledge/queryTree', { subjectId: subject }).then(res => knowledgeList.value = res.json );
 
-    return { data, dataset, index, indexChange, isSync, isSyncChange, selectMap }
+      axios.post<null, AxResponse>('/system/dictionary/queryDictByCodes', { typeCodesStr: 'YEAR,QUES_SOURCE' }).then(res => {
+        selectMap.YEAR = res.json.YEAR;
+        selectMap.QUES_SOURCE = res.json.QUES_SOURCE;
+      });
+    })(baseStore.getters);
+
+    const getProvinceCity = async ({ data }, resolve) => {
+      let res = await axios.post<null, AxResponse>('/system/area/queryByParentId', { parentId: data.id ? data.id : null });
+      resolve(res.json);
+    }
+
+    const getSchoolList = async (e, source) => {
+      let res = await axios.post<null, AxResponse>('/admin/publicSchool/queryAll', { areaId: e[2] });
+      source.schoolList = res.json;
+    }
+
+    watch(data, () => {
+      if (data.value && data.value.questionSources) {
+        data.value.questionSources.map(source => source.areaId && !source.schoolList && getSchoolList(source.provinceCity, source));
+      }
+    })
+
+    const addSource = () => {
+      data.value.questionSources ? data.value.questionSources.push({}) : (data.value.questionSources = [ {} ]);
+    }
+
+    const delSource = (index) => {
+      data.value.questionSources.splice(index, 1);
+    }
+
+    const typeChange = () => {
+      data.value.basicQuestionType = selectMap.questionTypeList.find(i => i.jyQuestionType === data.value.type).toolQuestionType;
+    }
+
+    let knowledgeRef = ref();
+    const setTreeKey = (data) => knowledgeRef.value.setCheckedKeys(data.knowledgePoints || []);
+
+
+
+    return { data, dataset, index, indexChange, isSync, isSyncChange, selectMap, addSource, delSource, knowledgeList, typeChange, knowledgeRef, setTreeKey, getProvinceCity, getSchoolList }
   }
 }
 </script>
@@ -192,6 +255,12 @@ export default {
     margin-bottom: 20px;
     h6 {
       margin-bottom: 10px;
+      i {
+        float: right;
+        color: #999;
+        font-size: 16px;
+        cursor: pointer;
+      }
     }
     .source-item {
       display: flex;
@@ -219,6 +288,12 @@ export default {
   padding: 0 20px;
   .el-switch {
     float: right;
+  }
+}
+
+.knowledge-tree {
+  .el-tree-node__content {
+    height: 32px !important;
   }
 }
 </style>

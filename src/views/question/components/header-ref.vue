@@ -26,7 +26,7 @@ import UpdateComponent from './update.vue';
 export default {
   setup(props, { emit }) {
     let classType = ref(2);
-    let classList = [ { name: '区域精品', id: 2 }, { name: '我的题库', id: 3 }, { name: '菁优网', id: 1 } ];
+    let classList = [ { name: '区域精品', id: 2 }, { name: '我的题库', id: 3 }, { name: '学科网', id: 1 } ];
     const classChange = (e) => { classType.value = e; emit('type-change', e) };
 
     let searchText = ref(null);

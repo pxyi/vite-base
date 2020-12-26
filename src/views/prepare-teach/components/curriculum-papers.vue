@@ -50,7 +50,7 @@
             <div class="btn-group">
               <div class="btn-box">
                 <div>
-                  <el-button size="mini" icon="el-icon-search" @click="preview(item)" round >预览</el-button>
+                  <el-button size="mini" icon="el-icon-search" round >预览</el-button>
                 </div>
               </div>
               <div class="private">
@@ -175,7 +175,10 @@ export default {
         }
       }) 
     }
+<<<<<<< HEAD
 
+=======
+>>>>>>> dev
     return { 
       close, activeName, tabCountList, courseDto, request, allFileList, handleClick, prepareLesson, uploadMyPlan,
       tabCountRequest, uploadMyVideo, savePrepareClass, type

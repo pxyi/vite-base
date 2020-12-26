@@ -2,14 +2,14 @@
 <cus-skeleton :loading="loading">
   <div class="content">
     <div class="section">
-      <div class="label">题干</div>
+      <div class="label">题干{{ baseType }}</div>
       <div class="title" @click="log">这里填写题目描述</div>
-      <cus-editor min-height="80px" v-model="formGroup.title"></cus-editor>
+      <cus-editor min-height="80px" v-model="formGroup.title" placeholder="请输入题干"></cus-editor>
       <div class="tip" v-if="valid && !formGroup.title">请输入题目描述！</div>
     </div>
     <div class="section" v-if="baseType < 4">
-      <div class="label">选项</div>
-      <div class="title">单/多选题的选项范围从 2 到 20 </div>
+      <div class="label">{{ baseType === 3 ? '答案' : '选项' }}</div>
+      <div class="title">单/多选题、填空题的选项范围从 2 到 20 </div>
       <div class="group">
         <ul>
           <li 
@@ -23,7 +23,7 @@
             <div class="tip" v-if="valid && !node.content">请输入题目描述！</div>
             <i class="el-icon-close" v-if="options.length > 2" @click="deleteOption(idx)" />
           </li>
-          <li v-show="options.length < 10" @click="addOption">
+          <li v-show="options.length < 20" @click="addOption">
             <el-button icon="el-icon-circle-plus-outline" size="medium" round type="primary">添加一个选项</el-button>
           </li>
         </ul>

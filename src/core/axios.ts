@@ -25,24 +25,24 @@ axios.interceptors.request.use((res: AxiosRequestConfig) => {
 
 /* ----------------- 返回结果拦截, 如未登录直接跳转到登录页 ----------------- */
 axios.interceptors.response.use(res => {
-  // if (res.data.code && res.data.code === 403) {
-  //   useRouter().push('/login');
-  //   ElMessage({ type: 'warning', message: res.data.message });
-  // }
   /* 1s 内禁止重复请求 */
   // setTimeout(() => { delete requestMap[res.config.url as string]; }, 1000);
   return res.data;
 }, err => {
   ElLoading.service().close();
-  if (axios.isCancel(err)) {
-    let [url, reason] = err.message.split('##');
-    console.error(`${url}`, reason === 'Duplicate' ? '因请求重复被取消' : '被新请求覆盖');
-  } else if (err.response.status === 403) {
-    location.hash = 'login';
-    ElMessage({ type: 'warning', message: '登录失效，请重新登录' });
-  } else {
-    requestMap = {};
-    ElMessage({ type: 'error', message: '服务器开小差了，请稍后再试~！' });
+  try {
+    if (axios.isCancel(err)) {
+      let [url, reason] = err.message.split('##');
+      console.error(`${url}`, reason === 'Duplicate' ? '因请求重复被取消' : '被新请求覆盖');
+    } else if (err.response.status === 403) {
+      location.hash = 'login';
+      ElMessage({ type: 'warning', message: '登录失效，请重新登录' });
+    } else {
+      requestMap = {};
+      ElMessage({ type: 'error', message: '服务器开小差了，请稍后再试~！' });
+    }
+  } catch (error) {
+    ElMessage({ type: 'error', message: '系统错误，请稍后再试或联系管理员~！' });
   }
   return err;
 });
@@ -50,7 +50,6 @@ axios.interceptors.response.use(res => {
 export default {
   install: (vue: App) => { vue.use(VueAxios, axios) }
 }
-
 
 const stringify = (obj) => {
   return Object.entries(obj).map(i => i.join('=')).join('&')
@@ -62,7 +61,6 @@ export interface AxResponse {
   json?: any;
   record?: any;
 }
-
 
 let requestMap = {};
 const requestAbort = function (url, data, params, cancel) {

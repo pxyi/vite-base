@@ -1,29 +1,30 @@
 <template>
   <div class="main-container">
     <div class="fixed">
-      <h2>检查区：</h2><div><i>2</i><span>处错误，请参照提示修改</span><a>查看</a></div>
+      <h2>检查区：</h2><div v-if="errorList.length"><i>{{ errorList.length }}</i><span>处错误，请参照提示修改</span><a>查看</a></div>
     </div>
     <div class="main-content">
       <div class="item" @click.stop :class="{ 'is__focus': focusData?.id === data.id }" v-for="data in dataset" :key="data.id">
         <div class="mask" @click.stop="focusChange(data)"></div>
         <div class="title">
-          <cus-editor v-model="data.title" hide-border />
+          <cus-editor v-model="data.title" hide-border placeholder="请输入题干" />
         </div>
         <div class="answer">
           <h6>答案</h6>
+          <cus-editor v-model="data.answer" hide-border placeholder="请输入答案" />
         </div>
         <div class="analysis">
           <h6>解析</h6>
-          <cus-editor v-model="data.analysis" hide-border />
+          <cus-editor v-model="data.analysis" hide-border placeholder="请输入题目解析" />
         </div>
         <div class="footer">
           <h4>{{ data.questionTypeName }}</h4>
-          <p><span>知识点：</span><i>有理数</i>><i>有理数定义</i>><i>人认识有理数</i></p>
+          <p><span>知识点：</span><i>{{ data.knowledgePoints ? `已选择${data.knowledgePoints.length}项` : '-' }}</i></p>
           <p><span>难度：</span><i>{{ data.difficult ? [ { name: '易', id: 11 }, { name: '较易', id: 12 }, { name: '中档', id: 13 }, { name: '较难', id: 14 }, { name: '难', id: 15 } ].find(i => i.id === data.difficult).name : '-' }}</i></p>
           <div>
-            <a>缺少答案</a>
+            <a v-show="data.failReason">{{ data.failReason }}</a>
             <a>重复率80%</a>
-            <i :class="[`el-icon-${data.loading ? 'loading' : 'delete'}`]" />
+            <i :class="[`el-icon-${data.loading ? 'loading' : 'delete'}`]" @click="remove(data)" />
           </div>
         </div>
       </div>
@@ -34,15 +35,25 @@
 <script lang="ts">
 import { ref, computed } from 'vue';
 import store from './../store';
+import axios from 'axios';
+
 export default {
   setup() {
     let dataset = computed(() => store.state.dataSet);
+
+    let errorList = computed(() => store.state.errorList);
 
     let focusData = computed(() => store.state.focusData);
 
     const focusChange = (data) => store.commit('set_focus_data', data);
 
-    return { dataset, focusData, focusChange }
+    const remove = async (data) => { 
+      data.loading = true;
+      let res = await axios.post<null, { result: boolean }>('/tiku/question/delete', { id: data.id });
+      res.result && store.commit('delete_data', data.id);
+    }
+
+    return { dataset, errorList, focusData, focusChange, remove }
   }
 }
 </script>
@@ -153,7 +164,6 @@ export default {
           line-height: 20px;
           text-align: center;
           border-radius: 4px;
-          margin-right: 10px;
         }
         & > div {
           flex: 1 1 38px;

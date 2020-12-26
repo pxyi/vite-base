@@ -52,6 +52,18 @@ const routes: RouteRecordRaw[] = [
             component: AsyncComponent(() => import('/@/views/question/index.vue'))
           },
           {
+            path: 'test-paper',
+            name: 'test-paper',
+            meta: { title: '试卷库' },
+            component: () => import('/@/views/test-paper/index.vue')
+          },
+          {
+            path: 'resource-base',
+            name: 'resource-base',
+            meta: { title: '资料库' },
+            component: () => import('/@/views/resource-base/index.vue')
+          },
+          {
             path: 'recording',
             name: 'recording',
             meta: { title: '批量录题' },
@@ -70,8 +82,7 @@ const routes: RouteRecordRaw[] = [
             name: 'prepare-teach',
             meta: { title: '班级备授课' },
             component: AsyncComponent(() => import('/@/views/prepare-teach/index.vue'))
-          }
-         
+          },
         ]
       },
     ]

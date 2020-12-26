@@ -12,7 +12,7 @@ const create = (opt: ModalCreate) => {
     width: opt.width || 720,
     component: opt.component === 'form' || !opt.component ? ModalForm : opt.component,
     props: opt.props || {},
-    zIndex: opt.zIndex || 200,
+    zIndex: opt.zIndex || 2000,
     mask: typeof opt.mask === 'undefined' ? true : opt.mask,
     maskClosable: typeof opt.maskClosable === 'undefined' ? true : opt.maskClosable,
     closable: typeof opt.closable === 'undefined' ? true : opt.closable,
@@ -22,7 +22,6 @@ const create = (opt: ModalCreate) => {
   }
 
   return new Promise(resolve => {
-
     const container = createElement('div', { className: `__modal__${ Date.now() }` });
     let maskEl = createElement('div', { className: 'modal-mask', style: { zIndex: `${options.zIndex}` }, on: { click: () => options.maskClosable && remove() } })
     options.mask && container.appendChild(maskEl);
@@ -69,7 +68,7 @@ const create = (opt: ModalCreate) => {
       modalBox.classList.add('active');
       setTimeout(() => {
         app.unmount(modalBody);
-        document.body.removeChild(container);
+        container && document.body.removeChild(container);
       }, 500);
       val && resolve(val);
     };
@@ -80,7 +79,6 @@ const create = (opt: ModalCreate) => {
     app.use(ElementPlus);
     app.provide('close', remove);
     const vm = app.mount(modalBody);
-
     document.body.appendChild(container);
 
   })
