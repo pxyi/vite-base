@@ -10,7 +10,7 @@ import axios from 'axios';
 import { useStore } from 'vuex';
 import { AxResponse } from './../../../../core/axios';
 export default {
-  props: ['questions'],
+  props: ['questions', 'id'],
   setup(props) {
     let store = useStore();
 
@@ -41,8 +41,13 @@ export default {
             sourceFrom: 4 
           },
           valid
-        ), { headers: { 'Content-Type': 'application/json' } })
-        resolve(res)
+        ), { headers: { 'Content-Type': 'application/json' } });
+        if (res.result) {
+          await axios.post<null, AxResponse>('/admin/questionImportLog/bindQuestionImportLogPaper', { importLogId: props.id, paperId: res.json.id })
+          resolve(res)
+        } else {
+          reject();
+        }
       })
     }
     return { controls, loading, formRef, save }
