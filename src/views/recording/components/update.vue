@@ -2,7 +2,7 @@
   <div class="container">
     <div class="header">
       <el-button :loading="saveLoading" round @click="save">保存并返回</el-button>
-      <el-button round>保留原卷</el-button>
+      <el-button round @click="generatePaper">生成试卷</el-button>
     </div>
     <div class="content">
       <div class="main" @click="blur"><MainComponent /></div>
@@ -19,6 +19,8 @@ import axios from 'axios';
 import MainComponent from './update-section/main.vue';
 import ToolbarComponent from './update-section/toolbar.vue';
 import { cloneDeep } from 'lodash';
+import Modal from './../../../utils/modal';
+import GeneratingComponent from './update-section/generating.vue';
 
 export default {
   components: { MainComponent, ToolbarComponent },
@@ -53,7 +55,13 @@ export default {
     let saveLoading = ref(false);
     const save = async () => {
       saveLoading.value = true;
-      let questions = cloneDeep(dataset.value).map(data => {
+      let questions = __cloneData(dataset.value);
+      await axios.post('/tiku/question/batchSaveQuestion', { questionImportLogId: props.id, questions }, { headers: { 'Content-Type': 'application/json' } });
+      (document.querySelector('.el-icon-back') as any).click();
+    }
+
+    const __cloneData = (data) => {
+      let questions = cloneDeep(data).map(data => {
         if (data.basicQuestionType === 2 || data.basicQuestionType === 3 || data.basicQuestionType === 9 || data.basicQuestionType === 10) {
           if (data.answer) { data.answer = data.answer.replace(/<.*?>/g, '').replace(/[\r\n]/g, '') }
           let f = data.basicQuestionType === 3 ? (data.answer.includes(';') ? ';' : '；') : '';
@@ -70,12 +78,19 @@ export default {
           return i;
         })
         return data;
-      })
-      await axios.post('/tiku/question/batchSaveQuestion', { questionImportLogId: props.id, questions }, { headers: { 'Content-Type': 'application/json' } });
-      (document.querySelector('.el-icon-back') as any).click();
+      });
+
+      return questions;
     }
 
-    return { blur, save, saveLoading };
+    const generatePaper = () => {
+      let questions = __cloneData(dataset.value);
+      Modal.create({ component: GeneratingComponent, title: '生成试卷', width: 420, props: { questions } }).then((res: any) => {
+        ElMessage[res.result ? 'success' : 'warning'](res.result ? '生成试卷成功' : '生成试卷失败，请重试');
+      })
+    }
+
+    return { blur, save, saveLoading, generatePaper };
 
   }
 }

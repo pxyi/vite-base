@@ -29,6 +29,7 @@ export default {
 <style lang="scss" scope>
 .tool-list-content {
   margin-top: 12px;
+  overflow: auto;
   h4 {
     padding: 0 16px 20px;
     color: #77808D;
