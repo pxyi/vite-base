@@ -2,16 +2,15 @@
   <div class="course-details" v-loading="dialogLoading">
     <ul>
         <li v-for="(item,index) in courseIndexList" :key="index">
-        <div class="detaias">第{{ item.orderNo }}讲 {{ item.courseIndexName }}</div>
-        <div class="menu">
-        <el-button type="primary" size="small" v-show="item.lessonStatus === 0" @click="courseDetailFileList(item, index)">去备课</el-button>
-        <el-button type="primary" size="small" v-show="item.lessonStatus === 1" @click="courseDetailFileList(item, index)">继续备课</el-button>
-        <el-button type="primary" size="small" v-show="item.lessonStatus === 2" @click="courseDetailFileList(item, index)">已备课</el-button>
-
-        </div>
+            <div class="detaias">第{{ item.orderNo }}讲 {{ item.courseIndexName }}</div>
+            <div class="menu">
+                <el-button type="primary" round size="small" v-show="item.lessonStatus === 0" @click="courseDetailFileList(item, index)">去备课</el-button>
+                <el-button type="warning" round size="small" v-show="item.lessonStatus === 1" @click="courseDetailFileList(item, index)">继续备课</el-button>
+                <el-button type="primary" round size="small" v-show="item.lessonStatus === 2" @click="courseDetailFileList(item, index)">已备课</el-button>
+            </div>
         </li>
     </ul>   
-    <div v-if="courseIndexList.length == 0" style="text-align: center">暂无数据</div>
+    <cus-empty v-if="!courseIndexList.length && !dialogLoading" />
   </div>
   
 
@@ -60,28 +59,34 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-     .course-details{
+    :deep(.modal-body){
+        padding: 0 20px 30px;
+    }
+    .course-details{
         ul{
             max-height: 500px;
             li{
-                height: 52px;
+                height: 60px;
                 background: #FFFFFF;
-                border-radius: 4px;
+                border-radius: 10px;
                 display: flex;
                 justify-content: space-between;
-                margin: 15px 20px;
-                border: 1px solid #e8e8e8;
+                margin: 10px 0px;
+                border: 1px solid #DEE4F1;
                 align-content: center;
-                line-height: 52px;
+                line-height: 60px;
                 .detaias{
-                width: 50%;
-                text-indent: 30px;
+                text-indent: 20px;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
+                color: #77808D;
                 }
                 .menu{
                     margin-right: 30px;
+                }
+                &:hover{
+                    background: #F5F7FA;
                 }
             }
         }
