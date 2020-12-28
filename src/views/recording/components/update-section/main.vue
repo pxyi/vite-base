@@ -3,7 +3,7 @@
     <div class="fixed">
       <h2>检查区：</h2><div v-if="errorList.length"><i>{{ errorList.length }}</i><span>处错误，请参照提示修改</span><a>查看</a></div>
     </div>
-    <div class="main-content">
+    <div class="main-content" :class="{ 'is__sync': isSync }">
       <div class="item" @click.stop :class="{ 'is__focus': focusData?.id === data.id }" v-for="data in dataset" :key="data.id">
         <div class="mask" @click.stop="focusChange(data)"></div>
         <div class="title">
@@ -45,6 +45,8 @@ export default {
 
     let focusData = computed(() => store.state.focusData);
 
+    let isSync = computed(() => store.state.isSync);
+
     const focusChange = (data) => store.commit('set_focus_data', data);
 
     const remove = async (data) => { 
@@ -53,7 +55,7 @@ export default {
       res.result && store.commit('delete_data', data.id);
     }
 
-    return { dataset, errorList, focusData, focusChange, remove }
+    return { dataset, errorList, focusData, focusChange, remove, isSync }
   }
 }
 </script>
@@ -118,6 +120,9 @@ export default {
     flex: auto;
     padding: 10px 80px;
     overflow: auto;
+    &.is__sync .item {
+      border-color: #1AAFA7;
+    }
     .item {
       padding: 20px 20px 30px;
       margin-top: 10px;
