@@ -94,6 +94,7 @@ export default {
       dataset.value = res.json.records.map(n => ({
          ...n, 
          ...{ 
+            title: __strToHtml(n),
             createTime: n.createTime.split('-').join('/'), 
             difficult: difficultFilter(n.difficult),
             answer: n.basicQuestionType < 3 ? n.rightAnswer.map(a => String.fromCharCode(a.no + 64)).join('、') :
@@ -103,6 +104,25 @@ export default {
       );
       pageAorder.total = res.json.total;
       loading.value = false;
+    }
+    const __strToHtml = (data) => {
+      if (data.basicQuestionType === 9) {
+        return `${ data.title }<br>${ data.childs.map((i, idx) => `${idx + 1}.${i.title}<br>${ i.option ? i.option.map(c => `${c.name}.${c.content}`).join('<br>') : [] }`).join('<br>') }`;
+        
+        // let child = (c) => `${c.name}.${c.content}`;
+        // let cell = (c) => `<div class="e-c-label">${c.name}.</div><div class="e-c-group"><div class="c-t-item">${c.childs.map(child).join(`</div><div class="c-t-item">`)}</div></div>`;
+        // let options = `<div class="e-m-cell">${data.option.map(cell).join(`</div><div class="e-m-cell">`)}</div>`
+        // let html = `<div class="e-title">${data.title}</div><div class="e-main">${options}</div>`;
+        // return html;
+      } else if (data.basicQuestionType === 10) {
+        let child = (c) => `${c.name}.${c.content}`;
+        let cell = (c) => `<div class="e-c-label">${c.name}.</div><div class="e-c-group"><div class="c-t-item">${c.childs.map(child).join(`</div><div class="c-t-item">`)}</div></div>`;
+        let options = `<div class="e-m-cell">${data.option.map(cell).join(`</div><div class="e-m-cell">`)}</div>`
+        let html = `<div class="e-title">${data.title}</div><div class="e-main">${options}</div>`
+        return html
+      } else {
+        return data.title
+      }
     }
 
     /* ------------- 排序设置 ------------- */
@@ -284,6 +304,26 @@ export default {
             }
           }
         }
+      }
+    }
+  }
+}
+
+.e-title {
+  margin-bottom: 20px;
+}
+.e-main {
+  .e-m-cell {
+    display: flex;
+    margin-bottom: 10px;
+    .e-c-label {
+      width: 40px;
+    }
+    .e-c-group {
+      flex: 1 1 40px;
+      display: flex;
+      .c-t-item {
+        flex: 1;
       }
     }
   }

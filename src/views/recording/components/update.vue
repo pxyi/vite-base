@@ -43,7 +43,7 @@ export default {
           data.answer = data.rightAnswer ? data.rightAnswer[0].content : '';
         }
         if (data.basicQuestionType < 3) {
-          data.title = `${ data.title }<br>${ data.option.map(i => `${i.name}.${i.content}`).join('<br>') }`
+          data.title = `${ data.title }<br>${ data.option ? data.option.map(i => `${i.name}.${i.content}`).join('<br>') : '' }`
         }
         if (data.basicQuestionType === 9) {
           data.title = `${ data.title }<br>${ data.childs.map((i, idx) => `${idx + 1}.${i.title}<br>${ i.option ? i.option.map(c => `${c.name}.${c.content}`).join('<br>') : [] }`).join('<br>') }`
