@@ -18,7 +18,7 @@
       <div class="section">
         <div class="item" v-for="data in dataset" :key="data.id">
           <div class="update-icon" @click="update(data.id)"><i class="el-icon-edit-outline" /></div>
-          <div class="content">
+          <div class="content-text">
             <div class="title" v-html="data.title"></div>
           </div>
           <div class="flex-box" v-show="showAnswer">
@@ -209,8 +209,12 @@ export default {
           transform: scale(.95);
         }
       }
-      /* .content {
-      } */
+      .content-text {
+        padding-right: 20px;
+        img {
+          display: inline-block;
+        }
+      }
       .flex-box {
         font-size: 13px;
         display: flex;

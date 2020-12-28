@@ -20,7 +20,7 @@
         </div>
       </template>
       <div class="menu-item">
-        <div class="menu-title" @click="goSystem"><img src="nav-icon/system.png" alt="进入后台"><span>进入后台</span></div>
+        <div class="menu-title" @click="goSystem"><img :src="'nav-icon/system.png'" alt="进入后台"><span>进入后台</span></div>
       </div>
     </div>
   </div>
