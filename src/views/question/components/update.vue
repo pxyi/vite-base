@@ -27,8 +27,8 @@ export default {
       let contentGroup = contentRef.value.validator();
       let headerGroup = cloneDeep(headerRef.value.formGroup)
       if (contentGroup) {
-        headerGroup.questionSources.length && headerGroup.questionSources.map(s => {
-          if (s.provinceCity) {
+         headerGroup.questionSources && headerGroup.questionSources.map(s => {
+          if (s.provinceCity && s.provinceCity[2]) {
             let [ provinceId, cityId, areaId ] = s.provinceCity;
             s.provinceId = provinceId; s.cityId = cityId; s.areaId = areaId;
           }
