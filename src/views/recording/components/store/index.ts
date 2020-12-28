@@ -37,7 +37,7 @@ export default new Vuex.Store({
   actions: {
     'focus_data_change'({ commit, state }, payload) {
       let data = cloneDeep(state.focusData)
-      data.rightAnswer = data.answer;
+      // data.rightAnswer = data.answer;
       // if (data.basicQuestionType === 2 || data.basicQuestionType === 3 || data.basicQuestionType === 9 || data.basicQuestionType === 10) {
       //   if (data.answer) { data.answer = data.answer.replace(/<.*?>/g, '').replace(/[\r\n]/g, '') }
       //   let f = data.basicQuestionType === 3 ? (data.answer.includes(';') ? ';' : '；') : '';
