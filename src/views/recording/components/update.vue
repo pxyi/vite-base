@@ -42,6 +42,15 @@ export default {
         } else {
           data.answer = data.rightAnswer ? data.rightAnswer[0].content : '';
         }
+        if (data.basicQuestionType < 3) {
+          data.title = `${ data.title }<br>${ data.option.map(i => `${i.name}.${i.content}`).join('<br>') }`
+        }
+        if (data.basicQuestionType === 9) {
+          data.title = `${ data.title }<br>${ data.childs.map((i, idx) => `${idx + 1}.${i.title}<br>${ i.option ? i.option.map(c => `${c.name}.${c.content}`).join('<br>') : [] }`).join('<br>') }`
+        }
+        if (data.basicQuestionType === 10) {
+          data.title = `${ data.title }<br>${ data.option.map(i => `${i.name}.<br>${ i.childs.map(c => `${c.name}.${c.content}`).join('<br>') }`).join('<br>') }`
+        }
         data.questionSources && data.questionSources.map(i => { i.provinceCity = i.areaId ? [ i.provinceId, i.cityId, i.areaId ] : null; return i; })
         return data;
       })
@@ -65,13 +74,14 @@ export default {
 
     const __cloneData = (data) => {
       let questions = cloneDeep(data).map(data => {
-        if (data.basicQuestionType === 2 || data.basicQuestionType === 3 || data.basicQuestionType === 9 || data.basicQuestionType === 10) {
-          if (data.answer) { data.answer = data.answer.replace(/<.*?>/g, '').replace(/[\r\n]/g, '') }
-          let f = data.basicQuestionType === 3 ? (data.answer.includes(';') ? ';' : '；') : '';
-          data.rightAnswer = data.answer.split(f).filter(i => !!i).map((a, idx) => ({ no: idx + 1, content: a }));
-        } else if (data.answer) {
-          data.rightAnswer = [ {no: 1, content: data.answer } ]
-        }
+        data.rightAnswer = data.answer;
+        // if (data.basicQuestionType === 2 || data.basicQuestionType === 3 || data.basicQuestionType === 9 || data.basicQuestionType === 10) {
+        //   if (data.answer) { data.answer = data.answer.replace(/<.*?>/g, '').replace(/[\r\n]/g, '') }
+        //   let f = data.basicQuestionType === 3 ? (data.answer.includes(';') ? ';' : '；') : '';
+        //   data.rightAnswer = data.answer.split(f).filter(i => !!i).map((a, idx) => ({ no: idx + 1, content: a }));
+        // } else if (data.answer) {
+        //   data.rightAnswer = [ {no: 1, content: data.answer } ]
+        // }
         data.questionSources && data.questionSources.length && data.questionSources.map(i => {
           if (i.provinceCity) {
             i.provinceId = i.provinceCity[0];

@@ -31,7 +31,8 @@ export default {
     onMounted(() => {
       setTimeout(() => {
         editor = window['CKEDITOR'].inline(`editor${instanceId.value}`);
-        editor.setData(props.modelValue?.startsWith('<p>') ? props.modelValue : `<p>${props.modelValue || ''}</p>`);
+        // editor.setData(props.modelValue?.startsWith('<p>') ? props.modelValue : `<p>${props.modelValue || ''}</p>`);
+        editor.setData(props.modelValue || '');
         hasContent.value = !!props.modelValue;
         editor.on('change', () => { let data = editor.getData(); emit('update:modelValue', data); hasContent.value = !!data; } );
         editor.on('focus', () => { emit('focus', editor.getData()); isFocus.value = true; } );
