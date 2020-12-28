@@ -6,9 +6,7 @@
          <el-date-picker
           v-model="startTime"
           size='small'
-          @change='dateChange'
           :disabled-date="disabledDate"
-          format="YYYY 年 MM 月 DD 日"
           type="date"
           placeholder="开始日期">
         </el-date-picker>
@@ -16,8 +14,7 @@
           v-model="endTime"
           size='small'
           type="date"
-          @change='dateChange'
-          :disabled-date="disabledDate"
+          :disabled-date="disabledEndDate"
           placeholder="结束日期">
         </el-date-picker>
       </div>  
@@ -25,14 +22,20 @@
 </template>
 
 <script lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 export default({
   setup(props, { emit }) {
     /*---按时间搜索---*/ 
     let startTime = ref()
     let endTime = ref()
     // 将数据格式化成YYYY-MM-dd
-    const dataFormat = (dateData) => {
+    const dataFormat = (dateData, startOrEnd) => {
+      if(dateData === null && startOrEnd === 'end'){
+         dateData = Date.now() //结束时间为null 结束时间为当前时间
+      }
+      if(!dateData && startOrEnd === 'start'){
+        return   //起始时间为空 直接返回
+      }
       let date = new Date(dateData)
       let y = date.getFullYear()
       let m: any = date.getMonth() + 1
@@ -42,22 +45,23 @@ export default({
       let time: any = y + '-' + m + '-' + d
       return time
     }
+    // 起始时间默认
     const disabledDate = (time) => {
-      return time.getTime() > Date.now()
+      if(endTime.value !== null){
+        return time.getTime() > Date.now() || time.getTime() > new Date(endTime.value)
+      }else {
+        return time.getTime() > Date.now()
+      }
     }
-    const dateChange = (data) => {
-      let __startTime =  dataFormat(startTime.value)
-      let __endTime  = dataFormat(endTime.value)
-      if(__startTime === 'NaN-NaN-NaN'){
-        __startTime = null
-      }
-      if(__endTime === '1970-01-01'){
-        __endTime = dataFormat(Date.now())
-      }
-      emit('search', { startTime: __startTime, endTime: __endTime })
+    // 结束时间默认
+    const disabledEndDate = (time) => {
+      return time.getTime() > Date.now() || time.getTime() < new Date(startTime.value)
     }
 
-    return { startTime, endTime, dateChange, disabledDate }
+    watch(startTime, (val) => {emit('search', { startTime: dataFormat(val, 'start'), endTime: dataFormat(endTime.value, 'end') })})
+    watch(endTime, (val) => {emit('search', { startTime: dataFormat(startTime.value, 'start'), endTime: dataFormat(val, 'end') })})
+
+    return { startTime, endTime, disabledDate, disabledEndDate }
   }
   
 })
