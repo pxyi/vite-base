@@ -95,9 +95,12 @@
       border-radius: 10px;
       border: 1px solid #DEE4F1;
       min-width: 200px;
-      padding: 20px 20px 0;
+      padding: 20px 10px 0;
       cursor: pointer;
       margin-right: 1%;
+      &:not(:last-child) {
+        margin-bottom: 0px;
+      }
     }
     .course-info {
       height: 90px;

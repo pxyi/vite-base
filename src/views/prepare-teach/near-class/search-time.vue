@@ -85,14 +85,24 @@ export default({
       }
     }
   }
+  @media screen and(min-width: 1680px){
+    .search-time{
+      min-height: 157px;
+    }
+  }
   @media screen and(min-width: 1440px){
     .search-time{
       min-height: 130px;
     }
   }
-  @media screen and(min-width: 1680px){
+  @media screen and(max-width: 1280px){
     .search-time{
-      min-height: 157px;
+      .times{
+        width: 360px;
+        :deep(.el-date-editor.el-input, .el-date-editor.el-input__inner){
+          width: 150px;
+        }
+      }
     }
   }
 </style>

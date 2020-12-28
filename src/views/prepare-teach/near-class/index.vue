@@ -40,6 +40,8 @@ export default {
   setup(props) {
     let params: Ref<any> = ref({});
     let nearList: Ref<any> = ref();
+
+    // 搜索时刷新接口
     const searchTime = (data) => {
       nearList.value.request(data)
     }
@@ -146,6 +148,15 @@ export default {
     }
     .btn-hidden{
       visibility: hidden;
+    }
+  }
+}
+@media screen and(max-width: 1280px){
+  .near-cus-list{
+    .menu{
+      .el-button{
+        margin-right: 0;
+      }
     }
   }
 }
