@@ -14,7 +14,7 @@
         <div class="flex-cell">
           <div class="tool-label">年级</div>
           <div class="tool-control">
-            <el-select size="medium" placeholder="选择年级" v-model="data.grade" v-if="selectMap.gradeList.length">
+            <el-select size="medium" placeholder="选择年级" v-model="data.grade" v-if="selectMap.gradeList.length" @change="syncChange('grade')">
               <el-option v-for="option in selectMap.gradeList" :key="option.id" :value="option.id" :label="option.name" />
             </el-select>
           </div>
@@ -24,7 +24,7 @@
         <div class="flex-cell">
           <div class="tool-label">题型</div>
           <div class="tool-control">
-            <el-select size="medium" placeholder="选择题型" v-model="data.type" v-if="selectMap.questionTypeList.length" @change="typeChange">
+            <el-select size="medium" placeholder="选择题型" v-model="data.type" v-if="selectMap.questionTypeList.length" @change="typeChange($event); syncChange('type')">
               <el-option v-for="option in selectMap.questionTypeList" :key="option.jyQuestionType" :value="option.jyQuestionType" :label="option.jyQuestionTypeName" />
             </el-select>
           </div>
@@ -34,7 +34,7 @@
         <div class="flex-cell">
           <div class="tool-label">类别</div>
           <div class="tool-control">
-            <el-select size="medium" placeholder="选择类别" v-model="data.category" v-if="selectMap.categoryList.length">
+            <el-select size="medium" placeholder="选择类别" v-model="data.category" v-if="selectMap.categoryList.length" @change="syncChange('category')">
               <el-option v-for="option in selectMap.categoryList" :key="option.id" :value="option.id" :label="option.name" />
             </el-select>
           </div>
@@ -42,7 +42,7 @@
         <div class="flex-cell">
           <div class="tool-label">难度</div>
           <div class="tool-control">
-            <el-select size="medium" placeholder="选择难度" v-model="data.difficult" v-if="selectMap.difficultyList.length">
+            <el-select size="medium" placeholder="选择难度" v-model="data.difficult" v-if="selectMap.difficultyList.length" @change="syncChange('difficult')">
               <el-option v-for="option in selectMap.difficultyList" :key="option.id" :value="option.id" :label="option.name" />
             </el-select>
           </div>
@@ -60,7 +60,7 @@
                 show-checkbox
                 node-key="id"
                 :props="{ children: 'childs', label: 'name' }"
-                @check="(target, { checkedKeys }) => { data.knowledgePoints = checkedKeys; }"
+                @check="(target, { checkedKeys }) => { data.knowledgePoints = checkedKeys; syncChange('knowledgePoints') }"
               />
               <template #reference>
                 <el-input @click="setTreeKey(data)" :model-value="data.knowledgePoints && data.knowledgePoints.length ? `已选择${data.knowledgePoints.length}项` : null" readonly placeholder="选择知识点" size="medium" />
@@ -185,9 +185,18 @@ export default {
     let knowledgeRef = ref();
     const setTreeKey = (data) => knowledgeRef.value.setCheckedKeys(data.knowledgePoints || []);
 
+    const syncChange = (type) => {
+      if (isSync.value) {
+        if (type === 'type') {
+          let basicQuestionType = selectMap.questionTypeList.find(i => i.jyQuestionType === data.value.type).toolQuestionType;
+          dataset.value.map(d => {d[type] = data.value[type]; d.basicQuestionType = basicQuestionType; return d});
+        } else {
+          dataset.value.map(d => {d[type] = data.value[type]; return d});
+        }
+      }
+    }
 
-
-    return { data, dataset, index, indexChange, isSync, isSyncChange, selectMap, addSource, delSource, knowledgeList, typeChange, knowledgeRef, setTreeKey, getProvinceCity, getSchoolList }
+    return { data, dataset, index, indexChange, isSync, isSyncChange, syncChange, selectMap, addSource, delSource, knowledgeList, typeChange, knowledgeRef, setTreeKey, getProvinceCity, getSchoolList }
   }
 }
 </script>
