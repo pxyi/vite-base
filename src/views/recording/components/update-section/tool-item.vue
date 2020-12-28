@@ -77,7 +77,7 @@
           <el-select placeholder="选择年份" size="medium" v-model="s.year">
             <el-option v-for="option in selectMap.YEAR" :key="option.id" :value="option.id" :label="option.name" />
           </el-select>
-          <el-select placeholder="选择来源" size="medium" v-model="s.dictSourceId">
+          <el-select placeholder="试卷类型" size="medium" v-model="s.dictSourceId">
             <el-option v-for="option in selectMap.QUES_SOURCE" :key="option.id" :value="option.id" :label="option.name" />
           </el-select>
         </div>

@@ -123,7 +123,7 @@ export default {
     }
 
     const update = (id) => {
-      Modal.create({ title: '编辑题目', component: updateComponent, width: 950, props: { id } }).then(_ => request() );
+      Modal.create({ title: '编辑题目', component: updateComponent, width: 640, props: { id } }).then(_ => request() );
     }
 
     return { request, loading, dataset, pageAorder, orderChange, similarPreview, cartList, addCart, update, showAnswer }
