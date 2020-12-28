@@ -146,4 +146,18 @@
       }
     }
   } 
+  @media only screen and (min-width: 1440px) {
+    .cus-list { 
+      :deep(.cus__list__item){
+        flex: 0 0 19%;
+      }
+    }
+  }
+  @media only screen and (min-width: 1680px) {
+    .cus-list { 
+      :deep(.cus__list__item){
+        flex: 0 0 15.6%;
+      }
+    }
+  }
 </style>

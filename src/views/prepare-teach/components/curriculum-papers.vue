@@ -41,7 +41,10 @@
             <div class="content-list-box">
               <div class="content-list-box-item" v-for="(item,index) in allFileList" :key="index">
                 <div class="content-list-box-item-bg">
-                  <img class="img-cover" style="width:116px;" v-if="item.ext !== 'mp3' && item.ext !== 'zip' && item.ext !== 'rar' && item.mediaType == null" :src="`/test${item.imgPath}`" alt="">
+                  <img class="img-cover" style="width:116px;" 
+                    v-if="item.ext !== 'mp3' && item.ext !== 'zip' && item.ext !== 'rar' && item.mediaType == null" 
+                    :src="`${import.meta.env.VITE_DOMAIN}${item.imgPath}`" 
+                    alt="爱学标品">
                   <img v-else src="/@/assets/prepare-teach/weizhiwenjian.png" alt="">
                 </div>
                 <div class="content-list-box-item-title">
@@ -64,7 +67,6 @@
         </el-tabs>
       </div> 
     </div>
-    <DataPreview v-if="isPreview" @sentClose='getClose(item)' :dataName="dataName" :dataPath="dataPath" :ext="ext"/>
   </div>
 </template>
 <script lang="ts">
@@ -75,14 +77,14 @@ import Modal from './../../../utils/modal';
 import MyPlanUpload from './my-plan-upload.vue'
 import MyVideoUpload from './my-video-upload.vue'
 import { ElMessage,ElLoading } from 'element-plus'
-import DataPreview from './../preview/index.vue'
+import createElement from './../../../utils/createElement';
 
 export default {
   props: {
     id: String,
     title: String,
   },
-  components: { DataPreview },
+ 
   setup(props) {
     let close: any = inject('close')
     let activeName = ref('totalCount')
@@ -177,29 +179,44 @@ export default {
       }) 
     }
 
-    /*预览*/
-    let dataName = ref()
-    let dataPath = ref()
-    let isPreview = ref(false)
-    let ext = ref()
+    /*-----预览-----*/
     const preview = (item) => {
-      let loading = ElLoading.service({ lock: true, background: 'rgba(255, 255, 255, .7)', text: '加载中...' })
-      setTimeout(() => {
-        // console.log(item)
-        dataName.value = item.fileName
-        dataPath.value = item.filePath
-        ext.value = item.ext
-        isPreview.value = true
-        loading.close()
-      }, 1000)
+      const loading = ElLoading.service({ lock: true, background: 'rgba(255, 255, 255, .7)', text: '加载中...' })
+      let src = `${import.meta.env.VITE_OFFICE_PREVIEW}?furl=${import.meta.env.VITE_DOMAIN}${item.filePath}`;
+      let closeBtn = createElement('div', { 
+        className: 'el-icon-close', 
+        style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', top: '40px', right: '40px', zIndex: '10', cursor: 'pointer' },
+        on: { click: () => { container.remove(); } }
+      });
+      // 打印
+      let printData = createElement('div', { 
+        className: 'el-icon-printer', 
+        style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', bottom: '40px', right: '40px', zIndex: '10', cursor: 'pointer' },
+        on: { click: () => { window.print() } }
+      });
+      //下载
+      let downloadData = createElement('div', { 
+        className: 'el-icon-download', 
+        style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', bottom: '100px', right: '40px', zIndex: '10', cursor: 'pointer' },
+        on: { click: () => { 
+          let host: any = process.env.VUE_APP_BASE_API
+          let a:any = document.createElement('a');
+          a.download = item.fileName;
+          a.href = `${import.meta.env.VITE_DOMAIN}${item.filePath}`;
+          a.click();
+         } }
+      });
+      let iframe = createElement('iframe', { attrs: { src, width: '100%', height: '100%' }, style: { background: '#f9f9f9' } });
+      iframe.onload = loading.close;
+      let container = createElement('div', { 
+        style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '1000' },
+      }, [ closeBtn, iframe, printData, downloadData ])
+      document.body.appendChild(container);
     }
-    const getClose = (item) => {
-      console.log(item,111)
-      isPreview.value = item
-    }
+
     return { 
       close, activeName, tabCountList, courseDto, request, allFileList, handleClick, prepareLesson, uploadMyPlan,
-      tabCountRequest, uploadMyVideo, savePrepareClass, type, dataName, dataPath, isPreview, ext, preview, getClose
+      tabCountRequest, uploadMyVideo, savePrepareClass, type, preview
     }
   }
 }
@@ -479,6 +496,13 @@ export default {
       :deep(.el-tabs__nav){
         border: none;
       }
+    }
+  }
+}
+@media screen and (max-width: 1280px){
+  .paper__update__container {
+    .content{
+      width: 100%;
     }
   }
 }

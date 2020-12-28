@@ -1,24 +1,6 @@
 <template>
   <div class="near-cus-list">
-    <div class="search-time">
-      <p>备课日期</p>
-      <div class="times">
-        <img src="/@/assets/prepare-teach/date.png" alt="爱学标品">
-         <el-date-picker
-          v-model="startTime"
-          size='small'
-          type="date"
-          placeholder="开始日期">
-        </el-date-picker>
-        <el-date-picker
-          v-model="endTime"
-          size='small'
-          type="date"
-          @change='dateChange'
-          placeholder="结束日期">
-        </el-date-picker>
-      </div>  
-    </div>
+    <SearchTime :params='params' @search="searchTime"/>
     <cus-list has-page url="/admin/prepareLesson/queryPageV2" :default="params" :auto-request="true" :headers='{ type: 1 }' ref="nearList" >
       <template v-slot:avatar>
          <img src="/@/assets/prepare-teach/book_logo.png" width="36"  alt="爱学标品">
@@ -47,23 +29,19 @@ import Screen from './../../../utils/screen';
 import CurriculumPapers from './../components/curriculum-papers.vue';
 import axios from 'axios'
 import { AxResponse } from './../../../core/axios'
-import { ElMessage, ElLoading } from 'element-plus'
-
+import { ElMessage, ElLoading, locale } from 'element-plus'
+import SearchTime from './search-time.vue'
 
 export default {
   props: {
     listShow: Number
   },
+  components: { SearchTime },
   setup(props) {
     let params: Ref<any> = ref({});
     let nearList: Ref<any> = ref();
-
-    // 按时间搜索
-    let startTime = ref()
-    let endTime = ref()
-    const dateChange = () => {
-      params.value.startTime = startTime.value
-      params.value.endTime = startTime.value
+    const searchTime = (data) => {
+      nearList.value.request(data)
     }
 
     // 查看备课、继续备课
@@ -107,30 +85,13 @@ export default {
       }) 
     }
 
-    return { params, courseDetailFileList, nearList, savePrepareClass, startTime, endTime, dateChange }
+    return { params, courseDetailFileList, nearList, savePrepareClass, searchTime }
   }
 }
 </script>
 
 <style lang="scss" scoped>
 .near-cus-list{
-  .search-time{
-    height: 157px;
-    margin-bottom: 20px;
-    background: #fff;
-    padding: 20px 30px;
-    border-radius: 10px;
-    .times{
-      width: 36%;
-      margin-top: 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      :deep(.el-date-editor.el-input, .el-date-editor.el-input__inner){
-        width: 180px;
-      }
-    }
-  }
   :deep(.cus__list__container .cus__list__item){
     padding: 5px 10px;
     align-items: center;
