@@ -21,7 +21,7 @@ const create = (component, props = {}) => {
       app.unmount(body);
       val ? resolve(val) : reject(false);
     }
-    const app = createApp(component, { ...props });
+    const app = createApp(component, { ...props, close: remove });
     app.use(Components);
     app.use(Store);
     app.use(ElementPlus);

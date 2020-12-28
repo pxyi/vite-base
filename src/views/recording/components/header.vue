@@ -153,6 +153,7 @@ export default {
   }
 }
 .tmpt-type {
+  padding: 10px;
   div {
     padding-left: 42px;
     font-size: 24px;

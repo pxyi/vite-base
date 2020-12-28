@@ -28,12 +28,6 @@ const routes: RouteRecordRaw[] = [
         component: AsyncComponent(() => import('/@/views/index/index.vue'))
       },
       {
-        path: 'testing',
-        name: 'testing',
-        meta: { title: '测试' },
-        component: AsyncComponent(() => import('/@/views/test.vue'))
-      },
-      {
         path: 'teaching',
         name: 'teaching',
         component: Transition,

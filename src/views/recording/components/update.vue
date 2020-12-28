@@ -2,7 +2,7 @@
   <div class="container">
     <div class="header">
       <el-button :loading="saveLoading" round @click="save">保存并返回</el-button>
-      <el-button round @click="generatePaper">生成试卷</el-button>
+      <el-button round @click="generatePaper" :disabled="!allowGenerate">{{ allowGenerate ? '' : '已' }}生成试卷</el-button>
     </div>
     <div class="content">
       <div class="main" @click="blur"><MainComponent /></div>
@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import { ref, computed, inject, getCurrentInstance } from 'vue';
+import { ref, computed, inject, provide, getCurrentInstance } from 'vue';
 import { ElMessage, ElLoading } from 'element-plus';
 import store from './store';
 import axios from 'axios';
@@ -24,7 +24,7 @@ import GeneratingComponent from './update-section/generating.vue';
 
 export default {
   components: { MainComponent, ToolbarComponent },
-  props: ['id'],
+  props: ['id', 'close'],
   setup(props) {
     let loading = ElLoading.service();
 
@@ -47,6 +47,8 @@ export default {
       })
       store.commit('set_error_list', res.json[0]);
       store.commit('set_data_set', questions);
+
+      allowGenerate.value = !res.json[2];
       loading.close();
     });
 
@@ -56,8 +58,9 @@ export default {
     const save = async () => {
       saveLoading.value = true;
       let questions = __cloneData(dataset.value);
-      await axios.post('/tiku/question/batchSaveQuestion', { questionImportLogId: props.id, questions }, { headers: { 'Content-Type': 'application/json' } });
-      (document.querySelector('.el-icon-back') as any).click();
+      let res = await axios.post<null, { result: boolean, msg: string }>('/tiku/question/batchSaveQuestion', { questionImportLogId: props.id, questions }, { headers: { 'Content-Type': 'application/json' } });
+      !res.result && ElMessage.warning(res.msg);
+      props.close(res);
     }
 
     const __cloneData = (data) => {
@@ -83,14 +86,16 @@ export default {
       return questions;
     }
 
+    let allowGenerate = ref(true);
     const generatePaper = () => {
       let questions = __cloneData(dataset.value);
-      Modal.create({ component: GeneratingComponent, title: '生成试卷', width: 420, props: { questions } }).then((res: any) => {
+      Modal.create({ component: GeneratingComponent, title: '生成试卷', width: 420, props: { questions, id: props.id } }).then((res: any) => {
         ElMessage[res.result ? 'success' : 'warning'](res.result ? '生成试卷成功' : '生成试卷失败，请重试');
+        allowGenerate.value = !res.result;
       })
     }
 
-    return { blur, save, saveLoading, generatePaper };
+    return { blur, save, saveLoading, generatePaper, allowGenerate };
 
   }
 }

@@ -10,7 +10,7 @@
             @click="menu.isLeaf && !$route.path.includes(menu.key) ? $router.push(menu.key) : (menu.closed = !menu.closed)"
             :class="{ 'active': $route.path.includes(menu.key) }"
           >
-            <img :src="menu.icon" alt="icon" />
+            <img :src="`nav-icon/${menu.icon}.png`" alt="icon" />
             <span>{{ menu.title }}</span>
             <i class="el-icon-arrow-up" v-if="!menu.isLeaf"></i>
           </div>
@@ -20,7 +20,7 @@
         </div>
       </template>
       <div class="menu-item">
-        <div class="menu-title" @click="goSystem"><img src="/@/assets/menu/icon-system.png" alt="进入后台"><span>进入后台</span></div>
+        <div class="menu-title" @click="goSystem"><img :src="'nav-icon/system.png'" alt="进入后台"><span>进入后台</span></div>
       </div>
     </div>
   </div>
@@ -38,8 +38,7 @@ export default {
     let list: { value: RouterConf[] } = ref([]);
 
     let initPath = useRoute().path;
-    MenuList.map(async (res: any) => {
-      res.icon = typeof res.icon === 'string' ? res.icon : (await res.icon).default; 
+    MenuList.map((res: any) => {
       res.closed = initPath.includes(res.key);
       list.value.push(res);
     });

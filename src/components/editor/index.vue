@@ -53,6 +53,9 @@ export default {
   border: 1px solid #E6E6E6;
   outline: none;
   transition: border-color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1) 0s;
+  :deep(img) {
+    display: inline-block;
+  }
   &.is__focus {
     border-color: #1aafa7;
     &::before {
