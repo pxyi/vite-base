@@ -13,18 +13,12 @@ const MenuList: RouterConf[] = [
     title: '首页',
     key: '/index',
     isLeaf: true,
-    icon: import('./../assets/menu/icon-1.png')
-  },
-  {
-    title: '测试',
-    key: '/testing',
-    isLeaf: true,
-    icon: import('./../assets/menu/icon-2.png'),
+    icon: 'home'
   },
   {
     title: '教研中台',
     key: '/teaching',
-    icon: import('./../assets/menu/icon-3.png'),
+    icon: 'teaching',
     children: [
       {
         title: '题库',
@@ -56,7 +50,7 @@ const MenuList: RouterConf[] = [
   {
     title: '日常教学',
     key: '/daily',
-    icon: import('./../assets/menu/icon-3.png'),
+    icon: 'daily',
     children: [
       {
         title: '班级备授课',
