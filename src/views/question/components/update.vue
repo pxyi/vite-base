@@ -40,7 +40,7 @@ export default {
         let params = { ...contentGroup, ...headerGroup, subjectId, id: props.id };
         let url = `/tiku/question/${props.id ? 'editQuestion' : 'add'}`
         let res = await axios.post<null, AxResponse>(url, params, { headers: { 'Content-Type': 'application/json' } });
-        ElMessage[res.result ? 'success' : 'warning'](res.msg || '添加题目成功');
+        ElMessage[res.result ? 'success' : 'warning'](res.msg || `${props.id ? '编辑' : '添加'}试题成功`);
         resolve();
       } else {
         reject();

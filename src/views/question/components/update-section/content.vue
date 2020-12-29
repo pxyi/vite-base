@@ -82,7 +82,7 @@ export default {
         baseType: unref(baseType)
       };
       if (baseType.value < 3) { 
-        result.option = unref(options);
+        result.option = unref(options).map((i: any)=> { i.name = numberToLetter(i.no); return i });
         result.rightAnswer = options.value.filter(i => i.checked);
       } else if (baseType.value === 3) {
         result.rightAnswer = unref(options);
