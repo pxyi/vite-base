@@ -83,7 +83,7 @@ export default {
                 color: #77808D;
                 }
                 .menu{
-                    margin-right: 30px;
+                    margin-right: 20px;
                 }
                 &:hover{
                     background: #F5F7FA;

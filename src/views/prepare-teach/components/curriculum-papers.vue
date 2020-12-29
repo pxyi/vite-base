@@ -45,7 +45,7 @@
                     v-if="item.ext !== 'mp3' && item.ext !== 'zip' && item.ext !== 'rar' && item.mediaType == null" 
                     :src="`${domain}${item.imgPath}`" 
                     alt="爱学标品">
-                  <img v-else src="/@/assets/prepare-teach/weizhiwenjian.png" alt="">
+                  <img v-else src="/@/assets/prepare-teach/weizhiwenjian.png" alt="爱学标品"/>
                 </div>
                 <div class="content-list-box-item-title">
                   <p>{{ item.fileName }}</p>

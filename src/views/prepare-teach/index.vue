@@ -94,10 +94,11 @@
       flex: 0 0 24%;
       border-radius: 10px;
       border: 1px solid #DEE4F1;
-      min-width: 200px;
+      min-width: 180px;
       padding: 20px 10px 0;
       cursor: pointer;
       margin-right: 1%;
+      margin-top: 10px;
       &:not(:last-child) {
         margin-bottom: 0px;
       }
