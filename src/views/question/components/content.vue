@@ -102,8 +102,7 @@ export default {
             title: __strToHtml(n),
             createTime: n.createTime.split('-').join('/'), 
             difficult: difficultFilter(n.difficult),
-            answer: n.basicQuestionType < 3 ? n.rightAnswer.map(a => String.fromCharCode(a.no + 64)).join('、') :
-                    n.basicQuestionType === 3 ? n.rightAnswer.map(a => a.no).join('、') || '-' : n.rightAnswer[0].content
+            answer: n.rightAnswer.map(a => a.content).join('、') || '-'
            } 
         })
       );
@@ -111,9 +110,11 @@ export default {
       loading.value = false;
     }
     const __strToHtml = (data) => {
-      if (data.basicQuestionType === 9) {
-        // return `${ data.title }<br>${ data.childs.map((i, idx) => `${idx + 1}.${i.title}<br>${ i.option ? i.option.map(c => `${c.name}.${c.content}`).join('<br>') : [] }`).join('<br>') }`;
-        
+      if (data.basicQuestionType < 3) {
+        let options = `<div class="e-m-cell">${data.option.map(e => `${e.name}.${e.content}`).join(`</div><div class="e-m-cell">`)}</div>`
+        let html = `<div class="e-title">${data.title}</div><div class="e-main">${options}</div>`
+        return html
+      } else if (data.basicQuestionType === 9) {
         let child = (c) => `<div>${c.name}.${c.content}</div>`;
         let cell = (c, idx) => `<div class="e-c-label">${idx + 1}.${c.title}</div>${c.option ? `<div class="e-c-group">${c.option.map(child).join(``)}</div>` : ''}`;
         let options = `<div class="e-m-cell">${data.childs.map(cell).join(`</div><div class="e-m-cell">`)}</div>`
