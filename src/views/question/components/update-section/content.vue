@@ -130,6 +130,9 @@ export default {
     padding: 0 32px 0 60px;
     margin-bottom: 40px;
     position: relative;
+    &:last-child {
+      margin-bottom: 30px;
+    }
     .tip {
       color: #f56c6c;
       font-size: 12px;
