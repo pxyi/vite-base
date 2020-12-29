@@ -36,10 +36,11 @@ export default {
           delete s.provinceCity;
           return s;
         })
+        contentGroup.basicQuestionType = contentGroup.baseType;
         let params = { ...contentGroup, ...headerGroup, subjectId, id: props.id };
         let url = `/tiku/question/${props.id ? 'editQuestion' : 'add'}`
         let res = await axios.post<null, AxResponse>(url, params, { headers: { 'Content-Type': 'application/json' } });
-        ElMessage[res.result ? 'success' : 'warning'](res.msg || '添加题目成功');
+        ElMessage[res.result ? 'success' : 'warning'](res.msg || `${props.id ? '编辑' : '添加'}试题成功`);
         resolve();
       } else {
         reject();
@@ -57,10 +58,10 @@ export default {
     }
     const __init = (info) => {
       let { knowledgePoints, type, difficult, year, source, category, title, analysis, basicQuestionType} = info;
-      info.questionSources && info.questionSources?.map(s => { 
+      info.questionSources && info.questionSources?.map(s => {
         s.provinceCity = [ s.provinceId, s.cityId, s.areaId ];
         s.areaId && headerRef.value.getSchoolList(s.provinceCity, s)
-        return s; 
+        return s;
       })
 
       headerRef.value.formGroup.knowledgePoints = knowledgePoints || [];
@@ -76,7 +77,12 @@ export default {
       contentRef.value.baseType = basicQuestionType;
 
       if (basicQuestionType < 3) {
-        contentRef.value.options = info.option.map(i => {i.checked = !!info.rightAnswer.find(a => a.no === i.no); return i;});
+        contentRef.value.options = info.option ? info.option.map(i => {i.checked = !!info.rightAnswer.find(a => a.no === i.no); return i}) : [
+          { no: 1, content: null, checked: false },
+          { no: 2, content: null, checked: false },
+          { no: 3, content: null, checked: false },
+          { no: 4, content: null, checked: false }
+        ];
       } else if (basicQuestionType === 3) {
         contentRef.value.options = info.rightAnswer;
       } else {

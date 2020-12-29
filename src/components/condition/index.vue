@@ -119,7 +119,7 @@ export default {
     const setQueryValue = (type, val) => {
       formGroup[type] = val;
       emit('submit', Object.entries(formGroup).reduce((group, node) => {
-        node[1] !== '' && node[1] !== null && (group[node[0]] = node[1])
+        node[1] !== '' && (group[node[0]] = node[1])
         return group;
       }, {}) );
     }

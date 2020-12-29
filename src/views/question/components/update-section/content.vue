@@ -82,7 +82,7 @@ export default {
         baseType: unref(baseType)
       };
       if (baseType.value < 3) { 
-        result.option = unref(options);
+        result.option = unref(options).map((i: any)=> { i.name = numberToLetter(i.no); return i });
         result.rightAnswer = options.value.filter(i => i.checked);
       } else if (baseType.value === 3) {
         result.rightAnswer = unref(options);
@@ -104,9 +104,6 @@ export default {
 
     const questionTypeChange = (question) => {
       baseType.value = question.toolQuestionType;
-      formGroup.title = null;
-      formGroup.analysis = null;
-      answer.value = null;
       if (baseType.value === 4) { answer.value = '正确' }
       if (baseType.value === 1 || baseType.value === 3) {
         options.value = [];

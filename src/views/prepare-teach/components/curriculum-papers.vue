@@ -43,7 +43,11 @@
                 <div class="content-list-box-item-bg">
                   <img class="img-cover" style="width:116px;" 
                     v-if="item.ext !== 'mp3' && item.ext !== 'zip' && item.ext !== 'rar' && item.mediaType == null" 
+<<<<<<< HEAD
                     :src="`${process.env.VITE_DOMAIN}${item.imgPath}`" 
+=======
+                    :src="`${domain}${item.imgPath}`" 
+>>>>>>> dev
                     alt="爱学标品">
                   <img v-else src="/@/assets/prepare-teach/weizhiwenjian.png" alt="爱学标品">
                 </div>
@@ -88,6 +92,7 @@ export default {
   setup(props) {
     let close: any = inject('close')
     let activeName = ref('totalCount')
+    let domain = import.meta.env.VITE_DOMAIN;
     /*---------获取上部展示数据------------*/
     let courseDto: any = ref({})
     let prepareLesson: any = ref({})
@@ -216,7 +221,7 @@ export default {
 
     return { 
       close, activeName, tabCountList, courseDto, request, allFileList, handleClick, prepareLesson, uploadMyPlan,
-      tabCountRequest, uploadMyVideo, savePrepareClass, type, preview
+      tabCountRequest, uploadMyVideo, savePrepareClass, type, preview, domain
     }
   }
 }
