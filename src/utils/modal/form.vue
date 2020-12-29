@@ -13,6 +13,9 @@
           <el-option v-for="option in node.options" :key="option[node.valueKey || 'id']" :label="option[node.labelKey || 'name']" :value="option[node.valueKey || 'id']" />
         </el-select>
       </template>
+	    <template v-else-if="node.type === 'cascader'">
+		    <el-cascader style="width: 100%" v-model="formGroup[node.key]" :props="node.props" :options="node.options" :placeholder="node.placeholder || `请选择${node.label}`"></el-cascader>
+	    </template>
       <template v-else-if="node.type === 'radio'">
         <el-radio-group  v-model="formGroup[node.key]">
           <el-radio v-for="option in node.options" :key="option[node.valueKey || 'id']" :label="option[node.valueKey || 'id']">{{ option[node.labelKey || 'name'] }}</el-radio>
@@ -44,9 +47,9 @@
 </template>
 <script lang="ts">
 import { PropType, reactive, ref } from 'vue';
-import { ElForm, ElFormItem, ElInput, ElInputNumber, ElSelect, ElOption, ElDatePicker, ElRadioGroup, ElRadio } from 'element-plus';
+import { ElForm, ElFormItem, ElInput, ElInputNumber, ElSelect, ElOption, ElDatePicker, ElRadioGroup, ElRadio, ElCascader } from 'element-plus';
 import axios from 'axios';
-type INodes = PropType<(NInput | NNumber | NBetween | NSelect | NDatepicker | NRangepicker)[]>;
+type INodes = PropType<(NInput | NNumber | NBetween | NSelect | NDatepicker | NRangepicker | NCascader)[]>;
 
 export default {
   name: 'cus-form',
@@ -64,16 +67,19 @@ export default {
       default: () => ({})
     }
   },
-  components: { ElForm, ElFormItem, ElInput, ElInputNumber, ElSelect, ElOption, ElDatePicker, ElRadioGroup, ElRadio },
+  components: { ElForm, ElFormItem, ElInput, ElInputNumber, ElSelect, ElOption, ElDatePicker, ElRadioGroup, ElRadio, ElCascader },
   setup(props) {
-    let formGroup = reactive(props.nodes.reduce((group, node) => {
+    let nodes = ref(props.nodes);
+    let formGroup = reactive(nodes.value.reduce((group, node) => {
       if (node.type === 'between') {
         group[node.keys[0]] = props.data[node.keys[0]];
         group[node.keys[1]] = props.data[node.keys[1]];
+      } else if(node.type === 'cascader' && node.default) {
+        group[node.key] = node.default;
       } else {
         group[node.key] = props.data[node.key] || node.default;
       }
-      if (node.type === 'select' && node.url) {
+      if ((node.type === 'select' || node.type === 'cascader') && node.url) {
         axios.post(node.url).then((res: any) => {
           node.options = [...res.json, ...(node.options || [])];
         });
@@ -86,8 +92,8 @@ export default {
         valid ? resolve(formGroup) : reject()
       })
     }
-    return { formRef, formGroup, save }
-  } 
+    return { formRef, formGroup, save, nodes}
+  }
 }
 
 interface NPublic {
@@ -125,5 +131,12 @@ interface NRangepicker extends NPublic {
   readonly type: 'rangepicker';
   readonly key: string;
   format?: 'yyyy-MM-dd' | 'yyyy-MM-dd hh:mm:ss',
+}
+interface NCascader extends NPublic {
+  props?: {[key: string]: any},
+	readonly type: 'cascader',
+	options?: any[],
+	url?: string,
+  filterable?: boolean
 }
 </script>

@@ -36,6 +36,16 @@ const MenuList: RouterConf[] = [
         isLeaf: true
       },
       {
+        title: '课程管理',
+        key: '/teaching/course',
+        isLeaf: true
+      },
+      {
+        title: '教师管理',
+        key: '/teaching/teacher',
+        isLeaf: true
+      },
+      {
         title: '角色管理',
         key: '/teaching/role',
         isLeaf: true

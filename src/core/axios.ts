@@ -10,11 +10,12 @@ import Store from './../store';
 
 /* ------------------------- 默认请求格式, 和全局请求地址 ------------------------- */
 axios.defaults.headers['Content-Type'] = 'application/x-www-form-urlencoded';
-axios.defaults.baseURL = import.meta.env.VITE_APP_BASE_URL as string;
+// axios.defaults.baseURL = import.meta.env.VITE_APP_BASE_URL as string;
+axios.defaults.baseURL = 'http://192.168.4.14:8080';
 axios.interceptors.request.use((res: AxiosRequestConfig) => {
   res.headers['accessToken'] = window.localStorage.getItem('token');
   res.headers['userId'] = Store.getters.userInfo ? Store.getters.userInfo.user.id : null;
-  
+
   /* 设置 request token 该请求可被取消 */
   if (res.headers['Content-Type'] === 'application/x-www-form-urlencoded') {
     res.data = res.data ? stringify(res.data) : res.data;
