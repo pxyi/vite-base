@@ -111,7 +111,7 @@ export default {
     }
     const __strToHtml = (data) => {
       if (data.basicQuestionType < 3) {
-        let options = `<div class="e-m-cell">${data.option.map(e => `${e.name}.${e.content}`).join(`</div><div class="e-m-cell">`)}</div>`
+        let options = `<div class="e-m-cell">${data.option ? data.option.map(e => `${e.name}.${e.content}`).join(`</div><div class="e-m-cell">`) : ''}</div>`
         let html = `<div class="e-title">${data.title}</div><div class="e-main">${options}</div>`
         return html
       } else if (data.basicQuestionType === 9) {
