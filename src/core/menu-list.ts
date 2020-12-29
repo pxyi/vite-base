@@ -36,8 +36,6 @@ const MenuList: RouterConf[] = [
         isLeaf: true
       },
       {
-<<<<<<< HEAD
-=======
         title: '课程管理',
         key: '/teaching/course',
         isLeaf: true
@@ -53,7 +51,6 @@ const MenuList: RouterConf[] = [
         isLeaf: true
       },
       {
->>>>>>> 8eb2d7dd005e0120b6381c80f9544ae14ce92c9c
         title: '资料库',
         key: '/teaching/resource-base',
         isLeaf: true
