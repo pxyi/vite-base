@@ -4,7 +4,7 @@
     <ul>
       <li v-for="(data, idx) in questionList" :key="data.id">
         <span>第<i>{{ idx + 1 }}</i>题</span>
-        <a @click.stop="setFocusData(data)">{{ data.questionTypeName }}</a>
+        <a @click.stop="setFocusData(data, idx)">{{ data.questionTypeName }}</a>
       </li>
     </ul>
   </div>
@@ -19,7 +19,12 @@ export default {
 
     let data: Ref<any> = computed(() => store.state.focusData);
 
-    let setFocusData = (data) => store.commit('set_focus_data', data);
+    let setFocusData = (data, idx) => {
+      let top = (document.querySelectorAll('.main-content .item')[idx] as HTMLElement).offsetTop;
+      document.querySelector('.main-content')!.scrollTop = top - 80;
+      
+      store.commit('set_focus_data', data)
+    };
 
     return { questionList, setFocusData, data }
   }

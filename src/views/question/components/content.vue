@@ -38,6 +38,7 @@
               <p><i @click="data.showAnalysis = !data.showAnalysis">解析</i></p>
               <!-- <p><i @click="similarPreview(data.id)">相似题</i></p> -->
               <a @click.prevent="addCart(data)" :class="{ active: !!cartList.find(i => i.id === data.id) }" />
+              <i :class="[`el-icon-${data.loading ? 'loading' : 'delete'}`]" @click="remove(data)" v-if="userId === data.creatorId" />
             </div>
           </div>
         </div>
@@ -60,16 +61,20 @@
 </template>
 
 <script lang="ts">
-import { ref, Ref, reactive } from 'vue';
+import { ref, Ref, reactive, computed } from 'vue';
 import axios from 'axios';
 import { AxResponse } from './../../../core/axios';
 import Modal from './../../../utils/modal';
 import updateComponent from './update.vue';
+import { ElMessage } from 'element-plus';
+import { useStore } from 'vuex';
 
 const difficultFilter = (v) => ([{ name: '易', id: 11 }, { name: '较易', id: 12 }, { name: '中档', id: 13 }, { name: '较难', id: 14 }, { name: '难', id: 15 }].find(i => i.id === v)?.name);
 
 export default {
   setup() {
+    let store = useStore()
+    let userId = computed(() => store.getters.userInfo.user.id)
 
     let dataset: Ref<any[]> = ref([]);
 
@@ -146,7 +151,14 @@ export default {
       Modal.create({ title: '编辑题目', component: updateComponent, width: 640, props: { id } }).then(_ => request() );
     }
 
-    return { request, loading, dataset, pageAorder, orderChange, similarPreview, cartList, addCart, update, showAnswer }
+    const remove = async (data) => {
+      data.loading = true;
+      let res = await axios.post<null, AxResponse>('/tiku/question/delete', { id: data.id });
+      ElMessage[res.result ? 'success' : 'warning'](res.result ? '删除成功~！' : res.msg);
+      request();
+    }
+
+    return { request, loading, dataset, pageAorder, orderChange, similarPreview, cartList, addCart, update, showAnswer, remove, userId }
   }
 }
 </script>
@@ -282,8 +294,7 @@ export default {
           a {
             display: inline-block;
             padding: 0 10px;
-            margin-left: 20px;
-            margin-right: 30px;
+            margin: 0 20px;
             color: #1AAFA7;
             line-height: 20px;
             border: solid 1px #1AAFA7;
@@ -301,6 +312,18 @@ export default {
             &::before {
               content: '加入试题篮';
               display: inline-block;
+            }
+          }
+
+          & > i {
+            color: #5B7DFF;
+            font-size: 18px;
+            line-height: 36px;
+            margin-right: 20px;
+            vertical-align: top;
+            cursor: pointer;
+            &:active {
+              opacity: .8;
             }
           }
         }

@@ -78,6 +78,7 @@ export default {
       ) { ElMessage.warning('请选择答案'); return false }
       let result: any = { 
         title: formGroup.title,
+        analysis: formGroup.analysis,
         baseType: unref(baseType)
       };
       if (baseType.value < 3) { 
