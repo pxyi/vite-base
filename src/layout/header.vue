@@ -1,6 +1,6 @@
 <template>
   <div class="lay__header__container">
-    <el-popover placement="bottom-start" :width="200" trigger="click">
+    <el-popover v-model:visible="visible" placement="bottom-start" :width="200" trigger="click">
       <template #reference>
         <div class="age__class"><span>{{ subject.name }}</span><i class="el-icon-arrow-down" /></div>
       </template>
@@ -8,11 +8,11 @@
         <div v-for="grade in subjectList" :key="grade.id">
           <h4>{{ grade.name }}</h4>
           <div class="grade__content">
-            <div 
-              v-for="course in grade.child" 
-              :key="course.code" 
+            <div
+              v-for="course in grade.child"
+              :key="course.code"
               :class="{ 'active': subject.code === course.code }"
-              @click="setSubject(course.name,course.code)"
+              @click="setSubject(course)"
             >{{ course.name }}</div>
           </div>
         </div>
@@ -70,7 +70,7 @@ export default {
     let store = useStore();
 
     let breadcrumb = computed( () => route.matched.reduce((t: string[], c) => { c.meta.title && t.push(c.meta.title); return t; }, []) );
-
+		let visible = ref(false)
 
     /* 接受组件传递内容插入至 slot, 路由变更时，清空 slot 内容 */
     let slot: { value: HTMLElement | null } = ref(null);
@@ -91,11 +91,14 @@ export default {
     /* 获取 sbujectList，并监听subject 变更，执行组件传递来的方法 */
     let subjectList = ref([]);
     getSubjectList(store).then(res => { subjectList.value = res; });
-    let subject: Ref<{ name, code }> = computed(() => store.getters.subject);
+    let subject: Ref<{[key: string]: any}> = computed(() => store.getters.subject);
     watch(subject, () => effectList.map(fn => fn(subject.value.code)) );
 
     let subjectName = ref('');
-    const setSubject = (name, code) => store.commit(SET_SUBJECT, { name, code });
+    const setSubject = (course) => {
+      store.commit(SET_SUBJECT, course);
+      visible.value = false;
+    }
 
     let commandList = new Map([
       ['logout', () => {
@@ -109,7 +112,7 @@ export default {
       emitter.off('effect', __setFns );
     });
 
-    return { breadcrumb, slot, commandList, subjectList, subject, setSubject }
+    return { breadcrumb, slot, commandList, subjectList, subject, setSubject, visible }
   }
 }
 </script>
@@ -117,7 +120,7 @@ export default {
 .lay__header__container {
   display: flex;
   .el-breadcrumb {
-    .el-breadcrumb__inner, 
+    .el-breadcrumb__inner,
     .el-breadcrumb__separator {
       color: #fff;
       &:hover {

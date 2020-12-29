@@ -5,9 +5,9 @@
       <template #empty><cus-empty /></template>
     </el-table>
     <template v-if="hasPage && dataset.length && page.total > page.size">
-      <el-pagination 
-        v-model:current-page="page.current" 
-        v-model:page-size="page.size" 
+      <el-pagination
+        v-model:current-page="page.current"
+        v-model:page-size="page.size"
         :total="page.total"
         @current-change="request()"
         layout="prev, pager, next"
@@ -16,7 +16,7 @@
   </div>
 </template>
 <script lang="ts">
-import { ref, reactive, watch, PropType } from 'vue';
+import { ref, reactive, watch, PropType, toRef } from 'vue';
 import axios from 'axios';
 import { AxResponse } from './../../core/axios';
 
@@ -33,8 +33,8 @@ export default {
       default: 'default'
     },
     dataSet: {
-      type: Array as PropType<any[]>,
-      default: () => []
+      type: Object,
+      default: () => ref([])
     },
     autoRequest: {
       type: Boolean,
@@ -54,7 +54,7 @@ export default {
     }
   },
   setup(props) {
-    let dataset = ref(props.dataSet);
+    let dataset = toRef(props, 'dataSet');
 
     let loading = ref(false);
 
@@ -63,7 +63,7 @@ export default {
       size: 10,
       total: props.dataSet.length
     });
-    watch(() => props.default, () => { page.current = 1; request() });
+    watch(props.default, () => { page.current = 1; request() });
 
     let __params = {};
     const request = async (params?) => {
@@ -77,9 +77,9 @@ export default {
       loading.value = false;
     }
     props.url && props.autoRequest && request(props.default);
-    
+
     return { dataset, page, request, loading }
-  } 
+  }
 }
 </script>
 <style lang="scss" scoped>

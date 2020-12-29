@@ -1,8 +1,9 @@
 <template>
   <div class="near-cus-list">
+    <SearchTime :params='params' @search="searchTime"/>
     <cus-list has-page url="/admin/prepareLesson/queryPageV2" :default="params" :auto-request="true" :headers='{ type: 1 }' ref="nearList" >
       <template v-slot:avatar>
-         <img src="/@/assets/prepare-teach/book_logo.png" width="36"  alt="">
+         <img src="/@/assets/prepare-teach/book_logo.png" width="36"  alt="爱学标品">
       </template>
       <template v-slot="{ data }">
          <div class="near-list-content">  
@@ -13,7 +14,7 @@
       </template>
       <template v-slot:actions="{ data }">
         <div class="menu">
-          <el-button size="small" round :class="data.checkStaus === 2?'btn-hidden':''"  @click="savePrepareClass(data)">提交备课</el-button>
+          <el-button size="small" round :class="{ 'btn-hidden': data.checkStaus === 2 }"  @click="savePrepareClass(data)">提交备课</el-button>
           <el-button size="small" round type='primary' v-if="data.checkStaus === 1"  @click="courseDetailFileList(data)">继续备课</el-button>
           <el-button size="small" round type='primary' v-if="data.checkStaus === 2"  @click="courseDetailFileList(data)">查看备课</el-button>
         </div>  
@@ -28,16 +29,22 @@ import Screen from './../../../utils/screen';
 import CurriculumPapers from './../components/curriculum-papers.vue';
 import axios from 'axios'
 import { AxResponse } from './../../../core/axios'
-import { ElMessage, ElLoading } from 'element-plus'
-
+import { ElMessage, ElLoading, locale } from 'element-plus'
+import SearchTime from './search-time.vue'
 
 export default {
   props: {
     listShow: Number
   },
+  components: { SearchTime },
   setup(props) {
     let params: Ref<any> = ref({});
     let nearList: Ref<any> = ref();
+
+    // 搜索时刷新接口
+    const searchTime = (data) => {
+      nearList.value.request(data)
+    }
 
     // 查看备课、继续备课
     const courseDetailFileList = (item) => {
@@ -48,8 +55,6 @@ export default {
         }
       })
     }
-
-    
    
     // 提交备课
     const savePrepareClass = async(data) => {
@@ -59,6 +64,7 @@ export default {
             if(res.result) {
               resolve(res.json)
             }else{
+              ElMessage.error(res.msg)
               reject(false)
             }
         })
@@ -81,8 +87,7 @@ export default {
       }) 
     }
 
-
-    return { params, courseDetailFileList, nearList, savePrepareClass }
+    return { params, courseDetailFileList, nearList, savePrepareClass, searchTime }
   }
 }
 </script>
@@ -90,10 +95,11 @@ export default {
 <style lang="scss" scoped>
 .near-cus-list{
   :deep(.cus__list__container .cus__list__item){
-    padding: 5px 20px;
+    padding: 5px 10px;
+    align-items: center;
   }
-  .cus__list__avatar > *{
-    margin-top: 12px;
+  :deep(.cus__list__container .cus__list__item):hover{
+    background: #F5F7FA;
   }
   .near-list-content{
     display: flex;
@@ -137,13 +143,20 @@ export default {
     }
   }
   .menu{
-    width: 200px;
-    margin-top: 13px;
     .el-button{
       margin-right: 10px;
     }
     .btn-hidden{
       visibility: hidden;
+    }
+  }
+}
+@media screen and(max-width: 1280px){
+  .near-cus-list{
+    .menu{
+      .el-button{
+        margin-right: 0;
+      }
     }
   }
 }

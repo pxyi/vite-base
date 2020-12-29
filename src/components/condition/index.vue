@@ -6,11 +6,11 @@
           <div class="cus__class__item" v-show="!node.hide || isOpened">
             <div class="cus__class__label">{{ node.label }}</div>
             <div class="cus__class__box">
-              <div 
+              <div
                 :class="{ active: cell.id === formGroup[node.key], 'cus__class__cell': true }"
-                v-for="cell in (node.options || list[mapping.find(i => i.text === node.label).key])" 
-                :key="cell.id" 
-                @click="setQueryValue(node.key, cell.id)" 
+                v-for="cell in (node.options || list[mapping.find(i => i.text === node.label).key])"
+                :key="cell.id"
+                @click="setQueryValue(node.key, cell.id)"
               >
                 <span>{{ cell.name }}</span>
               </div>
@@ -23,11 +23,11 @@
               <div class="cus__class__item">
                 <div class="cus__class__label">{{ node.label }}</div>
                 <div class="cus__class__box">
-                  <div 
+                  <div
                     :class="{ active: cell.id === formGroup[node.key], 'cus__class__cell': true }"
-                    v-for="cell in (node.options || list[mapping.find(i => i.text === node.label).key])" 
-                    :key="cell.id" 
-                    @click="setQueryValue(node.key, cell.id)" 
+                    v-for="cell in (node.options || list[mapping.find(i => i.text === node.label).key])"
+                    :key="cell.id"
+                    @click="setQueryValue(node.key, cell.id)"
                   >
                     <span>{{ cell.name }}</span>
                   </div>
@@ -68,8 +68,8 @@ const mapping = [
   { text: '来源', key: 'sourceList' },
   { text: '题类', key: 'categoryList' },
   { text: '知识点', key: 'lnowledgeList' },
-  { text: '学期', key: 'termList' },
-  { text: '班型', key: 'courseTypeList' },
+  { text: '班型', key: 'courseTypeList'},
+  { text: '学期', key: 'termList'}
 ]
 
 export default {
@@ -86,7 +86,7 @@ export default {
   },
   emit: ['submit'],
   setup(props, { emit }) {
-    
+
     let store = useStore();
 
     let showNodeList: ICondition[] = [];
@@ -118,7 +118,7 @@ export default {
 
     const setQueryValue = (type, val) => {
       formGroup[type] = val;
-      emit('submit', Object.entries(formGroup).reduce((group, node) => { 
+      emit('submit', Object.entries(formGroup).reduce((group, node) => {
         node[1] !== '' && node[1] !== null && (group[node[0]] = node[1])
         return group;
       }, {}) );
@@ -148,7 +148,7 @@ const getCondition = (userId, subjectCode, nodeList): Promise<any> => {
         if (Array.isArray(res.json)) {
           condition.questionType = [{ name: '全部', id: null }, ...(res.json.map(i => ({ name: i.jyQuestionTypeName, id: i.jyQuestionType }) )) ];
         } else {
-          res.json.years && (condition.yearList = [{ name: '全部', id: null }, ...(res.json.years.map(i => ({ name: i.name, id: i.val }))) ]);
+          res.json.years && (condition.yearList = [{ name: '全部', id: null }, ...(res.json.years.map(i => ({ name: i.name, id: i.id }))) ]);
           res.json.grades && (condition.gradeList = [{ name: '全部', id: null }, ...res.json.grades ]);
           res.json.bookVersions && (condition.bookVersionList = [{ name: '全部', id: null }, ...res.json.bookVersions ]);
           res.json.courseTypes && (condition.courseTypeList = [{ name: '全部', id: null }, ...res.json.courseTypes ]);
@@ -248,3 +248,4 @@ const getCondition = (userId, subjectCode, nodeList): Promise<any> => {
   }
 }
 </style>
+

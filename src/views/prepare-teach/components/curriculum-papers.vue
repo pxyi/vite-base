@@ -1,9 +1,7 @@
 <template>
   <div class="paper__update__container">
     <div class="header">
-      <div class="tabs_box">
-        {{title}}
-      </div>
+      <div class="tabs_box">{{ title }}</div>
       <div class="btns">
         <el-button round @click="savePrepareClass" :disabled="prepareLesson === '' && prepareLesson.id === null " v-if="!prepareLesson.checkStatus || prepareLesson.checkStatus === 0">提交备课</el-button>
         <el-button round @click="savePrepareClass" v-if="prepareLesson.checkStatus === 1"  >已提交</el-button>
@@ -13,17 +11,17 @@
     <div class="content">
       <div class="content-top">
         <div class="course-img">
-          <img src="/@/assets/prepare-teach/courseBg.png" style="width: 130px" alt="">
+          <img src="/@/assets/prepare-teach/course-bg.png" style="width: 130px" alt="爱学标品">
         </div>
         <div class="class-top">
-          <h2>{{courseDto.courseName}}</h2>
+          <h2>{{ courseDto.courseName || title }}</h2>
           <div class="class-list">
             <div>
               <p class="front"><span class="span-title">科目：</span><span class="span-content">{{ courseDto.subjectName ||'无' }}</span></p>
-              <p><span class="span-title">课程类型：</span><span class="span-content">{{ courseDto.gradeName ||'无' }}</span></p>
+              <p><span class="span-title">年级：</span><span class="span-content">{{ courseDto.courseTypeName ||'无' }}</span></p>
             </div>
             <div>
-              <p class="front"><span class="span-title">年级：</span><span class="span-content">{{ courseDto.courseTypeName ||'无' }}</span></p>
+              <p class="front"><span class="span-title">课程类型：</span><span class="span-content">{{ courseDto.gradeName ||'无' }}</span></p>
               <p><span class="span-title">保存时间：</span><span class="span-content">{{ prepareLesson.modifyTime ||'无' }}</span></p>
             </div>
           </div>       
@@ -33,8 +31,8 @@
          <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
           <el-tab-pane v-for="item in tabCountList" :key="item"  :name="item.nameKey">
           <template #label>
-            <span>{{item.name}}</span>
-            <span class="num">{{item.num}}</span>
+            <span>{{ item.name }}</span>
+            <span class="num">{{ item.num }}</span>
           </template>
             <div class="btn-box">
               <el-button type="primary" round @click="uploadMyPlan(item)" >上传我的教案</el-button>
@@ -43,24 +41,27 @@
             <div class="content-list-box">
               <div class="content-list-box-item" v-for="(item,index) in allFileList" :key="index">
                 <div class="content-list-box-item-bg">
-                  <img class="img-cover" style="width:116px;" v-if="item.ext !== 'mp3' && item.ext !== 'zip' && item.ext !== 'rar' && item.mediaType == null" :src="`/test${item.imgPath}`" alt="">
+                  <img class="img-cover" style="width:116px;" 
+                    v-if="item.ext !== 'mp3' && item.ext !== 'zip' && item.ext !== 'rar' && item.mediaType == null" 
+                    :src="`${import.meta.env.VITE_DOMAIN}${item.imgPath}`" 
+                    alt="爱学标品">
                   <img v-else src="/@/assets/prepare-teach/weizhiwenjian.png" alt="">
                 </div>
                 <div class="content-list-box-item-title">
-              <span>{{ item.fileName }}</span>
-            </div>
-            <div class="btn-group">
-              <div class="btn-box">
-                <div>
-                  <el-button size="mini" icon="el-icon-search" round >预览</el-button>
+                  <p>{{ item.fileName }}</p>
+                </div>
+                <div class="btn-group">
+                  <div class="btn-box">
+                    <div>
+                      <el-button size="mini" icon="el-icon-search" @click="preview(item)" round >预览</el-button>
+                    </div>
+                  </div>
+                  <div class="private">
+                    <i class="el-icon-lock" v-if="item.isPublic == 0" style="font-size: 12px"></i>
+                  </div>
                 </div>
               </div>
-              <div class="private">
-                <i class="el-icon-lock" v-if="item.isPublic == 0" style="font-size: 12px"></i>
-              </div>
-            </div>
-              </div>
-              <div v-if="allFileList.length == 0" style="text-align:center;">暂无数据</div>
+              <cus-empty v-if="!allFileList.length" />
             </div>
           </el-tab-pane>
         </el-tabs>
@@ -69,25 +70,25 @@
   </div>
 </template>
 <script lang="ts">
-import { ref, Ref, reactive, inject, watch, } from 'vue';
+import { ref, Ref, reactive, inject, watch } from 'vue';
 import axios from 'axios';
 import { AxResponse } from './../../../core/axios';
 import Modal from './../../../utils/modal';
 import MyPlanUpload from './my-plan-upload.vue'
 import MyVideoUpload from './my-video-upload.vue'
-import { ElMessage } from 'element-plus'
-
+import { ElMessage,ElLoading } from 'element-plus'
+import createElement from './../../../utils/createElement';
 
 export default {
   props: {
     id: String,
     title: String,
   },
+ 
   setup(props) {
     let close: any = inject('close')
     let activeName = ref('totalCount')
-    console.log(props.id)
-    // 获取上部展示数据
+    /*---------获取上部展示数据------------*/
     let courseDto: any = ref({})
     let prepareLesson: any = ref({})
       axios.post<any,AxResponse>('/admin/prepareLesson/queryPrepareLessonByCourseIndexId', { courseIndexId: props.id}).then(res => {
@@ -97,7 +98,7 @@ export default {
         }
       })
 
-    // 获取tab标签数据
+    /*---------获取tab标签数据------------*/
     let tabCountList = ref([
       { name: '全部', nameKey: 'totalCount', num: 0, type: null }, 
       { name: '课件', nameKey: 'courseWareCount', num: 0, type: 1 }, 
@@ -121,7 +122,7 @@ export default {
     }
     tabCountRequest()
 
-    // 获取内容图片数据
+    /*---------获取内容图片数据------------*/
     let allFileList = ref([])
     const request = async (type) =>{
       let res = await axios.post<any,AxResponse>('/admin/prepareLesson/queryMaterialByCourseIndexId', { courseIndexId: props.id, type: type })
@@ -131,7 +132,7 @@ export default {
     }
     request('')
 
-    // 切换标签获取数据
+    /*---------切换标签获取数据------------*/
     let type = ref()
     const handleClick = (e) => {
       tabCountList.value.map( ( item: any,index ) => {
@@ -142,7 +143,7 @@ export default {
       })
     }
 
-    // 上传我的教案
+    /*---------上传我的教案------------*/
     const uploadMyPlan = () => {
       Modal.create({ title: '上传我的教案', width: 640, component: MyPlanUpload, props: { id: props.id }, zIndex: 999 }).then((data: any) => {
         if(data.json){
@@ -152,7 +153,7 @@ export default {
       })
     }
 
-    // 上传我的说课
+    /*---------上传我的说课------------*/
     const uploadMyVideo = () => {
       Modal.create({ title: '上传我的说课', width: 640, component: MyVideoUpload, props: { id: props.id }, zIndex: 999 }).then((data: any) => {
         if(data.json){
@@ -161,7 +162,7 @@ export default {
         }
       })
     }
-    // 提交备课
+    /*---------提交备课------------*/
     const savePrepareClass = () => {
       let __params = {
         courseId: courseDto.value.id,
@@ -177,9 +178,45 @@ export default {
         }
       }) 
     }
+
+    /*-----预览-----*/
+    const preview = (item) => {
+      const loading = ElLoading.service({ lock: true, background: 'rgba(255, 255, 255, .7)', text: '加载中...' })
+      let src = `${import.meta.env.VITE_OFFICE_PREVIEW}?furl=${import.meta.env.VITE_DOMAIN}${item.filePath}`;
+      let closeBtn = createElement('div', { 
+        className: 'el-icon-close', 
+        style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', top: '40px', right: '40px', zIndex: '10', cursor: 'pointer' },
+        on: { click: () => { container.remove(); } }
+      });
+      // 打印
+      let printData = createElement('div', { 
+        className: 'el-icon-printer', 
+        style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', bottom: '40px', right: '40px', zIndex: '10', cursor: 'pointer' },
+        on: { click: () => { window.print() } }
+      });
+      //下载
+      let downloadData = createElement('div', { 
+        className: 'el-icon-download', 
+        style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', bottom: '100px', right: '40px', zIndex: '10', cursor: 'pointer' },
+        on: { click: () => { 
+          let host: any = process.env.VUE_APP_BASE_API
+          let a:any = document.createElement('a');
+          a.download = item.fileName;
+          a.href = `${import.meta.env.VITE_DOMAIN}${item.filePath}`;
+          a.click();
+         } }
+      });
+      let iframe = createElement('iframe', { attrs: { src, width: '100%', height: '100%' }, style: { background: '#f9f9f9' } });
+      iframe.onload = loading.close;
+      let container = createElement('div', { 
+        style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '1000' },
+      }, [ closeBtn, iframe, printData, downloadData ])
+      document.body.appendChild(container);
+    }
+
     return { 
       close, activeName, tabCountList, courseDto, request, allFileList, handleClick, prepareLesson, uploadMyPlan,
-      tabCountRequest, uploadMyVideo, savePrepareClass, type
+      tabCountRequest, uploadMyVideo, savePrepareClass, type, preview
     }
   }
 }
@@ -190,6 +227,9 @@ export default {
   background: $--background-color-base;
   padding-bottom: 1px;
   min-height: 100%;
+  .cus__empty__container{
+    margin: 0 auto;
+  }
   .header {
     background: $--color-primary;
     padding: 0 80px;
@@ -262,6 +302,7 @@ export default {
         h2{
           font-size: 18px;
           color: #333;
+          font-weight: 500;
         }
         .class-list{
           margin-top: 30px;
@@ -269,9 +310,9 @@ export default {
           flex-direction: row;
           justify-content: space-between;
           div{
-            line-height: 25px;
+            line-height: 30px;
             .front{
-              width: 300px;
+              width: 200px;
             }
             .span-title{
               font-weight: 500;
@@ -297,17 +338,17 @@ export default {
         border-radius: 15px;
       }
       .content-list-box{
-        padding: 20px 0;
+        padding: 20px 0 ;
         display: flex;
         justify-content: flex-start;
         flex-direction: row;
         flex-wrap: wrap;
         &-item{
+          flex: 0 0 16.6%;
           margin-bottom: 15px;
           position: relative;
           box-sizing: border-box;
-          padding: 10px 10px;
-          width: 160px;
+          padding: 10px 25px;
           height: 155px;
           border-radius: 6px;
           display: flex;
@@ -315,13 +356,12 @@ export default {
           justify-content: flex-start;
           align-items: center;
           cursor: pointer;
-          margin-right: 15px;
           &:hover .btn-group{
             display: flex;
           }
           .btn-group{
             top: 0;
-            left: 0;
+            left: 15px;
             width: 160px;
             height: 155px;
             border-radius: 6px;
@@ -368,13 +408,11 @@ export default {
             }
           }
           &-title{
-            width: 100%;
             text-align:center;
             text-justify:inter-ideograph;
             margin-top: 8px;
             font-size: 14px;
             font-family: PingFangSC-Regular, PingFang SC;
-            font-weight: 400;
             color: #333333;
             overflow: hidden;
             word-break: break-all;
@@ -385,6 +423,9 @@ export default {
             -webkit-line-clamp: 2;
             line-clamp: 2;
             -webkit-box-orient: vertical;
+            p{
+              text-align: left;
+            }
           }
           .private{
             display: none;
@@ -403,7 +444,7 @@ export default {
         margin-bottom: 0;
       }
       :deep(.el-tabs__content){
-        padding: 20px 30px;
+        padding: 20px;
       }
       :deep(.el-tabs__nav-scroll){
         background: $--background-color-base;
@@ -455,6 +496,13 @@ export default {
       :deep(.el-tabs__nav){
         border: none;
       }
+    }
+  }
+}
+@media screen and (max-width: 1280px){
+  .paper__update__container {
+    .content{
+      width: 100%;
     }
   }
 }

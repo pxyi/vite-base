@@ -14,7 +14,7 @@
         multiple
       > 
         <i class="el-icon-upload"></i>
-        <div>将文件拖到此处，或<em>点击上传</em></div>
+        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
         <span class="supported-documents">支持扩展名：.mp4,.jpg,.jpeg,.png</span>
       </el-upload>
     </div>
@@ -70,7 +70,14 @@ export default ({
     let __params = ref({})
     const save = (resolve, reject) => {
       if(ercodeOrUrl.value === 'ercode'){
-         __params.value  = {
+        __params.value = {
+          fileList: newFileList.value,
+          isPublic: 0,
+          courseIndexId: props.id,
+          type: 3,
+        }; 
+      } else if(ercodeOrUrl.value === 'url' ) {
+        __params.value  = {
           fileList: [{
             oriFilename: "链接",
             filePath: uploadUrlData.value,
@@ -80,15 +87,7 @@ export default ({
           type: 3,
           mediaType: "url",
         };
-      } else if(ercodeOrUrl.value === 'url' ) {
-        __params.value = {
-          fileList: newFileList.value,
-          isPublic: 0,
-          courseIndexId: props.id,
-          type: 5,
-        };
       }
-      
       let res =  axios.post<any, AxResponse>('/admin/material/saveUserMaterial', __params.value, { headers: { type: 1, 'Content-Type': 'application/json' }}).then(res => {
         if(res.result) {
           ElMessage.success('上传成功')

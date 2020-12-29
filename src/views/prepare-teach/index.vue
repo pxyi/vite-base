@@ -13,22 +13,22 @@
       ]"
       @submit="$refs.list.request($event)" 
     />
-    <div class="cus-list clearfix" v-if="listShow == 1">
+    <div class="cus-list" v-if="listShow == 1">
       <cus-list ref="list" has-page url="/course/queryByPage" :default="params" :auto-request="true" :headers='{ type: 1, "Content-Type": "application/json" }' >
         <template v-slot="{ data }">
           <div class="course-info" @click="godetails(data)">
           <div class="course-info-top">
-            <p class="course-title">{{data.courseName}}</p>
+            <p class="course-title">{{ data.courseName }}</p>
             <p class="course-trip">
               {{ data.gradeName || '--'}}/{{ data.courseTypeName || '--'}}/{{ data.semesterName || '--' }}</p>
           </div>
           <div class="course-img">
-            <img src="/@/assets/prepare-teach/courseBg.png" style="width: 60px" alt="">
+            <img src="/@/assets/prepare-teach/course-bg.png" width="60" alt="爱学标品">
           </div>
         </div>
         <div class="btn-box" @click="godetails(data)">
           <span>课程详情</span>
-          <img src="/@/assets/prepare-teach/enter.png" width="16" height="16" alt="">
+          <img src="/@/assets/prepare-teach/enter.png" width="16" height="16" alt="爱学标品">
         </div>
         </template>
       </cus-list>
@@ -53,7 +53,7 @@
   import { useStore } from 'vuex';
 
   export default {
-    components: { HeaderRefComponent ,NearClass },
+    components: { HeaderRefComponent, NearClass },
     
     setup(props,{ emit }) {
       let store = useStore()
@@ -72,7 +72,7 @@
       // 课程详情弹窗
       const godetails = (item) => {
         let courseId = item.id
-        Modal.create({ title: item.courseName, width: 640, footed: false , component: PreparePapers, props: { courseId }})
+        Modal.create({ title: item.courseName, width: 640,zIndex:998, footed: false , component: PreparePapers, props: { courseId }})
       }
 
       return { headerRef, params,  typeChange, listShow, godetails }
@@ -81,44 +81,52 @@
 </script>
 
 <style lang="scss" scoped>
-  .clearfix{
-    content: '';
-    clear: both;
-    overflow: hidden;
-  }
   .cus-list {
+    :deep(.cus__list__container){
+      padding: 18px 5px 18px 20px;
+    }
+    :deep(.cus__list__container .cus__list__main){
+      display: flex;
+      justify-content: flex-start;
+      flex-flow: row wrap ;
+    }
     :deep(.cus__list__item){
-      width: 275px;
-      float: left;
+      flex: 0 0 24%;
       border-radius: 10px;
       border: 1px solid #DEE4F1;
-      padding: 20px;
-      margin-right: 25px;
+      min-width: 200px;
+      padding: 20px 10px 0;
       cursor: pointer;
+      margin-right: 1%;
+      &:not(:last-child) {
+        margin-bottom: 0px;
+      }
     }
     .course-info {
       height: 90px;
-      width: 100%;
       border-bottom: 1px solid #DEE4F1;
       display: flex;
       flex-direction: row;
       justify-content: space-between;
       .course-title {
         font-size: 16px;
-        margin-top: 2px;
-        margin-bottom: 10px;
-        font-weight: 400;
+        margin: 2px 0 12px;
         color: #1A2633;
         text-overflow: -o-ellipsis-lastline;
         overflow: hidden;
         text-overflow: ellipsis;
-        display: -webkit-box;
-        line-clamp: 2;
+        display: -webkit-box;   /*以下为webkit系兼容必须写法*/  
+        -webkit-line-clamp: 2; /*在第2行显示省略号*/
+        -webkit-box-orient: vertical;
       }
       .course-trip {
         font-size: 12px;
-        font-weight: 400;
         color: #77808D;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;   /*以下为webkit系兼容必须写法*/  
+        -webkit-line-clamp: 1; /*在第2行显示省略号*/
+        -webkit-box-orient: vertical;
       }
     }
     .btn-box {
@@ -141,4 +149,18 @@
       }
     }
   } 
+  @media only screen and (min-width: 1440px) {
+    .cus-list { 
+      :deep(.cus__list__item){
+        flex: 0 0 19%;
+      }
+    }
+  }
+  @media only screen and (min-width: 1680px) {
+    .cus-list { 
+      :deep(.cus__list__item){
+        flex: 0 0 15.6%;
+      }
+    }
+  }
 </style>
