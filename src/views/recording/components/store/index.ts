@@ -45,6 +45,7 @@ export default new Vuex.Store({
       // } else if (data.answer) {
       //   data.rightAnswer = [ {no: 1, content: data.answer } ]
       // }
+      data.operationType = 2;
       data.questionSources && data.questionSources.length && data.questionSources.map(i => {
         if (i.provinceCity) {
           i.provinceId = i.provinceCity[0];
