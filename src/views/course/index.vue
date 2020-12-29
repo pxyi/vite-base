@@ -9,7 +9,7 @@
 				{label: '学期', key: 'semesterId'},
 				{label: '班型', key: 'courseTypeId'},
 				{label: '年级', key: 'gradeId'}]"
-			@submit="$refs.table.request(params)"
+			@submit="$refs.tableRef.request({...$event, ...params})"
 			ref="condition"
 		></cus-condition>
 		<cus-table :auto-request="false" :default="params" ref="tableRef" url="/course/queryByPageV2">
