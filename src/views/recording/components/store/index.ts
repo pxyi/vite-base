@@ -37,13 +37,14 @@ export default new Vuex.Store({
   actions: {
     'focus_data_change'({ commit, state }, payload) {
       let data = cloneDeep(state.focusData)
-      if (data.basicQuestionType === 2 || data.basicQuestionType === 3 || data.basicQuestionType === 9 || data.basicQuestionType === 10) {
-        if (data.answer) { data.answer = data.answer.replace(/<.*?>/g, '').replace(/[\r\n]/g, '') }
-        let f = data.basicQuestionType === 3 ? (data.answer.includes(';') ? ';' : '；') : '';
-        data.rightAnswer = data.answer.split(f).filter(i => !!i).map((a, idx) => ({ no: idx + 1, content: a }));
-      } else if (data.answer) {
-        data.rightAnswer = [ {no: 1, content: data.answer } ]
-      }
+      // data.rightAnswer = data.answer;
+      // if (data.basicQuestionType === 2 || data.basicQuestionType === 3 || data.basicQuestionType === 9 || data.basicQuestionType === 10) {
+      //   if (data.answer) { data.answer = data.answer.replace(/<.*?>/g, '').replace(/[\r\n]/g, '') }
+      //   let f = data.basicQuestionType === 3 ? (data.answer.includes(';') ? ';' : '；') : '';
+      //   data.rightAnswer = data.answer.split(f).filter(i => !!i).map((a, idx) => ({ no: idx + 1, content: a }));
+      // } else if (data.answer) {
+      //   data.rightAnswer = [ {no: 1, content: data.answer } ]
+      // }
       data.questionSources && data.questionSources.length && data.questionSources.map(i => {
         if (i.provinceCity) {
           i.provinceId = i.provinceCity[0];

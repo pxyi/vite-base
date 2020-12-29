@@ -1,10 +1,8 @@
 <template>
   <div class="toolbar-container">
     <div class="title">{{ isItem && isItem.id ? '设置标签' : '题目列表' }}</div>
-    <!-- <transition name="fade" :duration="500"> -->
     <ToolItem />
     <ToolList />
-    <!-- </transition> -->
   </div>
 </template>
 
@@ -40,26 +38,5 @@ export default {
     background: #1AAFA7;
     border-radius: 6px;
   }
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  width: 100%;
-  position: absolute;
-  z-index: 1;
-}
-.fade-enter-active {
-  animation: fadeEnter .5s;
-}
-.fade-leave-active {
-  animation: fadeLeave .5s;
-}
-@keyframes fadeLeave {
-  0%  { opacity: 1; }
-  100%{ opacity: 0; }
-}
-@keyframes fadeEnter {
-  0%  { opacity: 0; }
-  100%{ opacity: 1; }
 }
 </style>
