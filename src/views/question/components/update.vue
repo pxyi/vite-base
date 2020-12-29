@@ -36,6 +36,7 @@ export default {
           delete s.provinceCity;
           return s;
         })
+        contentGroup.basicQuestionType = contentGroup.baseType;
         let params = { ...contentGroup, ...headerGroup, subjectId, id: props.id };
         let url = `/tiku/question/${props.id ? 'editQuestion' : 'add'}`
         let res = await axios.post<null, AxResponse>(url, params, { headers: { 'Content-Type': 'application/json' } });

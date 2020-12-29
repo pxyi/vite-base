@@ -104,9 +104,6 @@ export default {
 
     const questionTypeChange = (question) => {
       baseType.value = question.toolQuestionType;
-      formGroup.title = null;
-      formGroup.analysis = null;
-      answer.value = null;
       if (baseType.value === 4) { answer.value = '正确' }
       if (baseType.value === 1 || baseType.value === 3) {
         options.value = [];
