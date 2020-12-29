@@ -102,7 +102,7 @@ export default {
             title: __strToHtml(n),
             createTime: n.createTime.split('-').join('/'), 
             difficult: difficultFilter(n.difficult),
-            answer: n.rightAnswer.map(a => a.content).join('、') || '-'
+            answer: n.rightAnswer ? n.rightAnswer.map(a => a.content).join('、') : '-'
            } 
         })
       );
