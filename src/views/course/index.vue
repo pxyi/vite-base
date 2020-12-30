@@ -9,7 +9,7 @@
 				{label: '学期', key: 'semesterId'},
 				{label: '班型', key: 'courseTypeId'},
 				{label: '年级', key: 'gradeId'}]"
-			@submit="$refs.tableRef.request({...$event, ...params})"
+			@submit="params = {...$event, ...params};$refs.tableRef.request({...$event, ...params})"
 			ref="condition"
 		></cus-condition>
 		<cus-table :auto-request="false" :default="params" ref="tableRef" url="/course/queryByPageV2">
@@ -110,16 +110,13 @@
 
       async function courseModifyOrAdd(data, url) {
         const res: Promise = await axios.post<any, AxiosResponse>(url, data, {headers: {'Content-Type': 'application/json;charset=UTF-8'}});
-        res.result && instance.ctx.$notify({title: '成功', message: res.msg, type: 'success'}) && tableRef.value.request()
+        res.result && instance.ctx.$notify({title: '成功', message: res.msg, type: 'success'}) && tableRef.value.request(params.value)
       }
-
-
-
       const courseDelete = (id) => axios.post('/course/delete', {id}).then(res => res.result && instance.ctx.$notify({
         title: '成功',
         message: res.msg,
         type: 'success'
-      }) && tableRef.value.request());
+      }) && tableRef.value.request(params.value));
 
       const knotSet = (data) => { screen.create(knot, { data }) };
       return {headerRef, params, tableRef, openModel, condition, courseDelete, knotSet}

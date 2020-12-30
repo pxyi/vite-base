@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "@types/js-md5": "^0.4.2",
+    "@types/node": "^14.14.16",
     "@vue/compiler-sfc": "^3.0.2",
     "@vuedx/typecheck": "^0.2.4-0",
     "@vuedx/typescript-plugin-vue": "^0.2.4-0",

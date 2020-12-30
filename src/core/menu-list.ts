@@ -57,6 +57,11 @@ const MenuList: RouterConf[] = [
         key: '/daily/prepare-teach',
         isLeaf: true
       },
+      {
+        title: '备授课审核',
+        key: '/daily/prepare-check',
+        isLeaf: true
+      }
     ]
   }
 ]
