@@ -1,10 +1,19 @@
 html, body, div, h1, h2, h3, h4, h5, h6, ul, ol, dl, li, dt, dd, p, blockquote, pre, form, fieldset, table, th, td {
-  font-family: PingFangSC, PingFang SC;
   margin: 0;
   padding: 0;
-  font-size: inherit;
-  font-weight: 400;
-  box-sizing: border-box;
+	font-size: inherit;
+	font-weight: 400;
+	box-sizing: border-box;
+}
+@font-face {
+	font-family: 'webfont';
+	font-display: swap;
+	src: url('//at.alicdn.com/t/webfont_novqle83nik.eot'); /* IE9*/
+	src: url('//at.alicdn.com/t/webfont_novqle83nik.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+	url('https://pingtai-prd.oss-cn-shenzhen.aliyuncs.com/frontend-static/NotoSansHans-Regular.woff2') format('woff2'),
+	url('https://pingtai-prd.oss-cn-shenzhen.aliyuncs.com/frontend-static/NotoSansHans-Regular.woff2') format('woff'), /* chrome、firefox */
+	url('//at.alicdn.com/t/webfont_novqle83nik.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+	url('//at.alicdn.com/t/webfont_novqle83nik.svg#AlibabaPuHuiTiL') format('svg'); /* iOS 4.1- */
 }
 ul, ol {
   list-style: none;
@@ -19,8 +28,10 @@ a {
   text-decoration: none;
 }
 html, body, #app {
-  height: 100%;
+	font-family: "webfont", -apple-system, BlinkMacSystemFont, Roboto, "PingFang SC", "Hiragino Sans GB", 'Source Han Sans SC', "NotoSansHans", SimSun, sans-serif;
+	height: 100%;
   font-size: 14px;
+	overflow: hidden;
 }
 .el-popover { min-width: 80px !important; }
 .clear__float::after {
@@ -46,4 +57,19 @@ html, body, #app {
   font-size: 40px;
   line-height: 300px;
   text-align: center;
+}
+// fade-transform
+.fade-transform-leave-active,
+.fade-transform-enter-active {
+	transition: all .5s;
+}
+
+.fade-transform-enter {
+	opacity: 0;
+	transform: translateX(-30px);
+}
+
+.fade-transform-leave-to {
+	opacity: 0;
+	transform: translateX(30px);
 }

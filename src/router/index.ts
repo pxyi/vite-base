@@ -83,6 +83,12 @@ const routes: RouteRecordRaw[] = [
             meta: { title: '班级备授课' },
             component: AsyncComponent(() => import('/@/views/prepare-teach/index.vue'))
           },
+          {
+            path: 'prepare-check',
+            name: 'prepare-check',
+            meta: { title: '备授课审核' },
+            component: AsyncComponent(() => import('/@/views/check/index.vue'))
+          },
         ]
       },
     ]
