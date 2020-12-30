@@ -5,12 +5,12 @@
     <div class="source-main">
       <div class="source-cell">
         <div class="source-control">
-          <el-select size="medium" placeholder="选择年份" v-model="s.year" v-if="yearList.length">
+          <el-select size="medium" clearable placeholder="选择年份" v-model="s.year" v-if="yearList.length">
             <el-option v-for="o in yearList" :key="o.id" :value="o.id" :label="o.name" />
           </el-select>
         </div>
         <div class="source-control">
-          <el-cascader placeholder="选择省市区" size="medium"
+          <el-cascader placeholder="选择省市区" clearable size="medium"
             v-model="s.provinceCity" 
             :props="{ lazy: true, lazyLoad: getProvinceCity, label: 'name', value: 'id' }" 
             @change="getSchoolList($event, s)"
@@ -19,12 +19,12 @@
       </div>
       <div class="source-cell">
         <div class="source-control">
-          <el-select placeholder="试卷类型" size="medium" v-model="s.dictSourceId"  v-if="quesList.length">
+          <el-select placeholder="试卷类型" clearable size="medium" v-model="s.dictSourceId"  v-if="quesList.length">
             <el-option v-for="option in quesList" :key="option.id" :value="option.id" :label="option.name" />
           </el-select>
         </div>
         <div class="source-control">
-          <el-select placeholder="选择学校" size="medium" v-model="s.publicSchoolId" >
+          <el-select placeholder="选择学校" clearable size="medium" v-model="s.publicSchoolId" >
             <el-option v-for="option in s.schoolList" :key="option.id" :value="option.id" :label="option.name" />
           </el-select>
         </div>
@@ -67,8 +67,12 @@ export default {
     }
 
     const getSchoolList = async (e, source) => {
-      let res = await axios.post<null, AxResponse>('/admin/publicSchool/queryAll', { areaId: e[2] });
-      source.schoolList = res.json;
+      if (e && e.length) {
+        let res = await axios.post<null, AxResponse>('/admin/publicSchool/queryAll', { areaId: e[2] });
+        source.schoolList = res.json;
+      } else {
+        source.schoolList = [];
+      }
     }
 
     const addSource = () => {

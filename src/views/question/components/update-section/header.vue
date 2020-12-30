@@ -16,7 +16,7 @@
               @check="(target, { checkedKeys }) => { formGroup.knowledgePoints = checkedKeys; }"
             />
             <template #reference>
-              <el-input readonly placeholder="选择知识点" size="medium"
+              <el-input readonly clearable placeholder="选择知识点" size="medium"
                 :model-value="formGroup.knowledgePoints.length ? `已选择${formGroup.knowledgePoints.length}项` : null" 
               />
             </template>
@@ -26,7 +26,7 @@
       <div class="f-item">
         <div class="f-i-label">类别</div>
         <div class="f-i-control">
-          <el-select size="medium" placeholder="选择类别" v-model="formGroup.category">
+          <el-select size="medium" clearable placeholder="选择类别" v-model="formGroup.category">
             <el-option v-for="option in selectMap.categoryList" :key="option.id" :value="option.id" :label="option.name" />
           </el-select>
         </div>
@@ -44,7 +44,7 @@
       <div class="f-item">
         <div class="f-i-label">难度</div>
         <div class="f-i-control">
-          <el-select size="medium" placeholder="选择难度" v-model="formGroup.difficult">
+          <el-select size="medium" clearable placeholder="选择难度" v-model="formGroup.difficult">
             <el-option v-for="o in selectMap.difficultyList" :key="o.id" :value="o.id" :label="o.name" />
           </el-select>
         </div>
@@ -52,7 +52,7 @@
       <div class="f-item">
         <div class="f-i-label">年级</div>
         <div class="f-i-control">
-          <el-select size="medium" placeholder="选择年级" v-model="formGroup.grade" v-if="selectMap.gradeList.length">
+          <el-select size="medium" clearable placeholder="选择年级" v-model="formGroup.grade" v-if="selectMap.gradeList.length">
             <el-option v-for="option in selectMap.gradeList" :key="option.id" :value="option.id" :label="option.name" />
           </el-select>
         </div>

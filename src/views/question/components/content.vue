@@ -38,7 +38,12 @@
               <p><i @click="data.showAnalysis = !data.showAnalysis">解析</i></p>
               <!-- <p><i @click="similarPreview(data.id)">相似题</i></p> -->
               <a @click.prevent="addCart(data)" :class="{ active: !!cartList.find(i => i.id === data.id) }" />
-              <i :class="[`el-icon-${data.loading ? 'loading' : 'delete'}`]" @click="remove(data)" v-if="userId === data.creatorId" />
+
+              <a @click="remove(data)" v-if="userId === data.creatorId" :class="{ 'is__loading': data.loading }">
+                <i class="el-icon-loading" v-if="data.loading" />
+                <span>删除</span>
+              </a>
+              <!-- <i :class="[`el-icon-${data.loading ? 'loading' : 'delete'}`]" @click="remove(data)" v-if="userId === data.creatorId" /> -->
             </div>
           </div>
         </div>
@@ -254,6 +259,7 @@ export default {
         margin-top: 20px;
         .label {
           display: inline-block;
+          height: 20px;
           padding: 0 7px;
           color: #3ABAB3;
           font-size: 12px;
@@ -292,16 +298,21 @@ export default {
         }
         div {
           float: right;
+          padding-right: 20px;
           a {
             display: inline-block;
             padding: 0 10px;
-            margin: 0 20px;
+            margin-left: 20px;
             color: #1AAFA7;
             line-height: 20px;
             border: solid 1px #1AAFA7;
             border-radius: 12px;
             transition: all .25s;
             cursor: pointer;
+            &.is__loading {
+              pointer-events: none;
+              opacity: .6;
+            }
             &.active {
               color: #FAAD14;
               border: solid 1px #FAAD14;
@@ -310,7 +321,7 @@ export default {
                 content: '移出试题篮'
               }
             }
-            &::before {
+            &:not(:last-child)::before {
               content: '加入试题篮';
               display: inline-block;
             }
