@@ -27,7 +27,7 @@
 						<li v-for="(item, index) in courseIndexDto" :key="index" :class="{'active': item.id == currentFile.id}">
 							<div class="content-cell-wrapper"  @click="currentFile = item" v-if="item.type == 3">
 								<div class="img">
-									<img src="../../../../assets/lessonImg.png" alt="">
+									<img src="/@/assets/lessonImg.png" alt="">
 								</div>
 								{{item.fileName}}.{{item.ext}}
 							</div>
