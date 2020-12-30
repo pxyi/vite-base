@@ -110,9 +110,9 @@
 
       async function courseModifyOrAdd(data, url) {
         const res: Promise = await axios.post<any, AxiosResponse>(url, data, {headers: {'Content-Type': 'application/json;charset=UTF-8'}});
-        res.result && instance.ctx.$notify({title: '成功', message: res.msg, type: 'success'}) && tableRef.value.request(params.value)
+        res.result && instance.proxy.$notify({title: '成功', message: res.msg, type: 'success'}) && tableRef.value.request(params.value)
       }
-      const courseDelete = (id) => axios.post('/course/delete', {id}).then(res => res.result && instance.ctx.$notify({
+      const courseDelete = (id) => axios.post('/course/delete', {id}).then(res => res.result && instance.proxy.$notify({
         title: '成功',
         message: res.msg,
         type: 'success'

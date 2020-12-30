@@ -92,13 +92,13 @@
             VresionData
           }
         }).then(chapterIds => {
-					axios.post('/courseChapter/add', {chapterIds, courseIndexId: id}, {headers: {'Content-Type': 'application/json'}}).then(res => res.result && instance.ctx.$notify({title: '成功', message: res.msg, type: 'success'}))
+					axios.post('/courseChapter/add', {chapterIds, courseIndexId: id}, {headers: {'Content-Type': 'application/json'}}).then(res => res.result && instance.proxy.$notify({title: '成功', message: res.msg, type: 'success'}))
         })
       };
       const deleteChapter = ({ id }, courseIndex, i) => {
-        axios.post('/courseChapter/deleteByCourseIndexId', {chapterId: id, courseIndexId: courseIndex.id}).then(res => {res.result && instance.ctx.$notify({title: '成功', message: '删除章节成功', type: 'success'}) && courseIndex.hasChapters.splice(i, 1)})
+        axios.post('/courseChapter/deleteByCourseIndexId', {chapterId: id, courseIndexId: courseIndex.id}).then(res => {res.result && instance.proxy.$notify({title: '成功', message: '删除章节成功', type: 'success'}) && courseIndex.hasChapters.splice(i, 1)})
       };
-      const deleteCourseIndex = ({ id }, i) => {axios.post('/courseIndex/delete', { id }).then(res => {res.result && instance.ctx.$notify({title: '成功', message: res.msg, type: 'success'}) && courseIndexList.value.splice(i, 1)})};
+      const deleteCourseIndex = ({ id }, i) => {axios.post('/courseIndex/delete', { id }).then(res => {res.result && instance.proxy.$notify({title: '成功', message: res.msg, type: 'success'}) && courseIndexList.value.splice(i, 1)})};
       const move = (i, type) => {
         if (type === 1) {
           if (i === 0 ) return false;
