@@ -5,11 +5,9 @@
       <el-header height="60px" v-if="!hideHeader"><lay-header /></el-header>
       <el-main :class="{ is__index: hideHeader}">
         <router-view v-slot="{ Component }">
-          <transition :name="transitionName">
-            <div class="container">
-              <component :is="Component" />
-            </div>
-          </transition>
+          <div class="container">
+            <component :is="Component" />
+          </div>
         </router-view>
       </el-main>
     </el-container>

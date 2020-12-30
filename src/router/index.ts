@@ -1,9 +1,8 @@
-import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
+import { createRouter, createWebHashHistory, RouteRecordRaw, RouterView } from 'vue-router';
 import Transition from './transition.vue';
 
 
 import { defineAsyncComponent, h } from 'vue';
-import TimeoutComponent from './../views/timeout.vue';
 
 const AsyncComponent = (loader) => defineAsyncComponent({
   loader,
@@ -30,7 +29,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'teaching',
         name: 'teaching',
-        component: Transition,
+        component: RouterView,
         meta: { title: '教研中台' },
         children: [
           {
@@ -74,7 +73,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'daily',
         name: 'daily',
-        component: Transition,
+        component: RouterView,
         meta: { title: '日常教学' },
         children: [
           {

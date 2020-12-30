@@ -63,7 +63,7 @@ export default {
       size: 10,
       total: props.dataSet.length
     });
-    watch(props.default, () => { page.current = 1; request() });
+    watch(() => props.default, () => { page.current = 1; request() });
 
     let __params = {};
     const request = async (params?) => {
