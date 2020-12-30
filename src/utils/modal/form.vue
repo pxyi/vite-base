@@ -70,7 +70,7 @@ export default {
   components: { ElForm, ElFormItem, ElInput, ElInputNumber, ElSelect, ElOption, ElDatePicker, ElRadioGroup, ElRadio, ElCascader },
   setup(props) {
     let nodes = ref(props.nodes);
-    let formGroup = reactive(nodes.value.reduce((group, node) => {
+    let formGroup = reactive(nodes.value.reduce((group, node: any) => {
       if (node.type === 'between') {
         group[node.keys[0]] = props.data[node.keys[0]];
         group[node.keys[1]] = props.data[node.keys[1]];
@@ -80,7 +80,7 @@ export default {
         group[node.key] = props.data[node.key] || node.default;
       }
       if ((node.type === 'select' || node.type === 'cascader') && node.url) {
-        axios.post(node.url).then((res: any) => {
+        axios.post(node.url, node.params || {}).then((res: any) => {
           node.options = [...res.json, ...(node.options || [])];
         });
       }
