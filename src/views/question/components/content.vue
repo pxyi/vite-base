@@ -30,7 +30,7 @@
             <div class="flex-main" v-html="data.analysis"></div>
           </div>
           <div class="footer">
-            <p>{{ data.basicQuestionTypeName }}</p>
+            <p>{{ data.questionTypeName }}</p>
             <p><span>收录：</span><span>{{ data.createTime }}</span></p>
             <p><span>难度：</span><span>{{ data.difficult }}</span></p>
             <p><span>引用：</span><span>{{ data.useCount }}</span></p>
