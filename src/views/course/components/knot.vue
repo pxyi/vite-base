@@ -19,7 +19,7 @@
 							<div class="left">
 								<i class="el-icon-caret-right"></i>
 								<span class="courseIndex">第{{index + 1}}讲</span>
-								<el-input v-model="item.courseIndexName" @click.stop.native clearable></el-input>
+								<el-input @change="indexNameChange(item)" v-model="item.courseIndexName" @click.stop.native clearable></el-input>
 							</div>
 							<div class="right">
 								<span @click.stop="increaseChapter(item)">添加章节</span>
@@ -67,6 +67,7 @@
   import Model from '../../../utils/modal/index';
   import axios from "axios";
   import emitter from "../../../utils/mitt";
+  import { ElNotification } from 'element-plus'
 
 	export default defineComponent({
 		name: "knot",
@@ -79,7 +80,6 @@
 		  let courseIndexList = ref([]);
 		  let loading = ref(true);
       let subjectCode = ref('');
-      const instance = getCurrentInstance();
       onMounted(() => {
         emitter.emit('effect', (code) => { subjectCode.value = code });
         emitter.emit('effect', getVresion);
@@ -92,13 +92,16 @@
             VresionData
           }
         }).then(chapterIds => {
-					axios.post('/courseChapter/add', {chapterIds, courseIndexId: id}, {headers: {'Content-Type': 'application/json'}}).then(res => res.result && instance.proxy.$notify({title: '成功', message: res.msg, type: 'success'}))
+					axios.post('/courseChapter/add', {chapterIds, courseIndexId: id}, {headers: {'Content-Type': 'application/json'}}).then(res => res.result && ElNotification.success({title: '成功', message: '删除章节成功'}) && getCourseDto())
         })
       };
       const deleteChapter = ({ id }, courseIndex, i) => {
-        axios.post('/courseChapter/deleteByCourseIndexId', {chapterId: id, courseIndexId: courseIndex.id}).then(res => {res.result && instance.proxy.$notify({title: '成功', message: '删除章节成功', type: 'success'}) && courseIndex.hasChapters.splice(i, 1)})
+        axios.post('/courseChapter/deleteByCourseIndexId', {chapterId: id, courseIndexId: courseIndex.id}).then(res => {res.result && ElNotification.success({title: '成功', message: '删除章节成功'}) && courseIndex.hasChapters.splice(i, 1)})
       };
-      const deleteCourseIndex = ({ id }, i) => {axios.post('/courseIndex/delete', { id }).then(res => {res.result && instance.proxy.$notify({title: '成功', message: res.msg, type: 'success'}) && courseIndexList.value.splice(i, 1)})};
+      const deleteCourseIndex = ({ id }, i) => {axios.post('/courseIndex/delete', { id }).then(res => {res.result && ElNotification.success({title: '成功', message: '删除章节成功'}) && courseIndexList.value.splice(i, 1)})};
+      const indexNameChange = (data) => {
+        axios.post('/courseIndex/modify', data, {headers: {'Content-Type': 'application/json'}}).then(res => res.result && ElNotification.success({title: '成功', message: '修改名称成功'}) && getCourseDto())
+      }
       const move = (i, type) => {
         if (type === 1) {
           if (i === 0 ) return false;
@@ -137,7 +140,7 @@
         axios.post('/tiku/bookVersion/queryVresionBookTree', {subject: subjectCode}).then(res => {if (res.result) VresionData = res.json});
       }
 
-      return { courseIndexList, loading, increaseChapter, deleteChapter, deleteCourseIndex, move}
+      return { courseIndexList, loading, increaseChapter, deleteChapter, deleteCourseIndex, move, indexNameChange}
 		}
 	})
 </script>
