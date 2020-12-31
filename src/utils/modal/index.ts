@@ -1,16 +1,14 @@
 import ElementPlus from 'element-plus';
 import { Component, createApp } from 'vue';
-import ModalForm from './form.vue';
 import createElement from './../createElement';
-import Components from './../../components';
+import Components, { AppComponents } from './../../components';
 import Store from './../../store';
 import './modal.scss';
-
 const create = (opt: ModalCreate) => {
   let options = {
     title: opt.title || null,
     width: opt.width || 720,
-    component: opt.component === 'form' || !opt.component ? ModalForm : opt.component,
+    component: opt.component === 'form' || !opt.component ? AppComponents.CusForm : opt.component,
     props: opt.props || {},
     zIndex: opt.zIndex || 2000,
     mask: typeof opt.mask === 'undefined' ? true : opt.mask,

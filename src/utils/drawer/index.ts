@@ -1,8 +1,7 @@
 import ElementPlus from 'element-plus';
 import { Component, createApp } from 'vue';
-import FormComponent from './../modal/form.vue';
 import createElement from './../createElement';
-import Components from './../../components';
+import Components, { AppComponents } from './../../components';
 import './drawer.scss';
 import Store from './../../store';
 
@@ -11,7 +10,7 @@ const create = (opt: DrawerCreate): Promise<any> => {
     title: opt.title || null,
     width: opt.width || 720,
     maxWidth: opt.maxWidth || 'auto',
-    component: opt.component === 'form' ? FormComponent : opt.component,
+    component: opt.component === 'form' || !opt.component ? AppComponents.CusForm : opt.component,
     props: opt.props || {},
     zIndex: opt.zIndex || 200,
     mask: typeof opt.mask === 'undefined' ? true : opt.mask,

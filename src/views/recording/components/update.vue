@@ -34,8 +34,8 @@ export default {
 
     let dataset = computed(() => store.state.dataSet);
 
-    axios.post<null, { json: any[] }>('/admin/questionImportLog/queryQuestionByImportId', { importId: props.id }).then(res => {
-      let questions = res.json[1].map(data => {
+    axios.post<null, { json: any }>('/admin/questionImportLog/queryQuestionByImportId', { importId: props.id }).then(res => {
+      let questions = res.json.questionList.map(data => {
         if (data.basicQuestionType === 2 || data.basicQuestionType === 3 || data.basicQuestionType === 9 || data.basicQuestionType === 10) {
           let f = data.basicQuestionType === 2 ? ';' : ''
           data.answer = data.rightAnswer ? data.rightAnswer.map(i => i.content).join(f) : '';
@@ -54,10 +54,10 @@ export default {
         data.questionSources && data.questionSources.map(i => { i.provinceCity = i.areaId ? [ i.provinceId, i.cityId, i.areaId ] : null; return i; })
         return data;
       })
-      store.commit('set_error_list', res.json[0]);
+      store.commit('set_error_list', res.json.failInfo);
       store.commit('set_data_set', questions);
 
-      allowGenerate.value = !res.json[2];
+      allowGenerate.value = !res.json.paperId;
       loading.close();
     });
 
