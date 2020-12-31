@@ -40,7 +40,7 @@
 </template>
 
 <script lang="ts">
-import { computed, ref, onMounted, watch, onBeforeUnmount, Ref } from 'vue';
+import { computed, ref, onMounted, watch, onBeforeUnmount, Ref, isRef} from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import emitter from './../utils/mitt';
 import { useStore } from 'vuex';
@@ -74,7 +74,7 @@ export default {
 
     /* 接受组件传递内容插入至 slot, 路由变更时，清空 slot 内容 */
     let slot: { value: HTMLElement | null } = ref(null);
-    const __setSlot = s => slot.value?.append(...s.value.children)
+    const __setSlot = s => slot.value?.append(s.$el ? s.$el : s.value.children[0]);
     emitter.on('slot', __setSlot );
     watch(() => route.path, (e) => ( (slot.value as HTMLElement).innerHTML = '' ));
 

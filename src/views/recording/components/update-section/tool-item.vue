@@ -1,9 +1,9 @@
 <template>
   <div class="tool-item-content" v-if="data">
     <h4>
-      <i class="el-icon-arrow-left" @click.stop="indexChange(-1)" :class="{ 'is__disabled': index === 0 }" />
+      <i class="el-icon-arrow-left" @click.stop="indexChange(-1)" :class="{ 'is__disabled': index === 0 || isSync }" />
       <span>第<i>{{ index + 1 }}</i>题</span>
-      <i class="el-icon-arrow-right" @click.stop="indexChange(1)" :class="{ 'is__disabled': index === dataset.length - 1}" />
+      <i class="el-icon-arrow-right" @click.stop="indexChange(1)" :class="{ 'is__disabled': index === dataset.length - 1 || isSync}" />
     </h4>
     <div class="tool-item-main" v-if="data && data.id">
       <div class="flex-box">
@@ -24,7 +24,7 @@
         <div class="flex-cell">
           <div class="tool-label">题型</div>
           <div class="tool-control">
-            <el-select size="medium" placeholder="选择题型" v-model="data.type" v-if="selectMap.questionTypeList.length" @change="typeChange($event); syncChange('type')">
+            <el-select size="medium" placeholder="选择题型" :disabled="isSync" v-model="data.type" v-if="selectMap.questionTypeList.length" @change="typeChange($event)">
               <el-option v-for="option in selectMap.questionTypeList" :key="option.jyQuestionType" :value="option.jyQuestionType" :label="option.jyQuestionTypeName" />
             </el-select>
           </div>

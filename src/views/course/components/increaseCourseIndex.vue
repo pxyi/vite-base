@@ -1,6 +1,6 @@
 <template>
 	<div class="courseIndex">
-		<el-input placeholder="输入关键字进行过滤" v-model="filterText"></el-input>
+		<el-input placeholder="输入教材版本关键字进行过滤" v-model="filterText"></el-input>
 		<el-tree ref="tree" :data="VresionData" show-checkbox node-key="id" :props="{label: 'name', children: 'childs'}" :filter-node-method="filterNode"></el-tree>
 	</div>
 </template>

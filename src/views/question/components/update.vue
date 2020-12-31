@@ -1,12 +1,14 @@
 <template>
-  <ContentComponent :loading="loading" ref="contentRef" />
   <HeaderComponent :loading="loading" ref="headerRef" @question-type-change="change" />
+  <ContentComponent :loading="loading" ref="contentRef" />
+  <SourceComponent :loading="loading" ref="sourceRef" />
 </template>
 
 <script lang="ts">
 import { ref, Ref, reactive, computed, getCurrentInstance, onMounted } from 'vue';
 import HeaderComponent from './update-section/header.vue';
 import ContentComponent from './update-section/content.vue';
+import SourceComponent from './update-section/source.vue';
 import axios from 'axios';
 import { AxResponse } from './../../../core/axios';
 import { useStore } from 'vuex';
@@ -14,20 +16,22 @@ import { ElMessage } from 'element-plus';
 import { cloneDeep } from 'lodash';
 
 export default {
-  components: { HeaderComponent, ContentComponent },
+  components: { HeaderComponent, ContentComponent, SourceComponent },
   props: ['id'],
   setup(props) {
     let store = useStore()
     let headerRef: Ref<any> = ref(null);
     let contentRef: Ref<any> = ref(null);
+    let sourceRef: Ref<any> = ref(null);
 
     /* ------------- 保存 ------------- */
     let subjectId = computed(() => store.getters.subject.code).value;
     const save = async (resolve, reject) => {
       let contentGroup = contentRef.value.validator();
-      let headerGroup = cloneDeep(headerRef.value.formGroup)
+      let headerGroup = cloneDeep(headerRef.value.formGroup);
+      let sourceGroup = cloneDeep(sourceRef.value.questionSources);
       if (contentGroup) {
-         headerGroup.questionSources && headerGroup.questionSources.map(s => {
+         sourceGroup && sourceGroup.map(s => {
           if (s.provinceCity && s.provinceCity[2]) {
             let [ provinceId, cityId, areaId ] = s.provinceCity;
             s.provinceId = provinceId; s.cityId = cityId; s.areaId = areaId;
@@ -37,7 +41,7 @@ export default {
           return s;
         })
         contentGroup.basicQuestionType = contentGroup.baseType;
-        let params = { ...contentGroup, ...headerGroup, subjectId, id: props.id };
+        let params = { ...contentGroup, ...headerGroup, subjectId, id: props.id, questionSources: sourceGroup, operationType: 1 };
         let url = `/tiku/question/${props.id ? 'editQuestion' : 'add'}`
         let res = await axios.post<null, AxResponse>(url, params, { headers: { 'Content-Type': 'application/json' } });
         ElMessage[res.result ? 'success' : 'warning'](res.msg || `${props.id ? '编辑' : '添加'}试题成功`);
@@ -58,9 +62,11 @@ export default {
     }
     const __init = (info) => {
       let { knowledgePoints, type, difficult, year, source, category, title, analysis, basicQuestionType} = info;
-      info.questionSources && info.questionSources?.map(s => {
-        s.provinceCity = [ s.provinceId, s.cityId, s.areaId ];
-        s.areaId && headerRef.value.getSchoolList(s.provinceCity, s)
+      info.questionSources && info.questionSources.map(s => {
+        if (s.areaId) {
+          s.provinceCity = [ s.provinceId, s.cityId, s.areaId ];
+          sourceRef.value.getSchoolList(s.provinceCity, s);
+        }
         return s;
       })
 
@@ -70,7 +76,7 @@ export default {
       headerRef.value.formGroup.year = year;
       headerRef.value.formGroup.source = source;
       headerRef.value.formGroup.category = category;
-      headerRef.value.formGroup.questionSources = info.questionSources;
+      
 
       contentRef.value.formGroup.title = title;
       contentRef.value.formGroup.analysis = analysis;
@@ -91,10 +97,12 @@ export default {
       loading.value = false;
       setTimeout(() => {
         headerRef.value.knowledgeRef.setCheckedKeys(knowledgePoints || []);
+
+        sourceRef.value.questionSources = info.questionSources || [];
       });
     }
 
-    return { headerRef, contentRef, save, change, loading }
+    return { headerRef, contentRef, sourceRef, save, change, loading }
   }
 }
 </script>

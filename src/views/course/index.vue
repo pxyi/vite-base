@@ -9,7 +9,7 @@
 				{label: '学期', key: 'semesterId'},
 				{label: '班型', key: 'courseTypeId'},
 				{label: '年级', key: 'gradeId'}]"
-			@submit="$refs.table.request(params)"
+			@submit="params = {...$event, ...params};$refs.tableRef.request({...$event, ...params})"
 			ref="condition"
 		></cus-condition>
 		<cus-table :auto-request="false" :default="params" ref="tableRef" url="/course/queryByPageV2">
@@ -52,7 +52,8 @@
 </template>
 
 <script lang="ts">
-  import {defineComponent, ref, Ref, onMounted, getCurrentInstance} from 'vue'
+  import {defineComponent, ref, Ref, onMounted} from 'vue'
+  import { ElNotification } from 'element-plus'
   import headerRef from './components/header-ref.vue'
   import knot from './components/knot.vue';
   import emitter from '../../utils/mitt';
@@ -67,7 +68,6 @@
       const headerRef = ref(null);
       const tableRef: Ref<any> = ref(null);
       const condition: Ref<any> = ref(null);
-      const instance = getCurrentInstance();
       const store = useStore();
       let params = ref<{ [key: string]: any }>({});
       onMounted(() => {
@@ -110,16 +110,9 @@
 
       async function courseModifyOrAdd(data, url) {
         const res: Promise = await axios.post<any, AxiosResponse>(url, data, {headers: {'Content-Type': 'application/json;charset=UTF-8'}});
-        res.result && instance.ctx.$notify({title: '成功', message: res.msg, type: 'success'}) && tableRef.value.request()
+        res.result && ElNotification.success({title: '成功', message: res.msg}) && tableRef.value.request(params.value)
       }
-
-
-
-      const courseDelete = (id) => axios.post('/course/delete', {id}).then(res => res.result && instance.ctx.$notify({
-        title: '成功',
-        message: res.msg,
-        type: 'success'
-      }) && tableRef.value.request());
+      const courseDelete = (id) => axios.post('/course/delete', {id}).then(res => res.result && ElNotification.success({title: '成功', message: res.msg}) && tableRef.value.request(params.value));
 
       const knotSet = (data) => { screen.create(knot, { data }) };
       return {headerRef, params, tableRef, openModel, condition, courseDelete, knotSet}
