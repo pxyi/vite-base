@@ -102,13 +102,13 @@ export default {
 
     let formGroup = reactive(reducer.formGroup);
     let rules = reactive(reducer.rules)
-    
+
     const validate = (fn) => {
       formRef.value.validate(valid => valid ? fn(formGroup) : fn(false));
     }
 
     const save = (resolve, reject) => {
-      formRef.value.validate(valid => {
+      validate(valid => {
         valid ? resolve(valid) : reject()
       })
     }

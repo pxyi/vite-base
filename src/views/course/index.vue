@@ -52,7 +52,7 @@
 </template>
 
 <script lang="ts">
-  import {defineComponent, ref, Ref, onMounted} from 'vue'
+  import {defineComponent, ref, unref, Ref, onMounted } from 'vue'
   import { ElNotification } from 'element-plus'
   import headerRef from './components/header-ref.vue'
   import knot from './components/knot.vue';
@@ -82,7 +82,7 @@
           title: `${data.id ? '修改' : '添加'}课程`,
           width: 500,
           props: {
-            nodes: [
+            nodes: unref(ref([
               {label: '课程名称', type: 'input', key: 'courseName'},
               {
                 label: '学科',
@@ -90,21 +90,21 @@
                 key: 'subjectId',
                 default: store.getters.subject.path.split(','),
                 url: '/permission/user/userDataSubjects',
-                props: {label: 'name', value: 'code', children: 'child'}
+	              valueKey: 'code'
               },
               {label: '年份', type: 'select', key: 'year', options: condition.value.list.yearList},
               {label: '学期', type: 'select', key: 'semesterId', options: condition.value.list.termList},
               {label: '班型', type: 'select', key: 'courseTypeId', options: condition.value.list.courseTypeList},
               {label: '年级', type: 'select', key: 'gradeId', options: condition.value.list.gradeList},
               {label: '设置课次', type: 'number', key: 'courseIndexNum'},
-            ],
+            ])),
             rules: {
               courseName: [{required: true, message: '请输入课程名称', trigger: 'blur'}]
             },
             data
           }
         }).then(res => {
-          courseModifyOrAdd({...data, ...res, ...{subjectId: res.subjectId[1]}}, url);
+          courseModifyOrAdd({...data, ...res}, url);
         })
       };
 
