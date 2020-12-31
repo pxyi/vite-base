@@ -9,7 +9,7 @@ import CusQuery from './query/index.vue';
 import CusCondition from './condition/index.vue';
 import CusTable from './table/index.vue';
 
-const AppComponents: any = {
+export const AppComponents: any = {
   CusEditor,
   CusTree,
   CusList,
@@ -28,4 +28,5 @@ const install = (Vue: App) => {
 export default {
   version: '0.0.1',
   install,
+  ...AppComponents
 }

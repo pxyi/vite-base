@@ -100,10 +100,9 @@ export default {
           width: 500,
           props: {
             nodes: [ 
-              { label: '下载类型', type: 'radio', key: 'radio', options: [ { name: '教师版', id: 1 }, { name: '学生版', id: 2 }, { name: '解析版', id: 3 } ] },
+              { label: '下载类型', type: 'radio', key: 'radio', options: [ { name: '教师版', id: 1 }, { name: '学生版', id: 2 }, { name: '解析版', id: 3 } ], rule: [{ required: true, message: '请选择下载类型' }] },
               { label: '试卷模板', type: 'radio', key: 'template', options: [ { name: '8k', id: 1 }, { name: '4g', id: 2 } ] }
-            ],
-            rules: { radio: { required: true, message: '请选择下载类型' } }
+            ]
           }
         }).then((res: any) => {
           window.open(`${import.meta.env.VITE_APP_BASE_URL}/tiku/paper/downPaper?paperId=${ data.id }&type=${ res.radio }`);

@@ -106,7 +106,13 @@ export default {
     const validate = (fn) => {
       formRef.value.validate(valid => valid ? fn(formGroup) : fn(false));
     }
-    return { formRef, formGroup, rules, validate }
+
+    const save = (resolve, reject) => {
+      formRef.value.validate(valid => {
+        valid ? resolve(valid) : reject()
+      })
+    }
+    return { formRef, formGroup, rules, validate, save }
   }
 }
 
