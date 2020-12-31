@@ -95,7 +95,6 @@ export default {
     const setSubjectCode = (code) => {
       store.commit(SET_SUBJECT, code);
       console.log(code);
-      
     }
     
     let commandList = new Map([

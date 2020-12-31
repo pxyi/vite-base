@@ -130,7 +130,7 @@ export default {
         overflow: hidden;
         width: 117px;
         height: 87px;
-        box-shadow: 1px 1px 2px grey;
+        // box-shadow: 1px 1px 2px grey;
         img.imgCover {
           object-fit: cover;
           width: 100%;
