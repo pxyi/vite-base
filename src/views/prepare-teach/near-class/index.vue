@@ -3,7 +3,7 @@
     <SearchTime :params='params' @search="searchTime"/>
     <cus-list has-page url="/admin/prepareLesson/queryPageV2" :default="params" :auto-request="true" :headers='{ type: 1 }' ref="nearList" >
       <template v-slot:avatar>
-         <img src="/@/assets/prepare-teach/book_logo.png" width="36"  alt="爱学标品">
+         <img src="/@/assets/prepare-teach/book-logo.png" width="36"  alt="爱学标品">
       </template>
       <template v-slot="{ data }">
          <div class="near-list-content">  
@@ -14,9 +14,9 @@
       </template>
       <template v-slot:actions="{ data }">
         <div class="menu">
-          <el-button size="small" round :class="{ 'btn-hidden': data.checkStaus === 2 }"  @click="savePrepareClass(data)">提交备课</el-button>
-          <el-button size="small" round type='primary' v-if="data.checkStaus === 1"  @click="courseDetailFileList(data)">继续备课</el-button>
-          <el-button size="small" round type='primary' v-if="data.checkStaus === 2"  @click="courseDetailFileList(data)">查看备课</el-button>
+          <el-button size="small" round :class="{ 'btn-hidden': data.checkStaus !== 0 }"  @click="savePrepareClass(data)">提交备课</el-button>
+          <el-button size="small" round type='primary' v-if="data.checkStaus === 0"  @click="courseDetailFileList(data)">继续备课</el-button>
+          <el-button size="small" round type='primary' v-if="data.checkStaus === 2 || data.checkStaus === 1"  @click="courseDetailFileList(data)">查看备课</el-button>
         </div>  
       </template>
     </cus-list>
@@ -31,6 +31,7 @@ import axios from 'axios'
 import { AxResponse } from './../../../core/axios'
 import { ElMessage, ElLoading, locale } from 'element-plus'
 import SearchTime from './search-time.vue'
+import emitter from './../../../utils/mitt';
 
 export default {
   props: {
@@ -40,6 +41,7 @@ export default {
   setup(props) {
     let params: Ref<any> = ref({});
     let nearList: Ref<any> = ref();
+    emitter.emit('effect', (id) => params.value.subjectCode = id)
 
     // 搜索时刷新接口
     const searchTime = (data) => {

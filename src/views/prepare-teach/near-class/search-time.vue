@@ -47,7 +47,7 @@ export default({
     }
     // 起始时间默认
     const disabledDate = (time) => {
-      if(endTime.value !== null){
+      if (endTime.value !== null) {
         return time.getTime() > Date.now() || time.getTime() > new Date(endTime.value)
       }else {
         return time.getTime() > Date.now()
@@ -57,7 +57,6 @@ export default({
     const disabledEndDate = (time) => {
       return time.getTime() > Date.now() || time.getTime() < new Date(startTime.value)
     }
-
     watch(startTime, (val) => {emit('search', { startTime: dataFormat(val, 'start'), endTime: dataFormat(endTime.value, 'end') })})
     watch(endTime, (val) => {emit('search', { startTime: dataFormat(startTime.value, 'start'), endTime: dataFormat(val, 'end') })})
 
@@ -70,10 +69,10 @@ export default({
 <style lang="scss" scoped>
   .search-time{
     margin-bottom: 20px;
-    background: #fff url('./../../../assets/prepare-teach/search-bg.png') no-repeat 100%;
+    background: #fff url('./../../../assets/prepare-teach/search-bg-1.png') no-repeat 100%;
     background-size: cover;
     padding: 20px 30px;
-    border-radius: 10px;
+    border-radius: 6px;
     .times{
       width: 420px;
       margin-top: 20px;
@@ -83,16 +82,6 @@ export default({
       :deep(.el-date-editor.el-input, .el-date-editor.el-input__inner){
         width: 180px;
       }
-    }
-  }
-  @media screen and(min-width: 1680px){
-    .search-time{
-      min-height: 157px;
-    }
-  }
-  @media screen and(min-width: 1440px){
-    .search-time{
-      min-height: 130px;
     }
   }
   @media screen and(max-width: 1280px){
@@ -105,4 +94,15 @@ export default({
       }
     }
   }
+  @media screen and(min-width: 1440px){
+    .search-time{
+      min-height: 130px;
+    }
+  }
+  @media screen and(min-width: 1680px){
+    .search-time{
+      min-height: 157px;
+    }
+  }
+  
 </style>
