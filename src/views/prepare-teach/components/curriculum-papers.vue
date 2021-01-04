@@ -52,9 +52,7 @@
                 </div>
                 <div class="btn-group">
                   <div class="btn-box">
-                    <div>
-                      <el-button size="mini" icon="el-icon-search" @click="preview(item)" round >预览</el-button>
-                    </div>
+                    <el-button size="mini" icon="el-icon-search" @click="preview(item)" round >预览</el-button>
                   </div>
                   <div class="private">
                     <i class="el-icon-lock" v-if="item.isPublic == 0" style="font-size: 12px"></i>
@@ -130,12 +128,12 @@ export default {
     }
     request('')
     /*---------切换标签获取数据------------*/
-    let __tabtype = ref()
+    let tabtype = ref()
     const handleClick = (e) => {
       tabCountList.value.map( ( item: any,index ) => {
         if( index == e.index ){
-          __tabtype.value = item.type
-          request(__tabtype.value)
+          tabtype.value = item.type
+          request(tabtype.value)
         }
       })
     }
@@ -143,7 +141,7 @@ export default {
     const uploadMyPlan = () => {
       Modal.create({ title: '上传我的教案', width: 640, component: MyPlanUpload, props: { id: props.id }, zIndex: 999 }).then((data: any) => {
         if(data.json){
-           request(__tabtype.value)
+           request(tabtype.value)
            tabCountRequest()
         }
       })
@@ -152,7 +150,7 @@ export default {
     const uploadMyVideo = () => {
       Modal.create({ title: '上传我的说课', width: 640, component: MyVideoUpload, props: { id: props.id }, zIndex: 999 }).then((data: any) => {
         if(data.json){
-           request(__tabtype.value)
+           request(tabtype.value)
            tabCountRequest()
         }
       })
@@ -194,8 +192,7 @@ export default {
         style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', bottom: '100px', right: '40px', zIndex: '10', cursor: 'pointer' },
         on: { click: () => { window.open(`${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`) } }
       }); 
-      let video, iframe, container
-
+      let container;
       if(item.ext === 'mp4') {
         let video = createElement('video', 
         { attrs: { src:`${import.meta.env.VITE_DOMAIN}${item.filePath}`, width: '100%', height: '100%',controls: true, controlsList: "nodownload" }, style: { background: '#f9f9f9' }});
@@ -203,8 +200,14 @@ export default {
         container = createElement('div', { 
           style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '1000' },
         }, [ closeBtn, video, printData, downloadData ])
+      }else if (item.ext === null && item.mediaType === 'url'){
+        loading.close()
+        let url = createElement('p', { style: { background: '#f9f9f9', width: '100%', height: '100%', padding: '36px', 'font-size':'20px' }}, '链接地址：' + item.filePath);
+        container = createElement('div', { 
+          style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '1000' },
+        }, [ closeBtn, url, printData, downloadData ])
       }else {
-        iframe = createElement('iframe', { attrs: { src, width: '100%', height: '100%' }, style: { background: '#f9f9f9' } });
+        let iframe = createElement('iframe', { attrs: { src, width: '100%', height: '100%' }, style: { background: '#f9f9f9' } });
         iframe.onload = loading.close;
         container = createElement('div', { 
           style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '1000' },

@@ -1,20 +1,46 @@
 <template>
   <div class="login__container">
-    <div class="login__logo"><img src="/@/assets/login-logo.png" alt="爱学教研系统"></div>
-    <div class="login__cover"><img src="/@/assets/login-cover.png" alt="爱学教研系统"></div>
+    <div class="login__logo">
+      <img src="/@/assets/login-logo.png" alt="爱学教研系统" />
+    </div>
+    <div class="login__cover">
+      <img src="/@/assets/login-cover.png" alt="爱学教研系统" />
+    </div>
     <div class="login__content">
       <h1>登录</h1>
       <p>自主、可配、安全、高效</p>
-      <el-form :model="formGroup" :rules="rules" ref="formRef" class="login__form">
+      <el-form
+        :model="formGroup"
+        :rules="rules"
+        ref="formRef"
+        class="login__form"
+      >
         <el-form-item prop="mobile">
-          <el-input placeholder="请输入用户名" prefix-icon="el-icon-mobile-phone" v-model="formGroup.mobile" />
+          <el-input
+            placeholder="请输入用户名"
+            prefix-icon="el-icon-mobile-phone"
+            v-model="formGroup.mobile"
+          />
         </el-form-item>
         <el-form-item prop="md5Password">
-          <el-input placeholder="请输入密码" :type="showPassword ? 'test' : 'password'" prefix-icon="el-icon-lock" v-model="formGroup.md5Password">
+          <el-input
+            placeholder="请输入密码"
+            :type="showPassword ? 'test' : 'password'"
+            prefix-icon="el-icon-lock"
+            v-model="formGroup.md5Password"
+          >
             <template #suffix>
               <div @click="showPassword = !showPassword">
-                <img src="/@/assets/login-password-hide.png" class="password__icon" v-if="!showPassword" />
-                <img src="/@/assets/login-password-show.png" class="password__icon" v-if="showPassword" />
+                <img
+                  src="/@/assets/login-password-hide.png"
+                  class="password__icon"
+                  v-if="!showPassword"
+                />
+                <img
+                  src="/@/assets/login-password-show.png"
+                  class="password__icon"
+                  v-if="showPassword"
+                />
               </div>
             </template>
           </el-input>
@@ -25,7 +51,13 @@
             <span>记住密码</span>
           </div>
         </div>
-        <div class="login__submit" :class="{ 'is__disabled': loading}" @click="login">登录</div>
+        <div
+          class="login__submit"
+          :class="{ is__disabled: loading }"
+          @click="login"
+        >
+          登录
+        </div>
       </el-form>
       <div class="login__desc">
         <span>忘记密码请联系管理员哟！</span>
@@ -35,14 +67,14 @@
 </template>
 
 <script lang="ts">
-import { ref, reactive } from 'vue';
-import axios from 'axios';
-import md5 from 'js-md5';
-import { ElMessage } from 'element-plus';
-import { AxResponse } from './../core/axios';
-import { useStore } from 'vuex';
-import { SET_USER_INFO } from '../store/types';
-import { useRoute, useRouter } from 'vue-router';
+import { ref, reactive } from "vue";
+import axios from "axios";
+import md5 from "js-md5";
+import { ElMessage } from "element-plus";
+import { AxResponse } from "./../core/axios";
+import { useStore } from "vuex";
+import { SET_USER_INFO } from "../store/types";
+import { useRoute, useRouter } from "vue-router";
 
 export default {
   setup() {
@@ -52,41 +84,48 @@ export default {
     let store = useStore();
     let router = useRouter();
     let loading = ref(false);
-
     let formGroup = reactive({
-      mobile: '15701215206',
-      md5Password: '15701215206'
+      mobile: "15701215206",
+      md5Password: "15701215206",
     });
     let rules = {
-      mobile: [{ required: true, message: '请输入用户名' }],
-      md5Password: [{ required: true, message: '请输入密码' }],
-    }
+      mobile: [{ required: true, message: "请输入用户名" }],
+      md5Password: [{ required: true, message: "请输入密码" }],
+    };
     const login = async () => {
       await formRef.value.validate();
       let params = {
         mobile: formGroup.mobile,
-        md5Password: md5(formGroup.md5Password)
+        md5Password: md5(formGroup.md5Password),
       };
       loading.value = true;
-      let res: AxResponse = await axios.post('/permission/auth/login', params);
+      let res: AxResponse = await axios.post("/permission/auth/login", params);
       if (res.result) {
         store.commit(SET_USER_INFO, res.json);
-        localStorage.setItem('token', res.json.accessToken);
-        router.push('/index');
+        localStorage.setItem("token", res.json.accessToken);
+        router.push("/index");
       } else {
         ElMessage.warning(res.msg);
       }
       loading.value = false;
-    }
-    return { showPassword, remember, formRef, formGroup, rules, login, loading }
-  }
-}
+    };
+    return {
+      showPassword,
+      remember,
+      formRef,
+      formGroup,
+      rules,
+      login,
+      loading,
+    };
+  },
+};
 </script>
 
 <style lang="scss">
 .login__container {
   height: 100%;
-  background: url('./../assets/login-background.png') no-repeat center center;
+  background: url("./../assets/login-background.png") no-repeat center center;
   background-size: cover;
   position: relative;
   overflow: hidden;
@@ -117,14 +156,14 @@ export default {
   transform: translate3d(165px, -50%, 0);
   box-sizing: border-box;
   h1 {
-    color: #007EC1;
+    color: #007ec1;
     font-size: 40px;
     line-height: 55px;
     font-weight: 400;
     margin-bottom: 12px;
   }
   p {
-    color: #91A5C2;
+    color: #91a5c2;
     font-size: 20px;
     font-weight: 400;
     margin-bottom: 60px;
@@ -156,7 +195,7 @@ export default {
 }
 .login__remember {
   height: 30px;
-  color: #91A5C2;
+  color: #91a5c2;
   font-size: 16px;
   line-height: 30px;
   text-align: right;
@@ -168,13 +207,13 @@ export default {
     line-height: 30px;
     cursor: pointer;
     &::before {
-      content: '';
+      content: "";
       display: inline-block;
       width: 20px;
       height: 20px;
       margin-top: 5px;
       border-radius: 4px;
-      background: #E9EDF3;
+      background: #e9edf3;
     }
     i {
       position: absolute;
@@ -193,39 +232,39 @@ export default {
   line-height: 50px;
   font-weight: 400;
   text-align: center;
-  background: linear-gradient(270deg, #007EC1 0%, #09CABF 100%);
+  background: linear-gradient(270deg, #007ec1 0%, #09cabf 100%);
   border-radius: 8px;
   cursor: pointer;
   &:active {
-    opacity: .9;
+    opacity: 0.9;
   }
   &.is__disabled {
     pointer-events: none;
-    opacity: .6;
+    opacity: 0.6;
   }
 }
 .login__desc {
   padding-top: 54px;
-  color: #91A5C2;
+  color: #91a5c2;
   font-size: 18px;
   text-align: center;
   font-weight: 400;
   position: relative;
   &::before {
-    content: '';
+    content: "";
     display: block;
     width: 100%;
-    border-bottom: dashed 1px #91A5C2;
+    border-bottom: dashed 1px #91a5c2;
     position: absolute;
     top: 30px;
     left: 0;
   }
   &::after {
-    content: 'or';
+    content: "or";
     display: block;
     width: 48px;
     height: 20px;
-    color: #91A5C2;
+    color: #91a5c2;
     font-size: 20px;
     line-height: 1;
     background: #fff;

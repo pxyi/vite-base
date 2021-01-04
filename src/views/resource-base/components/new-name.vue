@@ -1,37 +1,89 @@
 <template>
-  <div>
-    <el-form ref="form" :model="form" label-width="80px">
-      <el-form-item label="资料名称">
-        <el-input v-model="form.name"></el-input>
-      </el-form-item>
-    </el-form>
-  </div>
+  <cus-form
+    ref="formRef"
+    :nodes="nodes"
+    :width="files ? '422px' : '500px'"
+  ></cus-form>
 </template>
-
 <script lang="ts">
-import { ref, reactive, Ref } from "vue";
+import { ref, Ref, PropType, onMounted } from "vue";
+import { AxResponse } from "./../../../core/axios";
 import axios from "axios";
 import { useStore } from "vuex";
-import { AxResponse } from "../../../core/axios";
-import emitter from "../../../utils/mitt";
-import Modal from "../../../utils/modal";
-import { ElMessage, ElLoading } from "element-plus";
+import { ElMessage } from 'element-plus';
+
 export default {
   props: {
-    contentList: {
-      type: Object,
-      default: () => [],
-    },
+    newName: Object as any,
+    files: Array as PropType<File[]>,
   },
   setup(props) {
-    let form = reactive({
-      name: "DOC文档",
-    });
-    // console.log(props.contentList.value);
 
-    return { form };
+    let store = useStore();
+    let formRef = ref();
+    let uploadRef = ref();
+    let action = `${import.meta.env.VITE_APP_BASE_URL}/system/file/uploadFile`;
+   
+    let fileList: Ref<any[]> = ref([]);
+   
+
+    const uploadSuccess = (response, file, fileList) => {
+    //   console.log(response, file, fileList);
+    };
+    const fileRemove = (file, fileList) => {
+    //   console.log(file, fileList);
+    };
+
+    const save = (resolve, reject) => {
+     let params = {
+        id:props.newName.id,
+        fileName:formRef.value.formGroup.fileName
+      }
+      console.log(formRef.value.formGroup.fileName,'51');
+      
+      axios.post<any,AxResponse>('/admin/material/saveOrUpdate',params).then(res=>{
+        if(res.result){
+         ElMessage.success('修改成功');
+        //  console.log(res,'51');
+         resolve(res.result)
+        }else{
+        ElMessage.error('修改失败');
+        reject()
+        }
+      })
+    
+      formRef.value.validate((valid) => {
+        valid ? resolve(valid) : reject();
+      });
+      
+    };
+ let controls: any[] = [
+      {
+        label: "资料名称",
+        type: "input",
+        rule: { required: true, message: "请输入文件名称" },
+        default:props.newName.fileName,
+        key:'fileName'
+      },
+ 
+    ];
+
+    let nodes: Ref<any[]> = ref(controls);
+
+    return {
+      action,
+      save,
+      formRef,
+      uploadRef,
+      fileList,
+      uploadSuccess,
+      fileRemove,
+      nodes,
+
+    };
   },
 };
 </script>
+<style lang="scss" scoped>
 
-<style lang="scss" scoped></style>
+</style>

@@ -98,6 +98,7 @@ export default {
     const setSubject = (course) => {
       store.commit(SET_SUBJECT, course);
       visible.value = false;
+      
     }
 
     let commandList = new Map([

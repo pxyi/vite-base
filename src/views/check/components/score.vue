@@ -41,7 +41,7 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script lang="js">
 	import axios from 'axios'
 	export default {
 		name: "score",

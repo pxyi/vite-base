@@ -18,7 +18,7 @@
 					</el-tooltip></div>
 				</div>
 				<ul class="teach-box">
-					<li class="teacher-item" :class="{'teacher-item-active': item.id === currentTeacher.id}" @click="selectTeacher(item)" v-for="item in filterTeacher">
+					<li class="teacher-item" :class="{'teacher-item-active': item.id === currentTeacher.id}" @click="selectTeacher(item)" v-for="item in filterTeacher" :key="item.id">
 						<span>{{item.nickname}}</span>
 						<span style="font-weight: 500">{{item.prepareLessonAvgScore == 100000 ? '---' : item.prepareLessonAvgScore}} 分</span>
 					</li>
@@ -87,12 +87,14 @@
 				</ul>
 			</div>
 		</div>
-		<el-dialog title="备课评分" :visible.sync="scoreDialogVisible" width="40%">
+		<el-dialog title="备课评分" v-model:visible.sync="scoreDialogVisible" width="40%">
 			<score @sendParam="openScore" :lessonInfo="handelLessonInfo"/>
-			<span slot="footer" class="dialog-footer">
-		    <el-button @click="scoreDialogVisible = false">取 消</el-button>
-		    <el-button type="primary" @click="saveLessonScore">确 定</el-button>
-		  </span>
+			<template #footer>
+				<span class="dialog-footer">
+				<el-button @click="scoreDialogVisible = false">取 消</el-button>
+				<el-button type="primary" @click="saveLessonScore">确 定</el-button>
+			</span>
+			</template>
 		</el-dialog>
 		<transition name="slide-fade">
 			<page-view :lessonInfo="handelLessonInfo" :courseIndexDto="courseIndexDto" v-show="courseIndexDto"/>
