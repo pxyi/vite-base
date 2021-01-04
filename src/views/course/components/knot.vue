@@ -92,7 +92,7 @@
             VresionData
           }
         }).then(chapterIds => {
-					axios.post('/courseChapter/add', {chapterIds, courseIndexId: id}, {headers: {'Content-Type': 'application/json'}}).then(res => res.result && ElNotification.success({title: '成功', message: '删除章节成功'}) && getCourseDto())
+					axios.post('/courseChapter/add', {chapterIds, courseIndexId: id}, {headers: {'Content-Type': 'application/json'}}).then(res => res.result && ElNotification.success({title: '成功', message: '添加章节成功'}) && getCourseDto())
         })
       };
       const deleteChapter = ({ id }, courseIndex, i) => {

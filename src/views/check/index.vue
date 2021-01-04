@@ -87,7 +87,7 @@
 				</ul>
 			</div>
 		</div>
-		<el-dialog title="备课评分" v-model:visible.sync="scoreDialogVisible" width="40%">
+		<el-dialog title="备课评分" v-model="scoreDialogVisible" width="40%">
 			<score @sendParam="openScore" :lessonInfo="handelLessonInfo"/>
 			<template #footer>
 				<span class="dialog-footer">
