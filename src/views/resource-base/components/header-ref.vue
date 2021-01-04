@@ -21,19 +21,41 @@
         @keydown.enter="searchHandle"
       />
     </div>
-       <div class="btns">
-      <el-button round>
-        <label for="paperUploadBtn">
-          <span>上传资料</span>
-          <input type="file" ref="uploadRef" id="paperUploadBtn" @change="upload" multiple accept=".ppt,.pptx,.doc,.docx,.pdf,.mp4,.mp3,.jpg,.png,.zip,.rar">
-        </label>
+    <div class="btns" @mouseleave="setUpdateShow(false)">
+      <el-button round :disabled="false" @mouseenter="setUpdateShow(true)" @click="() => emit('handleClick', 'zl')">
+        <span>上传资料</span>
       </el-button>
+
+      <div class="update_show" v-show="updateShow" style="z-index:100">
+        <el-tooltip placement="left" effect="light">
+          <template #content>
+            课件支持的格式：.ppt .pptx <br />讲义支持的格式：.doc .docx .pdf<br />
+            说课视频支持的格式：.mp4（H264）<br />其他支持的格式：.png，.jpg
+            .jpeg .mp3，zip，rar<br />
+          </template>
+          <el-button round @click="() => emit('handleClick', 'zl')">
+            <label for="paperUploadBtn">
+              <span>上传资料</span>
+              <input />
+            </label>
+          </el-button>
+        </el-tooltip>
+        <el-tooltip content="Bottom center" placement="left" effect="light">
+          <template #content> 标准教案支持的格式：doc，docx。 </template>
+          <el-button round @click="() => emit('handleClick', 'ja')">
+            <label for="paperUploadBtn">
+              <span>上传标准教案</span>
+              <input />
+            </label>
+          </el-button>
+        </el-tooltip>
+      </div>
     </div>
   </div>
 </template>
 <script lang="ts">
-import { ref } from "vue";
-import OrganizingPapers from './organizing-papers.vue'
+import { getCurrentInstance, ref } from "vue";
+import OrganizingPapers from "./organizing-papers.vue";
 import emitter from "../../../utils/mitt";
 import Modal from "../../../utils/modal";
 import { ElMessage } from "element-plus";
@@ -41,16 +63,18 @@ import axios from "axios";
 import { AxResponse } from "../../../core/axios";
 
 export default {
+  props: ["handleClick"],
   setup(props, { emit }) {
     let classType = ref(null);
+    const updateShow = ref(false);
     let classList = [{ name: "资料库", id: null }];
     const classChange = (e) => {
       classType.value = e;
       emit("SET_SUBJECT", e);
     };
-    const handlePreview = ()=>{
+    const handlePreview = () => {
       console.log(1);
-    }
+    };
     let searchText = ref(null);
     const searchHandle = () => emit("search", searchText);
 
@@ -58,28 +82,50 @@ export default {
     emitter.on("queryClass", (e) => (queryClass = e));
 
     const iMousemove = () => {
-      console.log(1111);
+      // console.log(1111);
     };
 
-      let uploadRef = ref();
+    let uploadRef = ref();
     const upload = () => {
       let files: File[] = Array.from(uploadRef.value.files);
-      uploadRef.value.files
-      let accept = ['ppt','pptx','doc','docx','pdf','mp4','mp3','jpg','png','zip','rar']
-      files.filter(file => {
-        let idx = file.name.lastIndexOf('.')
+      uploadRef.value.files;
+      let accept = [
+        "ppt",
+        "pptx",
+        "doc",
+        "docx",
+        "pdf",
+        "mp4",
+        "mp3",
+        "jpg",
+        "png",
+        "zip",
+        "rar",
+      ];
+      files.filter((file) => {
+        let idx = file.name.lastIndexOf(".");
         let ext = file.name.substr(idx + 1);
         return accept.includes(ext);
       });
       if (!files.length) {
-        ElMessage.warning(`请选择指定${accept.join('、')}格式文件`);
+        ElMessage.warning(`请选择指定${accept.join("、")}格式文件`);
       } else {
-        Modal.create({ title: '上传资料', width: 540,  component: OrganizingPapers, props: { queryClass, files } });
+        Modal.create({
+          title: "上传资料",
+          width: 540,
+          component: OrganizingPapers,
+          props: { queryClass, files },
+        });
       }
+    };
+    let roundisShow: boolean = false;
+
+    function setUpdateShow(bool: boolean) {
+      updateShow.value = bool;
     }
-     let roundisShow:boolean = false
-  
-   
+    // function uploadInfo(){
+    //   emit("handleClick","zl")
+    // }
     return {
       classType,
       classList,
@@ -90,6 +136,9 @@ export default {
       upload,
       iMousemove,
       handlePreview,
+      updateShow,
+      setUpdateShow,
+      emit,
     };
   },
 };
@@ -149,6 +198,25 @@ export default {
       }
       input {
         display: none;
+      }
+    }
+  }
+  .update_show {
+    position: absolute;
+    top: 50px;
+    z-index: 2;
+    line-height: initial;
+    width: 140px;
+    background: #fff;
+    border-radius: 10px;
+    > button {
+      border-radius: 0;
+      width: 100%;
+      margin: 10px 0;
+      border: none;
+      &:nth-of-type(2) {
+        margin-top: 0;
+        margin-left: 0;
       }
     }
   }

@@ -46,10 +46,10 @@
   </template>
 </template>
 <script lang="ts">
-import { ref, Ref, PropType, onMounted } from "vue";
-import { AxResponse } from "./../../../core/axios";
-import axios from "axios";
-import { useStore } from "vuex";
+import { ref, Ref, PropType, onMounted, inject } from 'vue';
+import { AxResponse } from './../../../core/axios';
+import axios from 'axios';
+import { useStore } from 'vuex';
 
 export default {
   props: {
@@ -96,29 +96,13 @@ export default {
 
     let fileList: Ref<any[]> = ref([]);
     if (props.files) {
-      controls.push({
-        label: "共享范围",
-        key: "xxxx",
-        type: "checkbox",
-        default: [0],
-        options: [
-          { name: "我的试卷", id: 0 },
-          { name: "公共试卷", id: 1 },
-        ],
-      });
-      Promise.all(
-        props.files.map((file) => {
-          let formdata = new FormData();
-          formdata.append("file", file);
-          return axios.post("/system/file/uploadFile", formdata, {
-            headers: { "Content-Type": "multipart/form-data" },
-          });
-        })
-      ).then((list: any[]) => {
-        fileList.value = list.map((res) => ({
-          name: res.json.oriFilename,
-          url: res.json.filePath,
-        }));
+      controls.push({ label: '共享范围', key: 'xxxx', type: 'checkbox', default: [0], options: [ { name: '我的试卷', id: 0 },{ name: '公共试卷', id: 1 } ] })
+      Promise.all(props.files.map(file => {
+        let formdata = new FormData();
+        formdata.append('file', file);
+        return axios.post('/system/file/uploadFile', formdata, { headers: { 'Content-Type': 'multipart/form-data' } });
+      })).then((list: any[]) => {
+        fileList.value = list.map(res => ({ name: res.json.oriFilename, url: res.json.filePath }))
       });
     } else {
       controls = [
@@ -151,8 +135,7 @@ export default {
     };
 
     const save = (resolve, reject) => {
-      console.log(fileList.value);
-      formRef.value.validate((valid) => {
+      formRef.value.validate(valid => {
         valid ? resolve(valid) : reject();
       });
     };

@@ -1,9 +1,11 @@
-import Vuex from 'vuex';
 import { SET_SUBJECT, SET_SUBJECT_LIST } from '../types';
 
 const state = {
   subjectList: null,
-  subject: null
+  subject: {
+    name: null,
+    code: null
+  }
 }
 const mutations = {
   [ SET_SUBJECT ] (state, payload) {

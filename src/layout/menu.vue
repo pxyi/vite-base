@@ -10,7 +10,7 @@
             @click="menu.isLeaf && !$route.path.includes(menu.key) ? $router.push(menu.key) : (menu.closed = !menu.closed)"
             :class="{ 'active': $route.path.includes(menu.key) }"
           >
-            <img :src="menu.icon" alt="icon" />
+            <img :src="`nav-icon/${menu.icon}.png`" alt="icon" />
             <span>{{ menu.title }}</span>
             <i class="el-icon-arrow-up" v-if="!menu.isLeaf"></i>
           </div>
@@ -20,7 +20,7 @@
         </div>
       </template>
       <div class="menu-item">
-        <div class="menu-title" @click="goSystem"><img src="/@/assets/menu/icon-system.png" alt="进入后台"><span>进入后台</span></div>
+        <div class="menu-title" @click="goSystem"><img :src="'nav-icon/system.png'" alt="进入后台"><span>进入后台</span></div>
       </div>
     </div>
   </div>
@@ -30,6 +30,7 @@
 import { reactive, ref } from 'vue';
 import MenuList, { RouterConf } from './../core/menu-list';
 import { useRoute } from 'vue-router';
+import { ElMessageBox } from 'element-plus';
 
 export default {
   name: 'lay-menu',
@@ -37,14 +38,15 @@ export default {
     let list: { value: RouterConf[] } = ref([]);
 
     let initPath = useRoute().path;
-
-    MenuList.map(async (res: any) => {
-      res.icon = typeof res.icon === 'string' ? res.icon : (await res.icon).default; 
+    MenuList.map((res: any) => {
       res.closed = initPath.includes(res.key);
       list.value.push(res);
     });
 
-    const goSystem = () => { window.location.href = import.meta.env.VITE_APP_SYSTEM_URL as string }
+    const goSystem = async () => { 
+      let confirm = await ElMessageBox.confirm('是否进入后台管理系统？', '进入后台', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' })
+      confirm && (window.location.href = import.meta.env.VITE_APP_SYSTEM_URL as string);
+    }
     
     return { list, initPath, goSystem }
   }

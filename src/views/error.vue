@@ -5,19 +5,25 @@
       <div class="text">
         <h2>迷路了！</h2>
         <h4>您无法进入此页面...</h4>
-        <p>请检查您输入的URL是否正确，或单击下面的按钮返回主页。</p>
+        <p>请检查您输入的URL是否正确，{{ num }} 秒后自动跳转或单击下方按钮返回主页。</p>
         <el-button type="primary" round @click="goBack">返回首页</el-button>
       </div>
     </div>
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { ref } from 'vue';
 import { useRouter } from 'vue-router'
 export default {
   setup() {
-    let router = useRouter()
-    return { goBack: () => router.push('/') }
+    let router = useRouter();
+    let num = ref(5);
+    const setInter = (() => {
+      num.value > 0 ? setTimeout(() => { num.value--; setInter(); }, 1000) : router.push('/');
+    })
+    setInter();
+    return { goBack: () => router.push('/'), num}
   }
 }
 </script>
@@ -61,7 +67,6 @@ export default {
     }
     p {
       margin-top: 0;
-      font-size: 13px;
       line-height: 21px;
       color: grey;
       margin-bottom: 30px;

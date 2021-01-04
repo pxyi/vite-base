@@ -1,18 +1,18 @@
 <template>
   <div class="lay__header__container">
-    <el-popover placement="bottom-start" :width="200" trigger="click">
+    <el-popover v-model:visible="visible" placement="bottom-start" :width="200" trigger="click">
       <template #reference>
-        <div class="age__class"><span>小学语文</span><i class="el-icon-arrow-down" /></div>
+        <div class="age__class"><span>{{ subject.name }}</span><i class="el-icon-arrow-down" /></div>
       </template>
       <div class="class__container">
         <div v-for="grade in subjectList" :key="grade.id">
           <h4>{{ grade.name }}</h4>
           <div class="grade__content">
-            <div 
-              v-for="course in grade.child" 
-              :key="course.code" 
-              :class="{ 'active': subjectCode === course.code }"
-              @click="setSubjectCode(course.code)"
+            <div
+              v-for="course in grade.child"
+              :key="course.code"
+              :class="{ 'active': subject.code === course.code }"
+              @click="setSubject(course)"
             >{{ course.name }}</div>
           </div>
         </div>
@@ -40,7 +40,7 @@
 </template>
 
 <script lang="ts">
-import { computed, ref, onMounted, watch, onBeforeUnmount, Ref } from 'vue';
+import { computed, ref, onMounted, watch, onBeforeUnmount, Ref, isRef} from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import emitter from './../utils/mitt';
 import { useStore } from 'vuex';
@@ -55,7 +55,7 @@ const getSubjectList = (store): Promise<any> => {
     } else {
       let res = await axios.post<any, AxResponse>('/permission/user/userDataSubjects');
       store.commit(SET_SUBJECT_LIST, res.json);
-      store.commit(SET_SUBJECT, res.json[0].child[0].code);
+      store.commit(SET_SUBJECT, res.json[0].child[0]);
       resolve(res.json);
     }
   })
@@ -70,33 +70,37 @@ export default {
     let store = useStore();
 
     let breadcrumb = computed( () => route.matched.reduce((t: string[], c) => { c.meta.title && t.push(c.meta.title); return t; }, []) );
-
+		let visible = ref(false)
 
     /* 接受组件传递内容插入至 slot, 路由变更时，清空 slot 内容 */
     let slot: { value: HTMLElement | null } = ref(null);
-    const __setSlot = s => slot.value?.append(...s.value.children)
+    const __setSlot = s => slot.value?.append(s.$el ? s.$el : s.value.children[0]);
     emitter.on('slot', __setSlot );
     watch(() => route.path, (e) => ( (slot.value as HTMLElement).innerHTML = '' ));
 
-    /* 接受 组件传递的方法，如果已存在 subjectCode 则只需 */
+    /* 接受 组件传递的方法，如果已存在 subject 则只需 */
     let effectList: (([key]: string) => void)[] = [];
-    const __setFns = (fns) => { 
-      effectList = typeof fns === 'function' ? [ fns, ...effectList ] : [ ...fns, ...effectList]; 
-      subjectCode.value && effectList.map(fn => fn(subjectCode.value));
+    const __setFns = (calls) => {
+      let fns = typeof calls === 'function' ? [ calls ] : calls;
+      effectList = [ ...effectList, ...fns ];
+      subject.value.code && fns.map(fn => fn(subject.value.code));
     }
     emitter.on('effect', __setFns);
     watch(() => route.path, (to, from) => to !== from && (effectList = []))
 
-    /* 获取 sbujectList，并监听subjectCode 变更，执行组件传递来的方法 */
+    /* 获取 sbujectList，并监听subject 变更，执行组件传递来的方法 */
     let subjectList = ref([]);
     getSubjectList(store).then(res => { subjectList.value = res; });
-    let subjectCode: Ref<string> = computed(() => store.getters.subject);
-    watch(subjectCode, () => effectList.map(fn => fn(subjectCode.value)) );
-    const setSubjectCode = (code) => {
-      store.commit(SET_SUBJECT, code);
-      console.log(code);
+    let subject: Ref<{[key: string]: any}> = computed(() => store.getters.subject);
+    watch(subject, () => effectList.map(fn => fn(subject.value.code)) );
+
+    let subjectName = ref('');
+    const setSubject = (course) => {
+      store.commit(SET_SUBJECT, course);
+      visible.value = false;
+      
     }
-    
+
     let commandList = new Map([
       ['logout', () => {
         store.commit(REMOVE_USER_INFO)
@@ -109,7 +113,7 @@ export default {
       emitter.off('effect', __setFns );
     });
 
-    return { breadcrumb, slot, commandList, subjectList, subjectCode, setSubjectCode }
+    return { breadcrumb, slot, commandList, subjectList, subject, setSubject, visible }
   }
 }
 </script>
@@ -117,7 +121,7 @@ export default {
 .lay__header__container {
   display: flex;
   .el-breadcrumb {
-    .el-breadcrumb__inner, 
+    .el-breadcrumb__inner,
     .el-breadcrumb__separator {
       color: #fff;
       &:hover {
@@ -136,7 +140,9 @@ export default {
 }
 .cus__slot {
   flex: auto;
+  height: 100%;
   padding: 0 30px;
+  overflow: hidden;
 }
 .age__class {
   margin-left: 20px;

@@ -10,7 +10,7 @@
       >
         {{ item.name }}
         <span class="num">
-          {{ item.count }}
+          {{ item.num }}
         </span>
       </a>
     </nav>
@@ -66,7 +66,9 @@
           </div>
         </div>
       </li>
+       <cus-empty v-if="contengList.length<1"/>
     </ul>
+
   </div>
 
 </template>
@@ -83,87 +85,41 @@ import createElement from '../../../utils/createElement'
 import OrganizingPapers from './organizing-papers.vue'
 import NewName from './new-name.vue'
 import Prepare from './prepare-lessons.vue'
+import { emit } from 'process';
 
 export default {
   setup(props, context) {
-    let activeId = ref(6);
+    let activeId = ref(0);
     let params = reactive({
       subject: "chinese3",
       chapterId: [],
       isPublic: 1,
     });
-    let fileTypeAndCount: Array<any> = reactive([]);
-    // console.log(params);
 
-    const getTabsList = () => {
-      axios
-        .post<any, AxResponse>("/admin/material/queryCountByType", params, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((res) => {
-          if (res.result) {
-            res.json.allCount = eval(Object.values(res.json).join("+"));
-            let i = 1;
-            for (let keys in res.json) {
-              let obj: any = {
-                name: keys,
-                count: res.json[keys],
-                id: i,
-                type: null,
-                ext:[],
-                order: 0
-              };
-              switch (keys) {
-                case "allCount":
-              obj.type = null;
-              obj.order = 1;
-              obj.name = "全部";
-              break;
-            case "courseWareCount":
-              obj.ext = ["ppt", "pptx"];
-              obj.type = 1
-              obj.order = 2;
-              obj.name = "课件";
-              break;
-            case "handoutCount":
-              obj.ext = ['pdf','doc','docx'];
-              obj.type = 2
-              obj.order = 3;
-              obj.name = "讲义";
-              break;
-            case "teachplanCount":
-              obj.ext = ["doc", "docx"];
-              obj.type = 5
-              obj.order = 4;
-              obj.name = "教案";
-              break;
-            case "mediaCount":
-              obj.ext = ["mp3", "mp4"];
-              obj.type = 3
-              obj.order = 5;
-              obj.name = "说课视频";
-              break;
-            case "otherCount":
-              obj.ext = ['png','jpg','jpeg','mp3','zip','rar']
-              obj.type = 4
-              obj.order = 6;
-              obj.name = "其他";
-              break;
-              }
-              fileTypeAndCount.push(obj);
-              i += 1;
+     let fileTypeAndCount = ref([
+      { name: '全部', nameKey: 'totalCount', num: 0, type: null ,id:0}, 
+      { name: '课件', nameKey: 'courseWareCount', num: 0, type: 1 ,id:1}, 
+      { name: '讲义', nameKey: 'handoutCount', num: 0, type: 2 ,id:3}, 
+      { name: '标准教案', nameKey: 'teachplanCount', num: 0, type: 5,id:4 }, 
+      { name: '说课视频', nameKey: 'mediaCount', num: 0, type: 3 ,id:5},
+      { name: '其他', nameKey: 'otherCount', num: 0, type: 4 ,id:6},
+    ])
+        const tabCountRequest = async() => {
+      let res = await  axios.post<any, AxResponse>("/admin/material/queryCountByType", params, {headers: { "Content-Type": "application/json"}})
+      if(res.result) {
+        let arr = Object.entries(res.json)
+        arr.map (( [key, value] ) => {
+          fileTypeAndCount.value.map( ( item: any ) => {
+            if( item.nameKey == key ) {
+              item.num = value
             }
-            fileTypeAndCount.sort((a, b) => a.order - b.order);
-          } else {
-            ElMessage.error(res.msg);
-          }
-          fileTypeAndCount.values = res.json;
-          // console.log(res.json);
-        });
-    };
-    getTabsList();
+          })
+          
+        })
+      }
+    }
+    tabCountRequest()
+    
     let pageParam: any = {
       current: 1,
       size: 20,
@@ -187,11 +143,12 @@ export default {
           headers: { "Content-Type": "application/json" },
         }
       );
-      // console.log(res.json)
+      // console.log(res.json.records.length)
       contengList.value = res.json.records;
-      
+      context.emit('getMaterialQueryPage',)
     };
     getMaterialQueryPage();
+    
     let isShow = ref();
     const mouseleaveisShow = (item) => {
       item.isShow = false;
@@ -209,6 +166,8 @@ export default {
               res.result ? "删除成功" : res.msg
             );
             getMaterialQueryPage();
+       
+        //  getTabsList()
           }
         });
     };
@@ -245,13 +204,7 @@ export default {
       let downloadData = createElement('div', { 
         className: 'el-icon-download', 
         style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', bottom: '100px', right: '40px', zIndex: '10', cursor: 'pointer' },
-        on: { click: () => { 
-          let host: any = process.env.VUE_APP_BASE_API
-          let a:any = document.createElement('a');
-          a.download = item.fileName;
-          a.href = `${import.meta.env.VITE_DOMAIN}${item.filePath}`;
-          a.click();
-         } }
+         on: { click: () => { window.open(`${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`) } }
       });
       let iframe = createElement('iframe', { attrs: { src, width: '100%', height: '100%' }, style: { background: '#f9f9f9' } });
       iframe.onload = loading.close;
@@ -261,14 +214,11 @@ export default {
       document.body.appendChild(container);
     }
        const downLoad = (item) => {
-          let host: any = process.env.VUE_APP_BASE_API
-          let a:any = document.createElement('a');
-          a.download = item.fileName;
-          a.href = `${import.meta.env.VITE_DOMAIN}${item.filePath}`;
-          a.click();
+       window.open(`${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`)  
     };
      
     const selectActive = (item) => {
+      
       pageParam.type = item.type;
       getMaterialQueryPage();
       activeId.value = item.id;
@@ -286,7 +236,8 @@ export default {
       aNewName,
       downLoad,
       preview,
-      prepareLessons
+      prepareLessons,
+      tabCountRequest
     };
   },
 };

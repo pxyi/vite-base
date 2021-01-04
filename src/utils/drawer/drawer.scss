@@ -1,3 +1,4 @@
+@import './../../cus-var.scss';
 .drawer-mask {
   position: fixed;
   left: 0;
@@ -105,16 +106,16 @@
 }
 .drawer-save-btn {
   color: #fff;
-  background-color: #409eff;
-  border: solid 1px #409eff;
+  background-color: $--color-primary;
+  border: solid 1px $--color-primary;
   &:hover,
   &:focus {
-    background: #66b1ff;
-    border-color: #66b1ff;
+    background: rgba($color: $--color-primary, $alpha: .8);
+    border-color: rgba($color: $--color-primary, $alpha: .8);
   }
   &:active {
-    background: #3a8ee6;
-    border-color: #3a8ee6;
+    background: rgba($color: $--color-primary, $alpha: .65);
+    border-color: rgba($color: $--color-primary, $alpha: .65);
     color: #fff;
   }
   &.loading {
