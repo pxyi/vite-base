@@ -18,7 +18,7 @@
 import LayMenu from './menu.vue';
 import LayHeader from './header.vue';
 import TreeItem from '../components/tree/components/tree-item.vue';
-import { ref, watch, computed, Ref, onUnmounted } from 'vue';
+import { ref, computed, Ref, onUnmounted } from 'vue';
 import { onBeforeRouteUpdate, useRoute } from 'vue-router';
 
 export default {

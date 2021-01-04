@@ -36,8 +36,12 @@ const create = (component, props = {}) => {
 }
 
 
+const closeAll = () => {
+  let screen = document.querySelectorAll('[class^=__screen__]') || [];
+  screen.forEach(i => i.remove());
+}
 
-export default { create }
+export default { create, closeAll }
 
 
 interface ScreenCreate {

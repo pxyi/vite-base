@@ -110,8 +110,11 @@ const confirm = (opt: ModalConfirm): Promise<boolean> => {
   })
 }
 
-
-export default { create, confirm };
+const closeAll = () => {
+  let modal = document.querySelectorAll('[class^=__modal__]') || [];
+  modal.forEach(i => i.remove());
+}
+export default { create, confirm, closeAll };
 interface ModalConfirm {
   title?: string;
   message: string | HTMLElement;

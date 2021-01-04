@@ -87,8 +87,11 @@ const create = (opt: DrawerCreate): Promise<any> => {
   });
 
 }
-
-export default { create };
+const closeAll = () => {
+  let drawer = document.querySelectorAll('[class^=__drawer__]') || [];
+  drawer.forEach(i => i.remove());
+}
+export default { create, closeAll };
 
 /*
  * @Method CreateElement
