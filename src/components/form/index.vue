@@ -7,7 +7,7 @@
           <el-input clearable v-model="formGroup[node.key]" :placeholder="node.placeholder || `请输入${node.label}`" :disabled="node.disabled" />
         </template>
         <template v-else-if="node.type === 'number'">
-          <el-input-number clearable controls-position="right" v-model="formGroup[node.key]" :placeholder="node.placeholder || `请输入${node.label}`" />
+          <el-input-number clearable controls-position="right" v-model="formGroup[node.key]" :min="node.min" :max="node.max" :placeholder="node.placeholder || `请输入${node.label}`" />
         </template>
         <template v-else-if="node.type === 'select'">
           <el-select clearable :multiple="node.multiple" v-model="formGroup[node.key]" :placeholder="node.placeholder || `请选择${node.label}`">
@@ -131,6 +131,8 @@ interface NInput extends NPublic {
 interface NNumber extends NPublic {
   readonly type: 'number';
   readonly key: string;
+  readonly min: string;
+  readonly max: string
 }
 interface NBetween extends NPublic {
   readonly type: 'between';
