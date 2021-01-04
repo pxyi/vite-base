@@ -94,7 +94,7 @@ export default {
     let prepareLesson: any = ref({})
       axios.post<any,AxResponse>('/admin/prepareLesson/queryPrepareLessonByCourseIndexId', { courseIndexId: props.id}).then(res => {
         if(res.result){
-          courseDto.value = res.json.courseDto
+          courseDto.value = res.json.courseDto || {}
           res.json.prepareLesson ? prepareLesson.value = res.json.prepareLesson : {};
         }
       })
