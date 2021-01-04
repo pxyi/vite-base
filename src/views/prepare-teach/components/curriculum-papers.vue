@@ -94,7 +94,7 @@ export default {
     let prepareLesson: any = ref({})
       axios.post<any,AxResponse>('/admin/prepareLesson/queryPrepareLessonByCourseIndexId', { courseIndexId: props.id}).then(res => {
         if(res.result){
-          courseDto.value = res.json.courseDto
+          courseDto.value = res.json.courseDto || {}
           res.json.prepareLesson ? prepareLesson.value = res.json.prepareLesson : {};
         }
       })
@@ -199,19 +199,24 @@ export default {
       let downloadData = createElement('div', { 
         className: 'el-icon-download', 
         style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', bottom: '100px', right: '40px', zIndex: '10', cursor: 'pointer' },
-        on: { click: () => { 
-          let host: any = process.env.VUE_APP_BASE_API
-          let a:any = document.createElement('a');
-          a.download = item.fileName;
-          a.href = `${import.meta.env.VITE_DOMAIN}${item.filePath}`;
-          a.click();
-         } }
-      });
-      let iframe = createElement('iframe', { attrs: { src, width: '100%', height: '100%' }, style: { background: '#f9f9f9' } });
-      iframe.onload = loading.close;
-      let container = createElement('div', { 
-        style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '1000' },
-      }, [ closeBtn, iframe, printData, downloadData ])
+        on: { click: () => { window.open(`${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`) } }
+      }); 
+      let video, iframe, container
+      
+      if(item.ext === 'mp4') {
+        let video = createElement('video', 
+        { attrs: { src:`${import.meta.env.VITE_DOMAIN}${item.filePath}`, width: '100%', height: '100%',controls: true, controlsList: "nodownload" }, style: { background: '#f9f9f9' }});
+        video.oncanplay = loading.close;
+        container = createElement('div', { 
+          style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '1000' },
+        }, [ closeBtn, video, printData, downloadData ])
+      }else {
+        iframe = createElement('iframe', { attrs: { src, width: '100%', height: '100%' }, style: { background: '#f9f9f9' } });
+        iframe.onload = loading.close;
+        container = createElement('div', { 
+          style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '1000' },
+        }, [ closeBtn, iframe, printData, downloadData ])
+      }
       document.body.appendChild(container);
     }
 
