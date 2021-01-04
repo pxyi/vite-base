@@ -10,7 +10,7 @@
 		<div class="body">
 			<div class="body-left">
 				<div class="header">
-					<div v-for="i in tab" @click="tabIndex = i.value" :class="{'tabActive': tabIndex == i.value}">{{i.label}}</div>
+					<div v-for="i in tab" @click="tabIndex = i.value" :key="i.id" :class="{'tabActive': tabIndex == i.value}">{{i.label}}</div>
 				</div>
 				<div class="content">
 					<ul class="content-ul" v-show="tabIndex == 1">
@@ -58,7 +58,7 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script lang="js">
 	export default {
 		name: "pageView",
 		props: {
