@@ -3,7 +3,7 @@
     <SearchTime :params='params' @search="searchTime"/>
     <cus-list has-page url="/admin/prepareLesson/queryPageV2" :default="params" :auto-request="true" :headers='{ type: 1 }' ref="nearList" >
       <template v-slot:avatar>
-         <img src="/@/assets/prepare-teach/book_logo.png" width="36"  alt="爱学标品">
+         <img src="/@/assets/prepare-teach/book-logo.png" width="36"  alt="爱学标品">
       </template>
       <template v-slot="{ data }">
          <div class="near-list-content">  
@@ -14,9 +14,9 @@
       </template>
       <template v-slot:actions="{ data }">
         <div class="menu">
-          <el-button size="small" round :class="{ 'btn-hidden': data.checkStaus === 2 }"  @click="savePrepareClass(data)">提交备课</el-button>
-          <el-button size="small" round type='primary' v-if="data.checkStaus === 1"  @click="courseDetailFileList(data)">继续备课</el-button>
-          <el-button size="small" round type='primary' v-if="data.checkStaus === 2"  @click="courseDetailFileList(data)">查看备课</el-button>
+          <el-button size="small" round :class="{ 'btn-hidden': data.checkStaus !== 0 }"  @click="savePrepareClass(data)">提交备课</el-button>
+          <el-button size="small" round type='primary' v-if="data.checkStaus === 0"  @click="courseDetailFileList(data)">继续备课</el-button>
+          <el-button size="small" round type='primary' v-if="data.checkStaus === 2 || data.checkStaus === 1"  @click="courseDetailFileList(data)">查看备课</el-button>
         </div>  
       </template>
     </cus-list>
@@ -73,7 +73,6 @@ export default {
       })
       // 将获取的参数传到提交接口内
       prepareLessonRequest.then((res: any) => {
-      console.log(res)
         let __params = {
           courseId: res.courseDto.id,
           courseIndexId: res.courseDto.courseIndexId,
