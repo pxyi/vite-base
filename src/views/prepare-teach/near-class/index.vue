@@ -31,6 +31,7 @@ import axios from 'axios'
 import { AxResponse } from './../../../core/axios'
 import { ElMessage, ElLoading, locale } from 'element-plus'
 import SearchTime from './search-time.vue'
+import emitter from './../../../utils/mitt';
 
 export default {
   props: {
@@ -40,6 +41,7 @@ export default {
   setup(props) {
     let params: Ref<any> = ref({});
     let nearList: Ref<any> = ref();
+    emitter.emit('effect', (id) => params.value.subjectCode = id)
 
     // 搜索时刷新接口
     const searchTime = (data) => {
@@ -71,6 +73,7 @@ export default {
       })
       // 将获取的参数传到提交接口内
       prepareLessonRequest.then((res: any) => {
+      console.log(res)
         let __params = {
           courseId: res.courseDto.id,
           courseIndexId: res.courseDto.courseIndexId,
