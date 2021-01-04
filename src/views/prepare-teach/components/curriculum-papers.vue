@@ -202,7 +202,7 @@ export default {
         }, [ closeBtn, video, printData, downloadData ])
       }else if (item.ext === null && item.mediaType === 'url'){
         loading.close()
-        let url = createElement('p', { style: { background: '#f9f9f9', width: '100%', height: '100%', padding: '36px', 'font-size':'20px' }}, '链接地址：' + item.filePath);
+        let url = createElement('p', { style: { background: '#f9f9f9', width: '100%', height: '100%', padding: '36px', 'font-size':'20px', textAlign: 'center' }}, '链接地址：' + item.filePath);
         container = createElement('div', { 
           style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '1000' },
         }, [ closeBtn, url, printData, downloadData ])
