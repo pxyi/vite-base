@@ -26,7 +26,6 @@ const create = (component, props = {}) => {
     app.use(Store);
     app.use(ElementPlus);
     app.provide('close', remove);
-    app.use(Components)
     app.use(router)
     const vm = app.mount(body);
 

@@ -70,13 +70,13 @@
   </div>
 </template>
 <script lang="ts">
-import { ref, Ref, reactive, inject, watch } from 'vue';
+import { ref, Ref, inject, watch } from 'vue';
 import axios from 'axios';
 import { AxResponse } from './../../../core/axios';
 import Modal from './../../../utils/modal';
 import MyPlanUpload from './my-plan-upload.vue'
 import MyVideoUpload from './my-video-upload.vue'
-import { ElMessage,ElLoading } from 'element-plus'
+import { ElMessage, ElLoading } from 'element-plus'
 import createElement from './../../../utils/createElement';
 
 export default {
@@ -84,21 +84,19 @@ export default {
     id: String,
     title: String,
   },
- 
   setup(props) {
-    let close: any = inject('close')
-    let activeName = ref('totalCount')
+    let close: any = inject('close');
+    let activeName = ref('totalCount');
     let domain = import.meta.env.VITE_DOMAIN;
     /*---------获取上部展示数据------------*/
-    let courseDto: any = ref({})
-    let prepareLesson: any = ref({})
+    let courseDto: any = ref({});
+    let prepareLesson: any = ref({});
       axios.post<any,AxResponse>('/admin/prepareLesson/queryPrepareLessonByCourseIndexId', { courseIndexId: props.id}).then(res => {
         if(res.result){
-          courseDto.value = res.json.courseDto
+          courseDto.value = res.json.courseDto || {}
           res.json.prepareLesson ? prepareLesson.value = res.json.prepareLesson : {};
         }
       })
-
     /*---------获取tab标签数据------------*/
     let tabCountList = ref([
       { name: '全部', nameKey: 'totalCount', num: 0, type: null }, 
@@ -122,7 +120,6 @@ export default {
       }
     }
     tabCountRequest()
-
     /*---------获取内容图片数据------------*/
     let allFileList = ref([])
     const request = async (type) =>{
@@ -132,33 +129,30 @@ export default {
       }
     }
     request('')
-
     /*---------切换标签获取数据------------*/
-    let type = ref()
+    let __tabtype = ref()
     const handleClick = (e) => {
       tabCountList.value.map( ( item: any,index ) => {
         if( index == e.index ){
-          type.value = item.type
-          request(type.value)
+          __tabtype.value = item.type
+          request(__tabtype.value)
         }
       })
     }
-
     /*---------上传我的教案------------*/
     const uploadMyPlan = () => {
       Modal.create({ title: '上传我的教案', width: 640, component: MyPlanUpload, props: { id: props.id }, zIndex: 999 }).then((data: any) => {
         if(data.json){
-           request(type.value)
+           request(__tabtype.value)
            tabCountRequest()
         }
       })
     }
-
     /*---------上传我的说课------------*/
     const uploadMyVideo = () => {
       Modal.create({ title: '上传我的说课', width: 640, component: MyVideoUpload, props: { id: props.id }, zIndex: 999 }).then((data: any) => {
         if(data.json){
-           request(type.value)
+           request(__tabtype.value)
            tabCountRequest()
         }
       })
@@ -179,7 +173,6 @@ export default {
         }
       }) 
     }
-
     /*-----预览-----*/
     const preview = (item) => {
       const loading = ElLoading.service({ lock: true, background: 'rgba(255, 255, 255, .7)', text: '加载中...' })
@@ -199,25 +192,30 @@ export default {
       let downloadData = createElement('div', { 
         className: 'el-icon-download', 
         style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', bottom: '100px', right: '40px', zIndex: '10', cursor: 'pointer' },
-        on: { click: () => { 
-          let host: any = process.env.VUE_APP_BASE_API
-          let a:any = document.createElement('a');
-          a.download = item.fileName;
-          a.href = `${import.meta.env.VITE_DOMAIN}${item.filePath}`;
-          a.click();
-         } }
-      });
-      let iframe = createElement('iframe', { attrs: { src, width: '100%', height: '100%' }, style: { background: '#f9f9f9' } });
-      iframe.onload = loading.close;
-      let container = createElement('div', { 
-        style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '1000' },
-      }, [ closeBtn, iframe, printData, downloadData ])
+        on: { click: () => { window.open(`${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`) } }
+      }); 
+      let video, iframe, container
+
+      if(item.ext === 'mp4') {
+        let video = createElement('video', 
+        { attrs: { src:`${import.meta.env.VITE_DOMAIN}${item.filePath}`, width: '100%', height: '100%',controls: true, controlsList: "nodownload" }, style: { background: '#f9f9f9' }});
+        video.oncanplay = loading.close;
+        container = createElement('div', { 
+          style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '1000' },
+        }, [ closeBtn, video, printData, downloadData ])
+      }else {
+        iframe = createElement('iframe', { attrs: { src, width: '100%', height: '100%' }, style: { background: '#f9f9f9' } });
+        iframe.onload = loading.close;
+        container = createElement('div', { 
+          style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '1000' },
+        }, [ closeBtn, iframe, printData, downloadData ])
+      }
       document.body.appendChild(container);
     }
 
     return { 
       close, activeName, tabCountList, courseDto, request, allFileList, handleClick, prepareLesson, uploadMyPlan,
-      tabCountRequest, uploadMyVideo, savePrepareClass, type, preview, domain
+      tabCountRequest, uploadMyVideo, savePrepareClass, preview, domain
     }
   }
 }
