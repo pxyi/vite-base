@@ -9,7 +9,7 @@
 				{label: '学期', key: 'semesterId'},
 				{label: '班型', key: 'courseTypeId'},
 				{label: '年级', key: 'gradeId'}]"
-			@submit="params = {...$event, ...params};$refs.tableRef.request({...$event, ...params})"
+			@submit="params = {...params, ...$event}"
 			ref="condition"
 		></cus-condition>
 		<cus-table :auto-request="false" :default="params" ref="tableRef" url="/course/queryByPageV2">
@@ -89,7 +89,7 @@
                 label: '学科',
                 type: 'cascader',
                 key: 'subjectId',
-                default: store.getters.subject.path.split(','),
+                default: store.getters.subject.code,
                 url: '/permission/user/userDataSubjects',
 	              valueKey: 'code'
               },
@@ -105,13 +105,14 @@
             data
           }
         }).then(res => {
-          courseModifyOrAdd({...data, ...res}, ...{subjectId: res.subjectId[1]}, url);
+          courseModifyOrAdd({...data, ...res}, url);
         })
       };
 
       async function courseModifyOrAdd(data, url) {
         const res: Promise = await axios.post<any, AxiosResponse>(url, data, {headers: {'Content-Type': 'application/json;charset=UTF-8'}});
-        res.result && ElNotification.success({title: '成功', message: res.msg}) && tableRef.value.request(params.value)
+        res.result && ElNotification.success({title: '成功', message: res.msg}) && tableRef.value.request(params.value);
+        !res.result && ElNotification.error({title: '失败', message: res.msg});
       }
       const courseDelete = (id) => axios.post('/course/delete', {id}).then(res => res.result && ElNotification.success({title: '成功', message: res.msg}) && tableRef.value.request(params.value));
 
