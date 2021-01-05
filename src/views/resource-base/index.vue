@@ -301,6 +301,7 @@ export default {
           uploadInfoDeforeClose(); // this.uploadInfoDialogVisible = false;
 
         });
+         emitter.emit('uploadInfoSure',()=>{})
     }
     
     return {

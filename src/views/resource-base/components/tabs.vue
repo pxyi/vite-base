@@ -15,8 +15,8 @@
       </a>
     </nav>
     <div class="order">
-      <span>文件名 <i class="el-icon-bottom"></i></span>
-      <span>上传时间 <i class="el-icon-bottom"></i></span>
+     <span @click="fileOder(1)">文件名 <i class="el-icon-bottom " v-if="flag"></i> <i class="el-icon-top " v-else></i></span>
+      <span @click="timeOder(2)">上传时间 <i class="el-icon-bottom" v-if="flags"></i> <i class="el-icon-top " v-else></i></span>
       <!-- <span>引用次数<i class="el-icon-bottom"></i></span> -->
     </div>
   </div>
@@ -90,7 +90,7 @@ import { emit } from 'process';
 export default {
   setup(props, context) {
     let domain = import.meta.env.VITE_DOMAIN;
-    let activeId = ref(0);
+   let activeId = ref(0);
     emitter.on('search',(searchText)=>{
       pageParam.fileName = searchText.value
       getMaterialQueryPage()
@@ -99,7 +99,10 @@ export default {
     emitter.on('clearInput',(clearInput)=>{
        getMaterialQueryPage()
     })
-    
+     emitter.on('uploadInfoSure',()=>{
+       tabCountRequest()
+       getMaterialQueryPage()
+    })
     let activeName = ref('totalCount');
      let fileTypeAndCount = ref([
       { name: '全部', nameKey: 'allCount', count: 0, type: null ,       id:0}, 
@@ -133,7 +136,38 @@ export default {
     
     }
     tabCountRequest() 
-    
+     let flag = ref(false)
+     const fileOder = (order)=>{
+      if(pageParam.orderType===0){
+        flag.value = false
+        getMaterialQueryPage()
+        pageParam.orderType=1
+         pageParam.order=1
+        // console.log(pageParam.orderType);
+      }else{
+        flag.value = true
+         pageParam.order=1
+         getMaterialQueryPage()
+          pageParam.orderType=0
+        // console.log(pageParam.orderType);
+      }
+     }
+     let flags = ref(false)
+      const timeOder = (order)=>{
+      if(pageParam.orderType===0){
+        flags.value = false
+        getMaterialQueryPage()
+        pageParam.orderType=1
+         pageParam.order=2
+        // console.log(pageParam.orderType);
+      }else{
+        flags.value = true
+         pageParam.order=2
+         getMaterialQueryPage()
+          pageParam.orderType=0
+        // console.log(pageParam.orderType);
+      }
+     }
     let pageParam: any = {
       current: 1,
       size: 20,
@@ -236,6 +270,10 @@ export default {
     };
 
     return {
+      fileOder,
+      timeOder,
+      flags,
+      flag,
       fileTypeAndCount,
       activeId,
       selectActive,
