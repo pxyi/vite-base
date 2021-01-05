@@ -1,7 +1,7 @@
 <template>
   <div class="lay__menu__container">
     <div class="logo">
-      <img src="/@/assets/menu/logo.png" alt="logo">
+      <img src="/src/assets/menu/logo.png" alt="logo">
     </div>
     <div class="menu-content">
       <template v-for="(menu) in list" :key="menu.key">

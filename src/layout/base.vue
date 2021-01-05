@@ -5,7 +5,7 @@
       <el-header height="60px" v-if="!hideHeader"><lay-header /></el-header>
       <el-main :class="{ is__index: hideHeader}">
         <router-view v-slot="{ Component }">
-          <div class="container">
+          <div class="layout__container">
             <component :is="Component" />
           </div>
         </router-view>
@@ -66,7 +66,7 @@ export default {
     background: #fff;
   }
 }
-.container {
+.layout__container {
   height: 100%;
   overflow: auto;
 }

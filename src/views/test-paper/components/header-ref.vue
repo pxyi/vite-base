@@ -30,7 +30,7 @@ export default {
   setup(props, { emit }) {
     let classType = ref(null);
     let classList = [ { name: '全部试卷', id: null }, { name: '我的试卷', id: 2 }, { name: '标准试卷', id: 1 } ];
-    const classChange = (e) => { classType.value = e; emit('', e) };
+    const classChange = (e) => { classType.value = e; emit('type-change', e) };
 
     let searchText = ref(null);
     const searchHandle = () => emit('search', searchText);
