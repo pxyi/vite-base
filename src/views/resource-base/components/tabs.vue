@@ -358,7 +358,7 @@ export default {
         cursor: pointer;
         width: 16px;
         height: 16px;
-        background: url("../../../assets/images/icon_d44l6421sgu/caozuo.png")
+        background: url("../../../assets/resource-base/icon_d44l6421sgu/caozuo.png")
           no-repeat center;
       }
 
