@@ -382,6 +382,11 @@ export default {
         }
       }
       .content-list-box-item-title {
+        text-overflow: -o-ellipsis-lastline;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        line-clamp: 2;
         width: 140px;
         margin: 0 auto;
         font-size: 14px;
