@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="paper-update-container">
     <div class="header"><HeaderComponent /></div>
     <div class="content">
       <ToolbarComponent />
@@ -10,9 +10,11 @@
 </template>
 <script lang="ts">
 import { ref, Ref, reactive } from 'vue';
+import axios from 'axios';
 import HeaderComponent from './header.vue';
 import ToolbarComponent from './toolbar.vue';
 import ContentComponent from './content.vue';
+import store from './store/index';
 
 export default {
   props: {
@@ -20,12 +22,15 @@ export default {
   },
   components: { HeaderComponent, ToolbarComponent, ContentComponent },
   setup(props) {
-    
+    axios.post<null, { json: any }>('/tiku/paper/getPaper', { id: props.id }).then((res) => {
+      res.json.paperCharpts = res.json.paperCharpts.map(quest => { quest.questions.map(q => {q.question = q.question || { title: '默认标题' }; return q;}); return quest } )
+      store.commit('set_paper_info', res.json);
+    });
   }
 }
 </script>
 <style lang="scss" scoped>
-.container {
+.paper-update-container {
   height: 100%;
   display: flex;
   flex-direction: column;

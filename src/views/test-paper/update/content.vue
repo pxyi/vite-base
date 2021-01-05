@@ -12,14 +12,37 @@
       </div>
       <div class="paper_main">
         <div class="question_type" v-for="(questionType, index) in paperInfo.paperCharpts" :key="questionType.id">
-          <h2>{{ toChinesNum(index + 1) }}、 {{ questionType.title }}（共{{ questionType.questionCount }}小题）（0）分</h2>
+          <div class="question-title">
+            <span>{{ toChinesNum(index + 1) }}、 {{ questionType.title }}（共{{ questionType.questionCount }}小题）（0）分</span>
+            <i class="el-icon-plus" />
+            <div class="footer">
+              <i class="iconfont iconshangyi" />
+              <i class="iconfont iconxiayi" />
+              <i class="iconfont iconshanchu" />
+            </div>
+          </div>
           <draggable v-model="questionType.questions" tag="transition-group" animation="250" item-key="id">
             <template #item="{ element, index }">
               <div class="item">
                 <i class="el-icon-plus" />
                 <div class="title" v-html="element.question.title" :data-index="`${index + 1}.`"></div>
                 <div class="footer">
-                  
+                  <div>
+                    <i class="iconfont iconshezhifenzhi" />
+                    <input type="text" />
+                    <span>分值</span>
+                  </div>
+                  <div>
+                    <i class="iconfont icondaan" />
+                    <span>答案</span>
+                  </div>
+                  <div>
+                    <i class="iconfont iconhuanti" />
+                    <span>换题</span>
+                  </div>
+                  <i class="iconfont iconshangyi" />
+                  <i class="iconfont iconxiayi" />
+                  <i class="iconfont iconshanchu" />
                 </div>
               </div>
             </template>
@@ -31,9 +54,18 @@
 </template>
 
 <script lang="ts">
-import { ref, inject } from 'vue';
+import { ref, computed } from 'vue';
 import draggable from 'vuedraggable';
 import axios from 'axios';
+import store from './store/index';
+
+export default {
+  components: { draggable },
+  setup(props) {
+    let paperInfo = computed(() => store.state.paperInfo);
+    return { paperInfo, toChinesNum }
+  }
+}
 let toChinesNum = (num: number): string => {
   let changeNum = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
   let unit = ["", "十", "百", "千", "万"];
@@ -52,18 +84,6 @@ let toChinesNum = (num: number): string => {
   }
   return overWan ? getWan(overWan) + "万" + getWan(noWan) : getWan(num);
 }
-export default {
-  components: { draggable },
-  setup(props) {
-    let paperInfo = ref({});
-    let id = inject('id');
-    axios.post<null, { json: any }>('/tiku/paper/getPaper', { id }).then((res) => {
-      res.json.paperCharpts = res.json.paperCharpts.map(quest => { quest.questions.map(q => {q.question = q.question || { title: '默认标题' }; return q;}); return quest } )
-      paperInfo.value = res.json;
-    });
-    return { paperInfo, toChinesNum }
-  }
-}
 </script>
 
 <style lang="scss" scope>
@@ -74,7 +94,8 @@ export default {
   margin: 0 auto;
   .paper_content {
     height: 100%;
-    padding: 50px 70px 10px;
+    padding: 50px 70px;
+    background: #fff;
     box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.1);
     border: 1px solid #eee;
     overflow: auto;
@@ -133,19 +154,26 @@ export default {
   }
   .question_type {
     margin-bottom: 20px;
-    h2 {
+    .question-title {
       padding: 12px 20px;
+      position: relative;
     }
-    h2, .item {
+    .question-title, .item {
       border: solid 1px transparent;
       border-left-width: 3px;
       border-radius: 4px;
       &:hover {
         border-color: #1AAFA7;
+        .el-icon-plus,
+        .footer {
+          opacity: 1;
+          visibility: visible;
+        }
       }
     }
     .item {
       padding: 20px;
+      cursor: move;
       position: relative;
       .title::before {
         content: attr(data-index);
@@ -155,28 +183,32 @@ export default {
       .title > * {
         display: inline-block;
       }
-      .el-icon-plus {
-        display: block;
-        width: 24px;
-        height: 24px;
-        color: #1AAFA7;
-        line-height: 24px;
-        text-align: center;
-        font-weight: bold;
-        background: #fff;
-        border-radius: 50%;
-        box-shadow: 0 0 4px #ccc;
-        border: 1px solid #EEEEEE;
-        position: absolute;
-        top: 0;
-        left: 0;
-        margin: -13px 0 0 -15px
-      }
+    }
+    .el-icon-plus {
+      display: block;
+      width: 24px;
+      height: 24px;
+      color: #1AAFA7;
+      line-height: 24px;
+      text-align: center;
+      font-weight: bold;
+      background: #fff;
+      border-radius: 50%;
+      box-shadow: 0 0 4px #ccc;
+      border: 1px solid #EEEEEE;
+      position: absolute;
+      top: 0;
+      left: 0;
+      margin: -13px 0 0 -15px;
+      opacity: 0;
+      visibility: hidden;
     }
     .footer {
+      opacity: 0;
+      visibility: hidden;
       width: calc(100% + 2px);
       height: 28px;
-      line-height: 28px;
+      line-height: 24px;
       text-align: right;
       background: #fff;
       box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.1);
@@ -185,8 +217,45 @@ export default {
       position: absolute;
       bottom: 0;
       left: 0;
+      z-index: 1;
       margin-bottom: -26px;
       margin-left: -1px;
+      & > div {
+        display: inline-block;
+        margin-right: 22px;
+        color: #77808D;
+        font-size: 12px;
+        cursor: pointer;
+        input {
+          width: 32px;
+          border: 0;
+          font-size: 12px;
+          text-align: center;
+          border-bottom: solid 1px #77808D;
+          outline: none;
+        }
+        &:last-of-type {
+          padding-right: 20px;
+          height: 16px;
+          line-height: 16px;
+          border-right: solid 1px #DCDFE7;
+        }
+      }
+      i {
+        color: #FAAD14;
+        font-size: 14px;
+        margin-right: 2px;
+      }
+      & > i {
+        font-size: 16px;
+        margin-right: 15px;
+        cursor: pointer;
+        &:last-child {
+          font-size: 14px;
+          color: #3D7FFF;
+          margin-right: 25px;
+        }
+      }
     }
   }
 }
