@@ -1,6 +1,6 @@
 <template>
 <cus-skeleton :loading="loading">
-  <div class="source-container" v-for="(s, idx) in questionSources" :key="s">
+  <div class="source-box" v-for="(s, idx) in questionSources" :key="s">
     <div class="source-label">来源{{ idx + 1 }}</div>
     <div class="source-main">
       <div class="source-cell">
@@ -68,6 +68,9 @@ export default {
 
     const getSchoolList = async (e, source) => {
       if (e && e.length) {
+        questionSources.value.map((item) => {
+          item.publicSchoolId = null
+        })
         let res = await axios.post<null, AxResponse>('/admin/publicSchool/queryAll', { areaId: e[2] });
         source.schoolList = res.json;
       } else {
@@ -90,7 +93,7 @@ export default {
 </script>
 
 <style lang="scss" scope>
-  .source-container {
+  .source-box {
     display: flex;
     padding: 10px;
     background: rgba(26, 175, 167, 0.1);

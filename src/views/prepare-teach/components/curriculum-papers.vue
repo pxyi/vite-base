@@ -76,6 +76,7 @@ import MyPlanUpload from './my-plan-upload.vue'
 import MyVideoUpload from './my-video-upload.vue'
 import { ElMessage, ElLoading } from 'element-plus'
 import createElement from './../../../utils/createElement';
+import { resolve } from 'url';
 
 export default {
   props: {

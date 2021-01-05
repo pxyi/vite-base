@@ -6,15 +6,17 @@
         <div class="f-i-label">知识点</div>
         <div class="f-i-control">
           <el-popover placement="bottom-start" :width="220">
-            <el-tree 
-              class="knowledge-tree"
-              :data="selectMap.knowledgeList"
-              ref="knowledgeRef"
-              show-checkbox
-              node-key="id"
-              :props="{ children: 'childs', label: 'name' }"
-              @check="(target, { checkedKeys }) => { formGroup.knowledgePoints = checkedKeys; }"
-            />
+            <div class="knowledge-tree-wrapper">
+              <el-tree 
+                class="knowledge-tree"
+                :data="selectMap.knowledgeList"
+                ref="knowledgeRef"
+                show-checkbox
+                node-key="id"
+                :props="{ children: 'childs', label: 'name' }"
+                @check="(target, { checkedKeys }) => { formGroup.knowledgePoints = checkedKeys; }"
+              />
+            </div>
             <template #reference>
               <el-input readonly clearable placeholder="选择知识点" size="medium"
                 :model-value="formGroup.knowledgePoints.length ? `已选择${formGroup.knowledgePoints.length}项` : null" 
@@ -136,7 +138,13 @@ export default {
     }
   }
 
+  
+}
+.knowledge-tree-wrapper {
+  max-height: 250px;
+  overflow: auto;
   .knowledge-tree {
+    min-width: 220px;
     .el-tree-node__content {
       height: 32px !important;
     }
