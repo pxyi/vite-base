@@ -299,9 +299,9 @@ export default {
             });
           } // 上传成功关闭弹窗
           uploadInfoDeforeClose(); // this.uploadInfoDialogVisible = false;
-
+          emitter.emit('uploadInfoSure',()=>{})
         });
-         emitter.emit('uploadInfoSure',()=>{})
+         
     }
     
     return {
