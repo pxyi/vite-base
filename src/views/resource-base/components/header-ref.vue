@@ -1,5 +1,5 @@
 <template>
-  <div class="header_ref">
+   <div class="header_ref">
     <div class="tabs_box">
       <ul>
         <li
@@ -14,6 +14,7 @@
     </div>
     <div class="search">
       <el-input
+      @clear='clearInput'
         clearable
         placeholder="按文件名称搜索"
         prefix-icon="el-icon-search"
@@ -54,7 +55,7 @@
   </div>
 </template>
 <script lang="ts">
-import { getCurrentInstance, ref } from "vue";
+import { getCurrentInstance, ref, watch } from "vue";
 import OrganizingPapers from "./organizing-papers.vue";
 import emitter from "../../../utils/mitt";
 import Modal from "../../../utils/modal";
@@ -63,45 +64,40 @@ import axios from "axios";
 import { AxResponse } from "../../../core/axios";
 
 export default {
-  props: ["handleClick"],
+  props: ["fileList", "fileChange", "tipShow"],
   setup(props, { emit }) {
-    let classType = ref(null);
-    const updateShow = ref(false);
-    let classList = [{ name: "资料库", id: null }];
-    const classChange = (e) => {
+     let classType = ref(null);
+     const updateShow = ref(false);
+     let classList = [{ name: "资料库", id: null }];
+     const classChange = (e) => {
       classType.value = e;
       emit("SET_SUBJECT", e);
-    };
-    const handlePreview = () => {
+     };
+     const handlePreview = () => {
       console.log(1);
-    };
-    let searchText = ref(null);
-    const searchHandle = () => emit("search", searchText);
+     };
 
-    let queryClass = {};
-    emitter.on("queryClass", (e) => (queryClass = e));
+    let searchText = ref();
+    const searchHandle = () => {
+      emitter.emit('search', searchText);
+    }
 
-    const iMousemove = () => {
-      // console.log(1111);
-    };
+    const clearInput = ()=>{
+      emitter.emit('search', clearInput=>{clearInput});
+    }
 
-    let uploadRef = ref();
-    const upload = () => {
+     let queryClass = {};
+     emitter.on("queryClass", (e) => (queryClass = e));
+
+     const iMousemove = () => {
+      console.log(1111);
+     };
+
+      let uploadRef = ref();
+      const upload = () => {
       let files: File[] = Array.from(uploadRef.value.files);
       uploadRef.value.files;
-      let accept = [
-        "ppt",
-        "pptx",
-        "doc",
-        "docx",
-        "pdf",
-        "mp4",
-        "mp3",
-        "jpg",
-        "png",
-        "zip",
-        "rar",
-      ];
+      let accept = ["ppt","pptx","doc","docx","pdf","mp4","mp3","jpg","png","zip","rar", ];
       files.filter((file) => {
         let idx = file.name.lastIndexOf(".");
         let ext = file.name.substr(idx + 1);
@@ -112,37 +108,21 @@ export default {
       } else {
         Modal.create({
           title: "上传资料",
-          width: 540,
+          width: 500,
           component: OrganizingPapers,
           props: { queryClass, files },
         });
       }
     };
     let roundisShow: boolean = false;
-
-    function setUpdateShow(bool: boolean) {
+    const setUpdateShow = (bool: boolean)=> {
       updateShow.value = bool;
     }
-    // function uploadInfo(){
-    //   emit("handleClick","zl")
-    // }
-    return {
-      classType,
-      classList,
-      classChange,
-      searchText,
-      searchHandle,
-      uploadRef,
-      upload,
-      iMousemove,
-      handlePreview,
-      updateShow,
-      setUpdateShow,
-      emit,
-    };
+   
+    return {clearInput,classType,classList,classChange,searchText,searchHandle,uploadRef,upload,iMousemove,handlePreview,updateShow,setUpdateShow,emit,};
   },
 };
-</script>
+  </script>
 <style lang="scss" scoped>
 .header_ref {
   display: flex;
@@ -218,6 +198,9 @@ export default {
         margin-top: 0;
         margin-left: 0;
       }
+    }
+    :deep(ul.el-upload-list.el-upload-list--text) {
+      display: none;
     }
   }
 }
