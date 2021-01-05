@@ -131,6 +131,7 @@ export default {
           d.category = data.value.category;
           d.difficult = data.value.difficult;
           d.knowledgePoints = data.value.knowledgePoints;
+          d.questionSources = data.value.questionSources;
           return d;
         });
         store.commit('set_data_set', cloneData);
@@ -217,7 +218,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
 .tool-item-content {
   padding: 20px;
   flex: auto;

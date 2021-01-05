@@ -76,7 +76,7 @@ export default {
       headerRef.value.formGroup.year = year;
       headerRef.value.formGroup.source = source;
       headerRef.value.formGroup.category = category;
-      
+
 
       contentRef.value.formGroup.title = title;
       contentRef.value.formGroup.analysis = analysis;
@@ -107,5 +107,5 @@ export default {
 }
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
 </style>

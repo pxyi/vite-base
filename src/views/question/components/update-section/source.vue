@@ -11,8 +11,8 @@
         </div>
         <div class="source-control">
           <el-cascader placeholder="选择省市区" clearable size="medium"
-            v-model="s.provinceCity" 
-            :props="{ lazy: true, lazyLoad: getProvinceCity, label: 'name', value: 'id' }" 
+            v-model="s.provinceCity"
+            :props="{ lazy: true, lazyLoad: getProvinceCity, label: 'name', value: 'id' }"
             @change="getSchoolList($event, s)"
           />
         </div>
@@ -92,7 +92,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
   .source-box {
     display: flex;
     padding: 10px;
@@ -123,7 +123,7 @@ export default {
         }
       }
     }
-    &:hover .source-delete-btn { 
+    &:hover .source-delete-btn {
       width: 20px;
     }
     .source-delete-btn {

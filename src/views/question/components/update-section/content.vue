@@ -12,10 +12,10 @@
       <div class="title">单/多选题、填空题的选项范围从 2 到 20 </div>
       <div class="group">
         <ul>
-          <li 
-            v-for="(node, idx) in options" 
+          <li
+            v-for="(node, idx) in options"
             :key="node"
-            :data-index="baseType === 3 ? node.no : numberToLetter(node.no)" 
+            :data-index="baseType === 3 ? node.no : numberToLetter(node.no)"
           >
             <div class="check" v-if="baseType === 1"><el-radio v-model="node.checked" :label="true" @change="radioChange(node.no)"></el-radio></div>
             <div class="check" v-if="baseType === 2"><el-checkbox v-model="node.checked"></el-checkbox></div>
@@ -72,16 +72,16 @@ export default {
       valid.value = true;
       if (!formGroup.title) { return false };
       if (baseType.value < 4 && options.value.some(i => !i.content)) { return false }
-      if ( 
-        baseType.value === 1 && options.value.every(i => !i.checked) || 
+      if (
+        baseType.value === 1 && options.value.every(i => !i.checked) ||
         baseType.value === 2 && !options.value.some(i => i.checked)
       ) { ElMessage.warning('请选择答案'); return false }
-      let result: any = { 
+      let result: any = {
         title: formGroup.title,
         analysis: formGroup.analysis,
         baseType: unref(baseType)
       };
-      if (baseType.value < 3) { 
+      if (baseType.value < 3) {
         result.option = unref(options).map((i: any)=> { i.name = numberToLetter(i.no); return i });
         result.rightAnswer = options.value.filter(i => i.checked);
       } else if (baseType.value === 3) {
@@ -118,13 +118,13 @@ export default {
     const addOption = () => options.value.push({ no: options.value.length + 1, content: null, checked: false });
 
     const deleteOption = (idx) => { options.value.splice(idx, 1); options.value.map((n, idx) => n.no = idx + 1); }
-    
+
     return { formGroup, valid, validator, questionTypeChange, baseType, answer, options, numberToLetter, radioChange, addOption, deleteOption, log: () => console.log(formGroup) }
   }
 }
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
 .content {
   .section {
     padding: 0 32px 0 60px;
