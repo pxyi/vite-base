@@ -102,7 +102,7 @@
 	</div>
 </template>
 
-<script>
+<script lang="js">
 	import './index.scss'
 	import checkHeader from "./components/header.vue";
 	import score from './components/score.vue'
