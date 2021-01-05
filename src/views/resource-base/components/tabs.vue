@@ -35,7 +35,7 @@
           />
           <img
             v-else
-            src="../../../assets/resource-base/icon_d44l6421sgu/caozuo.png"
+            src="../../../assets/resource-base/icon_d44l6421sgu/weizhiwenjian.png"
           />
         </div>
         <p class="content-list-box-item-title">
@@ -74,7 +74,7 @@
 </template>
 
 <script lang="ts">
-import { ref, reactive, Ref ,computed, onMounted} from "vue";
+import { ref, reactive, Ref ,computed, onMounted, watch} from "vue";
 import axios from "axios";
 import { useStore } from "vuex";
 import { AxResponse } from "../../../core/axios";
@@ -88,10 +88,10 @@ import Prepare from './prepare-lessons.vue'
 import { emit } from 'process';
 
 export default {
-  setup(props, context) {
+  setup(props, context) {    
     let domain = import.meta.env.VITE_DOMAIN;
    let activeId = ref(0);
-    emitter.on('search',(searchText)=>{
+    emitter.on('search',(searchText)=>{ 
       pageParam.fileName = searchText.value
       getMaterialQueryPage()
     })
@@ -103,6 +103,7 @@ export default {
        tabCountRequest()
        getMaterialQueryPage()
     })
+    
     let activeName = ref('totalCount');
      let fileTypeAndCount = ref([
       { name: '全部', nameKey: 'allCount', count: 0, type: null ,       id:0}, 
@@ -112,14 +113,14 @@ export default {
       { name: '说课视频', nameKey: 'mediaCount', count: 0, type: 3 ,    id:4},
       { name: '其他', nameKey: 'otherCount', count: 0, type: 4 ,        id:5},
     ])
-
-    const tabCountRequest = () => {
-    emitter.emit("effect",async (id) => {
-    let params = reactive({
-      subject: id,
+ let params = reactive({
+      subject: '',
       chapterId: [],
       isPublic: 1,
     });
+    const tabCountRequest = () => {
+    emitter.emit("effect",async (id) => {
+   params.subject = id
       let res = await  axios.post<any, AxResponse>("/admin/material/queryCountByType", params, {headers: { "Content-Type": "application/json"}})
       if(res.result) {
          res.json.allCount = eval(Object.values(res.json).join("+"));
@@ -168,16 +169,32 @@ export default {
         // console.log(pageParam.orderType);
       }
      }
+     emitter.on('check-change',(target)=>{
+      pageParam.chapterId.push(target.id)
+      params.chapterId.values = target.id
+      getMaterialQueryPage()
+      tabCountRequest()
+      pageParam.chapterId.forEach((item,index,arr)=>{
+        for(var i = 0 ; i <arr.length;i++){
+           if(arr[i]==item){
+             pageParam.chapterId.splice(i,1)
+           }else{
+              pageParam.chapterId.push(target.id)
+           }
+        }
+      })
+    })
+    
     let pageParam: any = {
       current: 1,
       size: 20,
       chapterId: [],
       isPublic: 1,
-      lastLevelId: [],
+      lastLevelId: [], 
       ext: null,
       fileName: '',
       courseId: "",
-      subject: "chinese3",
+      subject: '',
       type: null,
     };
     let contengList = ref({});
@@ -193,7 +210,6 @@ export default {
       );
       contengList.value = res.json.records;
     };
-    getMaterialQueryPage();
     let isShow = ref();
     const mouseleaveisShow = (item) => {
       item.isShow = false;
@@ -267,8 +283,12 @@ export default {
       activeId.value = item.id;
       
       // console.log(activeId);
-    };
-
+    };  
+    emitter.emit("effect", (id) => {
+    pageParam.subject = id
+     getMaterialQueryPage()
+     tabCountRequest()
+    })
     return {
       fileOder,
       timeOder,
