@@ -1,6 +1,6 @@
 <template>
 <cus-skeleton :loading="loading">
-  <div class="source-box" v-for="(s, idx) in questionSources" :key="s">
+  <div class="source-container" v-for="(s, idx) in questionSources" :key="s">
     <div class="source-label">来源{{ idx + 1 }}</div>
     <div class="source-main">
       <div class="source-cell">
@@ -90,7 +90,7 @@ export default {
 </script>
 
 <style lang="scss" scope>
-  .source-box {
+  .source-container {
     display: flex;
     padding: 10px;
     background: rgba(26, 175, 167, 0.1);

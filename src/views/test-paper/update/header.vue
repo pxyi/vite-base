@@ -12,14 +12,6 @@
         <el-button round>下载</el-button>
       </div>
     </div>
-    <div class="content">
-      <div class="toolbar">
-        
-      </div>
-      <div class="main">
-
-      </div>
-    </div>
   </div>
 </template>
 <script lang="ts">

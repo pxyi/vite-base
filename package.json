@@ -9,12 +9,13 @@
     "axios": "^0.21.0",
     "element-plus": "^v1.0.1-beta.17",
     "js-md5": "^0.7.3",
-    "moment": "^2.29.1",
     "lodash": "^4.17.20",
     "mitt": "^2.1.0",
+    "moment": "^2.29.1",
     "vue": "^3.0.4",
     "vue-axios": "^3.2.0",
     "vue-router": "4.0.1",
+    "vuedraggable": "^4.0.1",
     "vuex": "4.0.0-rc.2"
   },
   "devDependencies": {

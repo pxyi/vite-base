@@ -21,7 +21,8 @@ const create = (component, props = {}) => {
       app.unmount(body);
       val ? resolve(val) : reject(false);
     }
-    const app = createApp(component, { ...props, close: remove });
+    const app = createApp(component, { ...props });
+    Object.keys(props).map(key => app.provide(key, props[key]))
     app.use(Components);
     app.use(Store);
     app.use(ElementPlus);
