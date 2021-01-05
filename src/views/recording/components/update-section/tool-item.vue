@@ -53,15 +53,17 @@
           <div class="tool-label">知识点</div>
           <div class="tool-control">
             <el-popover placement="bottom-start" :width="220">
-              <el-tree 
-                class="knowledge-tree"
-                :data="knowledgeList"
-                ref="knowledgeRef"
-                show-checkbox
-                node-key="id"
-                :props="{ children: 'childs', label: 'name' }"
-                @check="(target, { checkedKeys }) => { data.knowledgePoints = checkedKeys; syncChange('knowledgePoints') }"
-              />
+              <div class="knowledge-tree-wrapper">
+                <el-tree
+                    class="knowledge-tree"
+                    :data="knowledgeList"
+                    ref="knowledgeRef"
+                    show-checkbox
+                    node-key="id"
+                    :props="{ children: 'childs', label: 'name' }"
+                    @check="(target, { checkedKeys }) => { data.knowledgePoints = checkedKeys; syncChange('knowledgePoints') }"
+                />
+              </div>
               <template #reference>
                 <el-input @click="setTreeKey(data)" :model-value="data.knowledgePoints && data.knowledgePoints.length ? `已选择${data.knowledgePoints.length}项` : null" readonly placeholder="选择知识点" size="medium" />
               </template>
@@ -82,9 +84,9 @@
           </el-select>
         </div>
         <div class="source-item">
-          <el-cascader placeholder="选择省市区" 
-            v-model="s.provinceCity" 
-            :props="{ lazy: true, lazyLoad: getProvinceCity, label: 'name', value: 'id' }" 
+          <el-cascader placeholder="选择省市区"
+            v-model="s.provinceCity"
+            :props="{ lazy: true, lazyLoad: getProvinceCity, label: 'name', value: 'id' }"
             @change="getSchoolList($event, s)"
           />
         </div>
@@ -299,10 +301,15 @@ export default {
     float: right;
   }
 }
-
-.knowledge-tree {
-  .el-tree-node__content {
-    height: 32px !important;
+.knowledge-tree-wrapper {
+  max-height: 250px;
+  overflow: auto;
+  .knowledge-tree {
+    min-width: 250px;
+    .el-tree-node__content {
+      height: 32px !important;
+    }
   }
 }
+
 </style>
