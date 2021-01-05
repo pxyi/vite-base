@@ -95,7 +95,7 @@
         </div>
       </div>
     </template>
-    <div class="add-source-btn"><el-button icon="el-icon-circle-plus" size="medium" @click="addSource">添加来源</el-button></div>
+    <div class="add-source"><el-button icon="el-icon-circle-plus" size="medium" @click="addSource">添加来源</el-button></div>
   </div>
 
   <div class="turn-sync-switch" v-if="data">
@@ -284,7 +284,7 @@ export default {
       }
     }
   }
-  .add-source-btn {
+  .add-source {
     button {
       width: 100%;
       background: #F5F7FA;

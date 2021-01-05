@@ -35,6 +35,7 @@ export default {
   & > .content {
     flex: 1 1 60px;
     position: relative;
+    overflow: hidden;
   }
   .toolbar {
     height: 100%;
