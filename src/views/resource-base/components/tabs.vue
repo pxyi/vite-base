@@ -35,7 +35,7 @@
           />
           <img
             v-else
-            src="../../../assets/resource-base/icon_d44l6421sgu/weizhiwenjian.png"
+            src="../../../assets/resource-base/icon_d44l6421sgu/caozuo.png"
           />
         </div>
         <p class="content-list-box-item-title">
