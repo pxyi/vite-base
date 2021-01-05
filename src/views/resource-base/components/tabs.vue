@@ -10,11 +10,11 @@
       >
         {{ item.name }}
         <span class="num">
-          {{ item.num }}
+          {{ item.count }}
         </span>
       </a>
     </nav>
-    <div class="aaa">
+    <div class="order">
       <span>文件名 <i class="el-icon-bottom"></i></span>
       <span>上传时间 <i class="el-icon-bottom"></i></span>
       <!-- <span>引用次数<i class="el-icon-bottom"></i></span> -->
@@ -31,11 +31,11 @@
           <img
             v-if ="item.ext !== 'mp3' && item.ext !== 'zip' && item.ext !== 'rar'"
             class="imgCover"
-            :src="`/test${item.imgPath}`"
+            :src="`${domain}${item.imgPath}`"
           />
           <img
             v-else
-            src="../../../assets/resource-base/icon_d44l6421sgu/caozuo.png"
+            src="../../../assets/images/icon_d44l6421sgu/weizhiwenjian.png"
           />
         </div>
         <p class="content-list-box-item-title">
@@ -74,7 +74,7 @@
 </template>
 
 <script lang="ts">
-import { ref, reactive, Ref } from "vue";
+import { ref, reactive, Ref ,computed, onMounted} from "vue";
 import axios from "axios";
 import { useStore } from "vuex";
 import { AxResponse } from "../../../core/axios";
@@ -89,37 +89,51 @@ import { emit } from 'process';
 
 export default {
   setup(props, context) {
+    let domain = import.meta.env.VITE_DOMAIN;
     let activeId = ref(0);
+    emitter.on('search',(searchText)=>{
+      pageParam.fileName = searchText.value
+      getMaterialQueryPage()
+    })
+
+    emitter.on('clearInput',(clearInput)=>{
+       getMaterialQueryPage()
+    })
+    
+    let activeName = ref('totalCount');
+     let fileTypeAndCount = ref([
+      { name: '全部', nameKey: 'allCount', count: 0, type: null ,       id:0}, 
+      { name: '课件', nameKey: 'courseWareCount', count: 0, type: 1 ,   id:1}, 
+      { name: '讲义', nameKey: 'handoutCount', count: 0, type: 2 ,      id:2}, 
+      { name: '标准教案', nameKey: 'teachplanCount', count: 0, type: 5, id:3}, 
+      { name: '说课视频', nameKey: 'mediaCount', count: 0, type: 3 ,    id:4},
+      { name: '其他', nameKey: 'otherCount', count: 0, type: 4 ,        id:5},
+    ])
+
+    const tabCountRequest = () => {
+    emitter.emit("effect",async (id) => {
     let params = reactive({
-      subject: "chinese3",
+      subject: id,
       chapterId: [],
       isPublic: 1,
     });
-
-     let fileTypeAndCount = ref([
-      { name: '全部', nameKey: 'totalCount', num: 0, type: null ,id:0},
-      { name: '课件', nameKey: 'courseWareCount', num: 0, type: 1 ,id:1},
-      { name: '讲义', nameKey: 'handoutCount', num: 0, type: 2 ,id:3},
-      { name: '标准教案', nameKey: 'teachplanCount', num: 0, type: 5,id:4 },
-      { name: '说课视频', nameKey: 'mediaCount', num: 0, type: 3 ,id:5},
-      { name: '其他', nameKey: 'otherCount', num: 0, type: 4 ,id:6},
-    ])
-        const tabCountRequest = async() => {
       let res = await  axios.post<any, AxResponse>("/admin/material/queryCountByType", params, {headers: { "Content-Type": "application/json"}})
       if(res.result) {
+         res.json.allCount = eval(Object.values(res.json).join("+"));
         let arr = Object.entries(res.json)
         arr.map (( [key, value] ) => {
           fileTypeAndCount.value.map( ( item: any ) => {
             if( item.nameKey == key ) {
-              item.num = value
+              item.count = value
             }
           })
-
         })
       }
+      })
+    
     }
-    tabCountRequest()
-
+    tabCountRequest() 
+    
     let pageParam: any = {
       current: 1,
       size: 20,
@@ -127,7 +141,7 @@ export default {
       isPublic: 1,
       lastLevelId: [],
       ext: null,
-      fileName: "",
+      fileName: '',
       courseId: "",
       subject: "chinese3",
       type: null,
@@ -143,12 +157,9 @@ export default {
           headers: { "Content-Type": "application/json" },
         }
       );
-      // console.log(res.json.records.length)
       contengList.value = res.json.records;
-      context.emit('getMaterialQueryPage',)
     };
     getMaterialQueryPage();
-
     let isShow = ref();
     const mouseleaveisShow = (item) => {
       item.isShow = false;
@@ -166,12 +177,11 @@ export default {
               res.result ? "删除成功" : res.msg
             );
             getMaterialQueryPage();
-
-        //  getTabsList()
+           tabCountRequest()
           }
         });
     };
-
+ 
     const aNewName = (item) => {
       // console.log(item.fileName);
       Modal.create({ title: '重命名', width: 640, component: NewName, props: { newName:item } }).then(res=>{
@@ -181,47 +191,47 @@ export default {
       })
     };
     const prepareLessons = (item)=>{
-      console.log(item);
-       Modal.create({ title: '添加到备课', width: 640, component: Prepare, props: { prepareLessons:item } })
+       Modal.create({ title: '添加到备课', width: 560, component: Prepare, props: { prepareLessons:item } })
     }
 
       /*-----预览-----*/
     const preview = (item) => {
       const loading = ElLoading.service({ lock: true, background: 'rgba(255, 255, 255, .7)', text: '加载中...' })
       let src = `${import.meta.env.VITE_OFFICE_PREVIEW}?furl=${import.meta.env.VITE_DOMAIN}${item.filePath}`;
-      let closeBtn = createElement('div', {
-        className: 'el-icon-close',
+      let closeBtn = createElement('div', { 
+        className: 'el-icon-close', 
         style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', top: '40px', right: '40px', zIndex: '10', cursor: 'pointer' },
         on: { click: () => { container.remove(); } }
       });
       // 打印
-      let printData = createElement('div', {
-        className: 'el-icon-printer',
+      let printData = createElement('div', { 
+        className: 'el-icon-printer', 
         style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', bottom: '40px', right: '40px', zIndex: '10', cursor: 'pointer' },
         on: { click: () => { window.print() } }
       });
       //下载
-      let downloadData = createElement('div', {
-        className: 'el-icon-download',
+      let downloadData = createElement('div', { 
+        className: 'el-icon-download', 
         style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', bottom: '100px', right: '40px', zIndex: '10', cursor: 'pointer' },
          on: { click: () => { window.open(`${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`) } }
       });
       let iframe = createElement('iframe', { attrs: { src, width: '100%', height: '100%' }, style: { background: '#f9f9f9' } });
       iframe.onload = loading.close;
-      let container = createElement('div', {
+      let container = createElement('div', { 
         style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '1000' },
       }, [ closeBtn, iframe, printData, downloadData ])
       document.body.appendChild(container);
     }
        const downLoad = (item) => {
-       window.open(`${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`)
+       window.open(`${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`)  
     };
-
+     
     const selectActive = (item) => {
-
       pageParam.type = item.type;
       getMaterialQueryPage();
+      tabCountRequest()
       activeId.value = item.id;
+      
       // console.log(activeId);
     };
 
@@ -237,7 +247,7 @@ export default {
       downLoad,
       preview,
       prepareLessons,
-      tabCountRequest
+      domain,
     };
   },
 };
@@ -246,6 +256,8 @@ export default {
 <style lang="scss" scoped>
 .tab {
   nav {
+    // background-color: #f4f5f9;
+    // width: 100%;
     a {
       cursor: pointer;
       position: relative;
@@ -414,7 +426,7 @@ export default {
         right: -25px;
         top: 28px;
         z-index: 9;
-
+        border-radius: 5px;
         background: #fff;
         width: 170px;
         box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.06);
@@ -433,6 +445,7 @@ export default {
         span:hover {
           color: #1aafa7;
           background: #e9f7f7;
+          border-radius: 5px;
         }
         .triangle {
           display: inline-block;
@@ -458,11 +471,12 @@ export default {
     }
   }
 }
-.aaa {
+.order {
   background-color: #ebecf0;
   height: 46px;
   margin-top: 20px;
   display: flex;
+  margin-left: 15px;
   span {
     padding: 0 40px;
     line-height: 45px;
