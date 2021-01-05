@@ -35,7 +35,7 @@
           />
           <img
             v-else
-            src="../../../assets/images/icon_d44l6421sgu/weizhiwenjian.png"
+            src="../../../assets/resource-base/icon_d44l6421sgu/caozuo.png"
           />
         </div>
         <p class="content-list-box-item-title">
@@ -57,7 +57,7 @@
           <div class="btn-group">
             <div>
               <el-button size="mini" round  @click="preview(item)">
-                <img src="../../../assets/images/previewIcon.png"  />预览
+                <img src="../../../assets/resource-base/previewIcon.png"  />预览
               </el-button>
             </div>
             <div>
@@ -97,10 +97,10 @@ export default {
     });
 
      let fileTypeAndCount = ref([
-      { name: '全部', nameKey: 'totalCount', num: 0, type: null ,id:0}, 
-      { name: '课件', nameKey: 'courseWareCount', num: 0, type: 1 ,id:1}, 
-      { name: '讲义', nameKey: 'handoutCount', num: 0, type: 2 ,id:3}, 
-      { name: '标准教案', nameKey: 'teachplanCount', num: 0, type: 5,id:4 }, 
+      { name: '全部', nameKey: 'totalCount', num: 0, type: null ,id:0},
+      { name: '课件', nameKey: 'courseWareCount', num: 0, type: 1 ,id:1},
+      { name: '讲义', nameKey: 'handoutCount', num: 0, type: 2 ,id:3},
+      { name: '标准教案', nameKey: 'teachplanCount', num: 0, type: 5,id:4 },
       { name: '说课视频', nameKey: 'mediaCount', num: 0, type: 3 ,id:5},
       { name: '其他', nameKey: 'otherCount', num: 0, type: 4 ,id:6},
     ])
@@ -114,12 +114,12 @@ export default {
               item.num = value
             }
           })
-          
+
         })
       }
     }
     tabCountRequest()
-    
+
     let pageParam: any = {
       current: 1,
       size: 20,
@@ -148,7 +148,7 @@ export default {
       context.emit('getMaterialQueryPage',)
     };
     getMaterialQueryPage();
-    
+
     let isShow = ref();
     const mouseleaveisShow = (item) => {
       item.isShow = false;
@@ -166,12 +166,12 @@ export default {
               res.result ? "删除成功" : res.msg
             );
             getMaterialQueryPage();
-       
+
         //  getTabsList()
           }
         });
     };
- 
+
     const aNewName = (item) => {
       // console.log(item.fileName);
       Modal.create({ title: '重命名', width: 640, component: NewName, props: { newName:item } }).then(res=>{
@@ -189,36 +189,36 @@ export default {
     const preview = (item) => {
       const loading = ElLoading.service({ lock: true, background: 'rgba(255, 255, 255, .7)', text: '加载中...' })
       let src = `${import.meta.env.VITE_OFFICE_PREVIEW}?furl=${import.meta.env.VITE_DOMAIN}${item.filePath}`;
-      let closeBtn = createElement('div', { 
-        className: 'el-icon-close', 
+      let closeBtn = createElement('div', {
+        className: 'el-icon-close',
         style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', top: '40px', right: '40px', zIndex: '10', cursor: 'pointer' },
         on: { click: () => { container.remove(); } }
       });
       // 打印
-      let printData = createElement('div', { 
-        className: 'el-icon-printer', 
+      let printData = createElement('div', {
+        className: 'el-icon-printer',
         style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', bottom: '40px', right: '40px', zIndex: '10', cursor: 'pointer' },
         on: { click: () => { window.print() } }
       });
       //下载
-      let downloadData = createElement('div', { 
-        className: 'el-icon-download', 
+      let downloadData = createElement('div', {
+        className: 'el-icon-download',
         style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', bottom: '100px', right: '40px', zIndex: '10', cursor: 'pointer' },
          on: { click: () => { window.open(`${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`) } }
       });
       let iframe = createElement('iframe', { attrs: { src, width: '100%', height: '100%' }, style: { background: '#f9f9f9' } });
       iframe.onload = loading.close;
-      let container = createElement('div', { 
+      let container = createElement('div', {
         style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '1000' },
       }, [ closeBtn, iframe, printData, downloadData ])
       document.body.appendChild(container);
     }
        const downLoad = (item) => {
-       window.open(`${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`)  
+       window.open(`${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`)
     };
-     
+
     const selectActive = (item) => {
-      
+
       pageParam.type = item.type;
       getMaterialQueryPage();
       activeId.value = item.id;
