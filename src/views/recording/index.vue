@@ -63,7 +63,7 @@ export default {
     }
 
     onMounted(() => emitter.emit('effect', (subjectId) => tableRef.value.request({ subjectId }) ) );
-    
+
     const setting = async (id) => {
       Screen.create(UpdateComponent, { id })
     }
@@ -73,7 +73,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
 .file-name {
   img {
     display: inline-block;

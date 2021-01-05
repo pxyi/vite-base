@@ -22,7 +22,7 @@ export default {
     let setFocusData = (data, idx) => {
       let top = (document.querySelectorAll('.main-content .item')[idx] as HTMLElement).offsetTop;
       document.querySelector('.main-content')!.scrollTop = top - 80;
-      
+
       store.commit('set_focus_data', data)
     };
 
@@ -31,7 +31,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
 .tool-list-content {
   margin-top: 12px;
   overflow: auto;

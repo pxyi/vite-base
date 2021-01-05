@@ -1,9 +1,9 @@
 <template>
   <div class="container">
     <div class="fixed-header">
-      <div class="cell" 
-        @click="orderChange(cell.key)" 
-        v-for="cell in [{key: 0, text: '上传时间'}, {key: 1, text: '试题难度'}, {key: 2, text: '引用次数'}]" 
+      <div class="cell"
+        @click="orderChange(cell.key)"
+        v-for="cell in [{key: 0, text: '上传时间'}, {key: 1, text: '试题难度'}, {key: 2, text: '引用次数'}]"
         :key="cell.key"
       >
         <span>{{ cell.text }}</span>
@@ -55,9 +55,9 @@
           <cus-empty />
         </template>
         <template v-if="dataset.length && !loading">
-          <el-pagination 
-            v-model:current-page="pageAorder.current" 
-            v-model:page-size="pageAorder.size" 
+          <el-pagination
+            v-model:current-page="pageAorder.current"
+            v-model:page-size="pageAorder.size"
             :total="pageAorder.total"
             @current-change="request()"
             layout="prev, pager, next"
@@ -105,13 +105,13 @@ export default {
       params && (__params = params);
       let res = await axios.post<null, AxResponse>(`/tiku/question/queryPage`, { ...__params, ...pageAorder}, { headers: { 'Content-Type': 'application/json' } });
       dataset.value = res.json.records.map(n => ({
-         ...n, 
-         ...{ 
+         ...n,
+         ...{
             title: __strToHtml(n),
-            createTime: n.createTime.split('-').join('/'), 
+            createTime: n.createTime.split('-').join('/'),
             difficult: difficultFilter(n.difficult),
             answer: n.rightAnswer ? n.rightAnswer.map(a => a.content).join('、') : '-'
-           } 
+           }
         })
       );
       pageAorder.total = res.json.total;
@@ -172,7 +172,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
 .container {
   flex: auto;
   display: flex;

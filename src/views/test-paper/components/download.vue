@@ -2,9 +2,9 @@
   <div>
     <div class="controls">
       <div class="radio-group">
-        <div class="radio-cell" 
-          :class="{ 'is__checked': formGroup.type === cell.value }" 
-          v-for="cell in versionList" 
+        <div class="radio-cell"
+          :class="{ 'is__checked': formGroup.type === cell.value }"
+          v-for="cell in versionList"
           :key="cell.value"
           @click="formGroup.type = cell.value"
         >
@@ -16,9 +16,9 @@
     <div class="controls">
       <div class="label">试卷模板</div>
       <div class="radio-group">
-        <div class="radio-cell" 
-          :class="{ 'is__checked': formGroup.templateId === cell.id }" 
-          v-for="cell in templateList" 
+        <div class="radio-cell"
+          :class="{ 'is__checked': formGroup.templateId === cell.id }"
+          v-for="cell in templateList"
           :key="cell.id"
           @click="formGroup.templateId = cell.id"
         >
@@ -58,7 +58,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
 .label {
   display: inline-block;
   padding: 0 20px 0 10px;

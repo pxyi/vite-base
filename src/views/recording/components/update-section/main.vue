@@ -49,7 +49,7 @@ export default {
 
     const focusChange = (data) => store.commit('set_focus_data', data);
 
-    const remove = async (data) => { 
+    const remove = async (data) => {
       data.loading = true;
       let res = await axios.post<null, { result: boolean }>('/tiku/question/delete', { id: data.id });
       res.result && store.commit('delete_data', data.id);
@@ -60,7 +60,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
 .main-container {
   display: flex;
   flex-direction: column;
@@ -155,7 +155,7 @@ export default {
           visibility: visible;
         }
       }
-      .answer, 
+      .answer,
       .analysis {
         display: flex;
         padding: 14px 16px;
@@ -174,6 +174,9 @@ export default {
           flex: 1 1 38px;
           color: #77808D;
           font-size: 12px;
+        }
+        img {
+          positions: static;
         }
       }
       .footer {

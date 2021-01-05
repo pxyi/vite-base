@@ -98,7 +98,7 @@ export default {
     const setSubject = (course) => {
       store.commit(SET_SUBJECT, course);
       visible.value = false;
-      
+
     }
 
     let commandList = new Map([
@@ -117,7 +117,7 @@ export default {
   }
 }
 </script>
-<style lang="scss" scope>
+<style lang="scss" scoped>
 .lay__header__container {
   display: flex;
   .el-breadcrumb {

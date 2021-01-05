@@ -2,7 +2,7 @@
   <cus-skeleton :loading="loading">
     <el-input placeholder="按知识点搜索" prefix-icon="el-icon-search" v-model="filterText" class="search-input" v-if="!hideSearch" />
 
-    <el-tree 
+    <el-tree
       class="knowledge-tree"
       ref="knowledgeTree"
       :data="dateset"
@@ -40,7 +40,7 @@ export default {
     let knowledgeTree: Ref<any> = ref(null);
     const filterNode = (val, node) => (!val || node.name.includes(val));
     watch(filterText, debounce(() => knowledgeTree.value.filter(filterText.value) , 300))
-    
+
     const checkChange = (target, { checkedKeys }) => { emit('check-change', checkedKeys) }
 
     return { filterText, dateset, filterNode, knowledgeTree, checkChange, loading };
@@ -48,7 +48,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
 .search-input {
   margin-bottom: 12px;
 }

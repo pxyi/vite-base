@@ -6,7 +6,7 @@
     <div class="menu-content">
       <template v-for="(menu) in list" :key="menu.key">
         <div class="menu-item" :class="{ 'is-closed': !menu.closed }">
-          <div class="menu-title" 
+          <div class="menu-title"
             @click="menu.isLeaf && !$route.path.includes(menu.key) ? $router.push(menu.key) : (menu.closed = !menu.closed)"
             :class="{ 'active': $route.path.includes(menu.key) }"
           >
@@ -43,17 +43,17 @@ export default {
       list.value.push(res);
     });
 
-    const goSystem = async () => { 
+    const goSystem = async () => {
       let confirm = await ElMessageBox.confirm('是否进入后台管理系统？', '进入后台', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' })
       confirm && (window.location.href = import.meta.env.VITE_APP_SYSTEM_URL as string);
     }
-    
+
     return { list, initPath, goSystem }
   }
 }
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
 $--menu--item-height: 45px;
 .lay__menu__container {
   display: flex;

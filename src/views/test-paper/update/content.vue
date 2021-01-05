@@ -86,7 +86,7 @@ let toChinesNum = (num: number): string => {
 }
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
 .paper_container {
   width: 800px;
   height: 100%;
