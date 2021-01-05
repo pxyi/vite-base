@@ -53,15 +53,17 @@
           <div class="tool-label">知识点</div>
           <div class="tool-control">
             <el-popover placement="bottom-start" :width="220">
-              <el-tree 
-                class="knowledge-tree"
-                :data="knowledgeList"
-                ref="knowledgeRef"
-                show-checkbox
-                node-key="id"
-                :props="{ children: 'childs', label: 'name' }"
-                @check="(target, { checkedKeys }) => { data.knowledgePoints = checkedKeys; syncChange('knowledgePoints') }"
-              />
+              <div class="knowledge-tree-wrapper">
+                <el-tree
+                    class="knowledge-tree"
+                    :data="knowledgeList"
+                    ref="knowledgeRef"
+                    show-checkbox
+                    node-key="id"
+                    :props="{ children: 'childs', label: 'name' }"
+                    @check="(target, { checkedKeys }) => { data.knowledgePoints = checkedKeys; syncChange('knowledgePoints') }"
+                />
+              </div>
               <template #reference>
                 <el-input @click="setTreeKey(data)" :model-value="data.knowledgePoints && data.knowledgePoints.length ? `已选择${data.knowledgePoints.length}项` : null" readonly placeholder="选择知识点" size="medium" />
               </template>
@@ -82,9 +84,9 @@
           </el-select>
         </div>
         <div class="source-item">
-          <el-cascader placeholder="选择省市区" 
-            v-model="s.provinceCity" 
-            :props="{ lazy: true, lazyLoad: getProvinceCity, label: 'name', value: 'id' }" 
+          <el-cascader placeholder="选择省市区"
+            v-model="s.provinceCity"
+            :props="{ lazy: true, lazyLoad: getProvinceCity, label: 'name', value: 'id' }"
             @change="getSchoolList($event, s)"
           />
         </div>
@@ -95,11 +97,11 @@
         </div>
       </div>
     </template>
-    <div class="add-source-btn"><el-button icon="el-icon-circle-plus" size="medium" @click="addSource">添加来源</el-button></div>
+    <div class="add-source"><el-button icon="el-icon-circle-plus" size="medium" @click="addSource">添加来源</el-button></div>
   </div>
 
   <div class="turn-sync-switch" v-if="data">
-    <span>同步标签设置到所有题目</span><el-switch :modelValue="isSync" @update:modelValue="isSyncChange" />
+    <span>同步标签设置到所有题目</span><el-switch :modelValue="isSync" @update:modelValue="syncTag" />
   </div>
 </template>
 
@@ -110,6 +112,7 @@ import axios from 'axios';
 import { AxResponse } from './../../../../core/axios';
 import { useStore } from 'vuex';
 import KnowledgeComponent from './knowledge.vue';
+import { cloneDeep } from 'lodash';
 
 export default {
   components: { KnowledgeComponent },
@@ -120,7 +123,20 @@ export default {
     let index: Ref<number> = computed(() => dataset.value.findIndex((i: any) => i.id === data.value.id) );
 
     let isSync: Ref<boolean> = computed(() => store.state.isSync);
-    const isSyncChange = () => store.commit('set_is_sync', !isSync.value);
+    const syncTag = () => {
+      if (!isSync.value) {
+        let cloneData = cloneDeep(dataset.value);
+        cloneData = cloneData.map(d => {
+          d.grade = data.value.grade;
+          d.category = data.value.category;
+          d.difficult = data.value.difficult;
+          d.knowledgePoints = data.value.knowledgePoints;
+          return d;
+        });
+        store.commit('set_data_set', cloneData);
+      }
+      store.commit('set_is_sync', !isSync.value);
+    }
 
     const indexChange = (n: number) => {
       store.dispatch('focus_data_change', dataset.value[index.value + n]);
@@ -196,7 +212,7 @@ export default {
       }
     }
 
-    return { data, dataset, index, indexChange, isSync, isSyncChange, syncChange, selectMap, addSource, delSource, knowledgeList, typeChange, knowledgeRef, setTreeKey, getProvinceCity, getSchoolList }
+    return { data, dataset, index, indexChange, isSync, syncTag, syncChange, selectMap, addSource, delSource, knowledgeList, typeChange, knowledgeRef, setTreeKey, getProvinceCity, getSchoolList }
   }
 }
 </script>
@@ -284,7 +300,7 @@ export default {
       }
     }
   }
-  .add-source-btn {
+  .add-source {
     button {
       width: 100%;
       background: #F5F7FA;
@@ -299,10 +315,15 @@ export default {
     float: right;
   }
 }
-
-.knowledge-tree {
-  .el-tree-node__content {
-    height: 32px !important;
+.knowledge-tree-wrapper {
+  max-height: 250px;
+  overflow: auto;
+  .knowledge-tree {
+    min-width: 250px;
+    .el-tree-node__content {
+      height: 32px !important;
+    }
   }
 }
+
 </style>

@@ -1,10 +1,10 @@
 <template>
   <div class="login__container">
     <div class="login__logo">
-      <img src="/@/assets/login-logo.png" alt="爱学教研系统" />
+      <img src="/src/assets/login-logo.png" alt="爱学教研系统" />
     </div>
     <div class="login__cover">
-      <img src="/@/assets/login-cover.png" alt="爱学教研系统" />
+      <img src="/src/assets/login-cover.png" alt="爱学教研系统" />
     </div>
     <div class="login__content">
       <h1>登录</h1>
@@ -32,12 +32,12 @@
             <template #suffix>
               <div @click="showPassword = !showPassword">
                 <img
-                  src="/@/assets/login-password-hide.png"
+                  src="/src/assets/login-password-hide.png"
                   class="password__icon"
                   v-if="!showPassword"
                 />
                 <img
-                  src="/@/assets/login-password-show.png"
+                  src="/src/assets/login-password-show.png"
                   class="password__icon"
                   v-if="showPassword"
                 />
@@ -125,7 +125,7 @@ export default {
 <style lang="scss">
 .login__container {
   height: 100%;
-  background: url("./../assets/login-background.png") no-repeat center center;
+  background: url("/src/assets/login-background.png") no-repeat center center;
   background-size: cover;
   position: relative;
   overflow: hidden;

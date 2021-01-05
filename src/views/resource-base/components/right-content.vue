@@ -4,7 +4,7 @@
       <li v-for="(item, index) in tableData" :key="index" @mouseleave="mouseleaveisShow(item)">
         <div class="thumbnailWrap">
           <img v-if="item.ext !== 'mp3' && item.ext !== 'zip' && item.ext !== 'rar'" class="imgCover" :src="`/test${item.imgPath}`"/>
-          <img v-else src="../../../assets/images/icon_d44l6421sgu/weizhiwenjian.png" />
+          <img v-else src="../../../assets/resource-base/icon_d44l6421sgu/caozuo.png" />
         </div>
         <p class="content-list-box-item-title">
           {{ item.fileName }}.{{ item.ext }}
@@ -28,7 +28,7 @@
               <el-button size="mini" round>添加到备课</el-button>
             </div>
           </div>
-         
+
         </div>
       </li>
     </ul>
@@ -77,23 +77,23 @@ export default {
     }
     const deleteClick = (item)=>{
       let {id} = item
-       
+
         axios.post<any,AxResponse>(`admin/material/deleteById/${id}`).then(res=>{
           if(res.result){
              ElMessage[res.result ? 'success' : 'error'](res.result ? '删除成功' : res.msg);
             getRightContent()
           }
         })
-        
+
     }
-    
+
     const aNewName = (item)=>{
-      
+
     }
-    
+
     const downLoad = item=>{
       console.log(item);
-      
+
     }
 
 
@@ -101,10 +101,10 @@ export default {
  let contengList = {};
     emitter.on('contengList',(res)=>{
       console.log(res);
-      
+
     })
     // console.log(contengList);
-    
+
     return { tableData, mouseleaveisShow,changeTdOperation,deleteClick,aNewName,downLoad,contengList };
   },
 };
@@ -263,6 +263,6 @@ export default {
       }
     }
   }
-  
+
 }
 </style>

@@ -55,6 +55,7 @@ import createElement from './../../utils/createElement';
 import Modal from './../../utils/modal';
 import Screen from './../../utils/screen';
 import UpdateComponent from './update/index.vue';
+import downloadComponent from './components/download.vue';
 
 export default { 
   components: { HeaderRefComponent },
@@ -96,18 +97,13 @@ export default {
         axios.post<any, AxResponse>('/tiku/paper/countDownloadPaper', { paperId: data.id }).then(res => res.result && (data.downloadCount = res.json.downloadCount));
       } else {
         Modal.create({
-          title: '下载类型',
-          width: 500,
-          props: {
-            nodes: [ 
-              { label: '下载类型', type: 'radio', key: 'radio', options: [ { name: '教师版', id: 1 }, { name: '学生版', id: 2 }, { name: '解析版', id: 3 } ], rule: [{ required: true, message: '请选择下载类型' }] },
-              { label: '试卷模板', type: 'radio', key: 'template', options: [ { name: '8k', id: 1 }, { name: '4g', id: 2 } ] }
-            ]
-          }
+          title: '下载试卷',
+          width: 640,
+          component: downloadComponent
         }).then((res: any) => {
-          window.open(`${import.meta.env.VITE_APP_BASE_URL}/tiku/paper/downPaper?paperId=${ data.id }&type=${ res.radio }`);
+          window.open(`${import.meta.env.VITE_APP_BASE_URL}/tiku/paper/downPaper?paperId=${ data.id }&type=${ res.type }&templateId=${ res.templateId }`);
           data.downloadCount++;
-        })
+        });
       }
     }
 
