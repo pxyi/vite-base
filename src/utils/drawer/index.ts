@@ -41,7 +41,6 @@ const create = (opt: DrawerCreate): Promise<any> => {
     app.use(Store);
     app.use(ElementPlus);
     app.provide('close', remove);
-    app.use(Components)
     const vm = app.mount(drawerBody);
 
     drawerBox.appendChild(drawerBody);

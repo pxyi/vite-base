@@ -11,7 +11,10 @@
       </div>
       <div class="statistics">
         <span>共计<i>{{ pageAorder.total }}</i>道相关试题</span>
-        <div @click="showAnswer = !showAnswer"><i class="el-icon-view" />查看答案</div>
+        <div @click="showAnswer = !showAnswer">
+          <img v-show="showAnswer" src="/@/assets/question/open-eye.png" alt="爱学标品">
+          <img v-show="!showAnswer" src="/@/assets/question/close-eye.png" alt="爱学标品">
+          查看答案</div>
       </div>
     </div>
     <cus-skeleton :loading="loading">
@@ -211,6 +214,10 @@ export default {
       div {
         display: inline-block;
         cursor: pointer;
+        img{
+          display: inline-block;
+          margin-bottom: -1px;
+        }
       }
     }
   }
