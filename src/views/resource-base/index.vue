@@ -360,7 +360,8 @@ export default {
     }
   }
   .right_box {
-    flex: 5;
+    // flex: 5;
+    width: 930px;
     background-color: #fff;
     margin-left: 20px;
     height: 100%;

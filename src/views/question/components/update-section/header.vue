@@ -108,7 +108,7 @@ export default {
 
 
     let knowledgeRef = ref();
-    
+
     let chooseArr: Ref<any>= ref([])
     const knowledgeCheck = (target, { checkedNodes } ) => {
       chooseArr.value = []
@@ -116,10 +116,10 @@ export default {
         if(item.childs.length === 0) {
           chooseArr.value.push(item.id)
         }else {
-          return 
+          return
         }
       })
-      formGroup.knowledgePoints = chooseArr; 
+      formGroup.knowledgePoints = chooseArr;
     }
 
     return { formGroup, selectMap, questionTypeChange, knowledgeRef, knowledgeCheck }
