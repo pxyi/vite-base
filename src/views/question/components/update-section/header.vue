@@ -54,7 +54,7 @@
       <div class="f-item">
         <div class="f-i-label">年级</div>
         <div class="f-i-control">
-          <el-select size="medium" clearable placeholder="选择年级" v-model="formGroup.grade" v-if="selectMap.gradeList.length">
+          <el-select size="medium" clearable placeholder="选择年级" v-model="formGroup.gradeId" v-if="selectMap.gradeList.length">
             <el-option v-for="option in selectMap.gradeList" :key="option.id" :value="option.id" :label="option.name" />
           </el-select>
         </div>
@@ -84,7 +84,7 @@ export default {
       year: null,
       source: null,
       category: null,
-      grade: null
+      gradeId: null
     });
     let subject = computed(() => store.getters.subject.code).value;
     let userId = computed(() => store.getters.userInfo.user.id).value;
@@ -155,10 +155,10 @@ export default {
 
 }
 .knowledge-tree-wrapper {
-  max-height: 250px;
+  max-height: 450px;
   overflow: auto;
   .knowledge-tree {
-    min-width: 220px;
+    min-width: 250px;
     .el-tree-node__content {
       height: 32px !important;
     }
