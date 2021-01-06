@@ -11,7 +11,7 @@ import { AxResponse } from "./../../../core/axios";
 import axios from "axios";
 import { useStore } from "vuex";
 import { ElMessage } from 'element-plus';
-import emitter from '~/@/utils/mitt';
+import emitter from '../../../utils/mitt';
 
 export default {
   props: {

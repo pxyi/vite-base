@@ -31,7 +31,7 @@
       >
         <div class="thumbnailWrap">
           <img
-            v-if ="item.ext !== 'mp3' && item.ext !== 'zip' && item.ext !== 'rar'"
+            v-if ="item.ext !== 'mp3' && item.ext !== 'zip' && item.ext !== 'rar'&&item.ext !== 'ppt'"
             class="imgCover"
             :src="`${domain}${item.imgPath}`"
           />
@@ -162,6 +162,8 @@ export default {
     // tabCountRequest() 
      let flag = ref(false)
      const fileOder = (order)=>{
+       console.log(pageParam.total);
+       if(pageParam.total!==0){
       if(pageParam.orderType===0){
         flag.value = false
         getMaterialQueryPage()
@@ -175,9 +177,12 @@ export default {
           pageParam.orderType=0
         // console.log(pageParam.orderType);
       }
+       }
+     
      }
      let flags = ref(false)
       const timeOder = (order)=>{
+        if(pageParam.total!==0){
       if(pageParam.orderType===0){
         flags.value = false
         getMaterialQueryPage()
@@ -191,23 +196,32 @@ export default {
           pageParam.orderType=0
         // console.log(pageParam.orderType);
       }
+        }
+     
      }
      let chapterId = []
      emitter.on('check-change',(target)=>{
-      pageParam.chapterId.push(target.id)
+      //  chapterId.splice(target.id)
+      //  console.log(target.id);
+      // console.log( pageParam.chapterId);
+      // pageParam.chapterId.map((item,index,arr)=>{
+      //   if(item===target.id){
+      //    pageParam.chapterId.splice(index, 1)
+      //   } else {
+      //     pageParam.chapterId.push(target.id)
+      //   }
+      // })
       // console.log(target.id);
-      pageParam.chapterId.values = target.id
-      getMaterialQueryPage()
+      // pageParam.chapterId.values = target.id
+      let index = pageParam.chapterId.findIndex(i => i === target.id);
+      if( index !== -1 ) {
+        pageParam.chapterId.splice(index, 1)
+      } else {
+        pageParam.chapterId.push(target.id);
+      }
+      getMaterialQueryPage();
       tabCountRequest()
-      pageParam.chapterId.forEach((item,index,arr)=>{
-        for(var i = 0 ; i <arr.length;i++){
-           if(arr[i]==item){
-             pageParam.chapterId.splice(i,1)
-           }else{
-              pageParam.chapterId.push(target.id)
-           }
-        }
-      })
+     
     })
     
     
@@ -260,12 +274,11 @@ export default {
     const aNewName = (item) => {
       // console.log(item.fileName);
       Modal.create({ title: '重命名', width: 640, component: NewName, props: { newName:item } }).then(res=>{
-      if(res){
-         getMaterialQueryPage()
-         console.log(res);
-         
-      }
+        if(res){
+          getMaterialQueryPage()
+        }
       })
+      
     };
     const prepareLessons = (item)=>{
        Modal.create({ title: '添加到备课', width: 560, component: Prepare, props: { prepareLessons:item } })
@@ -293,7 +306,8 @@ export default {
         let downloadData = createElement('div', { 
           className: 'el-icon-download', 
           style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', bottom: '100px', right: '40px', zIndex: '10', cursor: 'pointer' },
-          on: { click: () => { window.open(`${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`) } }
+          on: { click: () => { let a  = document.createElement('a');a.download = item.fileName+'.'+item.ex;a.href = `${import.meta.env.VITE_DOMAIN}${item.filePath}`;a.click(); } }
+
         }); 
         let container;
         if(item.ext === 'mp4') {
@@ -301,26 +315,26 @@ export default {
           { attrs: { src:`${import.meta.env.VITE_DOMAIN}${item.filePath}`, width: '100%', height: '100%',controls: true, controlsList: "nodownload" }, style: { background: '#f9f9f9' }});
           video.oncanplay = loading.close;
           container = createElement('div', { 
-            style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '1000' },
+            style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '1000' , background: 'rgba(0,0,0,.8)'},
           }, [ closeBtn, video, printData, downloadData ])
         }else if (item.ext === null && item.mediaType === 'url'){
           loading.close()
           let url = createElement('p', { style: { background: '#f9f9f9', width: '100%', height: '100%', padding: '36px', 'font-size':'20px' }}, '链接地址：' + item.filePath);
           container = createElement('div', { 
-            style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '1000' },
+            style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '1000' , background: 'rgba(0,0,0,.8)'},
           }, [ closeBtn, url, printData, downloadData ])
         }else if(item.ext === 'mp3') {
           let video = createElement('video', 
-          { attrs: { src:`${import.meta.env.VITE_DOMAIN}${item.filePath}`, width: '100%', height: '100%',controls: true, controlsList: "nodownload" }, style: { background: '#333' }});
+          { attrs: { src:`${import.meta.env.VITE_DOMAIN}${item.filePath}`, width: '', height: '',controls: true, controlsList: "nodownload" }, style: { background: '#333', position:'absolute', top: '50%', left: '50%', transform:'translate(-50%,-50%)'}});
           video.oncanplay = loading.close;
           container = createElement('div', { 
-            style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '1000' },
+            style: { width: '100%', height: '100%', background: 'rgba(0,0,0,.8)', position: 'absolute', top: '0', left: '0', zIndex: '1000' },
           }, [ closeBtn, video, downloadData ])
         }else {
           let iframe = createElement('iframe', { attrs: { src, width: '100%', height: '100%' }, style: { background: '#f9f9f9' } });
           iframe.onload = loading.close;
           container = createElement('div', { 
-            style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '1000' },
+            style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '1000', background: 'rgba(0,0,0,.8)' },
           }, [ closeBtn, iframe, printData, downloadData ])
         }
         document.body.appendChild(container);
@@ -338,9 +352,8 @@ export default {
       pageParam.type = item.type;
       activeId.value = item.id;
       getMaterialQueryPage();
+      // pageParam.chapterId = target.id
       tabCountRequest()
-      
-      
       // console.log(activeId);
     };  
     emitter.emit("effect", (id) => {

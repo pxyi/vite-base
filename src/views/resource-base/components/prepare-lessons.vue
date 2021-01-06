@@ -50,7 +50,7 @@ export default {
 
     let controls: any[] = [
       {
-        label: "课程分类",
+        label: "班型",
         key: "0",
         type: "select",
         url: "system/dictionary/queryDataByType",
@@ -70,7 +70,7 @@ export default {
     ];
     let controls2: any[] = [
       {
-        label: "课程分类",
+        label: "年级",
         type: "select",
         url: "system/dictionary/queryDataByType",
         params: {
