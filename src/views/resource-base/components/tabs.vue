@@ -22,10 +22,12 @@
   </div>
   <div class="right-content">
     <ul class="tableMain">
+      
       <li
         v-for="(item, index) in contengList"
         :key="index"
         @mouseleave="mouseleaveisShow(item)"
+        :title="`${item.fileName}.${item.ext}`"
       >
         <div class="thumbnailWrap">
           <img
@@ -66,9 +68,21 @@
           </div>
         </div>
       </li>
+       
        <cus-empty v-if="contengList.length<1"/>
     </ul>
-
+       <div class="clearfloat"></div>
+       <div class="paginationFY">
+            <el-pagination
+              background
+              layout="prev, pager, next"
+              :hide-on-single-page='true'
+              :total="pageParam.total"
+              :page-size="pageParam.size"
+              @current-change="changeCurrent"
+            >
+            </el-pagination>
+          </div>
   </div>
 
 </template>
@@ -126,6 +140,7 @@ export default {
       courseId: "",
       subject: '',
       type: null,
+      total:0
     });
     const tabCountRequest = () => {
     emitter.emit("effect",async (id) => {
@@ -208,6 +223,9 @@ export default {
         }
       );
       contengList.value = res.json.records;
+      // console.log( contengList.value);
+      
+      pageParam.total = res.json.total
     };
     let isShow = ref();
     const mouseleaveisShow = (item) => {
@@ -230,7 +248,15 @@ export default {
           }
         });
     };
- 
+
+      // 切换分页
+  const  changeCurrent = (value: number)=> {
+    console.log(value);
+    
+    pageParam.current = value;
+    getMaterialQueryPage()
+  }
+
     const aNewName = (item) => {
       // console.log(item.fileName);
       Modal.create({ title: '重命名', width: 640, component: NewName, props: { newName:item } }).then(res=>{
@@ -337,6 +363,8 @@ export default {
       preview,
       prepareLessons,
       domain,
+      pageParam,
+      changeCurrent
     };
   },
 };
@@ -576,5 +604,10 @@ export default {
     line-height: 45px;
     cursor: pointer;
   }
+  
 }
+.clearfloat{clear:both}
+.paginationFY {
+        float: right;
+      }
 </style>
