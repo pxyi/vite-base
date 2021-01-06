@@ -7,7 +7,7 @@
         <div class="f-i-control">
           <el-popover placement="bottom-start" :width="220">
             <div class="knowledge-tree-wrapper">
-              <el-tree 
+              <el-tree
                 class="knowledge-tree"
                 :data="selectMap.knowledgeList"
                 ref="knowledgeRef"
@@ -19,8 +19,13 @@
             </div>
             <template #reference>
               <el-input readonly clearable placeholder="选择知识点" size="medium"
+<<<<<<< HEAD
                 :model-value="formGroup.knowledgePoints.length ? `已选择${formGroup.knowledgePoints.length}项` : null" 
               /> 
+=======
+                :model-value="formGroup.knowledgePoints.length ? `已选择${formGroup.knowledgePoints.length}项` : null"
+              />
+>>>>>>> dev
             </template>
           </el-popover>
         </div>
@@ -97,7 +102,7 @@ export default {
       sourceList: [ { name: '单元测试', id: 1 }, { name: '月考', id: 2 }, { name: '期中', id: 3 }, { name: '期末', id: 4 }, { name: '竞赛', id: 5 }, { name: '错题本', id: 6 } ],
       categoryList: [ { name: '真题', id: 1 }, { name: '好题', id: 2 }, { name: '常考题', id: 3 }, { name: '压轴题', id: 4 }, { name: '易错题', id: 5 } ],
     });
-    
+
     axios.post<null, AxResponse>('/tiku/questionType/queryTypeBySubject', { subject }).then(res => selectMap.questionTypeList = res.json );
     axios.post<null, AxResponse>('/permission/user/userDataRules', { userId, subjectCode: subject }).then(res => {
       selectMap.gradeList = res.json.grades;
@@ -127,7 +132,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
 .form-group {
   margin-bottom: 20px;
   .flex-cell {
@@ -152,7 +157,7 @@ export default {
     }
   }
 
-  
+
 }
 .knowledge-tree-wrapper {
   max-height: 250px;

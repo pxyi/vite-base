@@ -40,7 +40,6 @@
 							<span>备课时间</span>
 							<el-date-picker
 								size="small"
-								format="yyyy-MM-dd"
 								value-format="yyyy-MM-dd"
 								v-model="lessonTime"
 								type="daterange"
@@ -220,7 +219,7 @@
         }
 			},
 			getLessonData() {
-        axios.post('/admin/prepareLesson/queryPage', {...this.lessonParam}).then(res => {
+        axios.post('/admin/prepareLesson/queryPage', {...this.lessonParam, ...{startTime: new Date(this.lessonParam.startTime).toLocaleDateString(), endTime: new Date(this.lessonParam.endTime).toLocaleDateString()}}).then(res => {
         	this.lessonList = res.records;
         	this.total = res.total;
         	console.log(this.lessonList)

@@ -36,9 +36,9 @@ export default {
     const save = (resolve, reject) => {
       formRef.value.validate(async valid => {
         let res = await axios.post<null, AxResponse>('/tiku/paper/addPaper', Object.assign(
-          { 
+          {
             questions: props.questions.map(i => ({ score: 0, subjectId: i.subjectId, questionId: i.id })),
-            sourceFrom: 4 
+            sourceFrom: 4
           },
           valid
         ), { headers: { 'Content-Type': 'application/json' } });
@@ -55,6 +55,6 @@ export default {
 }
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
 
 </style>
