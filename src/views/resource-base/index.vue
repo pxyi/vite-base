@@ -189,7 +189,7 @@ export default {
       // }
       if (item === "zl") {
         state.upLoadDate =
-          ".ppt,.pptx,.doc,.docx,.pdf,.mp4,.mp3,.jpg,.png,.zip,.rar";
+          ".ppt,.pptx,.doc,.docx,.pdf,.mp4,.mp3,.jpg,.png,.zip,.rar,.jpeg";
         state.type = null;
       } else if (item === "ja") {
         // console.log('上传教案');

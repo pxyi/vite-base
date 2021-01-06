@@ -134,9 +134,8 @@ export default {
         })
       }
       })
-    
     }
-    tabCountRequest() 
+    // tabCountRequest() 
      let flag = ref(false)
      const fileOder = (order)=>{
       if(pageParam.orderType===0){
@@ -244,33 +243,60 @@ export default {
        Modal.create({ title: '添加到备课', width: 560, component: Prepare, props: { prepareLessons:item } })
     }
 
-      /*-----预览-----*/
+    /*-----预览-----*/
     const preview = (item) => {
-      const loading = ElLoading.service({ lock: true, background: 'rgba(255, 255, 255, .7)', text: '加载中...' })
-      let src = `${import.meta.env.VITE_OFFICE_PREVIEW}?furl=${import.meta.env.VITE_DOMAIN}${item.filePath}`;
-      let closeBtn = createElement('div', { 
-        className: 'el-icon-close', 
-        style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', top: '40px', right: '40px', zIndex: '10', cursor: 'pointer' },
-        on: { click: () => { container.remove(); } }
-      });
-      // 打印
-      let printData = createElement('div', { 
-        className: 'el-icon-printer', 
-        style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', bottom: '40px', right: '40px', zIndex: '10', cursor: 'pointer' },
-        on: { click: () => { window.print() } }
-      });
-      //下载
-      let downloadData = createElement('div', { 
-        className: 'el-icon-download', 
-        style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', bottom: '100px', right: '40px', zIndex: '10', cursor: 'pointer' },
-         on: { click: () => { window.open(`${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`) } }
-      });
-      let iframe = createElement('iframe', { attrs: { src, width: '100%', height: '100%' }, style: { background: '#f9f9f9' } });
-      iframe.onload = loading.close;
-      let container = createElement('div', { 
-        style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '1000' },
-      }, [ closeBtn, iframe, printData, downloadData ])
-      document.body.appendChild(container);
+      if(item.mediaType === 'url') {
+        window.open(item.filePath)
+      }else{
+        const loading = ElLoading.service({ lock: true, background: 'rgba(255, 255, 255, .7)', text: '加载中...' })
+        let src = `${import.meta.env.VITE_OFFICE_PREVIEW}?furl=${import.meta.env.VITE_DOMAIN}${item.filePath}`;
+        let closeBtn = createElement('div', { 
+          className: 'el-icon-close', 
+          style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', top: '40px', right: '40px', zIndex: '10', cursor: 'pointer' },
+          on: { click: () => { container.remove(); } }
+        });
+        // 打印
+        let printData = createElement('div', { 
+          className: 'el-icon-printer', 
+          style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', bottom: '40px', right: '40px', zIndex: '10', cursor: 'pointer' },
+          on: { click: () => { window.print() } }
+        });
+        //下载
+        let downloadData = createElement('div', { 
+          className: 'el-icon-download', 
+          style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', bottom: '100px', right: '40px', zIndex: '10', cursor: 'pointer' },
+          on: { click: () => { window.open(`${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`) } }
+        }); 
+        let container;
+        if(item.ext === 'mp4') {
+          let video = createElement('video', 
+          { attrs: { src:`${import.meta.env.VITE_DOMAIN}${item.filePath}`, width: '100%', height: '100%',controls: true, controlsList: "nodownload" }, style: { background: '#f9f9f9' }});
+          video.oncanplay = loading.close;
+          container = createElement('div', { 
+            style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '1000' },
+          }, [ closeBtn, video, printData, downloadData ])
+        }else if (item.ext === null && item.mediaType === 'url'){
+          loading.close()
+          let url = createElement('p', { style: { background: '#f9f9f9', width: '100%', height: '100%', padding: '36px', 'font-size':'20px' }}, '链接地址：' + item.filePath);
+          container = createElement('div', { 
+            style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '1000' },
+          }, [ closeBtn, url, printData, downloadData ])
+        }else if(item.ext === 'mp3') {
+          let video = createElement('video', 
+          { attrs: { src:`${import.meta.env.VITE_DOMAIN}${item.filePath}`, width: '100%', height: '100%',controls: true, controlsList: "nodownload" }, style: { background: '#f9f9f9' }});
+          video.oncanplay = loading.close;
+          container = createElement('div', { 
+            style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '1000' },
+          }, [ closeBtn, video, downloadData ])
+        }else {
+          let iframe = createElement('iframe', { attrs: { src, width: '100%', height: '100%' }, style: { background: '#f9f9f9' } });
+          iframe.onload = loading.close;
+          container = createElement('div', { 
+            style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '1000' },
+          }, [ closeBtn, iframe, printData, downloadData ])
+        }
+        document.body.appendChild(container);
+      }
     }
        const downLoad = (item) => {
        window.open(`${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`)  
