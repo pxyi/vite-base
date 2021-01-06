@@ -40,7 +40,6 @@ export default {
           delete s.provinceCity;
           return s;
         })
-        console.log(contentGroup,headerGroup)
         contentGroup.basicQuestionType = contentGroup.baseType;
         let params = { ...contentGroup, ...headerGroup, subjectId, id: props.id, questionSources: sourceGroup, operationType: 1 };
         let url = `/tiku/question/${props.id ? 'editQuestion' : 'add'}`

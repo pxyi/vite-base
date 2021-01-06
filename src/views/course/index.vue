@@ -97,7 +97,7 @@
               {label: '学期', type: 'select', key: 'semesterId', options: condition.value.list.termList},
               {label: '班型', type: 'select', key: 'courseTypeId', options: condition.value.list.courseTypeList},
               {label: '年级', type: 'select', key: 'gradeId', options: condition.value.list.gradeList},
-            ].concat(data.id ? [{label: '设置课次', type: 'number', key: 'courseIndexNum', ...number}] : []))),
+            ].concat(!data.id ? [{label: '设置课次', type: 'number', key: 'courseIndexNum', ...number}] : []))),
             rules: {
               courseName: [{required: true, message: '请输入课程名称', trigger: 'blur'}]
             },

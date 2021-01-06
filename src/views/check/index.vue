@@ -41,12 +41,12 @@
 							<el-date-picker
 								size="small"
 								value-format="yyyy-MM-dd"
-								v-model="lessonTime"
+								v-model="this.lessonTime"
 								type="daterange"
 								range-separator="至"
 								start-placeholder="开始日期"
 								end-placeholder="结束日期"
-								@change="[this.lessonParam.startTime, this.lessonParam.endTime] = this.lessonTime;">
+								@change="() => { this.lessonParam.startTime = new Date(this.lessonParam.startTime).toLocaleDateString(), this.lessonParam.endTime = new Date(this.lessonParam.endTime).toLocaleDateString()}">
 							</el-date-picker>
 						</div>
 					</div>
@@ -129,7 +129,7 @@
 			  statusOpt: [{label: '待审核', val: 0}, {label: '已审核', val: 1}, {label: '全部', val: 2}],
         course: null,
         courseOptions: [{}],
-        lessonTime: '',
+        lessonTime: [],
         schoolId: '',
         researchId:'',
 			  timer: null,
@@ -144,7 +144,7 @@
 				  current: 1,
 				  size: 3
 			  },
-			  lessonList: [{}],
+			  lessonList: [],
 			  scoreParam: null,
 			  total: 0,
 			  courseIndexDto: null,
@@ -219,7 +219,7 @@
         }
 			},
 			getLessonData() {
-        axios.post('/admin/prepareLesson/queryPage', {...this.lessonParam, ...{startTime: new Date(this.lessonParam.startTime).toLocaleDateString(), endTime: new Date(this.lessonParam.endTime).toLocaleDateString()}}).then(res => {
+        axios.post('/admin/prepareLesson/queryPage', {...this.lessonParam}).then(res => {
         	this.lessonList = res.records;
         	this.total = res.total;
         	console.log(this.lessonList)
