@@ -141,6 +141,10 @@ export default {
       }
       .title {
         margin-bottom: 20px;
+        :deep(img) {
+          float: none !important;
+          positions: static !important;
+        }
       }
       &:hover {
         box-shadow: 0 0 10px #e9e9e9;
@@ -175,8 +179,9 @@ export default {
           color: #77808D;
           font-size: 12px;
         }
-        img {
-          positions: static;
+        :deep(img) {
+          float: none !important;
+          positions: static !important;
         }
       }
       .footer {
