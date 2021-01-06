@@ -35,7 +35,7 @@
           />
           <img
             v-else
-            src="../../../assets/resource-base/icon_d44l6421sgu/caozuo.png"
+            src="../../../assets/resource-base/icon_d44l6421sgu/weizhiwenjian.png"
           />
         </div>
         <p class="content-list-box-item-title">
@@ -74,7 +74,7 @@
 </template>
 
 <script lang="ts">
-import { ref, reactive, Ref ,computed, onMounted} from "vue";
+import { ref, reactive, Ref ,computed, onMounted, watch} from "vue";
 import axios from "axios";
 import { useStore } from "vuex";
 import { AxResponse } from "../../../core/axios";
@@ -88,12 +88,14 @@ import Prepare from './prepare-lessons.vue'
 import { emit } from 'process';
 
 export default {
-  setup(props, context) {
+  setup(props, context) {    
     let domain = import.meta.env.VITE_DOMAIN;
    let activeId = ref(0);
-    emitter.on('search',(searchText)=>{
+    emitter.on('search',(searchText)=>{ 
       pageParam.fileName = searchText.value
+      tabCountRequest()
       getMaterialQueryPage()
+      
     })
 
     emitter.on('clearInput',(clearInput)=>{
@@ -103,6 +105,7 @@ export default {
        tabCountRequest()
        getMaterialQueryPage()
     })
+    
     let activeName = ref('totalCount');
      let fileTypeAndCount = ref([
       { name: '全部', nameKey: 'allCount', count: 0, type: null ,       id:0}, 
@@ -112,15 +115,15 @@ export default {
       { name: '说课视频', nameKey: 'mediaCount', count: 0, type: 3 ,    id:4},
       { name: '其他', nameKey: 'otherCount', count: 0, type: 4 ,        id:5},
     ])
-
-    const tabCountRequest = () => {
-    emitter.emit("effect",async (id) => {
-    let params = reactive({
-      subject: id,
+ let params = reactive({
+      subject: '',
       chapterId: [],
       isPublic: 1,
     });
-      let res = await  axios.post<any, AxResponse>("/admin/material/queryCountByType", params, {headers: { "Content-Type": "application/json"}})
+    const tabCountRequest = () => {
+    emitter.emit("effect",async (id) => {
+    pageParam.subject = id
+      let res = await  axios.post<any, AxResponse>("/admin/material/queryCountByType", pageParam, {headers: { "Content-Type": "application/json"}})
       if(res.result) {
          res.json.allCount = eval(Object.values(res.json).join("+"));
         let arr = Object.entries(res.json)
@@ -132,10 +135,9 @@ export default {
           })
         })
       }
-      })
-    
+    })
     }
-    tabCountRequest() 
+    // tabCountRequest() 
      let flag = ref(false)
      const fileOder = (order)=>{
       if(pageParam.orderType===0){
@@ -168,24 +170,42 @@ export default {
         // console.log(pageParam.orderType);
       }
      }
-    let pageParam: any = {
+     let chapterId = []
+     emitter.on('check-change',(target)=>{
+      pageParam.chapterId.push(target.id)
+      // console.log(target.id);
+      pageParam.chapterId.values = target.id
+      getMaterialQueryPage()
+      tabCountRequest()
+      pageParam.chapterId.forEach((item,index,arr)=>{
+        for(var i = 0 ; i <arr.length;i++){
+           if(arr[i]==item){
+             pageParam.chapterId.splice(i,1)
+           }else{
+              pageParam.chapterId.push(target.id)
+           }
+        }
+      })
+    })
+    
+    let pageParam: any = reactive({
       current: 1,
       size: 20,
       chapterId: [],
       isPublic: 1,
-      lastLevelId: [],
+      lastLevelId: [], 
       ext: null,
       fileName: '',
       courseId: "",
-      subject: "chinese3",
+      subject: '',
       type: null,
-    };
+    });
     let contengList = ref({});
     const getMaterialQueryPage = async () => {
-      let params: any = Object.assign(pageParam);
-      context.emit("tableEmit", params);
+      // let pageParam: any = Object.assign(pageParam);
+      context.emit("tableEmit", pageParam);
       let res: AxResponse = await axios.post(
-        `admin/material/queryPage?size=${params.size}&current=${params.current}`,
+        `admin/material/queryPage?size=${pageParam.size}&current=${pageParam.current}`,
         pageParam,
         {
           headers: { "Content-Type": "application/json" },
@@ -193,7 +213,6 @@ export default {
       );
       contengList.value = res.json.records;
     };
-    getMaterialQueryPage();
     let isShow = ref();
     const mouseleaveisShow = (item) => {
       item.isShow = false;
@@ -228,33 +247,60 @@ export default {
        Modal.create({ title: '添加到备课', width: 560, component: Prepare, props: { prepareLessons:item } })
     }
 
-      /*-----预览-----*/
+    /*-----预览-----*/
     const preview = (item) => {
-      const loading = ElLoading.service({ lock: true, background: 'rgba(255, 255, 255, .7)', text: '加载中...' })
-      let src = `${import.meta.env.VITE_OFFICE_PREVIEW}?furl=${import.meta.env.VITE_DOMAIN}${item.filePath}`;
-      let closeBtn = createElement('div', { 
-        className: 'el-icon-close', 
-        style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', top: '40px', right: '40px', zIndex: '10', cursor: 'pointer' },
-        on: { click: () => { container.remove(); } }
-      });
-      // 打印
-      let printData = createElement('div', { 
-        className: 'el-icon-printer', 
-        style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', bottom: '40px', right: '40px', zIndex: '10', cursor: 'pointer' },
-        on: { click: () => { window.print() } }
-      });
-      //下载
-      let downloadData = createElement('div', { 
-        className: 'el-icon-download', 
-        style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', bottom: '100px', right: '40px', zIndex: '10', cursor: 'pointer' },
-         on: { click: () => { window.open(`${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`) } }
-      });
-      let iframe = createElement('iframe', { attrs: { src, width: '100%', height: '100%' }, style: { background: '#f9f9f9' } });
-      iframe.onload = loading.close;
-      let container = createElement('div', { 
-        style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '1000' },
-      }, [ closeBtn, iframe, printData, downloadData ])
-      document.body.appendChild(container);
+      if(item.mediaType === 'url') {
+        window.open(item.filePath)
+      }else{
+        const loading = ElLoading.service({ lock: true, background: 'rgba(255, 255, 255, .7)', text: '加载中...' })
+        let src = `${import.meta.env.VITE_OFFICE_PREVIEW}?furl=${import.meta.env.VITE_DOMAIN}${item.filePath}`;
+        let closeBtn = createElement('div', { 
+          className: 'el-icon-close', 
+          style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', top: '40px', right: '40px', zIndex: '10', cursor: 'pointer' },
+          on: { click: () => { container.remove(); } }
+        });
+        // 打印
+        let printData = createElement('div', { 
+          className: 'el-icon-printer', 
+          style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', bottom: '40px', right: '40px', zIndex: '10', cursor: 'pointer' },
+          on: { click: () => { window.print() } }
+        });
+        //下载
+        let downloadData = createElement('div', { 
+          className: 'el-icon-download', 
+          style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', bottom: '100px', right: '40px', zIndex: '10', cursor: 'pointer' },
+          on: { click: () => { window.open(`${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`) } }
+        }); 
+        let container;
+        if(item.ext === 'mp4') {
+          let video = createElement('video', 
+          { attrs: { src:`${import.meta.env.VITE_DOMAIN}${item.filePath}`, width: '100%', height: '100%',controls: true, controlsList: "nodownload" }, style: { background: '#f9f9f9' }});
+          video.oncanplay = loading.close;
+          container = createElement('div', { 
+            style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '1000' },
+          }, [ closeBtn, video, printData, downloadData ])
+        }else if (item.ext === null && item.mediaType === 'url'){
+          loading.close()
+          let url = createElement('p', { style: { background: '#f9f9f9', width: '100%', height: '100%', padding: '36px', 'font-size':'20px' }}, '链接地址：' + item.filePath);
+          container = createElement('div', { 
+            style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '1000' },
+          }, [ closeBtn, url, printData, downloadData ])
+        }else if(item.ext === 'mp3') {
+          let video = createElement('video', 
+          { attrs: { src:`${import.meta.env.VITE_DOMAIN}${item.filePath}`, width: '100%', height: '100%',controls: true, controlsList: "nodownload" }, style: { background: '#f9f9f9' }});
+          video.oncanplay = loading.close;
+          container = createElement('div', { 
+            style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '1000' },
+          }, [ closeBtn, video, downloadData ])
+        }else {
+          let iframe = createElement('iframe', { attrs: { src, width: '100%', height: '100%' }, style: { background: '#f9f9f9' } });
+          iframe.onload = loading.close;
+          container = createElement('div', { 
+            style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '1000' },
+          }, [ closeBtn, iframe, printData, downloadData ])
+        }
+        document.body.appendChild(container);
+      }
     }
        const downLoad = (item) => {
        window.open(`${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`)  
@@ -262,13 +308,18 @@ export default {
      
     const selectActive = (item) => {
       pageParam.type = item.type;
+      activeId.value = item.id;
       getMaterialQueryPage();
       tabCountRequest()
-      activeId.value = item.id;
+      
       
       // console.log(activeId);
-    };
-
+    };  
+    emitter.emit("effect", (id) => {
+    pageParam.subject = id
+     getMaterialQueryPage()
+     tabCountRequest()
+    })
     return {
       fileOder,
       timeOder,
@@ -382,6 +433,11 @@ export default {
         }
       }
       .content-list-box-item-title {
+        text-overflow: -o-ellipsis-lastline;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        line-clamp: 2;
         width: 140px;
         margin: 0 auto;
         font-size: 14px;

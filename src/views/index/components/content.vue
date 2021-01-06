@@ -7,12 +7,15 @@
     <img class="m__head_bg" src="/@/assets/index/head-bg.png" alt="爱学标品" />
     <div class="m__menu">
       <div class="m__inline_title">快捷入口:</div>
-      <div class="m__menu_cell">备授课</div>
+      <!-- <div class="m__menu_cell">备授课</div>
       <div class="m__menu_cell">我的班级</div>
       <div class="m__menu_cell">题库</div>
       <div class="m__menu_cell" >资料库</div>
       <div class="m__menu_cell">试卷库</div>
-      <div class="m__menu_cell">课程管理</div>
+      <div class="m__menu_cell">课程管理</div> -->
+      <template  v-for="(menu) in list" :key="menu.key">
+        <div class="m__menu_cell" v-for="link in menu.children" :key="link.key" @click="$router.push(link.key)">{{ link.title }}</div>
+      </template>
     </div>
     <div class="m__section">
       <h4><span>教研统计</span><sub>(较昨日)</sub></h4>
@@ -53,9 +56,11 @@
 </template>
 <script lang="ts">
 import { useStore } from 'vuex';
+import MenuList, { RouterConf } from './../../../core/menu-list';
+import { useRoute } from 'vue-router';
 import RankingComponent from './ranking.vue';
 import axios, {AxiosResponse} from 'axios';
-import { reactive, ref } from 'vue';
+import { reactive, ref, watch } from 'vue';
 import { AxResponse } from '../../../core/axios'
 export default {
   name: 'index-content',
@@ -71,8 +76,13 @@ export default {
         teachResearchStatistics[key] = res.json[key];
       });
     });
-
-    return { teachResearchStatistics }
+    let list: { value: RouterConf[] } = ref([]);
+    let initPath = useRoute().path;
+    MenuList.map((res: any) => {
+      res.closed = initPath.includes(res.key);
+      list.value.push(res);
+    });
+    return { list, initPath, teachResearchStatistics}
   }
 }
 </script>

@@ -2,7 +2,6 @@
   <template ref="headerRef">
     <HeaderRefComponent
       @type-change="params.type = $event"
-     
       @handleClick="uploadInfo"
       v-model:fileList="upDateList"
       :tipShow="tipShow"
@@ -107,6 +106,9 @@ export default {
   name: "zjk",
   components: { HeaderRefComponent, TreeLeft, Tabs },
   setup(props, {emit}) {
+    emitter.on('check-change',target=>{
+      state.pageParam.chapterId = target.id
+    })
     const state = reactive({
       upDateList: [] as any,
       arr2: [] as any,
@@ -116,7 +118,7 @@ export default {
       pageParam: {
         current: 1,
         size: 20,
-        chapterId: ["4e46f1a7-7f68-4a60-bd55-b63630dbac67"],
+        chapterId: [],
         isPublic: 1,
         lastLevelId: [],
         ext: null,
@@ -177,17 +179,17 @@ export default {
     }
 
     const  uploadInfo=(item)=> {
-      if (!state.pageParam.chapterId.length) {
-        state.isShow = true;
-        return false;
-      } else {
-        state.isShow = false;
-      }
-      // console.log(ZL,JA);
+   
+      // if (!state.pageParam.chapterId.length) {
+      //   state.isShow = true;
+      //   return false;
+      // } else {
+      //      console.log(2);
+      //   state.isShow = false;
+      // }
       if (item === "zl") {
-        // console.log('上传资料');
         state.upLoadDate =
-          ".ppt,.pptx,.doc,.docx,.pdf,.mp4,.mp3,.jpg,.png,.zip,.rar";
+          ".ppt,.pptx,.doc,.docx,.pdf,.mp4,.mp3,.jpg,.png,.zip,.rar,.jpeg";
         state.type = null;
       } else if (item === "ja") {
         // console.log('上传教案');

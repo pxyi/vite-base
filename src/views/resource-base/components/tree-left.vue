@@ -73,8 +73,9 @@ export default {
     );
     // { checkedKeys }
     const checkChange = (target, e) => {
-      console.log(target, e);
-      emit("check-change", e);
+      // console.log(target, e);
+      emit("check-change",e)
+      emitter.emit("check-change", target);
     };
 
     return {

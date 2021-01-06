@@ -39,7 +39,7 @@ export default {
         id:props.newName.id,
         fileName:formRef.value.formGroup.fileName
       }
-      console.log(formRef.value.formGroup.fileName,'51');
+      // console.log(formRef.value.formGroup.fileName,'51');
       
       axios.post<any,AxResponse>('/admin/material/saveOrUpdate',params).then(res=>{
         if(res.result){
