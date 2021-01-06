@@ -14,7 +14,7 @@
                 show-checkbox
                 node-key="id"
                 :props="{ children: 'childs', label: 'name' }"
-                @check="(target, { checkedKeys }) => { formGroup.knowledgePoints = checkedKeys; }"
+                @check="knowledgeCheck"
               />
             </div>
             <template #reference>
@@ -65,11 +65,12 @@
 </template>
 
 <script lang="ts">
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, Ref } from 'vue'
 import KnowledgeTreeComponent from './../knowledge-tree.vue';
 import { useStore } from 'vuex';
 import axios from 'axios';
 import { AxResponse } from './../../../../core/axios';
+import { log } from 'util';
 
 export default {
   props: ['loading'],
@@ -107,8 +108,21 @@ export default {
 
 
     let knowledgeRef = ref();
+    
+    let chooseArr: Ref<any>= ref([])
+    const knowledgeCheck = (target, { checkedNodes } ) => {
+      chooseArr.value = []
+      checkedNodes.map((item)=>{
+        if(item.childs.length === 0) {
+          chooseArr.value.push(item.id)
+        }else {
+          return 
+        }
+      })
+      formGroup.knowledgePoints = chooseArr; 
+    }
 
-    return { formGroup, selectMap, questionTypeChange, knowledgeRef }
+    return { formGroup, selectMap, questionTypeChange, knowledgeRef, knowledgeCheck }
   }
 }
 </script>

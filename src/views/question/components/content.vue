@@ -40,7 +40,8 @@
             <div>
               <p><i @click="data.showAnalysis = !data.showAnalysis">解析</i></p>
               <!-- <p><i @click="similarPreview(data.id)">相似题</i></p> -->
-              <a @click.prevent="addCart(data)" :class="{ active: !!cartList.find(i => i.id === data.id) }" />
+
+              <a @click.prevent="addCart(data)" :class="{ active: !!cartList.find(i => i.id === data.id) }" v-if="userId === data.creatorId" />
 
               <a @click="remove(data)" v-if="userId === data.creatorId" :class="{ 'is__loading': data.loading }">
                 <i class="el-icon-loading" v-if="data.loading" />
@@ -69,7 +70,7 @@
 </template>
 
 <script lang="ts">
-import { ref, Ref, reactive, computed } from 'vue';
+import { ref, Ref, reactive, computed, watch } from 'vue';
 import axios from 'axios';
 import { AxResponse } from './../../../core/axios';
 import Modal from './../../../utils/modal';
@@ -83,7 +84,6 @@ export default {
   setup() {
     let store = useStore()
     let userId = computed(() => store.getters.userInfo.user.id)
-
     let dataset: Ref<any[]> = ref([]);
 
     let showAnswer = ref(false);
