@@ -18,7 +18,7 @@
       <div class="section">
         <div class="item" v-for="data in dataset" :key="data.id" @click="isSelected && checkedChange(data)" :class="{'is__checked': isSelected && !!checkedList.find(n => n.id === data.id), 'is__selected': isSelected }">
           <div class="update-icon" @click="update(data.id)" v-if="!isSelected"><i class="el-icon-edit-outline" /></div>
-          <div class="update-icon" v-else><el-checkbox :modelValue="checkedList.includes(data.id)" /></div>
+          <div class="update-icon" v-else><el-checkbox :modelValue="!!checkedList.find(n => n.id === data.id)" /></div>
           <div class="content-text">
             <div class="title" v-html="data.title"></div>
           </div>
