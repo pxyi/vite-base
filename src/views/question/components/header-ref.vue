@@ -14,7 +14,7 @@
   </div>
 </template>
 <script lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import emitter from './../../../utils/mitt';
 import Modal from './../../../utils/modal';
 import { ElMessage } from 'element-plus';
@@ -30,7 +30,12 @@ export default {
     const classChange = (e) => { classType.value = e; emit('type-change', e) };
 
     let searchText = ref(null);
-    const searchHandle = () => emit('search', searchText);
+   
+    const searchHandle = () => {
+      watch(searchText,(e) => {
+        emit('search', searchText)
+      })
+    };
 
     const add = () => {
       Drawer.create({ title: '添加题目', width: 'calc(100% - 200px)', maxWidth: 640, component: UpdateComponent }).then(_ => emit('add-success'));

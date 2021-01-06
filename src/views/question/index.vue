@@ -44,10 +44,19 @@ export default {
     });
 
     let params: any = reactive({
-      dataType: 2
+      dataType: 2,
+      questionSource: {
+        year: null,
+        dictSourcedId: null
+      },
     });
+
     const query = (key, val) => { 
       key === '*' ? (params = { ...params, ...val }) : (params[key] = val.value || val);
+      params.questionSource.year = params.year
+      params.questionSource.dictSourcedId = params.source
+      params.year = null
+      params.source = null
       contentRef.value.request(params); 
     }
 
