@@ -68,9 +68,11 @@ export default {
 
     const getSchoolList = async (e, source, idx) => {   
       if (e && e.length) {
-        questionSources.value.map((item) => {
-          questionSources.value[idx].publicSchoolId = null
-        })
+        if(questionSources.value[idx]){
+          questionSources.value.map((item) => {
+            questionSources.value[idx].publicSchoolId = null
+          })
+        }
         let res = await axios.post<null, AxResponse>('/admin/publicSchool/queryAll', { areaId: e[2] });
         source.schoolList = res.json;
       } else {

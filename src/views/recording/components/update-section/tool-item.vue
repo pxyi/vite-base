@@ -317,7 +317,7 @@ export default {
   }
 }
 .knowledge-tree-wrapper {
-  max-height: 250px;
+  max-height: 450px;
   overflow: auto;
   .knowledge-tree {
     min-width: 250px;
