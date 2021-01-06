@@ -11,9 +11,9 @@
         </div>
         <div class="source-control">
           <el-cascader placeholder="选择省市区" clearable size="medium"
-            v-model="s.provinceCity"
-            :props="{ lazy: true, lazyLoad: getProvinceCity, label: 'name', value: 'id' }"
-            @change="getSchoolList($event, s)"
+            v-model="s.provinceCity" 
+            :props="{ lazy: true, lazyLoad: getProvinceCity, label: 'name', value: 'id' }" 
+            @change="getSchoolList($event, s, idx)"
           />
         </div>
       </div>
@@ -66,11 +66,13 @@ export default {
       resolve(res.json);
     }
 
-    const getSchoolList = async (e, source) => {
+    const getSchoolList = async (e, source, idx) => {   
       if (e && e.length) {
-        questionSources.value.map((item) => {
-          item.publicSchoolId = null
-        })
+        if(questionSources.value[idx]){
+          questionSources.value.map((item) => {
+            questionSources.value[idx].publicSchoolId = null
+          })
+        }
         let res = await axios.post<null, AxResponse>('/admin/publicSchool/queryAll', { areaId: e[2] });
         source.schoolList = res.json;
       } else {
@@ -92,7 +94,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" scope>
   .source-box {
     display: flex;
     padding: 10px;
@@ -123,7 +125,7 @@ export default {
         }
       }
     }
-    &:hover .source-delete-btn {
+    &:hover .source-delete-btn { 
       width: 20px;
     }
     .source-delete-btn {

@@ -40,6 +40,7 @@ export default {
           delete s.provinceCity;
           return s;
         })
+        console.log(contentGroup,headerGroup)
         contentGroup.basicQuestionType = contentGroup.baseType;
         let params = { ...contentGroup, ...headerGroup, subjectId, id: props.id, questionSources: sourceGroup, operationType: 1 };
         let url = `/tiku/question/${props.id ? 'editQuestion' : 'add'}`
@@ -61,7 +62,7 @@ export default {
       axios.post<null, AxResponse>('/tiku/question/getQuestion', { id: props.id }).then(res => __init(res.json));
     }
     const __init = (info) => {
-      let { knowledgePoints, type, difficult, year, source, category, title, analysis, basicQuestionType} = info;
+      let { knowledgePoints, type, difficult, year, source, category, title, analysis, basicQuestionType, gradeId} = info;
       info.questionSources && info.questionSources.map(s => {
         if (s.areaId) {
           s.provinceCity = [ s.provinceId, s.cityId, s.areaId ];
@@ -76,6 +77,7 @@ export default {
       headerRef.value.formGroup.year = year;
       headerRef.value.formGroup.source = source;
       headerRef.value.formGroup.category = category;
+      headerRef.value.formGroup.gradeId = gradeId;
 
 
       contentRef.value.formGroup.title = title;
