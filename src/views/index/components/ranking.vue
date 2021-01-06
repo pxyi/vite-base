@@ -8,9 +8,12 @@
         </el-tooltip>
       </h4>
       <div class="rank__charts" v-if="prepareLessonsStatistics.prepareLessonsRank.length">
-        <div><div>3</div><p>{{ prepareLessonsStatistics.prepareLessonsRank[2].number }}</p><h6>王老师</h6></div>
-        <div><div>1</div><p>{{ prepareLessonsStatistics.prepareLessonsRank[0].number }}</p><h6>王老师</h6></div>
-        <div><div>2</div><p>{{ prepareLessonsStatistics.prepareLessonsRank[1].number }}</p><h6>王老师</h6></div>
+        <div><div>3</div><p>{{ prepareLessonsStatistics.prepareLessonsRank[2].number }}</p><h6>
+          {{ prepareLessonsStatistics.prepareLessonsRank[2].username }}</h6></div>
+        <div><div>1</div><p>{{ prepareLessonsStatistics.prepareLessonsRank[0].number }}</p><h6>
+          {{ prepareLessonsStatistics.prepareLessonsRank[0].username }}</h6></div>
+        <div><div>2</div><p>{{ prepareLessonsStatistics.prepareLessonsRank[1].number }}</p><h6>
+          {{ prepareLessonsStatistics.prepareLessonsRank[1].username === '' ? '未知用户' : prepareLessonsStatistics.prepareLessonsRank[1].username }}</h6></div>
       </div>
       <div class="rank__points">
         <div class="points__chart">

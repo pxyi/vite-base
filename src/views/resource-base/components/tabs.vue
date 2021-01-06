@@ -22,7 +22,7 @@
   </div>
   <div class="right-content">
     <ul class="tableMain">
-      
+
       <li
         v-for="(item, index) in contengList"
         :key="index"
@@ -68,7 +68,7 @@
           </div>
         </div>
       </li>
-       
+
        <cus-empty v-if="contengList.length<1"/>
     </ul>
        <div class="clearfloat"></div>
@@ -102,14 +102,14 @@ import Prepare from './prepare-lessons.vue'
 import { emit } from 'process';
 
 export default {
-  setup(props, context) {    
+  setup(props, context) {
     let domain = import.meta.env.VITE_DOMAIN;
    let activeId = ref(0);
-    emitter.on('search',(searchText)=>{ 
+    emitter.on('search',(searchText)=>{
       pageParam.fileName = searchText.value
       tabCountRequest()
       getMaterialQueryPage()
-      
+
     })
 
     emitter.on('clearInput',(clearInput)=>{
@@ -119,13 +119,13 @@ export default {
        tabCountRequest()
        getMaterialQueryPage()
     })
-    
+
     let activeName = ref('totalCount');
      let fileTypeAndCount = ref([
-      { name: '全部', nameKey: 'allCount', count: 0, type: null ,       id:0}, 
-      { name: '课件', nameKey: 'courseWareCount', count: 0, type: 1 ,   id:1}, 
-      { name: '讲义', nameKey: 'handoutCount', count: 0, type: 2 ,      id:2}, 
-      { name: '标准教案', nameKey: 'teachplanCount', count: 0, type: 5, id:3}, 
+      { name: '全部', nameKey: 'allCount', count: 0, type: null ,       id:0},
+      { name: '课件', nameKey: 'courseWareCount', count: 0, type: 1 ,   id:1},
+      { name: '讲义', nameKey: 'handoutCount', count: 0, type: 2 ,      id:2},
+      { name: '标准教案', nameKey: 'teachplanCount', count: 0, type: 5, id:3},
       { name: '说课视频', nameKey: 'mediaCount', count: 0, type: 3 ,    id:4},
       { name: '其他', nameKey: 'otherCount', count: 0, type: 4 ,        id:5},
     ])
@@ -134,7 +134,7 @@ export default {
       size: 20,
       chapterId: [],
       isPublic: 1,
-      lastLevelId: [], 
+      lastLevelId: [],
       ext: null,
       fileName: '',
       courseId: "",
@@ -159,7 +159,7 @@ export default {
       }
     })
     }
-    // tabCountRequest() 
+    // tabCountRequest()
      let flag = ref(false)
      const fileOder = (order)=>{
        console.log(pageParam.total);
@@ -223,8 +223,8 @@ export default {
       tabCountRequest()
      
     })
-    
-    
+
+
     let contengList = ref({});
     const getMaterialQueryPage = async () => {
       // let pageParam: any = Object.assign(pageParam);
@@ -238,7 +238,7 @@ export default {
       );
       contengList.value = res.json.records;
       // console.log( contengList.value);
-      
+
       pageParam.total = res.json.total
     };
     let isShow = ref();
@@ -266,7 +266,7 @@ export default {
       // 切换分页
   const  changeCurrent = (value: number)=> {
     console.log(value);
-    
+
     pageParam.current = value;
     getMaterialQueryPage()
   }
@@ -283,6 +283,10 @@ export default {
     const prepareLessons = (item)=>{
        Modal.create({ title: '添加到备课', width: 560, component: Prepare, props: { prepareLessons:item } })
     }
+    const downLoad = (item) => {
+      createElement('a', {attrs: {href: `${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`, download: `${item.fileName}`}}).click();
+      // window.open(`${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`)
+    };
 
     /*-----预览-----*/
     const preview = (item) => {
@@ -291,27 +295,27 @@ export default {
       }else{
         const loading = ElLoading.service({ lock: true, background: 'rgba(255, 255, 255, .7)', text: '加载中...' })
         let src = `${import.meta.env.VITE_OFFICE_PREVIEW}?furl=${import.meta.env.VITE_DOMAIN}${item.filePath}`;
-        let closeBtn = createElement('div', { 
-          className: 'el-icon-close', 
+        let closeBtn = createElement('div', {
+          className: 'el-icon-close',
           style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', top: '40px', right: '40px', zIndex: '10', cursor: 'pointer' },
           on: { click: () => { container.remove(); } }
         });
         // 打印
-        let printData = createElement('div', { 
-          className: 'el-icon-printer', 
+        let printData = createElement('div', {
+          className: 'el-icon-printer',
           style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', bottom: '40px', right: '40px', zIndex: '10', cursor: 'pointer' },
           on: { click: () => { window.print() } }
         });
         //下载
-        let downloadData = createElement('div', { 
-          className: 'el-icon-download', 
+        let downloadData = createElement('div', {
+          className: 'el-icon-download',
           style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', bottom: '100px', right: '40px', zIndex: '10', cursor: 'pointer' },
           on: { click: () => { let a  = document.createElement('a');a.download = item.fileName+'.'+item.ex;a.href = `${import.meta.env.VITE_DOMAIN}${item.filePath}`;a.click(); } }
 
         }); 
         let container;
         if(item.ext === 'mp4') {
-          let video = createElement('video', 
+          let video = createElement('video',
           { attrs: { src:`${import.meta.env.VITE_DOMAIN}${item.filePath}`, width: '100%', height: '100%',controls: true, controlsList: "nodownload" }, style: { background: '#f9f9f9' }});
           video.oncanplay = loading.close;
           container = createElement('div', { 
@@ -341,13 +345,10 @@ export default {
       }
     }
     //    const downLoad = (item) => {
-    //    window.open(`${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`)  
+    //    window.open(`${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`)
     // };
-    const downLoad = (item) => {
-      createElement('a', {attrs: {href: `${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`, download: `${item.fileName}`}}).click();
-       // window.open(`${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`)
-    };
-     
+
+
     const selectActive = (item) => {
       pageParam.type = item.type;
       activeId.value = item.id;
@@ -355,7 +356,7 @@ export default {
       // pageParam.chapterId = target.id
       tabCountRequest()
       // console.log(activeId);
-    };  
+    };
     emitter.emit("effect", (id) => {
     pageParam.subject = id
      getMaterialQueryPage()
@@ -619,7 +620,7 @@ export default {
     line-height: 45px;
     cursor: pointer;
   }
-  
+
 }
 .clearfloat{clear:both}
 .paginationFY {
