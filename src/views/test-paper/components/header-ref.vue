@@ -20,6 +20,7 @@
 <script lang="ts">
 import { ref } from 'vue';
 import OrganizingPapers from './organizing-papers.vue';
+import UploadComponent from './upload.vue';
 import emitter from './../../../utils/mitt';
 import Modal from './../../../utils/modal';
 import { ElMessage } from 'element-plus';
@@ -55,7 +56,9 @@ export default {
       if (!files.length) {
         ElMessage.warning(`请选择指定${accept.join('、')}格式文件`);
       } else {
-        Modal.create({ title: '上传试卷', width: 480, component: OrganizingPapers, props: { queryClass, files } });
+        Modal.create({ title: '上传试卷', width: 480, component: UploadComponent, props: { queryClass, files } }).then(res => {
+          res && emit('type-change', classType.value);
+        })
       }
     }
 

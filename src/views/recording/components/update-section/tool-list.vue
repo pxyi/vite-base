@@ -31,7 +31,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
 .tool-list-content {
   margin-top: 12px;
   overflow: auto;

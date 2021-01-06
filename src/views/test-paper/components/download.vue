@@ -58,7 +58,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
 .label {
   display: inline-block;
   padding: 0 20px 0 10px;

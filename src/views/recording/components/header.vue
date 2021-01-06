@@ -26,7 +26,6 @@
 </template>
 <script lang="ts">
 import { ref } from 'vue';
-import OrganizingPapers from './organizing-papers.vue';
 import emitter from './../../../utils/mitt';
 import Modal from './../../../utils/modal';
 import { ElMessage } from 'element-plus';

@@ -71,7 +71,7 @@
       </div>
     </div>
     <template v-if="data.questionSources">
-      <div class="source-box" v-for="(s, idx) in data.questionSources" :key="s">
+      <div class="source-section" v-for="(s, idx) in data.questionSources" :key="s">
         <h6><span>来源{{ idx + 1 }}</span><i class="el-icon-circle-close" @click="delSource(idx)" /></h6>
         <div class="source-item">
           <el-select placeholder="选择年份" size="medium" v-model="s.year">
@@ -128,7 +128,8 @@ export default {
           d.grade = data.value.grade;
           d.category = data.value.category;
           d.difficult = data.value.difficult;
-          d.knowledgePoints = data.value.knowledgePoints;
+          d.knowledgePoints = cloneDeep(data.value.knowledgePoints);
+          d.questionSources = cloneDeep(data.value.questionSources);
           return d;
         });
         store.commit('set_data_set', cloneData);
@@ -215,7 +216,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
 .tool-item-content {
   padding: 20px;
   flex: auto;
@@ -271,7 +272,7 @@ export default {
       }
     }
   }
-  .source-box {
+  .source-section {
     padding: 15px;
     background: #F5F7FA;
     border-radius: 6px;

@@ -53,7 +53,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
 $--menu--item-height: 45px;
 .lay__menu__container {
   display: flex;

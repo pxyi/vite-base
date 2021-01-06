@@ -48,7 +48,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
 .search-input {
   margin-bottom: 12px;
 }

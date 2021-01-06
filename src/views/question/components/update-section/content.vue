@@ -1,6 +1,6 @@
 <template>
 <cus-skeleton :loading="loading">
-  <div class="content">
+  <div class="question-content">
     <div class="section">
       <div class="label">题干</div>
       <div class="title" @click="log">这里填写题目描述</div>
@@ -124,8 +124,8 @@ export default {
 }
 </script>
 
-<style lang="scss" scope>
-.content {
+<style lang="scss" scoped>
+.question-content {
   .section {
     padding: 0 32px 0 60px;
     margin-bottom: 40px;

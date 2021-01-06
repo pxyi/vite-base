@@ -1,56 +1,39 @@
 <template>
-  <cus-form ref="formRef" :nodes="nodes" :width="files ? '422px' : '500px'" />
+  <cus-form ref="formRef" :nodes="nodes" width="422px" />
 
-  <template v-if="files">
-    <div class="file-upload-content">
-      <el-upload
-        drag
-        :action="action"
-        accept=".pdf,doc,.docx"
-        :file-list="fileList"
-        multiple
-        ref="uploadRef"
-        :on-success="uploadSuccess"
-        :on-remove="fileRemove"
-      >
-        <div class="upload-content">
-          <i class="el-icon-upload" />
-          <div>将文件拖到此处，或<span>点击上传</span></div>
-          <p>支持扩展名：.doc、.docx、.pdf</p>
-        </div>
-      </el-upload>
-    </div>
-  </template>
-  <template v-else>
-    <div class="paper-mode">
-      <span>组件方式</span>
-      <div class="mode-radio-group">
-        <div class="r-g-radio">
-          <i class="el-icon-check" />
-          <h4>智能选题</h4>
-          <p>
-            根据指定学科知识点，题目情况智能生成试卷结构和题目，支持手动调整
-          </p>
-        </div>
-        <div class="r-g-radio">
-          <i class="el-icon-check" />
-          <h4>手动选题</h4>
-          <p>根据个性化需求，手动添加试卷结构并完成选题</p>
-        </div>
+  <div class="file-upload-content">
+    <el-upload
+      drag
+      :action="action"
+      accept=".pdf,doc,.docx"
+      :file-list="fileList"
+      multiple
+      ref="uploadRef"
+      :on-success="uploadSuccess"
+      :on-remove="fileRemove"
+    >
+      <div class="upload-content">
+        <i class="el-icon-upload" />
+        <div>将文件拖到此处，或<span>点击上传</span></div>
+        <p>支持扩展名：.doc、.docx、.pdf</p>
       </div>
-    </div>
-  </template>
+    </el-upload>
+  </div>
 </template>
 <script lang="ts">
 import { ref, Ref, PropType, onMounted, inject } from 'vue';
 import { AxResponse } from './../../../core/axios';
 import axios from 'axios';
 import { useStore } from 'vuex';
+import { ElMessage } from 'element-plus';
 
 export default {
   props: {
     queryClass: Object as any,
-    files: Array as PropType<File[]>,
+    files: {
+      type: Array as PropType<File[]>,
+      default: () => []
+    }
   },
   setup(props) {
     let store = useStore();
@@ -61,7 +44,7 @@ export default {
     let userId = store.getters.userInfo.user.id;
     let subjectCode = store.getters.subject.code;
 
-    let controls: any[] = [
+    let nodes: Ref<any[]> = ref([
       {
         label: "学科",
         key: "subjectId", 
@@ -69,6 +52,13 @@ export default {
         url: "/permission/user/userDataSubjects",
         params: { userId },
         rule: { required: true, message: "请选择学科" },
+        valueKey: 'code',
+        change: (v) => {
+          axios.post('/permission/user/userDataRules', { userId, subjectCode: v[1] }).then((res: any) => {
+            nodes.value[1].options = res.json.grades;
+            nodes.value[2].options = res.json.years;
+          })
+        }
       },
       {
         label: "年级",
@@ -79,69 +69,59 @@ export default {
       },
       {
         label: "年份",
-        key: "yearId",
+        key: "year",
         type: "select",
         options: [],
         rule: { required: true, message: "请选择年份" },
       },
       {
         label: "来源",
-        key: "sourceId",
+        key: "source",
         type: "select",
         options: [{ name: '单元测试', id: 1 }, { name: '月考', id: 2 }, { name: '期中', id: 3 }, { name: '期末', id: 4 }, { name: '竞赛', id: 5 }, { name: '错题本', id: 6 }],
         rule: { required: true, message: "请选择来源" },
       },
-    ];
+      { 
+        label: '共享范围', 
+        key: 'isPublic', 
+        type: 'radio', 
+        default: 0, 
+        options: [ { name: '我的试卷', id: 0 },{ name: '公共试卷', id: 1 } ] 
+      }
+    ]);
 
     let fileList: Ref<any[]> = ref([]);
-    if (props.files) {
-      controls.push({ label: '共享范围', key: 'xxxx', type: 'checkbox', default: [0], options: [ { name: '我的试卷', id: 0 },{ name: '公共试卷', id: 1 } ] })
-      Promise.all(props.files.map(file => {
-        let formdata = new FormData();
-        formdata.append('file', file);
-        return axios.post('/system/file/uploadFile', formdata, { headers: { 'Content-Type': 'multipart/form-data' } });
-      })).then((list: any[]) => {
-        fileList.value = list.map(res => ({ name: res.json.oriFilename, url: res.json.filePath }))
-      });
-    } else {
-      controls = [
-        {
-          label: "试卷名称",
-          key: "paperTitle",
-          type: "input",
-          rule: { required: true, message: "请输入试卷名称" },
-        },
-        ...controls,
-        {
-          label: "共享范围",
-          key: "xxxx",
-          type: "checkbox",
-          default: [2],
-          options: [
-            { name: "我的试卷", id: 2, disabled: true },
-            { name: "公共试卷", id: 1 },
-          ],
-        },
-      ];
-    }
-    let nodes: Ref<any[]> = ref(controls);
+    Promise.all(props.files.map(file => {
+      let formdata = new FormData();
+      formdata.append('file', file);
+      return axios.post('/system/file/uploadFile', formdata, { headers: { 'Content-Type': 'multipart/form-data' } });
+    })).then((list: any[]) => {
+      fileList.value = list.map(res => ({ ...res.json, name: res.json.oriFilename, url: res.json.filePath }))
+    });
 
-    axios.post('/permission/user/userDataRules', { userId, subjectCode }).then((res: any) => {
-      if (props.files) {
-
-      }
-    })
-
-    const uploadSuccess = (response, file, fileList) => {
-      console.log(response, file, fileList);
+    const uploadSuccess = (res) => {
+      fileList.value.push({ ...res.json, name: res.json.oriFilename, url: res.json.filePath });
     };
-    const fileRemove = (file, fileList) => {
-      console.log(file, fileList);
+    const fileRemove = (file) => {
+      fileList.value.splice(fileList.value.findIndex(f => file.filePath === f.filePath), 1);
     };
 
     const save = (resolve, reject) => {
       formRef.value.validate(valid => {
-        valid ? resolve(valid) : reject();
+        if (valid) {
+          let parasm = { ...valid, papers: fileList.value, subjectId: valid.subjectId[1] };
+          axios.post<null, AxResponse>('/tiku/paper/batchSavePaper', parasm, { headers: { 'Content-Type': 'application/json' } }).then(res => {
+            if (res.result) {
+              ElMessage.success('上传试卷成功~！');
+              resolve(true)
+            } else {
+              ElMessage.warning(res.msg);
+              reject()
+            }
+          })
+        } else {
+          reject()
+        }
       });
     };
 

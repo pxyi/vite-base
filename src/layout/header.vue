@@ -117,7 +117,7 @@ export default {
   }
 }
 </script>
-<style lang="scss" scope>
+<style lang="scss" scoped>
 .lay__header__container {
   display: flex;
   .el-breadcrumb {
@@ -131,7 +131,7 @@ export default {
     line-height: 60px;
   }
   .header-user {
-    .el-dropdown {
+    .user-name, .el-icon-arrow-down {
       color: #fff;
     }
     margin-left: auto;

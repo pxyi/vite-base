@@ -2,6 +2,10 @@
   <div class="paper_container">
     <div class="paper_content">
       <div class="sealing"><img src="/src/assets/test-paper/sealing.png" alt="密封线"></div>
+      <div class="cover-map">
+        <img src="/src/assets/test-paper/logo.png" alt="logo" class="logo" />
+        <img src="/src/assets/test-paper/title.png" alt="title" class="title" />
+      </div>
       <h1>{{ paperInfo.title }}</h1>
       <h4><span>考试时间：<i>45</i> 分钟</span><span>总分：<i>100</i>分</span></h4>
       <h6><p><span>姓名：</span><i /></p><p><span>班级：</span><i /></p><p><span>考号：</span><i /></p></h6>
@@ -57,7 +61,8 @@
 import { ref, computed } from 'vue';
 import draggable from 'vuedraggable';
 import axios from 'axios';
-import store from './store/index';
+import store from './store';
+import { toChinesNum } from './utils';
 
 export default {
   components: { draggable },
@@ -66,27 +71,9 @@ export default {
     return { paperInfo, toChinesNum }
   }
 }
-let toChinesNum = (num: number): string => {
-  let changeNum = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
-  let unit = ["", "十", "百", "千", "万"];
-  let getWan = (temp) => {
-  　　let strArr = temp.toString().split("").reverse();
-  　　let newNum = "";
-  　　for (var i = 0; i < strArr.length; i++) {
-    　　newNum = (i == 0 && strArr[i] == 0 ? "" : (i > 0 && strArr[i] == 0 && strArr[i - 1] == 0 ? "" : changeNum[strArr[i]] + (strArr[i] == 0 ? unit[0] : unit[i]))) + newNum;
-  　　}
-    　 return newNum;
-  }
-  let overWan = Math.floor(num / 10000);
-  let noWan: string | number = num % 10000;
-  if (noWan.toString().length < 4) {
-    noWan = "0" + noWan;
-  }
-  return overWan ? getWan(overWan) + "万" + getWan(noWan) : getWan(num);
-}
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
 .paper_container {
   width: 800px;
   height: 100%;
@@ -94,15 +81,28 @@ let toChinesNum = (num: number): string => {
   margin: 0 auto;
   .paper_content {
     height: 100%;
-    padding: 50px 70px;
+    padding: 30px 70px;
     background: #fff;
     box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.1);
     border: 1px solid #eee;
     overflow: auto;
     position: relative;
+    .cover-map {
+      overflow: hidden;
+      margin: 0 20px 15px;
+      .logo {
+        width: 120px;
+        float: left;
+      }
+      .title {
+        width: 170px;
+        float: right;
+        margin-top: 17px;
+      }
+    }
     .sealing {
       position: absolute;
-      top: 50px;
+      top: 30px;
       left: 6px;
     }
     h1 {
@@ -134,7 +134,7 @@ let toChinesNum = (num: number): string => {
         }
         i {
           display: inline-block;
-          width: 140px;
+          width: 135px;
           height: 20px;
           border-bottom: solid 1px #000;
         }

@@ -9,10 +9,13 @@ export default new Vuex.Store({
   },
   mutations: {
     set_paper_info(state, payload) {
-      state.paperInfo = payload;
+      state.paperInfo = cloneDeep(payload);
+    }, 
+    set_paper_charpts(state, payload) {
+      state.paperInfo.paperCharpts = cloneDeep(payload);
     }
   },
   getters: {
-    questionList: state => state.paperInfo.paperCharpts
+    paperCharpts: state => state.paperInfo.paperCharpts
   }
 });

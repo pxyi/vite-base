@@ -89,7 +89,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
   .source-container {
     display: flex;
     padding: 10px;

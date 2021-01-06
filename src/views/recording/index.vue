@@ -8,7 +8,7 @@
         <template #default="{ row }">
           <div class="file-name">
             <img src="/@/assets/file-icon.png" alt="爱学标品">
-            <span>{{ row.fileName }}</span>
+            <div>{{ row.fileName }}</div>
           </div>
         </template>
       </el-table-column>
@@ -73,10 +73,10 @@ export default {
 }
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
 .file-name {
+  display: flex;
   img {
-    display: inline-block;
     width: 42px;
     margin-left: 10px;
     vertical-align: middle;
