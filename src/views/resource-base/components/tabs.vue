@@ -93,7 +93,9 @@ export default {
    let activeId = ref(0);
     emitter.on('search',(searchText)=>{ 
       pageParam.fileName = searchText.value
+      tabCountRequest()
       getMaterialQueryPage()
+      
     })
 
     emitter.on('clearInput',(clearInput)=>{
@@ -120,8 +122,8 @@ export default {
     });
     const tabCountRequest = () => {
     emitter.emit("effect",async (id) => {
-   params.subject = id
-      let res = await  axios.post<any, AxResponse>("/admin/material/queryCountByType", params, {headers: { "Content-Type": "application/json"}})
+    pageParam.subject = id
+      let res = await  axios.post<any, AxResponse>("/admin/material/queryCountByType", pageParam, {headers: { "Content-Type": "application/json"}})
       if(res.result) {
          res.json.allCount = eval(Object.values(res.json).join("+"));
         let arr = Object.entries(res.json)
@@ -133,7 +135,7 @@ export default {
           })
         })
       }
-      })
+    })
     }
     // tabCountRequest() 
      let flag = ref(false)
@@ -168,9 +170,11 @@ export default {
         // console.log(pageParam.orderType);
       }
      }
+     let chapterId = []
      emitter.on('check-change',(target)=>{
       pageParam.chapterId.push(target.id)
-      params.chapterId.values = target.id
+      // console.log(target.id);
+      pageParam.chapterId.values = target.id
       getMaterialQueryPage()
       tabCountRequest()
       pageParam.chapterId.forEach((item,index,arr)=>{
@@ -184,7 +188,7 @@ export default {
       })
     })
     
-    let pageParam: any = {
+    let pageParam: any = reactive({
       current: 1,
       size: 20,
       chapterId: [],
@@ -195,13 +199,13 @@ export default {
       courseId: "",
       subject: '',
       type: null,
-    };
+    });
     let contengList = ref({});
     const getMaterialQueryPage = async () => {
-      let params: any = Object.assign(pageParam);
-      context.emit("tableEmit", params);
+      // let pageParam: any = Object.assign(pageParam);
+      context.emit("tableEmit", pageParam);
       let res: AxResponse = await axios.post(
-        `admin/material/queryPage?size=${params.size}&current=${params.current}`,
+        `admin/material/queryPage?size=${pageParam.size}&current=${pageParam.current}`,
         pageParam,
         {
           headers: { "Content-Type": "application/json" },
@@ -304,9 +308,10 @@ export default {
      
     const selectActive = (item) => {
       pageParam.type = item.type;
+      activeId.value = item.id;
       getMaterialQueryPage();
       tabCountRequest()
-      activeId.value = item.id;
+      
       
       // console.log(activeId);
     };  
