@@ -19,13 +19,8 @@
             </div>
             <template #reference>
               <el-input readonly clearable placeholder="选择知识点" size="medium"
-<<<<<<< HEAD
-                :model-value="formGroup.knowledgePoints.length ? `已选择${formGroup.knowledgePoints.length}项` : null" 
-              /> 
-=======
                 :model-value="formGroup.knowledgePoints.length ? `已选择${formGroup.knowledgePoints.length}项` : null"
               />
->>>>>>> dev
             </template>
           </el-popover>
         </div>
