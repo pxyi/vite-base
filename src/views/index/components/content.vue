@@ -22,23 +22,23 @@
       <div class="s__flex">
         <div class="s__flex_cell">
           <h5>自建题目数</h5>
-          <div>101</div>
-          <p><i>14</i></p>
+          <div :class=" [ teachResearchStatistics.questionNum.class ]">{{ teachResearchStatistics.questionNum.compare }}</div>
+          <p><i>{{ teachResearchStatistics.questionNum.current }}</i></p>
         </div>
         <div class="s__flex_cell">
-          <h5>自建题目数</h5>
-          <div class="is__down">10</div>
-          <p><i>14</i></p>
+          <h5>自建试卷数</h5>
+          <div :class="[ teachResearchStatistics.paperNum.class ]">{{ teachResearchStatistics.paperNum.compare }}</div>
+          <p><i>{{ teachResearchStatistics.paperNum.current }}</i></p>
         </div>
         <div class="s__flex_cell">
-          <h5>自建题目数</h5>
-          <div>10</div>
-          <p><i>14</i></p>
+          <h5>上传课件数</h5>
+          <div :class="[ teachResearchStatistics.coursewareNum.class ]">{{ teachResearchStatistics.coursewareNum.compare }}</div>
+          <p><i>{{ teachResearchStatistics.coursewareNum.current }}</i></p>
         </div>
         <div class="s__flex_cell">
-          <h5>自建题目数</h5>
-          <div class="is__not"></div>
-          <p><i>14</i></p>
+          <h5>上传讲义数</h5>
+          <div :class="[ teachResearchStatistics.handoutNum.class ]">{{ teachResearchStatistics.handoutNum.compare }}</div>
+          <p><i>{{ teachResearchStatistics.handoutNum.current }}</i></p>
         </div>
       </div>
     </div>
@@ -59,20 +59,30 @@ import { useStore } from 'vuex';
 import MenuList, { RouterConf } from './../../../core/menu-list';
 import { useRoute } from 'vue-router';
 import RankingComponent from './ranking.vue';
-import { ref, watch } from 'vue'
+import axios, {AxiosResponse} from 'axios';
+import { reactive, ref, watch } from 'vue';
+import { AxResponse } from '../../../core/axios'
 export default {
   name: 'index-content',
   components: { RankingComponent },
   props: { nickName: String },
   setup() {
+    const store = useStore();
+    let teachResearchStatistics = reactive({coursewareNum: {}, handoutNum: {}, paperNum: {}, questionNum: {}});
+    axios.get<any, AxiosResponse>(`/permission/indexStatistics/teachResearchStatistics?userId=${store.getters.userInfo.user.id}`).then((res: AxResponse) => {
+      if (res.result) Object.keys(res.json).map(key => {
+        res.json[key].class = res.json[key].range === 'DOWN' ? 'is__down' : (res.json[key].range === 'LINE' ? 'is__not' : '');
+        res.json[key].compare = res.json[key].compare === 0 ? '' : res.json[key].compare;
+        teachResearchStatistics[key] = res.json[key];
+      });
+    });
     let list: { value: RouterConf[] } = ref([]);
-
     let initPath = useRoute().path;
     MenuList.map((res: any) => {
       res.closed = initPath.includes(res.key);
       list.value.push(res);
     });
-    return { list, initPath }
+    return { list, initPath, teachResearchStatistics}
   }
 }
 </script>
@@ -279,19 +289,19 @@ export default {
   .c__main {
     padding: 30px 24px;
     .m__head_bg { width: 263px; margin-top: -84px; }
-    .m__menu { 
-      height: 50px; line-height: 50px; 
+    .m__menu {
+      height: 50px; line-height: 50px;
       .m__inline_title { font-size: 16px; }
       .m__menu_cell { height: 34px; margin-top: 8px; font-size: 14px; line-height: 34px; padding: 0 9px; }
     }
     .m__section {
       h4 { font-size: 18px; sub { font-size: 14px; } }
-      .s__flex .s__flex_cell { 
+      .s__flex .s__flex_cell {
         height: 100px;
-        padding: 10px; 
-        h5 { font-size: 16px; margin-bottom: 8px; } 
-        div { 
-          height: 26px; line-height: 26px; border-radius: 4px; padding: 0 14px 0 26px; 
+        padding: 10px;
+        h5 { font-size: 16px; margin-bottom: 8px; }
+        div {
+          height: 26px; line-height: 26px; border-radius: 4px; padding: 0 14px 0 26px;
           &::before { left: 15px; height: 13px; }
           &::after { left: 11px;  }
           &.is__down::before { margin-top: -2px; }
@@ -300,7 +310,7 @@ export default {
         }
         p { font-size: 26px; }
       }
-    } 
+    }
   }
 }
 @media only screen and (max-width: 1440px) {
@@ -311,7 +321,7 @@ export default {
   .c__main {
     padding: 30px 24px;
     .m__head_bg { width: 263px; margin-top: -84px; }
-    .m__menu { 
+    .m__menu {
       height: 50px; line-height: 50px; margin-bottom: 30px;
       .m__inline_title { font-size: 16px; }
       .m__menu_cell { height: 34px; margin-top: 8px; font-size: 14px; line-height: 34px; padding: 0 9px; }
@@ -319,12 +329,12 @@ export default {
     .m__section {
       margin-bottom: 30px;
       h4 { font-size: 16px; sub { font-size: 12px; } }
-      .s__flex .s__flex_cell { 
+      .s__flex .s__flex_cell {
         height: 90px; padding: 8px; border-radius: 8px;
         &:not(:last-child) { margin-right: 14px; }
-        h5 { font-size: 14px; margin-bottom: 8px; } 
-        div { 
-          height: 22px; font-size: 14px; line-height: 22px; padding: 0 8px 0 18px; 
+        h5 { font-size: 14px; margin-bottom: 8px; }
+        div {
+          height: 22px; font-size: 14px; line-height: 22px; padding: 0 8px 0 18px;
           &::before { width: 3px; top: 7px; left: 11px; height: 10px; transform: translateX(-10%); }
           &::after { left: 7px; border-width: 5px; }
           &.is__down::before { margin-top: -2px; }
@@ -333,7 +343,7 @@ export default {
         }
         p { font-size: 26px; }
       }
-    } 
+    }
   }
 }
 @media only screen and (max-width: 1280px) {
@@ -344,21 +354,21 @@ export default {
   .c__main {
     padding: 20px;
     .m__head_bg { width: 200px; margin-top: -54px; }
-    .m__menu { 
-      height: 45px; line-height: 45px; margin-bottom: 30px; 
+    .m__menu {
+      height: 45px; line-height: 45px; margin-bottom: 30px;
       .m__inline_title { font-size: 14px; margin-right: 8px; }
       .m__menu_cell { height: 30px; line-height: 30px; margin-right: 2px !important; }
     }
     .m__section {
-      .s__flex .s__flex_cell { 
+      .s__flex .s__flex_cell {
         height: 80px;
-        div { 
-          height: 23px; line-height: 23px; font-size: 12px; border-radius: 4px; padding: 0 8px 0 15px; 
+        div {
+          height: 23px; line-height: 23px; font-size: 12px; border-radius: 4px; padding: 0 8px 0 10px; text-indent: -4em; overflow: hidden;
           &::before { left: 8px; }
           &::after { left: 4px; }
         }
       }
-    } 
+    }
   }
 }
 </style>

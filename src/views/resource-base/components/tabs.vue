@@ -115,10 +115,17 @@ export default {
       { name: '说课视频', nameKey: 'mediaCount', count: 0, type: 3 ,    id:4},
       { name: '其他', nameKey: 'otherCount', count: 0, type: 4 ,        id:5},
     ])
- let params = reactive({
-      subject: '',
+ let pageParam: any = reactive({
+      current: 1,
+      size: 20,
       chapterId: [],
       isPublic: 1,
+      lastLevelId: [], 
+      ext: null,
+      fileName: '',
+      courseId: "",
+      subject: '',
+      type: null,
     });
     const tabCountRequest = () => {
     emitter.emit("effect",async (id) => {
@@ -188,18 +195,7 @@ export default {
       })
     })
     
-    let pageParam: any = reactive({
-      current: 1,
-      size: 20,
-      chapterId: [],
-      isPublic: 1,
-      lastLevelId: [], 
-      ext: null,
-      fileName: '',
-      courseId: "",
-      subject: '',
-      type: null,
-    });
+    
     let contengList = ref({});
     const getMaterialQueryPage = async () => {
       // let pageParam: any = Object.assign(pageParam);
@@ -287,7 +283,7 @@ export default {
           }, [ closeBtn, url, printData, downloadData ])
         }else if(item.ext === 'mp3') {
           let video = createElement('video', 
-          { attrs: { src:`${import.meta.env.VITE_DOMAIN}${item.filePath}`, width: '100%', height: '100%',controls: true, controlsList: "nodownload" }, style: { background: '#f9f9f9' }});
+          { attrs: { src:`${import.meta.env.VITE_DOMAIN}${item.filePath}`, width: '100%', height: '100%',controls: true, controlsList: "nodownload" }, style: { background: '#333' }});
           video.oncanplay = loading.close;
           container = createElement('div', { 
             style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '1000' },
@@ -302,8 +298,12 @@ export default {
         document.body.appendChild(container);
       }
     }
-       const downLoad = (item) => {
-       window.open(`${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`)  
+    //    const downLoad = (item) => {
+    //    window.open(`${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`)  
+    // };
+    const downLoad = (item) => {
+      createElement('a', {attrs: {href: `${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`, download: `${item.fileName}`}}).click();
+       // window.open(`${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`)
     };
      
     const selectActive = (item) => {
