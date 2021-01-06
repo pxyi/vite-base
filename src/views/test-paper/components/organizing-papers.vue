@@ -1,67 +1,51 @@
 <template>
   <cus-form ref="formRef" :nodes="nodes" :width="files ? '422px' : '500px'" />
 
-  <template v-if="files">
-    <div class="file-upload-content">
-      <el-upload
-        drag
-        :action="action"
-        accept=".pdf,doc,.docx"
-        :file-list="fileList"
-        multiple
-        ref="uploadRef"
-        :on-success="uploadSuccess"
-        :on-remove="fileRemove"
-      >
-        <div class="upload-content">
-          <i class="el-icon-upload" />
-          <div>将文件拖到此处，或<span>点击上传</span></div>
-          <p>支持扩展名：.doc、.docx、.pdf</p>
-        </div>
-      </el-upload>
-    </div>
-  </template>
-  <template v-else>
-    <div class="paper-mode">
-      <span>组件方式</span>
-      <div class="mode-radio-group">
-        <div class="r-g-radio">
-          <i class="el-icon-check" />
-          <h4>智能选题</h4>
-          <p>
-            根据指定学科知识点，题目情况智能生成试卷结构和题目，支持手动调整
-          </p>
-        </div>
-        <div class="r-g-radio">
-          <i class="el-icon-check" />
-          <h4>手动选题</h4>
-          <p>根据个性化需求，手动添加试卷结构并完成选题</p>
-        </div>
+  <div class="paper-mode">
+    <span>组件方式</span>
+    <div class="mode-radio-group">
+      <div class="r-g-radio" v-for="t in paperTypeList" :key="t.value" :class="{ 'active': paperType === t.value }" @click="paperType = t.value">
+        <i class="el-icon-check" />
+        <h4>{{ t.h4 }}</h4>
+        <p>{{ t.p }}</p>
       </div>
     </div>
-  </template>
+  </div>
 </template>
 <script lang="ts">
 import { ref, Ref, PropType, onMounted, inject } from 'vue';
 import { AxResponse } from './../../../core/axios';
 import axios from 'axios';
 import { useStore } from 'vuex';
+import Drawer from './../../../utils/drawer';
+import Screen from './../../../utils/screen';
+import SelectedTopicComponent from './selected-topic.vue';
+import GeneratingComponent from './generating.vue';
 
 export default {
   props: {
-    queryClass: Object as any,
     files: Array as PropType<File[]>,
   },
   setup(props) {
     let store = useStore();
     let formRef = ref();
-    let uploadRef = ref();
-    let action = `${import.meta.env.VITE_APP_BASE_URL}/system/file/uploadFile`;
 
     let userId = store.getters.userInfo.user.id;
     let subjectCode = store.getters.subject.code;
 
-    let controls: any[] = [
+    let paperType = ref(0);
+    let paperTypeList = [
+      { h4: '智能选题', p: '根据指定学科知识点，题目情况智能生成试卷结构和题目，支持手动调整', value: 0 },
+      { h4: '手动选题', p: '根据个性化需求，手动添加试卷结构并完成选题', value: 1 }
+    ];
+
+    let nodes: Ref<any[]> = ref([
+      {
+        label: "试卷名称",
+        key: "title",
+        type: "input",
+        rule: { required: true, message: "请输入试卷名称" },
+      },
       {
         label: "学科",
         key: "subjectId", 
@@ -69,6 +53,15 @@ export default {
         url: "/permission/user/userDataSubjects",
         params: { userId },
         rule: { required: true, message: "请选择学科" },
+        valueKey: 'code',
+        change: (v) => {
+          axios.post('/permission/user/userDataRules', { userId, subjectCode: v[1] }).then((res: any) => {
+            nodes.value[2].options = res.json.grades;
+            nodes.value[3].options = res.json.years;
+            formRef.value.formGroup.gradeId && (formRef.value.formGroup.gradeId = null);
+            formRef.value.formGroup.year && (formRef.value.formGroup.year = null);
+          })
+        }
       },
       {
         label: "年级",
@@ -79,82 +72,55 @@ export default {
       },
       {
         label: "年份",
-        key: "yearId",
+        key: "year",
         type: "select",
         options: [],
         rule: { required: true, message: "请选择年份" },
       },
       {
         label: "来源",
-        key: "sourceId",
+        key: "source",
         type: "select",
         options: [{ name: '单元测试', id: 1 }, { name: '月考', id: 2 }, { name: '期中', id: 3 }, { name: '期末', id: 4 }, { name: '竞赛', id: 5 }, { name: '错题本', id: 6 }],
         rule: { required: true, message: "请选择来源" },
       },
-    ];
-
-    let fileList: Ref<any[]> = ref([]);
-    if (props.files) {
-      controls.push({ label: '共享范围', key: 'xxxx', type: 'checkbox', default: [0], options: [ { name: '我的试卷', id: 0 },{ name: '公共试卷', id: 1 } ] })
-      Promise.all(props.files.map(file => {
-        let formdata = new FormData();
-        formdata.append('file', file);
-        return axios.post('/system/file/uploadFile', formdata, { headers: { 'Content-Type': 'multipart/form-data' } });
-      })).then((list: any[]) => {
-        fileList.value = list.map(res => ({ name: res.json.oriFilename, url: res.json.filePath }))
-      });
-    } else {
-      controls = [
-        {
-          label: "试卷名称",
-          key: "paperTitle",
-          type: "input",
-          rule: { required: true, message: "请输入试卷名称" },
-        },
-        ...controls,
-        {
-          label: "共享范围",
-          key: "xxxx",
-          type: "checkbox",
-          default: [2],
-          options: [
-            { name: "我的试卷", id: 2, disabled: true },
-            { name: "公共试卷", id: 1 },
-          ],
-        },
-      ];
-    }
-    let nodes: Ref<any[]> = ref(controls);
-
-    axios.post('/permission/user/userDataRules', { userId, subjectCode }).then((res: any) => {
-      if (props.files) {
-
+      { 
+        label: '共享范围', 
+        key: 'isPublic', 
+        type: 'radio', 
+        default: 0, 
+        options: [ { name: '我的试卷', id: 0 },{ name: '公共试卷', id: 1 } ] 
       }
-    })
+    ]);
 
-    const uploadSuccess = (response, file, fileList) => {
-      console.log(response, file, fileList);
-    };
-    const fileRemove = (file, fileList) => {
-      console.log(file, fileList);
-    };
 
     const save = (resolve, reject) => {
       formRef.value.validate(valid => {
-        valid ? resolve(valid) : reject();
+        if (valid) {
+          let data = {
+            ...valid,
+            paperType: paperType.value,
+            subjectId: valid.subjectId[1]
+          }
+          if (paperType.value === 0) {
+            Screen.create(GeneratingComponent, { data });
+            resolve()
+          } else {
+            Drawer.create({ 
+              title: '选择试题',
+              closable: false,
+              width: 'calc(100% - 200px)',
+              component: SelectedTopicComponent,
+              props: { data }
+            }).then(res => resolve() ).catch(err => reject());
+          }
+        } else {
+          reject();
+        }
       });
     };
 
-    return {
-      action,
-      nodes,
-      save,
-      formRef,
-      uploadRef,
-      fileList,
-      uploadSuccess,
-      fileRemove,
-    };
+    return { nodes, save, formRef, paperType, paperTypeList };
   },
 };
 </script>

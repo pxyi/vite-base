@@ -12,7 +12,7 @@ const create = (component, props = {}) => {
 
     let closeBtn = createElement('div', { 
       className: 'el-icon-back', 
-      style: { fontSize: '28px', position: 'fixed', top: '15px', left: '30px', color: '#fff', cursor: 'pointer' },
+      style: { fontSize: '28px', position: 'fixed', top: '15px', left: '30px', color: '#fff', cursor: 'pointer', zIndex: 1 },
       on: { click: () => remove() }
     })
 
@@ -21,7 +21,7 @@ const create = (component, props = {}) => {
       app.unmount(body);
       val ? resolve(val) : reject(false);
     }
-    const app = createApp(component, { ...props });
+    const app = createApp(component, { ...props, close: remove });
     Object.keys(props).map(key => app.provide(key, props[key]))
     app.use(Components);
     app.use(Store);
@@ -30,7 +30,7 @@ const create = (component, props = {}) => {
     app.use(router)
     const vm = app.mount(body);
 
-    let container = createElement('div', { style: { width: '100%', height: '100%', position: 'fixed', zIndex: '999', top: '0' } }, [closeBtn, body]);
+    let container = createElement('div', { style: { width: '100%', height: '100%', position: 'fixed', zIndex: '2010', top: '0' } }, [closeBtn, body]);
     document.body.appendChild(container);
   });
 }

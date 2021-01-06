@@ -29,7 +29,6 @@ import { ElMessage } from 'element-plus';
 
 export default {
   props: {
-    queryClass: Object as any,
     files: {
       type: Array as PropType<File[]>,
       default: () => []
@@ -57,6 +56,8 @@ export default {
           axios.post('/permission/user/userDataRules', { userId, subjectCode: v[1] }).then((res: any) => {
             nodes.value[1].options = res.json.grades;
             nodes.value[2].options = res.json.years;
+            formRef.value.formGroup.gradeId = null;
+            formRef.value.formGroup.year = null;
           })
         }
       },
@@ -125,16 +126,7 @@ export default {
       });
     };
 
-    return {
-      action,
-      nodes,
-      save,
-      formRef,
-      uploadRef,
-      fileList,
-      uploadSuccess,
-      fileRemove,
-    };
+    return { action, nodes, save, formRef, uploadRef, fileList, uploadSuccess, fileRemove };
   },
 };
 </script>

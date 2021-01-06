@@ -40,7 +40,7 @@ export default {
     emitter.on('queryClass', (e) => queryClass = e);
 
     const addPaper = () => {
-      Modal.create({ title: '组卷', width: 640, component: OrganizingPapers, props: { queryClass } });
+      Modal.create({ title: '组卷', width: 640, component: OrganizingPapers });
     }
 
     let uploadRef = ref();
