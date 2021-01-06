@@ -32,6 +32,7 @@ export default {
     let searchText = ref(null);
    
     const searchHandle = () => {
+      emit('search', searchText)
       watch(searchText,(e) => {
         emit('search', searchText)
       })
