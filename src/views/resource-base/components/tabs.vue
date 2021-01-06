@@ -262,6 +262,8 @@ export default {
       Modal.create({ title: '重命名', width: 640, component: NewName, props: { newName:item } }).then(res=>{
       if(res){
          getMaterialQueryPage()
+         console.log(res);
+         
       }
       })
     };
