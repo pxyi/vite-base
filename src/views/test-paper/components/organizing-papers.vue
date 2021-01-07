@@ -2,7 +2,7 @@
   <cus-form ref="formRef" :nodes="nodes" :width="files ? '422px' : '500px'" />
 
   <div class="paper-mode">
-    <span>组件方式</span>
+    <span>组卷方式</span>
     <div class="mode-radio-group">
       <div class="r-g-radio" v-for="t in paperTypeList" :key="t.value" :class="{ 'active': paperType === t.value }" @click="paperType = t.value">
         <i class="el-icon-check" />
@@ -52,6 +52,7 @@ export default {
         type: "cascader",
         url: "/permission/user/userDataSubjects",
         params: { userId },
+        default: [store.getters.subject.parentCode, store.getters.subject.code],
         rule: { required: true, message: "请选择学科" },
         valueKey: 'code',
         change: (v) => {

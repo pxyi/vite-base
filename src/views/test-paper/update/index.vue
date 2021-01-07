@@ -2,7 +2,7 @@
   <div class="paper-update-container">
     <div class="header"><HeaderComponent /></div>
     <div class="content">
-      <ToolbarComponent />
+      <ToolbarComponent v-if="!preview" />
       <ContentComponent />
     </div>
   </div>
@@ -20,7 +20,8 @@ import { ElLoading } from 'element-plus';
 
 export default {
   props: {
-    id: String
+    id: String,
+    preview: Boolean
   },
   components: { HeaderComponent, ToolbarComponent, ContentComponent },
   setup(props) {

@@ -6,7 +6,7 @@
         <template v-for="node in showNodeList" :key="node.key">
           <div class="cus__class__item" v-show="!node.hide || isOpened">
             <div class="cus__class__label">{{ node.label }}</div>
-            <div class="cus__class__box is__element">
+            <div class="cus__class__box" :class="{ 'is__element': !!node.type }">
               <template v-if="node.type === 'input'">
                 <el-input size="mini" suffix-icon="el-icon-search"
                   v-model="formGroup[node.key]" 
@@ -215,10 +215,9 @@ const getCondition = (userId, subjectCode, nodeList): Promise<any> => {
       display: flex;
       flex-wrap: wrap;
       flex: 1 1 124px;
-      padding: 0 24px 8px;
+      padding: 7px 24px 0;
       background: #fff;
       &.is__element {
-        padding: 5px 24px 0;
         .el-input {
           width: 300px;
           height: 28px;
@@ -227,7 +226,7 @@ const getCondition = (userId, subjectCode, nodeList): Promise<any> => {
       .cus__class__cell {
         display: inline-block;
         margin-right: 22px;
-        margin-top: 8px;
+        margin-bottom: 7px;
         opacity: .8;
         & > span {
           display: inline-block;

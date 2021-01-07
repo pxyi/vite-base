@@ -30,7 +30,7 @@
         </template>
         <template v-slot:actions="{ data }">
           <div class="list__actions">
-            <el-button type="text" @click="preview(data.filePath)"><i class="iconfont iconsearch-eye-line" /><span>预览</span></el-button>
+            <el-button type="text" @click="preview(data)"><i class="iconfont iconsearch-eye-line" /><span>预览</span></el-button>
             <el-button type="text" @click="update(data)" v-if="data.sourceFrom !== 3"><i class="iconfont iconfile-edit-line" /><span>编辑</span></el-button>
             <el-button type="text" @click="download(data)"><i class="iconfont icondayin" /><span>下载/打印</span></el-button>
             <el-popconfirm title="这是一段内容确定删除吗？" confirmButtonText='确定' cancelButtonText='取消' @confirm="remove(data.id)">
@@ -80,20 +80,24 @@ export default {
       res.result && listRef.value.request();
     }
 
-    const preview = (path) => {
-      const loading = ElLoading.service({ lock: true, background: 'rgba(255, 255, 255, .7)', text: '加载中...' })
-      let src = `${import.meta.env.VITE_OFFICE_PREVIEW}?furl=${import.meta.env.VITE_DOMAIN}${path}`;
-      let closeBtn = createElement('div', { 
-        className: 'el-icon-close', 
-        style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', top: '40px', right: '40px', zIndex: '10', cursor: 'pointer' },
-        on: { click: () => { container.remove(); } }
-      });
-      let iframe = createElement('iframe', { attrs: { src, width: '100%', height: '100%' }, style: { background: '#f9f9f9' } });
-      iframe.onload = loading.close;
-      let container = createElement('div', { 
-        style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '9' },
-      }, [ closeBtn, iframe ])
-      document.body.appendChild(container);
+    const preview = (data) => {
+      if (data.sourceFrom === 3) {
+        const loading = ElLoading.service({ lock: true, background: 'rgba(255, 255, 255, .7)', text: '加载中...' })
+        let src = `${import.meta.env.VITE_OFFICE_PREVIEW}?furl=${import.meta.env.VITE_DOMAIN}${data.filePath}`;
+        let closeBtn = createElement('div', { 
+          className: 'el-icon-close', 
+          style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', top: '40px', right: '40px', zIndex: '10', cursor: 'pointer' },
+          on: { click: () => { container.remove(); } }
+        });
+        let iframe = createElement('iframe', { attrs: { src, width: '100%', height: '100%' }, style: { background: '#f9f9f9' } });
+        iframe.onload = loading.close;
+        let container = createElement('div', { 
+          style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '9' },
+        }, [ closeBtn, iframe ])
+        document.body.appendChild(container);
+      } else {
+        update(data, true);
+      }
     }
 
     const download = (data) => {
@@ -113,8 +117,8 @@ export default {
       }
     }
 
-    const update = (data) => {
-      Screen.create(UpdateComponent, { id: data.id })
+    const update = (data, preview = false) => {
+      Screen.create(UpdateComponent, { id: data.id, preview })
     }
     /* 监听新增试卷成功事件 */
     emitter.on('add-test-paper-success', e => {

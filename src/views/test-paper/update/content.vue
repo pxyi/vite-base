@@ -1,5 +1,5 @@
 <template>
-  <div class="paper_container">
+  <div class="paper_container" :class="{ 'is__preview': isPreview }">
     <div class="paper_content">
       <div class="paper-tool-header">
         <div class="sealing" v-show="paperInfo.showSealing"><img src="/src/assets/test-paper/sealing.png" alt="密封线"></div>
@@ -8,10 +8,10 @@
           <img src="/src/assets/test-paper/title.png" alt="title" class="title" />
         </div>
         <h1 v-show="paperInfo.showTitle">
-          <input type="text" v-model="paperInfo.title" placeholder="请输入试卷标题" />
+          <input type="text" v-model="paperInfo.title" placeholder="请输入试卷标题" :readonly="isPreview" />
         </h1>
         <h2 v-show="paperInfo.showSideTitle">
-          <input type="text" v-model="paperInfo.sideTitle" placeholder="请输入试卷副标题" />
+          <input type="text" v-model="paperInfo.sideTitle" placeholder="请输入试卷副标题" :readonly="isPreview" />
         </h2>
         <h4 v-show="paperInfo.showTime"><span>考试时间：<i>45</i> 分钟</span><span>总分：<i>100</i>分</span></h4>
         <h6 v-show="paperInfo.showStuInfo"><p><span>姓名：</span><i /></p><p><span>班级：</span><i /></p><p><span>考号：</span><i /></p></h6>
@@ -42,34 +42,34 @@
               </div>
             </div>
             <span>{{ toChinesNum(idx + 1) }}、 {{ questionType.title }}（共{{ questionType.questionCount }}小题）（{{ questionType.questions.reduce((t, n) => t += (n.question.score || 0), 0) }}）分</span>
-            <i class="el-icon-plus" />
-            <div class="footer">
+            <i class="el-icon-plus" v-if="!isPreview" />
+            <div class="footer" v-if="!isPreview">
               <i class="iconfont iconshangyi" :class="{ 'is__disabled': idx === 0 }" @click="moveType(idx, -1)" />
               <i class="iconfont iconxiayi" :class="{ 'is__disabled': idx === paperInfo.paperCharpts.length - 1 }" @click="moveType(idx, 1)" />
               <i class="iconfont iconshanchu" :class="{ 'is__disabled': paperInfo.paperCharpts.length === 1 }" @click="deleteQuestType(questionType.id)" />
             </div>
           </div>
-          <draggable v-model="questionType.questions" tag="transition-group" animation="250" item-key="id">
+          <draggable v-model="questionType.questions" :disabled="isPreview" tag="transition-group" animation="250" item-key="id">
             <template #item="{ element, index }">
               <div class="item">
-                <i class="el-icon-plus" />
-                <div class="title" :data-index="`${index + 1}.`"><div v-html="element.question.title"></div></div>
-                <div class="content" v-question="element.question"></div>
-                <div class="flex-box" v-if="classType !== 12">
+                <i class="el-icon-plus" v-if="!isPreview" />
+                <div class="title" :data-index="`${index + 1}.`"><div v-html="element.question.title" v-if="isPreview && classType !== 3 || !isPreview"></div></div>
+                <div class="content" v-question="element.question" v-if="isPreview && classType !== 3 || !isPreview"></div>
+                <div class="flex-box" v-if="isPreview && classType !== 2 || element.showAnswer">
                   <div class="label">答案</div>
                   <div class="flex-main" v-html="element.question.rightAnswer ? element.question.rightAnswer.map(a => a.content).join('、') : '无'"></div>
                 </div>
-                <div class="flex-box" v-if="classType !== 12">
+                <div class="flex-box" v-if="isPreview && classType !== 2 || element.showAnswer">
                   <div class="label">解析</div>
                   <div class="flex-main" v-html="element.question.analysis"></div>
                 </div>
-                <div class="footer">
+                <div class="footer" v-if="!isPreview">
                   <div>
                     <i class="iconfont iconshezhifenzhi" />
                     <el-input-number :controls="false" size="mini" v-model="element.question.score" />
                     <span>分值</span>
                   </div>
-                  <div>
+                  <div @click="element.showAnswer = !element.showAnswer">
                     <i class="iconfont icondaan" />
                     <span>答案</span>
                   </div>
@@ -91,7 +91,7 @@
 </template>
 
 <script lang="ts">
-import { ref, Ref, computed } from 'vue';
+import { ref, Ref, computed, inject } from 'vue';
 import draggable from 'vuedraggable';
 import axios from 'axios';
 import store from './store';
@@ -112,6 +112,8 @@ export default {
   },
   setup(props) {
     let paperInfo: Ref<any> = computed(() => store.state.paperInfo);
+
+    let isPreview = inject('preview');
 
     let classType = computed(() => store.state.classType);
 
@@ -156,7 +158,7 @@ export default {
       })
     }
 
-    return { paperInfo, toChinesNum, deleteQuestType, deleteQuest, moveType, moveQuestion, paperScoreData, classType, questExchange }
+    return { paperInfo, toChinesNum, deleteQuestType, deleteQuest, moveType, moveQuestion, paperScoreData, classType, questExchange, isPreview }
   }
 }
 </script>
@@ -297,10 +299,11 @@ export default {
         }
         & > div {
           flex: auto;
+          margin-bottom: 15px;
         }
       }
       .content {
-        margin-top: 10px;
+        margin-bottom: 10px;
       }
     }
     .el-icon-plus {
@@ -325,8 +328,7 @@ export default {
     .flex-box {
       font-size: 13px;
       display: flex;
-      margin-top: 15px;
-      margin-left: -5px;
+      margin-bottom: 15px;
       .label {
         display: inline-block;
         height: 20px;
@@ -404,6 +406,16 @@ export default {
     }
   }
 
+  &.is__preview {
+    .paper_main {
+      .question_type {
+        .question-title:hover,
+        .item:hover {
+          border-color: #fff;
+        }
+      }
+    }
+  }
 
   :deep(.item) {
     .e-main {
