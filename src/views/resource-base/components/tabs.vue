@@ -10,32 +10,34 @@
       >
         {{ item.name }}
         <span class="num">
-          {{ item.num }}
+          {{ item.count }}
         </span>
       </a>
     </nav>
-    <div class="aaa">
-      <span>文件名 <i class="el-icon-bottom"></i></span>
-      <span>上传时间 <i class="el-icon-bottom"></i></span>
+    <div class="order">
+     <span @click="fileOder(1)">文件名 <i class="el-icon-bottom " v-if="flag"></i> <i class="el-icon-top " v-else></i></span>
+      <span @click="timeOder(2)">上传时间 <i class="el-icon-bottom" v-if="flags"></i> <i class="el-icon-top " v-else></i></span>
       <!-- <span>引用次数<i class="el-icon-bottom"></i></span> -->
     </div>
   </div>
   <div class="right-content">
     <ul class="tableMain">
+
       <li
         v-for="(item, index) in contengList"
         :key="index"
         @mouseleave="mouseleaveisShow(item)"
+        :title="`${item.fileName}.${item.ext}`"
       >
         <div class="thumbnailWrap">
           <img
-            v-if ="item.ext !== 'mp3' && item.ext !== 'zip' && item.ext !== 'rar'"
+            v-if ="item.ext !== 'mp3' && item.ext !== 'zip' && item.ext !== 'rar'&&item.ext !== 'ppt'"
             class="imgCover"
-            :src="`/test${item.imgPath}`"
+            :src="`${domain}${item.imgPath}`"
           />
           <img
             v-else
-            src="../../../assets/resource-base/icon_d44l6421sgu/caozuo.png"
+            src="../../../assets/resource-base/icon_d44l6421sgu/weizhiwenjian.png"
           />
         </div>
         <p class="content-list-box-item-title">
@@ -66,15 +68,27 @@
           </div>
         </div>
       </li>
+
        <cus-empty v-if="contengList.length<1"/>
     </ul>
-
+       <div class="clearfloat"></div>
+       <div class="paginationFY">
+            <el-pagination
+              background
+              layout="prev, pager, next"
+              :hide-on-single-page='true'
+              :total="pageParam.total"
+              :page-size="pageParam.size"
+              @current-change="changeCurrent"
+            >
+            </el-pagination>
+          </div>
   </div>
 
 </template>
 
 <script lang="ts">
-import { ref, reactive, Ref } from "vue";
+import { ref, reactive, Ref ,computed, onMounted, watch} from "vue";
 import axios from "axios";
 import { useStore } from "vuex";
 import { AxResponse } from "../../../core/axios";
@@ -88,66 +102,144 @@ import { emit } from 'process';
 
 export default {
   setup(props, context) {
-    let activeId = ref(0);
-    let params = reactive({
-      subject: "chinese3",
-      chapterId: [],
-      isPublic: 1,
-    });
+    let domain = import.meta.env.VITE_DOMAIN;
+   let activeId = ref(0);
+    emitter.on('search',(searchText)=>{
+      pageParam.fileName = searchText.value
+      tabCountRequest()
+      getMaterialQueryPage()
 
+    })
+
+    emitter.on('clearInput',(clearInput)=>{
+       getMaterialQueryPage()
+    })
+     emitter.on('uploadInfoSure',()=>{
+       tabCountRequest()
+       getMaterialQueryPage()
+    })
+
+    let activeName = ref('totalCount');
      let fileTypeAndCount = ref([
-      { name: '全部', nameKey: 'totalCount', num: 0, type: null ,id:0},
-      { name: '课件', nameKey: 'courseWareCount', num: 0, type: 1 ,id:1},
-      { name: '讲义', nameKey: 'handoutCount', num: 0, type: 2 ,id:3},
-      { name: '标准教案', nameKey: 'teachplanCount', num: 0, type: 5,id:4 },
-      { name: '说课视频', nameKey: 'mediaCount', num: 0, type: 3 ,id:5},
-      { name: '其他', nameKey: 'otherCount', num: 0, type: 4 ,id:6},
+      { name: '全部', nameKey: 'allCount', count: 0, type: null ,       id:0},
+      { name: '课件', nameKey: 'courseWareCount', count: 0, type: 1 ,   id:1},
+      { name: '讲义', nameKey: 'handoutCount', count: 0, type: 2 ,      id:2},
+      { name: '标准教案', nameKey: 'teachplanCount', count: 0, type: 5, id:3},
+      { name: '说课视频', nameKey: 'mediaCount', count: 0, type: 3 ,    id:4},
+      { name: '其他', nameKey: 'otherCount', count: 0, type: 4 ,        id:5},
     ])
-        const tabCountRequest = async() => {
-      let res = await  axios.post<any, AxResponse>("/admin/material/queryCountByType", params, {headers: { "Content-Type": "application/json"}})
-      if(res.result) {
-        let arr = Object.entries(res.json)
-        arr.map (( [key, value] ) => {
-          fileTypeAndCount.value.map( ( item: any ) => {
-            if( item.nameKey == key ) {
-              item.num = value
-            }
-          })
-
-        })
-      }
-    }
-    tabCountRequest()
-
-    let pageParam: any = {
+ let pageParam: any = reactive({
       current: 1,
       size: 20,
       chapterId: [],
       isPublic: 1,
       lastLevelId: [],
       ext: null,
-      fileName: "",
+      fileName: '',
       courseId: "",
-      subject: "chinese3",
+      subject: '',
       type: null,
-    };
+      total:0
+    });
+    const tabCountRequest = () => {
+    emitter.emit("effect",async (id) => {
+    pageParam.subject = id
+      let res = await  axios.post<any, AxResponse>("/admin/material/queryCountByType", pageParam, {headers: { "Content-Type": "application/json"}})
+      if(res.result) {
+         res.json.allCount = eval(Object.values(res.json).join("+"));
+        let arr = Object.entries(res.json)
+        arr.map (( [key, value] ) => {
+          fileTypeAndCount.value.map( ( item: any ) => {
+            if( item.nameKey == key ) {
+              item.count = value
+            }
+          })
+        })
+      }
+    })
+    }
+    // tabCountRequest()
+     let flag = ref(false)
+     const fileOder = (order)=>{
+       console.log(pageParam.total);
+       if(pageParam.total!==0){
+      if(pageParam.orderType===0){
+        flag.value = false
+        getMaterialQueryPage()
+        pageParam.orderType=1
+         pageParam.order=1
+        // console.log(pageParam.orderType);
+      }else{
+        flag.value = true
+         pageParam.order=1
+         getMaterialQueryPage()
+          pageParam.orderType=0
+        // console.log(pageParam.orderType);
+      }
+       }
+     
+     }
+     let flags = ref(false)
+      const timeOder = (order)=>{
+        if(pageParam.total!==0){
+      if(pageParam.orderType===0){
+        flags.value = false
+        getMaterialQueryPage()
+        pageParam.orderType=1
+         pageParam.order=2
+        // console.log(pageParam.orderType);
+      }else{
+        flags.value = true
+         pageParam.order=2
+         getMaterialQueryPage()
+          pageParam.orderType=0
+        // console.log(pageParam.orderType);
+      }
+        }
+     
+     }
+     let chapterId = []
+     emitter.on('check-change',(target)=>{
+      //  chapterId.splice(target.id)
+      //  console.log(target.id);
+      // console.log( pageParam.chapterId);
+      // pageParam.chapterId.map((item,index,arr)=>{
+      //   if(item===target.id){
+      //    pageParam.chapterId.splice(index, 1)
+      //   } else {
+      //     pageParam.chapterId.push(target.id)
+      //   }
+      // })
+      // console.log(target.id);
+      // pageParam.chapterId.values = target.id
+      let index = pageParam.chapterId.findIndex(i => i === target.id);
+      if( index !== -1 ) {
+        pageParam.chapterId.splice(index, 1)
+      } else {
+        pageParam.chapterId.push(target.id);
+      }
+      getMaterialQueryPage();
+      tabCountRequest()
+     
+    })
+
+
     let contengList = ref({});
     const getMaterialQueryPage = async () => {
-      let params: any = Object.assign(pageParam);
-      context.emit("tableEmit", params);
+      // let pageParam: any = Object.assign(pageParam);
+      context.emit("tableEmit", pageParam);
       let res: AxResponse = await axios.post(
-        `admin/material/queryPage?size=${params.size}&current=${params.current}`,
+        `admin/material/queryPage?size=${pageParam.size}&current=${pageParam.current}`,
         pageParam,
         {
           headers: { "Content-Type": "application/json" },
         }
       );
-      // console.log(res.json.records.length)
       contengList.value = res.json.records;
-      context.emit('getMaterialQueryPage',)
-    };
-    getMaterialQueryPage();
+      // console.log( contengList.value);
 
+      pageParam.total = res.json.total
+    };
     let isShow = ref();
     const mouseleaveisShow = (item) => {
       item.isShow = false;
@@ -165,66 +257,115 @@ export default {
               res.result ? "删除成功" : res.msg
             );
             getMaterialQueryPage();
-
-        //  getTabsList()
+           tabCountRequest()
           }
         });
     };
 
+      // 切换分页
+  const  changeCurrent = (value: number)=> {
+    console.log(value);
+
+    pageParam.current = value;
+    getMaterialQueryPage()
+  }
+
     const aNewName = (item) => {
       // console.log(item.fileName);
       Modal.create({ title: '重命名', width: 640, component: NewName, props: { newName:item } }).then(res=>{
-      if(res){
-         getMaterialQueryPage()
-      }
+        if(res){
+          getMaterialQueryPage()
+        }
       })
+      
     };
     const prepareLessons = (item)=>{
-      console.log(item);
-       Modal.create({ title: '添加到备课', width: 640, component: Prepare, props: { prepareLessons:item } })
+       Modal.create({ title: '添加到备课', width: 560, component: Prepare, props: { prepareLessons:item } })
     }
-
-      /*-----预览-----*/
-    const preview = (item) => {
-      const loading = ElLoading.service({ lock: true, background: 'rgba(255, 255, 255, .7)', text: '加载中...' })
-      let src = `${import.meta.env.VITE_OFFICE_PREVIEW}?furl=${import.meta.env.VITE_DOMAIN}${item.filePath}`;
-      let closeBtn = createElement('div', {
-        className: 'el-icon-close',
-        style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', top: '40px', right: '40px', zIndex: '10', cursor: 'pointer' },
-        on: { click: () => { container.remove(); } }
-      });
-      // 打印
-      let printData = createElement('div', {
-        className: 'el-icon-printer',
-        style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', bottom: '40px', right: '40px', zIndex: '10', cursor: 'pointer' },
-        on: { click: () => { window.print() } }
-      });
-      //下载
-      let downloadData = createElement('div', {
-        className: 'el-icon-download',
-        style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', bottom: '100px', right: '40px', zIndex: '10', cursor: 'pointer' },
-         on: { click: () => { window.open(`${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`) } }
-      });
-      let iframe = createElement('iframe', { attrs: { src, width: '100%', height: '100%' }, style: { background: '#f9f9f9' } });
-      iframe.onload = loading.close;
-      let container = createElement('div', {
-        style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '1000' },
-      }, [ closeBtn, iframe, printData, downloadData ])
-      document.body.appendChild(container);
-    }
-       const downLoad = (item) => {
-       window.open(`${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`)
+    const downLoad = (item) => {
+      createElement('a', {attrs: {href: `${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`, download: `${item.fileName+'.'+item.ext}`}}).click();
+      // window.open(`${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`)
     };
+
+    /*-----预览-----*/
+    const preview = (item) => {
+      if(item.mediaType === 'url') {
+        window.open(item.filePath)
+      }else{
+        const loading = ElLoading.service({ lock: true, background: 'rgba(255, 255, 255, .7)', text: '加载中...' })
+        let src = `${import.meta.env.VITE_OFFICE_PREVIEW}?furl=${import.meta.env.VITE_DOMAIN}${item.filePath}`;
+        let closeBtn = createElement('div', {
+          className: 'el-icon-close',
+          style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', top: '40px', right: '40px', zIndex: '10', cursor: 'pointer' },
+          on: { click: () => { container.remove(); } }
+        });
+        // 打印
+        let printData = createElement('div', {
+          className: 'el-icon-printer',
+          style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', bottom: '40px', right: '40px', zIndex: '10', cursor: 'pointer' },
+          on: { click: () => { window.print() } }
+        });
+        //下载
+        let downloadData = createElement('div', {
+          className: 'el-icon-download',
+          style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', bottom: '100px', right: '40px', zIndex: '10', cursor: 'pointer' },
+          on: { click: () => { let a  = document.createElement('a');a.download = item.fileName+'.'+item.ext;a.href = `${import.meta.env.VITE_DOMAIN}${item.filePath}`;a.click(); } }
+
+        }); 
+        let container;
+        if(item.ext === 'mp4') {
+          let video = createElement('video',
+          { attrs: { src:`${import.meta.env.VITE_DOMAIN}${item.filePath}`, width: '100%', height: '100%',controls: true, controlsList: "nodownload" }, style: { background: '#f9f9f9' }});
+          video.oncanplay = loading.close;
+          container = createElement('div', { 
+            style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '1000' , background: 'rgba(0,0,0,.8)'},
+          }, [ closeBtn, video, printData, downloadData ])
+        }else if (item.ext === null && item.mediaType === 'url'){
+          loading.close()
+          let url = createElement('p', { style: { background: '#f9f9f9', width: '100%', height: '100%', padding: '36px', 'font-size':'20px' }}, '链接地址：' + item.filePath);
+          container = createElement('div', { 
+            style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '1000' , background: 'rgba(0,0,0,.8)'},
+          }, [ closeBtn, url, printData, downloadData ])
+        }else if(item.ext === 'mp3') {
+          let video = createElement('video', 
+          { attrs: { src:`${import.meta.env.VITE_DOMAIN}${item.filePath}`, width: '', height: '',controls: true, controlsList: "nodownload" }, style: { background: '#333', position:'absolute', top: '50%', left: '50%', transform:'translate(-50%,-50%)'}});
+          video.oncanplay = loading.close;
+          container = createElement('div', { 
+            style: { width: '100%', height: '100%', background: 'rgba(0,0,0,.8)', position: 'absolute', top: '0', left: '0', zIndex: '1000' },
+          }, [ closeBtn, video, downloadData ])
+        }else {
+          let iframe = createElement('iframe', { attrs: { src, width: '100%', height: '100%' }, style: { background: '#f9f9f9' } });
+          iframe.onload = loading.close;
+          container = createElement('div', { 
+            style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '1000', background: 'rgba(0,0,0,.8)' },
+          }, [ closeBtn, iframe, printData, downloadData ])
+        }
+        document.body.appendChild(container);
+      }
+    }
+    //    const downLoad = (item) => {
+    //    window.open(`${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`)
+    // };
+
 
     const selectActive = (item) => {
-
       pageParam.type = item.type;
-      getMaterialQueryPage();
       activeId.value = item.id;
+      getMaterialQueryPage();
+      // pageParam.chapterId = target.id
+      tabCountRequest()
       // console.log(activeId);
     };
-
+    emitter.emit("effect", (id) => {
+    pageParam.subject = id
+     getMaterialQueryPage()
+     tabCountRequest()
+    })
     return {
+      fileOder,
+      timeOder,
+      flags,
+      flag,
       fileTypeAndCount,
       activeId,
       selectActive,
@@ -236,7 +377,9 @@ export default {
       downLoad,
       preview,
       prepareLessons,
-      tabCountRequest
+      domain,
+      pageParam,
+      changeCurrent
     };
   },
 };
@@ -245,6 +388,8 @@ export default {
 <style lang="scss" scoped>
 .tab {
   nav {
+    // background-color: #f4f5f9;
+    // width: 100%;
     a {
       cursor: pointer;
       position: relative;
@@ -331,6 +476,11 @@ export default {
         }
       }
       .content-list-box-item-title {
+        text-overflow: -o-ellipsis-lastline;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        line-clamp: 2;
         width: 140px;
         margin: 0 auto;
         font-size: 14px;
@@ -413,7 +563,7 @@ export default {
         right: -25px;
         top: 28px;
         z-index: 9;
-
+        border-radius: 5px;
         background: #fff;
         width: 170px;
         box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.06);
@@ -432,6 +582,7 @@ export default {
         span:hover {
           color: #1aafa7;
           background: #e9f7f7;
+          border-radius: 5px;
         }
         .triangle {
           display: inline-block;
@@ -457,15 +608,21 @@ export default {
     }
   }
 }
-.aaa {
+.order {
   background-color: #ebecf0;
   height: 46px;
   margin-top: 20px;
   display: flex;
+  margin-left: 15px;
   span {
     padding: 0 40px;
     line-height: 45px;
     cursor: pointer;
   }
+
 }
+.clearfloat{clear:both}
+.paginationFY {
+        float: right;
+      }
 </style>

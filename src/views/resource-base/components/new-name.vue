@@ -11,6 +11,7 @@ import { AxResponse } from "./../../../core/axios";
 import axios from "axios";
 import { useStore } from "vuex";
 import { ElMessage } from 'element-plus';
+import emitter from '../../../utils/mitt';
 
 export default {
   props: {
@@ -39,11 +40,14 @@ export default {
         id:props.newName.id,
         fileName:formRef.value.formGroup.fileName
       }
-      console.log(formRef.value.formGroup.fileName,'51');
+      // console.log(formRef.value.formGroup.fileName,'51');
       
       axios.post<any,AxResponse>('/admin/material/saveOrUpdate',params).then(res=>{
         if(res.result){
          ElMessage.success('修改成功');
+         emitter.on('getMaterialQueryPage',getMaterialQueryPage=>{
+           getMaterialQueryPage()
+         })
         //  console.log(res,'51');
          resolve(res.result)
         }else{

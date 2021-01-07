@@ -1,9 +1,9 @@
 <template>
   <div class="container">
     <div class="fixed-header">
-      <div class="cell" 
-        @click="orderChange(cell.key)" 
-        v-for="cell in [{key: 0, text: '上传时间'}, {key: 1, text: '试题难度'}, {key: 2, text: '引用次数'}]" 
+      <div class="cell"
+        @click="orderChange(cell.key)"
+        v-for="cell in [{key: 0, text: '上传时间'}, {key: 1, text: '试题难度'}, {key: 2, text: '引用次数'}]"
         :key="cell.key"
       >
         <span>{{ cell.text }}</span>
@@ -42,6 +42,8 @@
               <p><i @click="data.showAnalysis = !data.showAnalysis">解析</i></p>
               <!-- <p><i @click="similarPreview(data.id)">相似题</i></p> -->
 
+              <!-- <a @click.prevent="addCart(data)" :class="{ active: !!cartList.find(i => i.id === data.id) }" v-if="userId === data.creatorId" /> -->
+
               <a @click="remove(data)" v-if="userId === data.creatorId" :class="{ 'is__loading': data.loading }">
                 <i class="el-icon-loading" v-if="data.loading" />
                 <span>删除</span>
@@ -54,9 +56,9 @@
           <cus-empty />
         </template>
         <template v-if="dataset.length && !loading">
-          <el-pagination 
-            v-model:current-page="pageAorder.current" 
-            v-model:page-size="pageAorder.size" 
+          <el-pagination
+            v-model:current-page="pageAorder.current"
+            v-model:page-size="pageAorder.size"
             :total="pageAorder.total"
             @current-change="request()"
             layout="prev, pager, next"
@@ -68,7 +70,7 @@
 </template>
 
 <script lang="ts">
-import { ref, Ref, reactive, computed } from 'vue';
+import { ref, Ref, reactive, computed, watch } from 'vue';
 import axios from 'axios';
 import { AxResponse } from './../../../core/axios';
 import Modal from './../../../utils/modal';
@@ -88,7 +90,6 @@ export default {
   setup(props, { emit }) {
     let store = useStore()
     let userId = computed(() => store.getters.userInfo.user.id)
-
     let dataset: Ref<any[]> = ref([]);
 
     let showAnswer = ref(false);
@@ -117,13 +118,13 @@ export default {
       params && (__params = params);
       let res = await axios.post<null, AxResponse>(`/tiku/question/queryPage`, { ...__params, ...pageAorder}, { headers: { 'Content-Type': 'application/json' } });
       dataset.value = res.json.records.map(n => ({
-         ...n, 
-         ...{ 
+         ...n,
+         ...{
             title: __strToHtml(n),
-            createTime: n.createTime.split('-').join('/'), 
+            createTime: n.createTime.split('-').join('/'),
             difficult: difficultFilter(n.difficult),
             answer: n.rightAnswer ? n.rightAnswer.map(a => a.content).join('、') : '-'
-           } 
+           }
         })
       );
       pageAorder.total = res.json.total;

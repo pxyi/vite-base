@@ -25,13 +25,13 @@
 								<span @click.stop="increaseChapter(item)">添加章节</span>
 								<el-divider direction="vertical"></el-divider>
 								<el-tooltip class="item" effect="dark" content="上移" placement="bottom">
-									<i class="icon iconfont icon-shangyi" @click.stop="move(index, 1)" :class="{'is-disable': index == 0}"></i>
+									<i class="icon iconfont iconshangyi" @click.stop="move(index, 1)" :class="{'is-disable': index == 0}"></i>
 								</el-tooltip>
 								<el-tooltip class="item" effect="dark" content="下移" placement="bottom">
-									<i class="icon iconfont icon-xiayi" @click.stop="move(index, -1)" :class="{'is-disable': index == courseIndexList.length - 1}"></i>
+									<i class="icon iconfont iconxiayi" @click.stop="move(index, -1)" :class="{'is-disable': index == courseIndexList.length - 1}"></i>
 								</el-tooltip>
 								<el-tooltip class="item" effect="dark" content="删除" placement="bottom">
-									<i class="icon iconfont icon-shanchu" @click.stop="deleteCourseIndex(item, index)"></i>
+									<i class="icon iconfont iconshanchu" @click.stop="deleteCourseIndex(item, index)"></i>
 								</el-tooltip>
 							</div>
 						</div>
@@ -74,7 +74,10 @@
 		props: {
 		  data: {
 		    type: Object
-		  }
+		  },
+      tableRef: {
+		    type: Object
+      }
 		},
 		setup(props) {
 		  let courseIndexList = ref([]);
@@ -98,7 +101,7 @@
       const deleteChapter = ({ id }, courseIndex, i) => {
         axios.post('/courseChapter/deleteByCourseIndexId', {chapterId: id, courseIndexId: courseIndex.id}).then(res => {res.result && ElNotification.success({title: '成功', message: '删除章节成功'}) && courseIndex.hasChapters.splice(i, 1)})
       };
-      const deleteCourseIndex = ({ id }, i) => {axios.post('/courseIndex/delete', { id }).then(res => {res.result && ElNotification.success({title: '成功', message: '删除章节成功'}) && courseIndexList.value.splice(i, 1)})};
+      const deleteCourseIndex = ({ id }, i) => {axios.post('/courseIndex/delete', { id }).then(res => {res.result && ElNotification.success({title: '成功', message: '删除章节成功'}) && courseIndexList.value.splice(i, 1) && tableRef.value.request()})};
       const indexNameChange = (data) => {
         axios.post('/courseIndex/modify', data, {headers: {'Content-Type': 'application/json'}}).then(res => res.result && ElNotification.success({title: '成功', message: '修改名称成功'}) && getCourseDto())
       }

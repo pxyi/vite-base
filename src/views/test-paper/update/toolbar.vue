@@ -34,8 +34,8 @@ export default {
     let showDetail = ref(false);
 
     let tabList = [
-      { title: '试卷属性', icon: 'iconshijuanshuxing', component: AttributeComponent }, 
-      { title: '题目排序', icon: 'iconshunxutiaozheng', component: SortComponent }, 
+      { title: '试卷属性', icon: 'iconshijuanshuxing', component: AttributeComponent },
+      { title: '题目排序', icon: 'iconshunxutiaozheng', component: SortComponent },
       { title: '设置分值', icon: 'iconshezhifenzhi', component: ScoreComponent }
     ];
 

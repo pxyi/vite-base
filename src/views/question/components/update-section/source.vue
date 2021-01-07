@@ -1,6 +1,6 @@
 <template>
 <cus-skeleton :loading="loading">
-  <div class="source-container" v-for="(s, idx) in questionSources" :key="s">
+  <div class="source-box" v-for="(s, idx) in questionSources" :key="s">
     <div class="source-label">来源{{ idx + 1 }}</div>
     <div class="source-main">
       <div class="source-cell">
@@ -11,9 +11,9 @@
         </div>
         <div class="source-control">
           <el-cascader placeholder="选择省市区" clearable size="medium"
-            v-model="s.provinceCity" 
-            :props="{ lazy: true, lazyLoad: getProvinceCity, label: 'name', value: 'id' }" 
-            @change="getSchoolList($event, s)"
+            v-model="s.provinceCity"
+            :props="{ lazy: true, lazyLoad: getProvinceCity, label: 'name', value: 'id' }"
+            @change="getSchoolList($event, s, idx)"
           />
         </div>
       </div>
@@ -66,15 +66,19 @@ export default {
       resolve(res.json);
     }
 
-    const getSchoolList = async (e, source) => {
+    const getSchoolList = async (e, source, idx) => {
       if (e && e.length) {
         let res = await axios.post<null, AxResponse>('/admin/publicSchool/queryAll', { areaId: e[2] });
         source.schoolList = res.json;
+        if(questionSources.value[idx]){
+          questionSources.value.map((item) => {
+            questionSources.value[idx].publicSchoolId = null
+          })
+        }
       } else {
         source.schoolList = [];
       }
     }
-
     const addSource = () => {
       questionSources.value.push({
         year: null,
@@ -83,14 +87,13 @@ export default {
         publicSchoolId: null
       })
     }
-
     return { questionSources, yearList, quesList, getProvinceCity, getSchoolList, addSource }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-  .source-container {
+  .source-box {
     display: flex;
     padding: 10px;
     background: rgba(26, 175, 167, 0.1);
@@ -123,7 +126,7 @@ export default {
         }
       }
     }
-    &:hover .source-delete-btn { 
+    &:hover .source-delete-btn {
       width: 20px;
     }
     .source-delete-btn {

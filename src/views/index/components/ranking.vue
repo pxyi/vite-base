@@ -7,20 +7,23 @@
           <sub class="el-icon-question"></sub>
         </el-tooltip>
       </h4>
-      <div class="rank__charts">
-        <div><div>2</div><p>9</p><h6>王老师</h6></div>
-        <div><div>1</div><p>19</p><h6>王老师</h6></div>
-        <div><div>3</div><p>25</p><h6>王老师</h6></div>
+      <div class="rank__charts" v-if="prepareLessonsStatistics.prepareLessonsRank.length">
+        <div><div>3</div><p>{{ prepareLessonsStatistics.prepareLessonsRank[2].number }}</p><h6>
+          {{ prepareLessonsStatistics.prepareLessonsRank[2].username }}</h6></div>
+        <div><div>1</div><p>{{ prepareLessonsStatistics.prepareLessonsRank[0].number }}</p><h6>
+          {{ prepareLessonsStatistics.prepareLessonsRank[0].username }}</h6></div>
+        <div><div>2</div><p>{{ prepareLessonsStatistics.prepareLessonsRank[1].number }}</p><h6>
+          {{ prepareLessonsStatistics.prepareLessonsRank[1].username === '' ? '未知用户' : prepareLessonsStatistics.prepareLessonsRank[1].username }}</h6></div>
       </div>
       <div class="rank__points">
         <div class="points__chart">
           <div><div></div><div></div><div></div><div></div></div>
           <h4>我的排名</h4>
-          <h3>2</h3>
+          <h3>{{ prepareLessonsStatistics.myPrepareLessonsRank }}</h3>
         </div>
         <div class="points__number">
-          <div><span>环比上周</span><i>+1</i></div>
-          <div><span>环比上周</span><i class="down">-1</i></div>
+          <div><span>环比上周</span><i>{{ prepareLessonsStatistics.compareLastWeekRank }}</i></div>
+          <div><span>环比上月</span><i class="down">{{ prepareLessonsStatistics.compareLastMonthRank }}</i></div>
         </div>
       </div>
     </div>
@@ -32,28 +35,53 @@
         </el-tooltip>
       </h4>
       <div class="r__n_box">
-        <div>
+        <div :class="[ prepareLessonsStatistics.dayTime.class ]">
           <div class="n__b_title">今日备课</div>
-          <h2>2</h2>
+          <h2>{{ prepareLessonsStatistics.dayTime.current }}</h2>
           <div class="n__b_num"></div>
-          <div class="n__b_icon">1</div>
+          <div class="n__b_icon">{{ prepareLessonsStatistics.dayTime.compare }}</div>
         </div>
-        <div class="is__down">
-          <div class="n__b_title">今日备课</div>
-          <h2>2</h2>
+        <div :class="[ prepareLessonsStatistics.weekTime.class ]">
+          <div class="n__b_title">本周备课</div>
+          <h2>{{ prepareLessonsStatistics.weekTime.current }}</h2>
           <div class="n__b_num"></div>
-          <div class="n__b_icon">2</div>
+          <div class="n__b_icon">{{ prepareLessonsStatistics.weekTime.compare }}</div>
         </div>
-        <div class="is__cn">
-          <div class="n__b_title">今日备课</div>
-          <h2>2</h2>
+        <div :class="[ prepareLessonsStatistics.monthTime.class ]">
+          <div class="n__b_title">本月备课</div>
+          <h2>{{ prepareLessonsStatistics.monthTime.current }}</h2>
           <div class="n__b_num"></div>
-          <div class="n__b_icon"></div>
+          <div class="n__b_icon">{{ prepareLessonsStatistics.monthTime.compare }}</div>
         </div>
       </div>
     </div>
   </div>
 </template>
+<script lang="ts">
+import axios, {AxiosResponse} from 'axios';
+import { reactive, ref } from 'vue';
+import { AxResponse } from '../../../core/axios';
+import { useStore } from 'vuex';
+
+export default {
+  name: "ranking",
+  setup() {
+    const store = useStore();
+    let prepareLessonsStatistics = reactive({myPrepareLessonsRank: 0, compareLastWeekRank: 0, compareLastMonthRank: 0, dayTime: {}, monthTime: {}, weekTime: {}, prepareLessonsRank: []});
+    axios.get<any, AxiosResponse>(`/permission/indexStatistics/prepareLessonsStatistics?userId=${store.getters.userInfo.user.id}`).then((res: AxResponse) => {
+      if ( res.result ) {
+        ['dayTime', 'weekTime', 'monthTime'].map(i => {
+            res.json[i].class = res.json[i].range === 'DOWN' ? 'is__down' : (res.json[i].range === 'LINE' ? 'is__cn' : '');
+            res.json[i].compare = res.json[i].compare === 0 ? '' : res.json[i].compare
+        });
+        Object.keys(res.json).map(key => prepareLessonsStatistics[key] = res.json[key]);
+        console.log(prepareLessonsStatistics)
+      };
+    });
+    return { prepareLessonsStatistics }
+  }
+}
+</script>
 <style lang="scss" scoped>
 $--rank-sort-1: #FF9E3D;
 $--rank-sort-2: #3BBAB3;
@@ -78,6 +106,7 @@ $--rank-sort-3: #F8662F;
   }
   .rank__charts {
     display: flex;
+    align-items: flex-end;
     & > div {
       div {
         width: 90px;
@@ -90,6 +119,7 @@ $--rank-sort-3: #F8662F;
       }
       &:first-child {
         div {
+          height: 50px;
           background: $--rank-sort-3;
         }
         p::before {
@@ -112,6 +142,7 @@ $--rank-sort-3: #F8662F;
       }
       &:last-child{
         div {
+          height: 100px;
           background: $--rank-sort-2;
         }
         p::before {
@@ -322,6 +353,7 @@ $--rank-sort-3: #F8662F;
         .n__b_icon::before {
           background: url('./../../../assets/index/icon-cn.png') no-repeat;
           background-size: contain;
+          background-position: 0 7px;
         }
       }
     }
@@ -335,15 +367,15 @@ $--rank-sort-3: #F8662F;
       & > div h6 { font-size: 16px; }
     }
     .rank__points {
-      .points__chart { 
-        width: 160px; 
+      .points__chart {
+        width: 160px;
         & > div::after { top: 20%; }
         h4 { font-size: 18px; }
         h3 { font-size: 24px; line-height: 1.4; }
       }
       .points__number {
         margin-top: 16px;
-        div { 
+        div {
           font-size: 16px; line-height: 24px; margin-bottom: 12px;
           i { font-size: 24px; }
         }
@@ -389,15 +421,15 @@ $--rank-sort-3: #F8662F;
       & > div h6 { font-size: 14px; }
     }
     .rank__points {
-      .points__chart { 
-        width: 160px; 
+      .points__chart {
+        width: 160px;
         & > div::after { top: 20%; }
         h4 { font-size: 18px; }
         h3 { font-size: 24px; line-height: 1.4; }
       }
       .points__number {
         margin-top: 16px;
-        div { 
+        div {
           font-size: 16px; line-height: 24px; margin-bottom: 12px;
           i { font-size: 24px; }
         }
@@ -430,8 +462,8 @@ $--rank-sort-3: #F8662F;
     }
     .rank__points {
       margin-top: 20px;
-      .points__chart { 
-        width: 140px; 
+      .points__chart {
+        width: 140px;
         height: 100px;
         & > div::after { top: 20%; vertical-align: top; }
         h4 { font-size: 14px; margin: 10% 0 0; }
@@ -439,7 +471,7 @@ $--rank-sort-3: #F8662F;
       }
       .points__number {
         margin-top: 16px;
-        div { 
+        div {
           font-size: 14px; line-height: 24px; margin-bottom: 12px;
           i { font-size: 20px; }
         }

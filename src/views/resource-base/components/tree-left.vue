@@ -6,6 +6,7 @@
         placeholder="按教材章节搜索"
         prefix-icon="el-icon-search"
         v-model="filterText"
+        clearable
       />
     </div>
     <div class="tree">
@@ -22,7 +23,7 @@
       >
       </el-tree>
     </div>
-    <div class="left-radius" v-if="isShow"></div>
+    <div class="left-radius" v-if="props.tipShow"></div>
     <!-- <cus-tree :data-set="dataset" allow-select v-loading="loading"  :props='props' empty-text='正在加载'/> -->
   </div>
 </template>
@@ -37,7 +38,10 @@ import { ElMessage } from "element-plus";
 import Carousel from "element-plus/lib/el-carousel";
 import { debounce } from "lodash";
 export default {
-  props: { hideSearch: { type: Boolean, default: () => false } },
+  props: {
+    hideSearch: { type: Boolean, default: () => false },
+    tipShow: { type: Boolean, default: () => false },
+  },
   emits: ["check-change"],
   setup(props, { emit }) {
     let loading = ref(true);
@@ -57,8 +61,6 @@ export default {
           } else {
             ElMessage.error(res.msg);
           }
-   
-     
         });
     });
     /* 搜索 */
@@ -69,10 +71,11 @@ export default {
       filterText,
       debounce(() => knowledgeTree.value.filter(filterText.value), 300)
     );
-// { checkedKeys }
+    // { checkedKeys }
     const checkChange = (target, e) => {
-      console.log(target,e);
-      emit("check-change", e);
+      // console.log(target, e);
+      emit("check-change",e)
+      emitter.emit("check-change", target);
     };
 
     return {
@@ -85,7 +88,7 @@ export default {
       filterNode,
       knowledgeTree,
       checkChange,
-      
+      props,
     };
   },
 };
@@ -93,20 +96,23 @@ export default {
 <style lang="scss" scoped>
 .left-tree {
   position: relative;
+   width: 250px;
   .tree {
-    height: 80vh;
-    overflow-y: scroll;
+    // height: 80vh;
+    overflow: auto;
   }
   .seachInput {
     // padding: 10px;
+     width: 90%;
+   padding: 10px 0 10px 10px;
   }
   /* 产生动画（向外扩散变大）的圆圈  */
   .left-radius {
     position: absolute;
     width: 140px;
     height: 140px;
-    left: 225px;
-    top: 105px;
+    left: 0px;
+    top: 30px;
     border: 4px solid skyblue;
     border-radius: 50%;
     z-index: 1;

@@ -2,7 +2,7 @@
   <cus-skeleton :loading="loading">
     <el-input placeholder="按知识点搜索" prefix-icon="el-icon-search" v-model="filterText" class="search-input" size="medium" v-if="!hideSearch" />
 
-    <el-tree 
+    <el-tree
       class="knowledge-tree"
       ref="knowledgeTree"
       :data="dateset"

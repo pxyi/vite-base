@@ -16,7 +16,7 @@
 </template>   
 
 <script lang='ts'>
-import { ref } from 'vue';
+import { ref, inject } from 'vue';
 import axios from 'axios';
 import { AxResponse } from './../../../core/axios';
 import { ElLoading, ElMessage } from 'element-plus';
@@ -32,6 +32,7 @@ export default {
     // 列表数据
     let courseIndexList = ref([])
     let dialogLoading = ref(false)
+    let close: any = inject('close');
     const queryData = async() => {
       dialogLoading.value = true
       let res = await axios.post<any,AxResponse>('/courseIndex/query', { courseId: props.courseId}, { headers: { type: 1, 'Content-Type': 'application/json' }});
@@ -45,6 +46,7 @@ export default {
       Screen.create( CurriculumPapers, { title: item.courseIndexName, id: item.id }).then((data: any) => {
         if(data) {
           queryData()
+          close(data)
         }
       })
     }

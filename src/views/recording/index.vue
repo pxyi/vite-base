@@ -17,8 +17,11 @@
       <el-table-column prop="status" label="解析状态" width="160">
         <template #default="{ row }">
           <span :class="[`i_status-${row.status}`]">{{ row.status === 0 ? '解析中' : row.status === 1 ? '解析失败' : row.status === 2 ? '解析成功' : row.status === 3 ? '导入失败' : '导入成功' }}</span>
-          <el-popover :width="240" trigger="hover" :content="row.failReason">
+          <el-popover :width="240" trigger="hover">
             <template #reference v-if="row.status === 1 || row.status === 3"><i class="el-icon-question" /></template>
+            <template #default>
+              <span v-html="row.failReason"></span>
+            </template>
           </el-popover>
         </template>
       </el-table-column>
@@ -63,7 +66,7 @@ export default {
     }
 
     onMounted(() => emitter.emit('effect', (subjectId) => tableRef.value.request({ subjectId }) ) );
-    
+
     const setting = async (id) => {
       Screen.create(UpdateComponent, { id })
     }

@@ -14,7 +14,7 @@
         <div class="flex-cell">
           <div class="tool-label">年级</div>
           <div class="tool-control">
-            <el-select size="medium" placeholder="选择年级" v-model="data.grade" v-if="selectMap.gradeList.length" @change="syncChange('grade')">
+            <el-select size="medium" placeholder="选择年级" v-model="data.gradeId" v-if="selectMap.gradeList.length" @change="syncChange('grade')">
               <el-option v-for="option in selectMap.gradeList" :key="option.id" :value="option.id" :label="option.name" />
             </el-select>
           </div>
@@ -127,11 +127,16 @@ export default {
       if (!isSync.value) {
         let cloneData = cloneDeep(dataset.value);
         cloneData = cloneData.map(d => {
-          d.grade = data.value.grade;
+          d.gradeId = data.value.gradeId;
           d.category = data.value.category;
           d.difficult = data.value.difficult;
+<<<<<<< HEAD
           d.knowledgePoints = cloneDeep(data.value.knowledgePoints);
           d.questionSources = cloneDeep(data.value.questionSources);
+=======
+          d.knowledgePoints = data.value.knowledgePoints;
+          d.questionSources = data.value.questionSources;
+>>>>>>> 48b271bf50e1353d058a6ad97ded261a5542f404
           return d;
         });
         store.commit('set_data_set', cloneData);
@@ -317,7 +322,7 @@ export default {
   }
 }
 .knowledge-tree-wrapper {
-  max-height: 250px;
+  max-height: 450px;
   overflow: auto;
   .knowledge-tree {
     min-width: 250px;

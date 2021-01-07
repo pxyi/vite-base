@@ -2,59 +2,64 @@
   <template ref="headerRef">
     <HeaderRefComponent
       @type-change="params.type = $event"
-      @search="params.title = $event"
-      @handleClick="uploadInfo"/>
+      @handleClick="uploadInfo"
+      v-model:fileList="upDateList"
+      :tipShow="tipShow"
+      @fileChange="handleChange"
+    />
   </template>
   <!-- 内容主体区域 -->
   <div class="content">
     <!-- 左盒子 -->
     <div class="left_box">
       <!-- 左侧树状图 -->
-      <TreeLeft @check-change="query('tree', $event)" />
+      <TreeLeft @check-change="query('tree', $event)" :tipShow="tipShow" />
     </div>
     <!-- 右盒子 -->
     <div class="right_box">
-      <el-dialog
-        title="上传资料"
-        v-model="uploadInfoDialogVisible"
-        @close="uploadInfoDeforeClose"
-        :before-close="uploadInfoDeforeClose"
-        @closed="close">
+      <div class="footer" v-if="tipShow">
+        <p>选择一个章节开始上传吧</p>
+        <span @click="tipShow = false"> 好的👌 </span>
+      </div>
+      <!-- //触发第一次input[type=file] -->
+      <el-upload
+        class="upload-demo"
+        style="display: none"
+        drag
+        :action="active"
+        :file-list="upDateList"
+        :on-change="handleChange"
+        :accept="upLoadDate"
+        multiple
+        :before-remove="remove">
+        <i class="el-icon-upload"></i>
+        <div class="el-upload__text iup">点击或将文件拖拽到这里上传</div>
+      </el-upload>
+      <!-- 触发第一次input[type=file]// -->
+      <el-dialog title="上传资料" v-model="uploadInfoDialogVisible" @close="uploadInfoDeforeClose" :before-close="uploadInfoDeforeClose" @closed="close">
         <div class="templateUploadWrap">
           <div class="templateUpload">
-            <el-upload
-              class="upload-demo"
-              drag
-              :action="active"
-              :file-list="upDateList"
-              :on-change="handleChange"
-              :accept="upLoadDate"
-              multiple
-              :before-remove="remove">
+            <el-upload class="upload-demo" drag :action="active" :file-list="upDateList" :on-change="handleChange" :accept="upLoadDate" multiple :before-remove="remove">
               <i class="el-icon-upload"></i>
               <div class="el-upload__text">点击或将文件拖拽到这里上传</div>
               <span
                 class="supportedDocuments"
                 style="display: block; padding: 0 24px"
-                >支持扩展名：.ppt .pptx .doc .docx .pdf .mp4 .mp3 .jpg .png
-                .jpeg .zip .rar</span>
+                >支持扩展名：.ppt .pptx .doc .docx .pdf .mp4 .mp3 .jpg .png.jpeg .zip .rar</span>
             </el-upload>
           </div>
-          <p style="margin-top: 20px">
+          <p style="margin: 20px 0 0 40px">
             <span>保存路径：</span>
-            <template v-if="dataStoragePath.textbookVersionName &&dataStoragePath.bookVersionName">
-              {{ dataStoragePath.textbookVersionName }}/{{
-                dataStoragePath.bookVersionName
-              }}
+            <template
+              v-if="dataStoragePath.textbookVersionName &&dataStoragePath.bookVersionName">
+              {{ dataStoragePath.textbookVersionName }}/{{ dataStoragePath.bookVersionName}}
             </template>
             <br />
             {{ dataStoragePath.lastLevelName }}
           </p>
-          <p>
+          <p style="margin:20px 0 0  40px">
             <span>保存位置：</span>
-            <el-checkbox-group
-              v-model="checkList"
-              style="display: inline-block">
+            <el-checkbox-group v-model="checkList" style="display: inline-block">
               <el-checkbox label="个人库"></el-checkbox>
               <el-checkbox label="公共库"></el-checkbox>
             </el-checkbox-group>
@@ -62,39 +67,32 @@
         </div>
         <template #footer>
           <span class="dialog-footer">
-            <el-button
-              type="primary"
-              @click="uploadInfoSure"
-              :loading="loadingBol">保存
-              </el-button>
-                <el-button
-              type="info"
-              @click="uploadInfoDeforeClose">取消
-              </el-button>
+            <el-button type="primary" @click="uploadInfoSure" :loading="loadingBol">
+              确认
+          </el-button>
           </span>
         </template>
       </el-dialog>
       <!-- tab切换 -->
       <div class="right_tab">
-        <!-- <Tabs @tableEmit="checkDialog"/> -->
         <Tabs />
       </div>
     </div>
-    <div class="gray"></div>
-    <div class="prompt" v-if="radioShow">
-     <div class="radio"></div>
-     <div class="promptText">
-       <p>选择一个章节开始上传吧</p>
-      <span @click=" radioShow = false ">
-        👌 好的
-      </span>
-     </div>
-    </div>
+    
   </div>
 </template>
 
 <script lang="ts">
-import { ref, onMounted, Ref, provide, reactive, toRefs, computed } from "vue";
+import {
+  ref,
+  onMounted,
+  Ref,
+  provide,
+  reactive,
+  toRefs,
+  computed,
+  nextTick,
+} from "vue";
 import axios from "axios";
 import { AxResponse } from "~/@/core/axios";
 import emitter from "../../utils/mitt";
@@ -103,12 +101,14 @@ import TreeLeft from "../resource-base/components/tree-left.vue";
 import Tabs from "./components/tabs.vue";
 import { useStore } from "vuex";
 import { ElMessage } from "element-plus";
-import { log } from "util";
 
 export default {
+  name: "zjk",
   components: { HeaderRefComponent, TreeLeft, Tabs },
-  setup() {
-    let radioShow = ref(false)
+  setup(props, {emit}) {
+    emitter.on('check-change',target=>{
+      state.pageParam.chapterId = target.id
+    })
     const state = reactive({
       upDateList: [] as any,
       arr2: [] as any,
@@ -118,7 +118,7 @@ export default {
       pageParam: {
         current: 1,
         size: 20,
-        chapterId: ["4e46f1a7-7f68-4a60-bd55-b63630dbac67"],
+        chapterId: [],
         isPublic: 1,
         lastLevelId: [],
         ext: null,
@@ -126,12 +126,12 @@ export default {
         courseId: "",
         subject: "",
         type: null,
-    
       },
       knowledgePoints: [] as any,
-      checkList: [] as any,
+      checkList: ["公共库"] as any,
       datumCategoryList: [] as any,
       isShow: false,
+      tipShow: false,
       type: null,
       dataStoragePath: {} as any,
       textbookVersionId: "",
@@ -144,13 +144,15 @@ export default {
       loadingBol: false,
       fileTypeAndCount: [] as Array<any>,
       tableData: [] as any,
+      total: 0,
       subject: "",
+      updateRef: {} as HTMLElement,
     });
     let headerRef = ref();
     let tableParam = {
       chapterId: [],
     };
-    // let isShow = false;
+    let isShow = false;
     const childTable = ref();
     const stateSelectId = computed(() => {
       return state.subject; //1; //NavModule.navSelectParams.selectId;
@@ -171,30 +173,41 @@ export default {
       state[key] = val;
     };
 
-    function okUpDate(file, fileList) {
+    const okUpDate = (file, fileList)=> {
       state.upDateList = fileList;
       state.upDateShow = true;
     }
 
-    function uploadInfo(item) {
-      if (!state.pageParam.chapterId.length) {
-        state.isShow = true;
-        return false;
-      } else {
-        state.isShow = false;
-      }
+    const  uploadInfo=(item)=> {
+   
+      // if (!state.pageParam.chapterId.length) {
+      //   state.isShow = true;
+      //   return false;
+      // } else {
+      //      console.log(2);
+      //   state.isShow = false;
+      // }
       if (item === "zl") {
         state.upLoadDate =
-          ".ppt,.pptx,.doc,.docx,.pdf,.mp4,.mp3,.jpg,.png,.zip,.rar";
+          ".ppt,.pptx,.doc,.docx,.pdf,.mp4,.mp3,.jpg,.png,.zip,.rar,.jpeg";
         state.type = null;
       } else if (item === "ja") {
+        // console.log('上传教案');
         state.upLoadDate = ".doc,.docx";
         (state.type as any) = 5;
+        console.log("上傳教案");
       }
       if (state.lastLevelId.length === 0) {
-        radioShow.value=true
+        state.tipShow = true;
         return;
       }
+      setTimeout(() => {
+        if (document.querySelector(".el-upload__text.iup")) {
+          (document.querySelector(
+            ".el-upload__text.iup"
+          ) as HTMLElement).click();
+        }
+      });
       state.dataStoragePath = {
         textbookVersionName: "",
         bookVersionName: "",
@@ -202,38 +215,41 @@ export default {
         lastLevelName: state.lastLevelName.join(" / "),
       };
       state.upDateList = [];
-      state.uploadInfoDialogVisible = true;
+      // state.uploadInfoDialogVisible = true;
     }
     // 关闭弹窗方法
-    function uploadInfoDeforeClose() {
+    const uploadInfoDeforeClose = ()=> {
       state.upDateList = []; //关闭弹窗清空
       state.uploadInfoDialogVisible = false;
     }
-    function close() {
+    const close =()=> {
       state.upDateList = [];
       state.upDateShow = false;
     }
-    function remove(file, fileList) {
+    const remove = (file, fileList)=> {
       // return this.$confirm(`确定移除 ${file.name}？`);
     }
-    function handleChange(file, fileList) {
+    const handleChange = (file, fileList) => {
+      if (!state.uploadInfoDialogVisible) {
+        state.uploadInfoDialogVisible = true;
+      }
       state.arr2 = fileList;
-      // state.upDateList = fileList;
+
+      // console.log(state.upDateList);
+
       if (state.arr2.length === 1) {
         state.upDateList = state.arr2;
       }
       for (var i = 0; i < state.arr2.length; i++) {
-        for (var j = i + 1; j < state.arr2.length; j++) {
-          if (state.arr2[i].name === state.arr2[j].name) {
-            j = j - 1;
-            return state.arr2.splice(i, 1);
-          } else {
-            state.upDateList = state.arr2;
-          }
+        if (state.arr2.filter((item,index)=>i!==index).map(v=>v.name).includes(state.arr2[i].name)) {
+          return state.arr2.splice(i, 1);
+        } else {
+          state.upDateList = state.arr2;
         }
       }
     }
-    // 上传资料确认保存
+   
+    // 上传资料确认保存
     const uploadInfoSure = ()=> {
       state.loadingBol = true;
       state.upDateShow = false;
@@ -263,35 +279,37 @@ export default {
             bookId: state.bookVersionId,
             chapterId: state.dataStoragePath.lastLevelId,
           };
-          axios.post<any,AxResponse>('admin/material/batchSave',params,{
-            headers:{
-              type:'1',
-              "Content-Type": 'application/json;charset=UTF-8'
-            }
-          }).then(res=>{
-             state.loadingBol = false;
-        if (!res.result) {
-          ElMessage({
-            type: "error",
-            message: res.msg,
-          });
-          return false;
-        } else {
-          ElMessage({
-            type: "success",
-            message: "上传成功",
-          });
-        }
-        // 上传成功关闭弹窗
-        uploadInfoDeforeClose();
-        
-          })
+      axios
+        .post<any, AxResponse>("admin/material/batchSave", params, {
+          headers: {
+            type: "1",
+            "Content-Type": "application/json;charset=UTF-8",
+          },
+        })
+        .then((res) => {
+          state.loadingBol = false;
+          if (!res.result) {
+            ElMessage({
+              type: "error",
+              message: res.msg,
+            });
+            return false;
+          } else {
+            ElMessage({
+              type: "success",
+              message: "上传成功",
+            });
+          } // 上传成功关闭弹窗
+          uploadInfoDeforeClose(); // this.uploadInfoDialogVisible = false;
+          emitter.emit('uploadInfoSure',()=>{})
+        });
+         
     }
-    // 点击确定关闭提示框和动画
     
     return {
       ...toRefs(state),
       headerRef,
+      isShow,
       query,
       uploadInfo,
       okUpDate,
@@ -300,28 +318,39 @@ export default {
       handleChange,
       close,
       uploadInfoSure,
-      radioShow
     };
   },
 };
 </script>
 
 <style lang="scss" scoped>
-:deep(.el-upload-dragger .el-icon-upload) {
+:deep(.el-upload-dragger.el-icon-upload) {
   margin-top: 20px;
 }
 :deep(.el-dialog[aria-label="上传资料"]) {
   width: 31.6% !important;
 }
+:deep(.el-upload-dragger.el-upload-dragger) {
+  margin:40px;
+  // display: table;
+  background-color: #f6f7f9;
+  
+}
+:deep(.el-upload) {
+  // margin:40px;
+  // display: table;
+  background-color: #f6f7f9;
+}
 .content {
   display: flex;
   .left_box {
-    flex: 1.5;
-    // width: 100%;
-    height: 100%;
+   width: 250px;
+    height: 860px;
+    min-height: 860px;
     background-color: #fff;
     border-radius: 6px;
     box-shadow: 0px 1px 6px 0px rgba(91, 125, 255, 0.08);
+    overflow: auto;
     .left_search {
       width: 226px;
       height: 40px;
@@ -331,7 +360,8 @@ export default {
     }
   }
   .right_box {
-    flex: 5;
+    // flex: 5;
+    width: 930px;
     background-color: #fff;
     margin-left: 20px;
     height: 100%;
@@ -340,6 +370,27 @@ export default {
     .right_tab {
       width: 98%;
       height: 100%;
+    }
+    .footer {
+      background-color: #333333;
+      height: 70px;
+      width: 200px;
+      color: #fff;
+      position: absolute;
+      top: 250px;
+      left: 350px;
+      border-radius: 10px;
+      text-align: center;
+      line-height: 35px;
+      // display: none;
+      font-size: 14px;
+      z-index: 999;
+      span {
+        display: block;
+        text-align: right;
+        padding-right: 20px;
+        cursor: pointer;
+      }
     }
     ul {
       background: rgb(244, 245, 249);
@@ -365,71 +416,12 @@ export default {
       }
     }
   }
-  .gray {
-    flex: 0.8;
-  }
+}
+.margin1{
+  margin-left: 40px;
 }
 .tooltip {
   font-size: 12px;
   line-height: 30px;
-  position: relative;
 }
-.prompt{
-  height: 140px;
-  .radio{
-  position: absolute;
-  width: 140px;
-  height: 140px;
-  left: 225px;
-  top: 105px;
-  border: 4px solid skyblue;
-  border-radius: 50%;
-  z-index: 1;
-  animation: warn 2s ease alternate infinite;
-
-@keyframes warn {
-  0%{
-     transform: scale(0.6);
-  }
-  
-  50% {
-    transform: scale(1);
-    // opacity: 0;
-  }
-  
-  100% {
-    transform: scale(0.6);
-    // opacity: 0;
-  }
-  
-}
-}
-.promptText{
- 
-  background-color: #333333;
-  height: 70px;
-  width: 200px;
-  color: #fff;
-  position: absolute;
-     top: 265px;
-    left: 340px;
-
-  border-radius: 10px;
-  text-align: center;
-  line-height: 35px;
-  // display: none;
-  font-size: 14px;
-  z-index: 999;
-  span {
-    display: block;
-    text-align: right;
-    padding-right: 20px;
-    cursor: pointer;
-  }
-span:hover{
-  color: green;
-}
-}
-}
-
 </style>
