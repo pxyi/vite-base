@@ -61,11 +61,14 @@ const getSubjectList = (store): Promise<any> => {
           let subject = JSON.parse(subStr);
           let has = res.json.some(l => !!l.child.some(s => s.code === subject.code));
           store.commit(SET_SUBJECT, has ? subject : res.json[0].child[0]);
+        } else {
+          store.commit(SET_SUBJECT, res.json[0].child[0]);
         }
+        resolve(res.json);
       } catch (error) {
         store.commit(SET_SUBJECT, res.json[0].child[0]);
+        resolve(res.json);
       }
-      resolve(res.json);
     }
   })
 }
