@@ -25,6 +25,8 @@ ul, ol {
 img {
   display: inline-block;
   vertical-align: middle;
+	position: static;
+	float: none;
 }
 i {
   font-style: normal;

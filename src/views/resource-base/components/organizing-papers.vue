@@ -72,8 +72,8 @@ export default {
 :deep(.el-upload) {
   width: 100%;
   .el-upload-dragger {
-    width: 100%;
-    height: 160px;
+    // width: 100%;
+    // height: 160px;
     background: none;
   }
 }

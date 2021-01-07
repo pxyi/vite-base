@@ -6,8 +6,7 @@
         :style="{ 'z-index': item.id === activeId ? 9 : 1 }"
         :class="{ active: item.id === activeId }"
         :key="index"
-        @click.prevent="selectActive(item)"
-      >
+        @click.prevent="selectActive(item)">
         {{ item.name }}
         <span class="num">
           {{ item.count }}
@@ -22,19 +21,16 @@
   </div>
   <div class="right-content">
     <ul class="tableMain">
-
       <li
         v-for="(item, index) in contengList"
         :key="index"
         @mouseleave="mouseleaveisShow(item)"
-        :title="`${item.fileName}.${item.ext}`"
-      >
+        :title="`${item.fileName}.${item.ext}`">
         <div class="thumbnailWrap">
           <img
             v-if ="item.ext !== 'mp3' && item.ext !== 'zip' && item.ext !== 'rar'&&item.ext !== 'ppt'"
             class="imgCover"
-            :src="`${domain}${item.imgPath}`"
-          />
+            :src="`${domain}${item.imgPath}`"/>
           <img
             v-else
             src="../../../assets/resource-base/icon_d44l6421sgu/weizhiwenjian.png"
@@ -55,21 +51,21 @@
         </div>
 
         <div class="floating-layer">
-          <div class="imageOperation" @click="changeTdOperation(item)"></div>
+        <div class="imageOperation" @click="changeTdOperation(item)"></div>
           <div class="btn-group">
-            <div>
-              <el-button size="mini" round  @click="preview(item)">
+           <div>
+                <el-button size="mini" round  @click="preview(item)">
                 <img src="../../../assets/resource-base/previewIcon.png"  />预览
-              </el-button>
-            </div>
-            <div>
-              <el-button size="mini" round @click="prepareLessons(item)">添加到备课</el-button>
-            </div>
+                </el-button>
+           </div>
+           <div>
+            <el-button size="mini" round @click="prepareLessons(item)">添加到备课</el-button>
+          </div>
           </div>
         </div>
       </li>
 
-       <cus-empty v-if="contengList.length<1"/>
+    <cus-empty v-if="contengList.length<1"/>
     </ul>
        <div class="clearfloat"></div>
        <div class="paginationFY">
@@ -99,6 +95,7 @@ import createElement from '../../../utils/createElement'
 import NewName from './new-name.vue'
 import Prepare from './prepare-lessons.vue'
 import { emit } from 'process';
+import { log } from 'util';
 
 export default {
   setup(props, context) {
@@ -139,7 +136,9 @@ export default {
       courseId: "",
       subject: '',
       type: null,
-      total:0
+      total:0,
+      order:2,
+      orderType:1
     });
     const tabCountRequest = () => {
     emitter.emit("effect",async (id) => {
@@ -158,66 +157,59 @@ export default {
       }
     })
     }
-    // tabCountRequest()
      let flag = ref(false)
      const fileOder = (order)=>{
-       console.log(pageParam.total);
        if(pageParam.total!==0){
       if(pageParam.orderType===0){
         flag.value = false
         getMaterialQueryPage()
         pageParam.orderType=1
          pageParam.order=1
-        // console.log(pageParam.orderType);
       }else{
         flag.value = true
          pageParam.order=1
          getMaterialQueryPage()
           pageParam.orderType=0
-        // console.log(pageParam.orderType);
       }
        }
-     
      }
      let flags = ref(false)
-      const timeOder = (order)=>{
+      const timeOder = ()=>{
         if(pageParam.total!==0){
-      if(pageParam.orderType===0){
-        flags.value = false
+      if(pageParam.orderType===1){
+        flags.value = true
+        pageParam.orderType=0
         getMaterialQueryPage()
-        pageParam.orderType=1
          pageParam.order=2
         // console.log(pageParam.orderType);
       }else{
-        flags.value = true
+        // console.log(2);
+        
+        flags.value = false
          pageParam.order=2
+          pageParam.orderType=1
          getMaterialQueryPage()
-          pageParam.orderType=0
+          pageParam.orderType=1
         // console.log(pageParam.orderType);
       }
         }
      
      }
-     let chapterId = []
-     emitter.on('check-change',(target)=>{
-      //  chapterId.splice(target.id)
-      //  console.log(target.id);
-      // console.log( pageParam.chapterId);
-      // pageParam.chapterId.map((item,index,arr)=>{
-      //   if(item===target.id){
-      //    pageParam.chapterId.splice(index, 1)
-      //   } else {
-      //     pageParam.chapterId.push(target.id)
-      //   }
-      // })
-      // console.log(target.id);
-      // pageParam.chapterId.values = target.id
-      let index = pageParam.chapterId.findIndex(i => i === target.id);
-      if( index !== -1 ) {
-        pageParam.chapterId.splice(index, 1)
-      } else {
-        pageParam.chapterId.push(target.id);
-      }
+     let chapterId:Ref<any> = ref([])
+     emitter.on('check-change',(e)=>{
+       chapterId.value = []
+      e.checkedNodes.map((item:any,index)=>{
+     if(item.parentId){
+       chapterId.value.push(item.id)
+     }
+      })
+       pageParam.chapterId = chapterId.value
+      // let index = pageParam.chapterId.findIndex(i => i === e.id);
+      // if( index !== -1 ) {
+      //   pageParam.chapterId.splice(index, 1)
+      // } else {
+      //   pageParam.chapterId.push(e.id);
+      // }
       getMaterialQueryPage();
       tabCountRequest()
      
@@ -319,13 +311,7 @@ export default {
           video.oncanplay = loading.close;
           container = createElement('div', { 
             style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '1000' , background: 'rgba(0,0,0,.8)'},
-          }, [ closeBtn, video, printData, downloadData ])
-        }else if (item.ext === null && item.mediaType === 'url'){
-          loading.close()
-          let url = createElement('p', { style: { background: '#f9f9f9', width: '100%', height: '100%', padding: '36px', 'font-size':'20px' }}, '链接地址：' + item.filePath);
-          container = createElement('div', { 
-            style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '1000' , background: 'rgba(0,0,0,.8)'},
-          }, [ closeBtn, url, printData, downloadData ])
+          }, [ closeBtn, video, downloadData ])
         }else if(item.ext === 'mp3') {
           let video = createElement('video', 
           { attrs: { src:`${import.meta.env.VITE_DOMAIN}${item.filePath}`, width: '', height: '',controls: true, controlsList: "nodownload" }, style: { background: '#333', position:'absolute', top: '50%', left: '50%', transform:'translate(-50%,-50%)'}});
@@ -333,12 +319,18 @@ export default {
           container = createElement('div', { 
             style: { width: '100%', height: '100%', background: 'rgba(0,0,0,.8)', position: 'absolute', top: '0', left: '0', zIndex: '1000' },
           }, [ closeBtn, video, downloadData ])
-        }else {
+        } else if(item.ext === 'ppt'||item.ext==='pptx'||item.ext==='dec'||item.ext==='docx'||item.ext==='pdf') {
           let iframe = createElement('iframe', { attrs: { src, width: '100%', height: '100%' }, style: { background: '#f9f9f9' } });
           iframe.onload = loading.close;
           container = createElement('div', { 
             style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '1000', background: 'rgba(0,0,0,.8)' },
-          }, [ closeBtn, iframe, printData, downloadData ])
+          }, [ closeBtn, iframe, downloadData,printData ])
+        }else if(item.ext==='zip'||item.ext==='rar'||item.ext==='png'||item.ext==='jpeg'||item.ext==='jpg') {
+          let iframe = createElement('iframe', { attrs: { src, width: '100%', height: '100%' }, style: { background: '#f9f9f9' } });
+          iframe.onload = loading.close;
+          container = createElement('div', { 
+            style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '1000', background: 'rgba(0,0,0,.8)' },
+          }, [ closeBtn, iframe, downloadData ])
         }
         document.body.appendChild(container);
       }
@@ -352,7 +344,7 @@ export default {
       pageParam.type = item.type;
       activeId.value = item.id;
       getMaterialQueryPage();
-      // pageParam.chapterId = target.id
+      // pageParam.chapterId = e.id
       tabCountRequest()
       // console.log(activeId);
     };
@@ -437,8 +429,10 @@ export default {
       &.active {
         background: #fff;
         color: rgba(51, 51, 51, 1);
+        
         &::before {
           background: #fff;
+          
         }
         .num {
           color: #ffffff;

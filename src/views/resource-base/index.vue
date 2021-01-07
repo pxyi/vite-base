@@ -15,6 +15,7 @@
       <!-- 左侧树状图 -->
       <TreeLeft @check-change="query('tree', $event)" :tipShow="tipShow" />
     </div>
+   
     <!-- 右盒子 -->
     <div class="right_box">
       <div class="footer" v-if="tipShow">
@@ -78,7 +79,7 @@
         <Tabs />
       </div>
     </div>
-    
+     <!-- <div class="clear"></div> -->
   </div>
 </template>
 
@@ -328,45 +329,55 @@ export default {
   margin-top: 20px;
 }
 :deep(.el-dialog[aria-label="上传资料"]) {
-  width: 31.6% !important;
+  width: 500px !important;
 }
 :deep(.el-upload-dragger.el-upload-dragger) {
-  margin:40px;
-  // display: table;
+  // margin:40px;
   background-color: #f6f7f9;
-  
+  width: 100%;
+  height: 100%;
 }
 :deep(.el-upload) {
   // margin:40px;
   // display: table;
   background-color: #f6f7f9;
 }
+  @media only screen and (min-width: 1440px) {
+    .cus-list { 
+      :deep(.cus__list__item){
+        flex: 0 0 19%;
+      }
+    }
+  }
+  @media only screen and (min-width: 1680px) {
+    .cus-list { 
+      :deep(.cus__list__item){
+        flex: 0 0 15.6%;
+      }
+    }
+  }
 .content {
   display: flex;
+  flex: 1 5 auto;
   .left_box {
-   width: 250px;
-    height: 860px;
+    overflow: auto;
+    width: 250px;
+    height: 100%;
+    min-width: 250px;
     min-height: 860px;
     background-color: #fff;
     border-radius: 6px;
     box-shadow: 0px 1px 6px 0px rgba(91, 125, 255, 0.08);
     overflow: auto;
-    .left_search {
-      width: 226px;
-      height: 40px;
-      background: rgba(255, 255, 255, 1);
-      border-radius: 3px;
-      border: 1px solid rgba(235, 240, 252, 1);
-    }
   }
   .right_box {
-    // flex: 5;
-    width: 930px;
+    width: 100%;
     background-color: #fff;
     margin-left: 20px;
     height: 100%;
     box-shadow: 0px -2px 6px 0px rgba(91, 125, 255, 0.08);
     min-height: 300px;
+    border-radius: 10px;
     .right_tab {
       width: 98%;
       height: 100%;
@@ -420,6 +431,9 @@ export default {
 .margin1{
   margin-left: 40px;
 }
+.clear{
+        clear:both;
+    }
 .tooltip {
   font-size: 12px;
   line-height: 30px;
