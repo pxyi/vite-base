@@ -7,7 +7,7 @@
         :key="cell.key"
       >
         <span>{{ cell.text }}</span>
-        <i v-show="pageAorder.order === cell.key" :class="[ `el-icon-${ pageAorder.orderType === 1 ? 'bottom' : 'top' }` ]" />
+        <img v-show="pageAorder.order === cell.key" :src="[pageAorder.orderType === 1 ? '/@/assets/question/arrow-down.png' : '/@/assets/question/arrow-up.png']" alt="爱学标品">
       </div>
       <div class="statistics">
         <span>共计<i>{{ pageAorder.total }}</i>道相关试题</span>
@@ -77,7 +77,6 @@ import Modal from './../../../utils/modal';
 import updateComponent from './update.vue';
 import { ElMessage } from 'element-plus';
 import { useStore } from 'vuex';
-
 const difficultFilter = (v) => ([{ name: '易', id: 11 }, { name: '较易', id: 12 }, { name: '中档', id: 13 }, { name: '较难', id: 14 }, { name: '难', id: 15 }].find(i => i.id === v)?.name);
 
 export default {
@@ -196,7 +195,7 @@ export default {
       display: inline-block;
       margin-right: 20px;
       cursor: pointer;
-      i {
+      img {
         color: #FAAD14;
         margin: 0 3px;
       }
@@ -225,7 +224,6 @@ export default {
         cursor: pointer;
         img{
           display: inline-block;
-          margin-bottom: -1px;
         }
       }
     }
@@ -237,6 +235,7 @@ export default {
     .item {
       padding: 20px 20px 0;
       border-radius: 10px;
+      border-top-right-radius: 15px;
       border: 1px solid #EBEEF6;
       position: relative;
       transition: all .25s;
@@ -255,6 +254,7 @@ export default {
       }
       &:hover {
         box-shadow: 0px 2px 11px 0px rgba(23, 18, 45, 0.2);
+        border-top-right-radius: 15px;
       }
       .update-icon {
         width: 40px;
@@ -262,13 +262,19 @@ export default {
         font-size: 24px;
         line-height: 34px;
         text-align: center;
-        border-bottom-left-radius: 10px;
-        border-top-right-radius: 10px;
-        background: #F2F1F6;
+        background: url('./../../../assets/question/edit-bg.png') no-repeat;
         position: absolute;
         top: 0;
         right: 0;
         cursor: pointer;
+        img{
+          background: #fff;
+          border-top-right-radius: 15px;
+          display: inline-block;
+          position: absolute;
+          top: 0;
+          right: 0;
+        }
         &:active > i {
           transform: scale(.95);
         }
@@ -282,7 +288,7 @@ export default {
       .flex-box {
         font-size: 13px;
         display: flex;
-        margin-top: 20px;
+        margin-top: 14px;
         .label {
           display: inline-block;
           height: 20px;
@@ -296,6 +302,7 @@ export default {
         }
         .flex-main {
           flex: auto;
+          color: #77808d;
         }
       }
       .footer {
@@ -375,6 +382,7 @@ export default {
     margin-bottom: 20px;
   }
   .e-main {
+    text-indent: 2em;
     .e-m-cell {
       display: flex;
       margin-bottom: 10px;

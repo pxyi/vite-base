@@ -79,6 +79,7 @@ export default {
 <style lang="scss" scoped>
 .file-name {
   display: flex;
+  color: #333;
   img {
     width: 42px;
     margin-left: 10px;
@@ -112,5 +113,8 @@ export default {
 .el-icon-question {
   margin-left: 4px;
   color: #bbb;
+}
+:deep(.el-table thead){
+  color: #77808d;
 }
 </style>
