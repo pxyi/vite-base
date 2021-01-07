@@ -30,6 +30,7 @@ export default {
       let contentGroup = contentRef.value.validator();
       let headerGroup = cloneDeep(headerRef.value.formGroup);
       let sourceGroup = cloneDeep(sourceRef.value.questionSources);
+      console.log(sourceGroup)
       if (contentGroup) {
          sourceGroup && sourceGroup.map(s => {
           if (s.provinceCity && s.provinceCity[2]) {
