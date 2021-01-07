@@ -1,15 +1,23 @@
 <template>
-  <cus-form ref="formRef" :nodes="nodes" :width="files ? '422px' : '500px'" />
+  <cus-form ref="formRef" :nodes="nodes" width="422px" />
 
-  <div class="paper-mode">
-    <span>组卷方式</span>
-    <div class="mode-radio-group">
-      <div class="r-g-radio" v-for="t in paperTypeList" :key="t.value" :class="{ 'active': paperType === t.value }" @click="paperType = t.value">
-        <i class="el-icon-check" />
-        <h4>{{ t.h4 }}</h4>
-        <p>{{ t.p }}</p>
+  <div class="file-upload-content">
+    <el-upload
+      drag
+      :action="action"
+      accept=".pdf,doc,.docx"
+      :file-list="fileList"
+      multiple
+      ref="uploadRef"
+      :on-success="uploadSuccess"
+      :on-remove="fileRemove"
+    >
+      <div class="upload-content">
+        <i class="el-icon-upload" />
+        <div>将文件拖到此处，或<span>点击上传</span></div>
+        <p>支持扩展名：.doc、.docx、.pdf</p>
       </div>
-    </div>
+    </el-upload>
   </div>
 </template>
 <script lang="ts">
@@ -17,35 +25,25 @@ import { ref, Ref, PropType, onMounted, inject } from 'vue';
 import { AxResponse } from './../../../core/axios';
 import axios from 'axios';
 import { useStore } from 'vuex';
-import Drawer from './../../../utils/drawer';
-import Screen from './../../../utils/screen';
-import SelectedTopicComponent from './selected-topic.vue';
-import GeneratingComponent from './generating.vue';
+import { ElMessage } from 'element-plus';
 
 export default {
   props: {
-    files: Array as PropType<File[]>,
+    files: {
+      type: Array as PropType<File[]>,
+      default: () => []
+    }
   },
   setup(props) {
     let store = useStore();
     let formRef = ref();
+    let uploadRef = ref();
+    let action = `${import.meta.env.VITE_APP_BASE_URL}/system/file/uploadFile`;
 
     let userId = store.getters.userInfo.user.id;
     let subjectCode = store.getters.subject.code;
 
-    let paperType = ref(0);
-    let paperTypeList = [
-      { h4: '智能选题', p: '根据指定学科知识点，题目情况智能生成试卷结构和题目，支持手动调整', value: 0 },
-      { h4: '手动选题', p: '根据个性化需求，手动添加试卷结构并完成选题', value: 1 }
-    ];
-
     let nodes: Ref<any[]> = ref([
-      {
-        label: "试卷名称",
-        key: "title",
-        type: "input",
-        rule: { required: true, message: "请输入试卷名称" },
-      },
       {
         label: "学科",
         key: "subjectId", 
@@ -57,10 +55,10 @@ export default {
         valueKey: 'code',
         change: (v) => {
           axios.post('/permission/user/userDataRules', { userId, subjectCode: v[1] }).then((res: any) => {
-            nodes.value[2].options = res.json.grades;
-            nodes.value[3].options = res.json.years;
-            formRef.value.formGroup.gradeId && (formRef.value.formGroup.gradeId = null);
-            formRef.value.formGroup.year && (formRef.value.formGroup.year = null);
+            nodes.value[1].options = res.json.grades;
+            nodes.value[2].options = res.json.years;
+            formRef.value.formGroup.gradeId = null;
+            formRef.value.formGroup.year = null;
           })
         }
       },
@@ -94,34 +92,42 @@ export default {
       }
     ]);
 
+    let fileList: Ref<any[]> = ref([]);
+    Promise.all(props.files.map(file => {
+      let formdata = new FormData();
+      formdata.append('file', file);
+      return axios.post('/system/file/uploadFile', formdata, { headers: { 'Content-Type': 'multipart/form-data' } });
+    })).then((list: any[]) => {
+      fileList.value = list.map(res => ({ ...res.json, name: res.json.oriFilename, url: res.json.filePath }))
+    });
+
+    const uploadSuccess = (res) => {
+      fileList.value.push({ ...res.json, name: res.json.oriFilename, url: res.json.filePath });
+    };
+    const fileRemove = (file) => {
+      fileList.value.splice(fileList.value.findIndex(f => file.filePath === f.filePath), 1);
+    };
 
     const save = (resolve, reject) => {
       formRef.value.validate(valid => {
         if (valid) {
-          let data = {
-            ...valid,
-            paperType: paperType.value,
-            subjectId: valid.subjectId[1]
-          }
-          if (paperType.value === 0) {
-            Screen.create(GeneratingComponent, { data });
-            resolve()
-          } else {
-            Drawer.create({ 
-              title: '选择试题',
-              closable: false,
-              width: 'calc(100% - 200px)',
-              component: SelectedTopicComponent,
-              props: { data }
-            }).then(res => resolve() ).catch(err => reject());
-          }
+          let parasm = { ...valid, papers: fileList.value, subjectId: valid.subjectId[1] };
+          axios.post<null, AxResponse>('/tiku/paper/batchSavePaper', parasm, { headers: { 'Content-Type': 'application/json' } }).then(res => {
+            if (res.result) {
+              ElMessage.success('上传试卷成功~！');
+              resolve(true)
+            } else {
+              ElMessage.warning(res.msg);
+              reject()
+            }
+          })
         } else {
-          reject();
+          reject()
         }
       });
     };
 
-    return { nodes, save, formRef, paperType, paperTypeList };
+    return { action, nodes, save, formRef, uploadRef, fileList, uploadSuccess, fileRemove };
   },
 };
 </script>

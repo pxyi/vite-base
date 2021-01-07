@@ -8,16 +8,16 @@
         <template #default="{ row }">
           <div class="file-name">
             <img src="/@/assets/file-icon.png" alt="爱学标品">
-            <span>{{ row.fileName }}</span>
+            <div>{{ row.fileName }}</div>
           </div>
         </template>
       </el-table-column>
       <el-table-column prop="creatorName" label="上传人" width="100" />
       <el-table-column prop="createTime" label="上传时间" width="180" />
-      <el-table-column prop="status" label="解析状态" width="160">
+      <el-table-column prop="status" label="解析状态" width="120">
         <template #default="{ row }">
           <span :class="[`i_status-${row.status}`]">{{ row.status === 0 ? '解析中' : row.status === 1 ? '解析失败' : row.status === 2 ? '解析成功' : row.status === 3 ? '导入失败' : '导入成功' }}</span>
-          <el-popover :width="240" trigger="hover">
+          <el-popover :width="160" trigger="hover">
             <template #reference v-if="row.status === 1 || row.status === 3"><i class="el-icon-question" /></template>
             <template #default>
               <span v-html="row.failReason"></span>
@@ -78,8 +78,9 @@ export default {
 
 <style lang="scss" scoped>
 .file-name {
+  display: flex;
+  color: #333;
   img {
-    display: inline-block;
     width: 42px;
     margin-left: 10px;
     vertical-align: middle;
@@ -112,5 +113,8 @@ export default {
 .el-icon-question {
   margin-left: 4px;
   color: #bbb;
+}
+:deep(.el-table thead){
+  color: #77808d;
 }
 </style>

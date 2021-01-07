@@ -68,18 +68,17 @@ export default {
 
     const getSchoolList = async (e, source, idx) => {
       if (e && e.length) {
+        let res = await axios.post<null, AxResponse>('/admin/publicSchool/queryAll', { areaId: e[2] });
+        source.schoolList = res.json;
         if(questionSources.value[idx]){
           questionSources.value.map((item) => {
             questionSources.value[idx].publicSchoolId = null
           })
         }
-        let res = await axios.post<null, AxResponse>('/admin/publicSchool/queryAll', { areaId: e[2] });
-        source.schoolList = res.json;
       } else {
         source.schoolList = [];
       }
     }
-
     const addSource = () => {
       questionSources.value.push({
         year: null,
@@ -88,7 +87,6 @@ export default {
         publicSchoolId: null
       })
     }
-
     return { questionSources, yearList, quesList, getProvinceCity, getSchoolList, addSource }
   }
 }
@@ -122,6 +120,9 @@ export default {
               width: 100%;
             }
           }
+        }
+        :deep(.source-control) .el-cascader {
+          width: 100%;
         }
       }
     }

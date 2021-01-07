@@ -17,6 +17,7 @@
           <component :is="tab.component" />
         </div>
       </div>
+      <div class="slide-btn" v-if="showDetail" @click="showDetail = false"><i class="el-icon-arrow-left" /></div>
     </div>
   </div>
 </template>
@@ -49,6 +50,7 @@ export default {
   position: absolute;
   top: 0;
   left: 0;
+  z-index: 9;
   .thumbnail-box {
     width: 62px;
     padding: 20px 6px;
@@ -129,14 +131,25 @@ export default {
           visibility: visible;
         }
       }
-      h2 {
-        margin-bottom: 15px;
-        line-height: 40px;
-        text-align: center;
-        background: #F5F7FA;
-        border-radius: 4px;
-      }
     }
+  }
+  .slide-btn {
+    width: 20px;
+    height: 64px;
+    font-size: 16px;
+    line-height: 64px;
+    text-align: center;
+    font-weight: bold;
+    background: #fff;
+    border: solid 1px #EBEEF5;
+    border-left: 0;
+    box-shadow: 6px 0 6px #EBEEF5;
+    border-radius: 0 4px 4px 0;
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translate3d(100%, -50%, 0);
+    cursor: pointer;
   }
 }
 </style>

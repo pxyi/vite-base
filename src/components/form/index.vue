@@ -25,7 +25,7 @@
           </el-checkbox-group>
         </template>
         <template v-else-if="node.type === 'cascader'">
-          <el-cascader v-model="formGroup[node.key]" :options="node.options" :placeholder="node.placeholder || `请选择${node.label}`" :props="{value: node.valueKey || 'id', label: node.labelKey || 'name', children: node.childKey || 'child'}" />
+          <el-cascader v-model="formGroup[node.key]" :options="node.options" :placeholder="node.placeholder || `请选择${node.label}`" :props="{value: node.valueKey || 'id', label: node.labelKey || 'name', children: node.childKey || 'child'}" @change="node.change ? node.change($event) : () => {}" />
         </template>
         <template v-else-if="node.type === 'datepicker'">
           <el-date-picker type="date" :value-format="node.format || 'yyyy-MM-dd'" v-model="formGroup[node.key]" :placeholder="node.placeholder || `请选择${node.label}`" />
@@ -123,6 +123,7 @@ interface NPublic {
   readonly default?: any;
   readonly placeholder?: string;
   readonly rule?: any;
+  readonly change?: (v?) => void;
 }
 interface NInput extends NPublic {
   readonly type: 'input';

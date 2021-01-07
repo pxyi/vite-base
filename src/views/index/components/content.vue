@@ -14,7 +14,7 @@
       <div class="m__menu_cell">试卷库</div>
       <div class="m__menu_cell">课程管理</div> -->
       <template  v-for="(menu) in list" :key="menu.key">
-        <div class="m__menu_cell" v-for="link in menu.children" :key="link.key" @click="$router.push(link.key)">{{ link.title }}</div>
+        <div class="m__menu_cell" v-for="link in menu.children" :key="link.key" @click="menuClick(menu, link)">{{ link.title }}</div>
       </template>
     </div>
     <div class="m__section">
@@ -57,7 +57,7 @@
 <script lang="ts">
 import { useStore } from 'vuex';
 import MenuList, { RouterConf } from './../../../core/menu-list';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import RankingComponent from './ranking.vue';
 import axios, {AxiosResponse} from 'axios';
 import { reactive, ref, watch } from 'vue';
@@ -69,7 +69,7 @@ export default {
   setup() {
     const store = useStore();
     let teachResearchStatistics = reactive({coursewareNum: {}, handoutNum: {}, paperNum: {}, questionNum: {}});
-    axios.get<any, AxiosResponse>(`/permission/indexStatistics/teachResearchStatistics?userId=${store.getters.userInfo.user.id}`).then((res: AxResponse) => {
+    axios.get<any, AxiosResponse>(`/permission/indexStatistics/teachResearchStatistics?userId=${store.getters.userInfo.user.id}`).then((res: any) => {
       if (res.result) Object.keys(res.json).map(key => {
         res.json[key].class = res.json[key].range === 'DOWN' ? 'is__down' : (res.json[key].range === 'LINE' ? 'is__not' : '');
         res.json[key].compare = res.json[key].compare === 0 ? '' : res.json[key].compare;
@@ -78,11 +78,17 @@ export default {
     });
     let list: { value: RouterConf[] } = ref([]);
     let initPath = useRoute().path;
+    let router = useRouter()
     MenuList.map((res: any) => {
       res.closed = initPath.includes(res.key);
       list.value.push(res);
     });
-    return { list, initPath, teachResearchStatistics}
+    const menuClick = (menu, link) => {
+      router.push(link.key)
+      menu.closed = !menu.closed 
+    }
+
+    return { list, initPath, teachResearchStatistics, menuClick }
   }
 }
 </script>
