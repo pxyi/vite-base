@@ -72,10 +72,10 @@ export default {
       debounce(() => knowledgeTree.value.filter(filterText.value), 300)
     );
     // { checkedKeys }
-    const checkChange = (target, e) => {
-      // console.log(target, e);
+    const checkChange = (target ,e) => {
+      // console.log(e,'111');
       emit("check-change",e)
-      emitter.emit("check-change", target);
+      emitter.emit("check-change", e);
     };
 
     return {
@@ -95,24 +95,26 @@ export default {
 </script>
 <style lang="scss" scoped>
 .left-tree {
-  position: relative;
+  // position: relative;
    width: 250px;
+   height: 100%;
+   
   .tree {
-    // height: 80vh;
-    overflow: auto;
+    height: 100%;
   }
   .seachInput {
     // padding: 10px;
-     width: 90%;
-   padding: 10px 0 10px 10px;
+     width:95%;
+   padding: 10px 0 10px 15px;
+  // margin-bottom: 10px;
   }
   /* 产生动画（向外扩散变大）的圆圈  */
   .left-radius {
     position: absolute;
     width: 140px;
     height: 140px;
-    left: 0px;
-    top: 30px;
+    left: 225px;
+    top: 120px;
     border: 4px solid skyblue;
     border-radius: 50%;
     z-index: 1;
