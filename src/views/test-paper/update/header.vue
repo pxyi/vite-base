@@ -1,14 +1,14 @@
 <template>
   <div class="paper__header__container">
     <div class="header">
-      <div class="save"><i class="el-icon-edit-outline" /><span>自动保存...</span></div>
-      <div class="tabs_box">
+      <div class="save"><div v-if="!isPreview"><i class="el-icon-edit-outline" /><span>自动保存...</span></div></div>
+      <div class="tabs_box" v-if="isPreview">
         <ul>
           <li v-for="p in classList" :key="p.id" :class="{ active: classType === p.id }" @click="classType = p.id">{{ p.name }}</li>
         </ul>
       </div>
       <div class="btns">
-        <el-button round @click="close();$router.push('/teaching/question')">题库</el-button>
+        <el-button round @click="close();$router.push('/teaching/question')" v-if="!isPreview">题库</el-button>
         <el-button round @click="download">下载</el-button>
       </div>
     </div>
@@ -29,6 +29,7 @@ export default {
     let classList = [ { name: '教师版', id: 1 }, { name: '学生版', id: 2 }, { name: '解析版', id: 3 } ];
     let close = inject('close');
     let id = inject('id');
+    let isPreview = inject('preview');
 
     const download = () => {
       Modal.create({
@@ -40,7 +41,7 @@ export default {
         window.open(`${import.meta.env.VITE_APP_BASE_URL}/tiku/paper/downPaper?paperId=${ id }&type=${ res.type }&templateId=${ res.templateId }`);
       });
     }
-    return { classType, classList, close, download }
+    return { classType, classList, close, download, isPreview }
   }
 }
 </script>
@@ -63,7 +64,7 @@ export default {
     }
   }
   .btns {
-    margin-left: 30px;
+    margin-left: auto;
     button {
       color: #1AAFA7;
       padding: 10px 23px;
