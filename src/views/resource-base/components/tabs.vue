@@ -14,21 +14,22 @@
       </a>
     </nav>
     <div class="order">
-     <span @click="fileOder(1)">文件名 <i class="el-icon-bottom " v-if="flag"></i> <i class="el-icon-top " v-else></i></span>
-      <span @click="timeOder(2)">上传时间 <i class="el-icon-bottom" v-if="flags"></i> <i class="el-icon-top " v-else></i></span>
+     <span @click="fileOder()">文件名 <i class="el-icon-bottom " v-if="flag"></i> <i class="el-icon-top " v-else></i></span>
+      <span @click="timeOder()">上传时间 <i class="el-icon-bottom" v-if="flags"></i> <i class="el-icon-top " v-else></i></span>
       <!-- <span>引用次数<i class="el-icon-bottom"></i></span> -->
     </div>
   </div>
   <div class="right-content">
     <ul class="tableMain">
       <li
+      class="tabs-content"
         v-for="(item, index) in contengList"
         :key="index"
         @mouseleave="mouseleaveisShow(item)"
         :title="`${item.fileName}.${item.ext}`">
         <div class="thumbnailWrap">
           <img
-            v-if ="item.ext !== 'mp3' && item.ext !== 'zip' && item.ext !== 'rar'&&item.ext !== 'ppt'"
+            v-if ="item.ext !== 'mp3' && item.ext !== 'zip' && item.ext !== 'rar'"
             class="imgCover"
             :src="`${domain}${item.imgPath}`"/>
           <img
@@ -64,7 +65,6 @@
           </div>
         </div>
       </li>
-
     <cus-empty v-if="contengList.length<1"/>
     </ul>
        <div class="clearfloat"></div>
@@ -158,41 +158,31 @@ export default {
     })
     }
      let flag = ref(false)
-     const fileOder = (order)=>{
-       if(pageParam.total!==0){
-      if(pageParam.orderType===0){
-        flag.value = false
-        getMaterialQueryPage()
+     const fileOder = ()=>{
+       flag.value=!flag.value
+       pageParam.order=1
+       if(flag.value){
         pageParam.orderType=1
-         pageParam.order=1
-      }else{
-        flag.value = true
-         pageParam.order=1
+          getMaterialQueryPage()
+       }else {
+         pageParam.orderType=0
          getMaterialQueryPage()
-          pageParam.orderType=0
-      }
+       }
+       if(pageParam.total!==0){
+   
        }
      }
      let flags = ref(false)
       const timeOder = ()=>{
-        if(pageParam.total!==0){
-      if(pageParam.orderType===1){
-        flags.value = true
-        pageParam.orderType=0
-        getMaterialQueryPage()
+        flags.value=!flags.value
          pageParam.order=2
-        // console.log(pageParam.orderType);
-      }else{
-        // console.log(2);
-        
-        flags.value = false
-         pageParam.order=2
-          pageParam.orderType=1
+       if(flags.value){
+        pageParam.orderType=1
+          getMaterialQueryPage()
+       }else {
+         pageParam.orderType=0
          getMaterialQueryPage()
-          pageParam.orderType=1
-        // console.log(pageParam.orderType);
-      }
-        }
+       }
      
      }
      let chapterId:Ref<any> = ref([])
@@ -319,7 +309,7 @@ export default {
           container = createElement('div', { 
             style: { width: '100%', height: '100%', background: 'rgba(0,0,0,.8)', position: 'absolute', top: '0', left: '0', zIndex: '1000' },
           }, [ closeBtn, video, downloadData ])
-        } else if(item.ext === 'ppt'||item.ext==='pptx'||item.ext==='dec'||item.ext==='docx'||item.ext==='pdf') {
+        } else if(item.ext === 'ppt'||item.ext==='pptx'||item.ext==='doc'||item.ext==='docx'||item.ext==='pdf') {
           let iframe = createElement('iframe', { attrs: { src, width: '100%', height: '100%' }, style: { background: '#f9f9f9' } });
           iframe.onload = loading.close;
           container = createElement('div', { 
@@ -416,11 +406,11 @@ export default {
       }
       .num {
         margin-left: 5px;
-        padding: 0 15px;
+        padding: 0 10px;
         background: rgba(119, 128, 141, 0.2);
         color: #77808d;
         height: 20px;
-        width: 50px;
+        width: 46px;
         border-radius: 15px;
       }
       &:first-child {
@@ -447,6 +437,7 @@ export default {
   .tableMain {
     position: relative;
     > li {
+      box-shadow: 0px -2px 6px 0px rgba(91, 125, 255, 0.08);
       width: 160px;
       height: 148px;
       border-radius: 4px;
