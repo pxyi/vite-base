@@ -4,12 +4,12 @@
       <div class="section">
         <div class="title">
           <span>{{ toChinesNum(index + 1) }}. {{ element.title }}</span>
-          <el-dropdown>
+          <el-dropdown @command="sortHandle($event, index)">
             <span>难度排序</span>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item>难度由低到高</el-dropdown-item>
-                <el-dropdown-item>难度由高到低</el-dropdown-item>
+                <el-dropdown-item command="down">难度由低到高</el-dropdown-item>
+                <el-dropdown-item command="up">难度由高到低</el-dropdown-item>
               </el-dropdown-menu>
             </template>
           </el-dropdown>
@@ -31,16 +31,20 @@ import { ref, computed } from 'vue';
 import draggable from 'vuedraggable';
 import store from './../store';
 import { toChinesNum } from './../utils';
+import { cloneDeep } from 'lodash';
 
 export default {
   components: { draggable },
   setup() {
-    let paperCharpts = computed({
-      get: () => store.getters.paperCharpts,
-      set: (val) => store.commit('set_paper_charpts', val)
-    });
+    let paperCharpts = computed(() => store.getters.paperCharpts);
 
-    return { paperCharpts, toChinesNum }
+    const sortHandle = (type, index) => {
+      let data = cloneDeep(paperCharpts.value);
+      data[index].questions = data[index].questions.sort((a, b) => (type === 'down' ? (a.question.difficult - b.question.difficult) : (b.question.difficult - a.question.difficult) )  );
+      store.commit('set_paper_charpts', data);
+    }
+
+    return { paperCharpts, toChinesNum, sortHandle }
   }
 }
 </script>

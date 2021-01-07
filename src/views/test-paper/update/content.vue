@@ -1,35 +1,37 @@
 <template>
   <div class="paper_container">
     <div class="paper_content">
-      <div class="sealing" v-show="paperInfo.showSealing"><img src="/src/assets/test-paper/sealing.png" alt="密封线"></div>
-      <div class="cover-map" v-show="paperInfo.showOrgInfo">
-        <img src="/src/assets/test-paper/logo.png" alt="logo" class="logo" />
-        <img src="/src/assets/test-paper/title.png" alt="title" class="title" />
-      </div>
-      <h1 v-show="paperInfo.showTitle">
-        <input type="text" v-model="paperInfo.title" placeholder="请输入试卷标题" />
-      </h1>
-      <h2 v-show="paperInfo.showSideTitle">
-        <input type="text" v-model="paperInfo.sideTitle" placeholder="请输入试卷副标题" />
-      </h2>
-      <h4 v-show="paperInfo.showTime"><span>考试时间：<i>45</i> 分钟</span><span>总分：<i>100</i>分</span></h4>
-      <h6 v-show="paperInfo.showStuInfo"><p><span>姓名：</span><i /></p><p><span>班级：</span><i /></p><p><span>考号：</span><i /></p></h6>
-      <div class="tip">
-        <p>注意事项:</p>
-        <p>1. 答题前填写好自己的姓名、班级、考号等信息；</p>
-        <p>2. 请将答案正确填写在答题卡上。</p>
-      </div>
-      <div class="paper-score" v-show="paperInfo.showChapterScore">
-        <div>
-          <el-table :data="paperScoreData" border size="mini" :header-cell-style="{background: '#fff'}">
-            <el-table-column prop="name" label="题号" align="center" width="84" />
-            <el-table-column v-for="i in paperInfo.paperCharpts.length" :key="i" :prop="`index${i - 1}`" :label="toChinesNum(i)" align="center" width="60" />
-            <el-table-column prop="score" label="总分" align="center" width="84" />
-          </el-table>
+      <div class="paper-tool-header">
+        <div class="sealing" v-show="paperInfo.showSealing"><img src="/src/assets/test-paper/sealing.png" alt="密封线"></div>
+        <div class="cover-map" v-show="paperInfo.showOrgInfo">
+          <img src="/src/assets/test-paper/logo.png" alt="logo" class="logo" />
+          <img src="/src/assets/test-paper/title.png" alt="title" class="title" />
+        </div>
+        <h1 v-show="paperInfo.showTitle">
+          <input type="text" v-model="paperInfo.title" placeholder="请输入试卷标题" />
+        </h1>
+        <h2 v-show="paperInfo.showSideTitle">
+          <input type="text" v-model="paperInfo.sideTitle" placeholder="请输入试卷副标题" />
+        </h2>
+        <h4 v-show="paperInfo.showTime"><span>考试时间：<i>45</i> 分钟</span><span>总分：<i>100</i>分</span></h4>
+        <h6 v-show="paperInfo.showStuInfo"><p><span>姓名：</span><i /></p><p><span>班级：</span><i /></p><p><span>考号：</span><i /></p></h6>
+        <div class="tip">
+          <p>注意事项:</p>
+          <p>1. 答题前填写好自己的姓名、班级、考号等信息；</p>
+          <p>2. 请将答案正确填写在答题卡上。</p>
+        </div>
+        <div class="paper-score" v-show="paperInfo.showChapterScore">
+          <div>
+            <el-table :data="paperScoreData" border size="mini" :header-cell-style="{background: '#fff'}">
+              <el-table-column prop="name" label="题号" align="center" width="84" />
+              <el-table-column v-for="i in paperInfo.paperCharpts.length" :key="i" :prop="`index${i - 1}`" :label="toChinesNum(i)" align="center" width="60" />
+              <el-table-column prop="score" label="总分" align="center" width="84" />
+            </el-table>
+          </div>
         </div>
       </div>
       <div class="paper_main">
-        <div class="question_type" v-for="(questionType, index) in paperInfo.paperCharpts" :key="questionType.id">
+        <div class="question_type" v-for="(questionType, idx) in paperInfo.paperCharpts" :key="questionType.id">
           <div class="question-title">
             <div v-show="paperInfo.showScore">
               <div style="display: inline-block">
@@ -39,11 +41,11 @@
                 </el-table>
               </div>
             </div>
-            <span>{{ toChinesNum(index + 1) }}、 {{ questionType.title }}（共{{ questionType.questionCount }}小题）（{{ questionType.questions.reduce((t, n) => t += (n.question.score || 0), 0) }}）分</span>
+            <span>{{ toChinesNum(idx + 1) }}、 {{ questionType.title }}（共{{ questionType.questionCount }}小题）（{{ questionType.questions.reduce((t, n) => t += (n.question.score || 0), 0) }}）分</span>
             <i class="el-icon-plus" />
             <div class="footer">
-              <i class="iconfont iconshangyi" :class="{ 'is__disabled': index === 0 }" @click="moveType(index, -1)" />
-              <i class="iconfont iconxiayi" :class="{ 'is__disabled': index === paperInfo.paperCharpts.length - 1 }" @click="moveType(index, 1)" />
+              <i class="iconfont iconshangyi" :class="{ 'is__disabled': idx === 0 }" @click="moveType(idx, -1)" />
+              <i class="iconfont iconxiayi" :class="{ 'is__disabled': idx === paperInfo.paperCharpts.length - 1 }" @click="moveType(idx, 1)" />
               <i class="iconfont iconshanchu" :class="{ 'is__disabled': paperInfo.paperCharpts.length === 1 }" @click="deleteQuestType(questionType.id)" />
             </div>
           </div>
@@ -51,7 +53,16 @@
             <template #item="{ element, index }">
               <div class="item">
                 <i class="el-icon-plus" />
-                <div class="title" v-html="element.question.title" :data-index="`${index + 1}.`"></div>
+                <div class="title" :data-index="`${index + 1}.`"><div v-html="element.question.title"></div></div>
+                <div class="content" v-question="element.question"></div>
+                <div class="flex-box" v-if="classType !== 12">
+                  <div class="label">答案</div>
+                  <div class="flex-main" v-html="element.question.rightAnswer ? element.question.rightAnswer.map(a => a.content).join('、') : '无'"></div>
+                </div>
+                <div class="flex-box" v-if="classType !== 12">
+                  <div class="label">解析</div>
+                  <div class="flex-main" v-html="element.question.analysis"></div>
+                </div>
                 <div class="footer">
                   <div>
                     <i class="iconfont iconshezhifenzhi" />
@@ -62,7 +73,7 @@
                     <i class="iconfont icondaan" />
                     <span>答案</span>
                   </div>
-                  <div>
+                  <div @click="questExchange(idx, index, element.question.id)">
                     <i class="iconfont iconhuanti" />
                     <span>换题</span>
                   </div>
@@ -86,12 +97,19 @@ import axios from 'axios';
 import store from './store';
 import { toChinesNum } from './utils';
 import { cloneDeep } from 'lodash';
+import QuestionDirective from './../../utils/question.directive';
+import Modal from './../../../utils/modal';
+import ExchangeComponent from './components/exchange.vue';
+
 const exchangeArrayIndex = (arr, index1, index2) => {
   arr[index1] = arr.splice(index2, 1, arr[index1])[0];
   return arr;
 }
 export default {
   components: { draggable },
+  directives: {
+    question: QuestionDirective
+  },
   setup(props) {
     let paperInfo: Ref<any> = computed(() => store.state.paperInfo);
 
@@ -123,7 +141,22 @@ export default {
       data[typeIndex].questions = exchangeArrayIndex(data[typeIndex].questions, index, index + arrow);
       store.commit('set_paper_charpts', data);
     }
-    return { paperInfo, toChinesNum, deleteQuestType, deleteQuest, moveType, moveQuestion, paperScoreData, classType }
+
+    const questExchange = (typeIndex, index, id) => {
+      Modal.create({
+        title: '换题',
+        zIndex: 2011,
+        component: ExchangeComponent,
+        props: { id }
+      }).then((res: any) => {
+        let data = cloneDeep(paperInfo.value.paperCharpts);
+        data[typeIndex].questions[index].question = res;
+        data[typeIndex].questions[index].questionId = res.id;
+        store.commit('set_paper_charpts', data);
+      })
+    }
+
+    return { paperInfo, toChinesNum, deleteQuestType, deleteQuest, moveType, moveQuestion, paperScoreData, classType, questExchange }
   }
 }
 </script>
@@ -249,16 +282,25 @@ export default {
       }
     }
     .item {
-      padding: 20px;
+      padding: 20px 20px 10px 32px;
       cursor: move;
       position: relative;
-      .title::before {
-        content: attr(data-index);
-        display: inline-block;
-        margin-right: 12px;
+      .title {
+        display: flex;
+        &::before {
+          content: attr(data-index);
+          display: block;
+          position: absolute;
+          top: 20px;
+          left: 20px;
+          transform: translate3d(-100%, 0, 0);
+        }
+        & > div {
+          flex: auto;
+        }
       }
-      .title > * {
-        display: inline-block;
+      .content {
+        margin-top: 10px;
       }
     }
     .el-icon-plus {
@@ -280,6 +322,26 @@ export default {
       opacity: 0;
       visibility: hidden;
     }
+    .flex-box {
+      font-size: 13px;
+      display: flex;
+      margin-top: 15px;
+      margin-left: -5px;
+      .label {
+        display: inline-block;
+        height: 20px;
+        padding: 0 7px;
+        color: #3ABAB3;
+        font-size: 12px;
+        line-height: 20px;
+        background: rgba(58, 186, 179, 0.15);
+        border-radius: 4px;
+        margin-right: 8px;
+      }
+      .flex-main {
+        flex: 1 1 32px;
+      }
+    }
     .footer {
       opacity: 0;
       visibility: hidden;
@@ -295,8 +357,8 @@ export default {
       bottom: 0;
       left: 0;
       z-index: 1;
-      margin-bottom: -26px;
-      margin-left: -1px;
+      margin-bottom: -20px;
+      margin-left: -2px;
       & > div {
         display: inline-block;
         margin-right: 22px;
@@ -338,6 +400,40 @@ export default {
         border-radius: 0;
         border: 0;
         border-bottom: solid 1px #77808D;
+      }
+    }
+  }
+
+
+  :deep(.item) {
+    .e-main {
+      .e-m-cell {
+        display: flex;
+        &:not(:last-child) {
+          margin-bottom: 10px;
+        }
+        .e-c-label {
+          width: 40px;
+        }
+        .e-c-group {
+          flex: 1 1 40px;
+          display: flex;
+          .c-t-item {
+            flex: 1;
+          }
+        }
+      }
+      &-title {
+        .e-m-cell {
+          margin-bottom: 20px;
+          .e-c-label {
+            margin-bottom: 5px;
+          }
+          .e-c-group {
+            line-height: 24px;
+            text-indent: 20px;
+          }
+        }
       }
     }
   }
