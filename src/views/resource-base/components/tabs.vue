@@ -284,7 +284,7 @@ export default {
        Modal.create({ title: '添加到备课', width: 560, component: Prepare, props: { prepareLessons:item } })
     }
     const downLoad = (item) => {
-      createElement('a', {attrs: {href: `${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`, download: `${item.fileName}`}}).click();
+      createElement('a', {attrs: {href: `${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`, download: `${item.fileName+'.'+item.ext}`}}).click();
       // window.open(`${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`)
     };
 
@@ -310,7 +310,7 @@ export default {
         let downloadData = createElement('div', {
           className: 'el-icon-download',
           style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', bottom: '100px', right: '40px', zIndex: '10', cursor: 'pointer' },
-          on: { click: () => { let a  = document.createElement('a');a.download = item.fileName+'.'+item.ex;a.href = `${import.meta.env.VITE_DOMAIN}${item.filePath}`;a.click(); } }
+          on: { click: () => { let a  = document.createElement('a');a.download = item.fileName+'.'+item.ext;a.href = `${import.meta.env.VITE_DOMAIN}${item.filePath}`;a.click(); } }
 
         }); 
         let container;
