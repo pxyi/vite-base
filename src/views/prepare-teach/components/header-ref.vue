@@ -32,7 +32,7 @@ export default {
     const classChange = (e) => { classType.value = e; emit('type-change', e);};
     let searchText = ref(null);
     const searchHandle = () => emit('search', searchText.value);
-
+  
     return { classType, classList, classChange, searchText, searchHandle }
   }
 }

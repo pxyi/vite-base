@@ -31,7 +31,7 @@ export default {
 
     let searchText = ref(null);
    
-    const searchHandle = () => {emit('search', searchText)};
+    const searchHandle = () => {emit('search', searchText.value)};
 
     const add = () => {
       Drawer.create({ title: '添加题目', width: 'calc(100% - 200px)', maxWidth: 640, component: UpdateComponent }).then(_ => emit('add-success'));
