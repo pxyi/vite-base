@@ -6,7 +6,7 @@
       </ul>
     </div>
     <div class="search">
-      <el-input clearable placeholder="按题干搜索" prefix-icon="el-icon-search" v-model="searchText" @keydown.enter="searchHandle" />
+      <el-input clearable placeholder="按试卷名称搜索" prefix-icon="el-icon-search" v-model="searchText" @keydown.enter="searchHandle" />
     </div>
     <div class="btns">
       <el-button round @click="addPaper">组卷</el-button>
@@ -56,7 +56,7 @@ export default {
       if (!files.length) {
         ElMessage.warning(`请选择指定${accept.join('、')}格式文件`);
       } else {
-        Modal.create({ title: '上传试卷', width: 480, component: UploadComponent, props: { queryClass, files } }).then(res => {
+        Modal.create({ title: '上传试卷', width: 480, component: UploadComponent, props: { files } }).then(res => {
           res && emit('type-change', classType.value);
         })
       }

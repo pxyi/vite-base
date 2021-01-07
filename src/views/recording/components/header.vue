@@ -20,9 +20,13 @@
         <input type="file" ref="uploadRef" @change="upload" multiple accept=".docx,.doc,.pdf">
       </el-button>
     </div>
+    <div class="rule-box" v-show="showRule" @click="showRule = false">
+      <div @click.stop><img src="/@/assets/import-rule.png" alt="爱学标品导入规则"></div>
+      <i class="el-icon-close" @click="showRule = false" />
+    </div>
   </div>
 
-  <div class="rule-box" v-show="showRule" @click="showRule = false"><div @click.stop><img src="/@/assets/import-rule.png" alt="爱学标品导入规则"></div></div>
+  
 </template>
 <script lang="ts">
 import { ref } from 'vue';
@@ -149,6 +153,21 @@ export default {
     img {
       width: 100%;
     }
+  }
+  .el-icon-close {
+    display: block;
+    width: 40px;
+    height: 40px;
+    color: #fff;
+    font-size: 30px;
+    line-height: 40px;
+    text-align: center;
+    position: absolute;
+    top: 40px;
+    right: 40px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    cursor: pointer;
   }
 }
 .tmpt-type {

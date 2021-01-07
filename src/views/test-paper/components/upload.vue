@@ -50,6 +50,7 @@ export default {
         type: "cascader",
         url: "/permission/user/userDataSubjects",
         params: { userId },
+        default: [store.getters.subject.parentCode, store.getters.subject.code],
         rule: { required: true, message: "请选择学科" },
         valueKey: 'code',
         change: (v) => {
