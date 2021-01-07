@@ -5,7 +5,8 @@ export default new Vuex.Store({
   state: {
     paperInfo: {
       paperCharpts: []
-    }
+    },
+    classType: 1
   },
   mutations: {
     set_paper_info(state, payload) {
@@ -13,6 +14,9 @@ export default new Vuex.Store({
     }, 
     set_paper_charpts(state, payload) {
       state.paperInfo.paperCharpts = cloneDeep(payload);
+    },
+    set_class_type(state, payload) {
+      state.classType = payload
     }
   },
   getters: {

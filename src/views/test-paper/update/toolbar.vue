@@ -131,13 +131,6 @@ export default {
           visibility: visible;
         }
       }
-      h2 {
-        margin-bottom: 15px;
-        line-height: 40px;
-        text-align: center;
-        background: #F5F7FA;
-        border-radius: 4px;
-      }
     }
   }
   .slide-btn {

@@ -117,7 +117,10 @@ export default {
       Screen.create(UpdateComponent, { id: data.id })
     }
     /* 监听新增试卷成功事件 */
-    emitter.on('add-test-paper-success', update);
+    emitter.on('add-test-paper-success', e => {
+      update(e);
+      listRef.value.request();
+    });
 
     return { headerRef, listRef, params, query, remove, preview, download, update }
   }

@@ -144,6 +144,9 @@ export default {
   padding: 0 30px;
   overflow: hidden;
 }
+:deep(.header_ref) .el-input__suffix i {
+  color: #fff !important;
+}
 .age__class {
   margin-left: 20px;
   color: #fff;

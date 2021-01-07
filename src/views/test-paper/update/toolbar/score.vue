@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="total">
-      <div><span>试题数量：</span><i>100</i></div>
-      <div><span>试卷总分：</span><i>100</i></div>
+      <div><span>试题数量：</span><i>{{ questionTotal }}</i></div>
+      <div><span>试卷总分：</span><i>{{ questionScoreTotal }}</i></div>
     </div>
     <div class="table">
       <div class="thead">
@@ -16,14 +16,14 @@
           <div class="td">{{ toChinesNum(index + 1) }}. {{ paper.title }}</div>
           <div class="td">
             <div class="box">
-              <el-input-number size="mini" controls-position="right" :min="0" :max="100" />
+              <el-input-number size="mini" controls-position="right" :min="0" :max="99" @change="paperTypeScoreChange(paper, $event)" />
               <div class="append">分/题</div>
             </div>
           </div>
         </div>
-        <div class="tr" v-for="(i, idx) in paper.questions" :key="i.id">
+        <div class="tr" v-for="(quest, idx) in paper.questions" :key="quest.id">
           <div class="td">{{ idx + 1 }}</div>
-          <div class="td"><el-input-number size="mini" controls-position="right" :min="0" :max="100" /></div>
+          <div class="td"><el-input-number v-model="quest.question.score" size="mini" controls-position="right" :min="0" :max="99" /></div>
         </div>
       </div>
     </div>
@@ -36,9 +36,24 @@ import store from './../store';
 import { toChinesNum } from './../utils';
 export default {
   setup() {
-    let paperCharpts = computed(() => store.getters.paperCharpts);
+    let paperCharpts = computed({
+      get: () => store.getters.paperCharpts,
+      set: (val) => store.commit('set_paper_charpts', val)
+    });
+    let questionTotal = computed(() => paperCharpts.value.reduce((total, n) => total += n.questions.length, 0));
 
-    return { paperCharpts, toChinesNum }
+    let questionScoreTotal = computed(() => paperCharpts.value.reduce((total, n) => { n.questions.map(q => { total += q.question.score || 0 }); return total}, 0));
+
+    const paperTypeScoreChange = (quest, val) => {
+      paperCharpts.value = paperCharpts.value.map(nodes => {
+        if (nodes.id === quest.id) {
+          quest.questions = quest.questions.map(n => { n.question.score = val; return n; })
+        }
+        return nodes;
+      });
+    }
+
+    return { paperCharpts, toChinesNum, questionTotal, paperTypeScoreChange, questionScoreTotal }
   }
 }
 </script>

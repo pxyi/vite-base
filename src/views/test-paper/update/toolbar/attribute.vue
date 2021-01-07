@@ -38,7 +38,7 @@
 </template>
 
 <script lang="ts">
-import { ref, reactive, computed } from 'vue';
+import { ref, reactive, computed, watch } from 'vue';
 import store from './../store/index';
 import axios from 'axios';
 import { AxResponse } from './../../../../core/axios'
@@ -59,7 +59,11 @@ export default {
     });
 
     let paperInfo = computed(() => store.state.paperInfo);
+
     let formGroup: any = reactive({});
+
+    watch(formGroup, (v) => store.commit('set_paper_info', v))
+
     const getSelectList = (val?) => {
       let userId = computed(() => baseStore.getters.userInfo.user.id).value;
       axios.post<null, AxResponse>('/permission/user/userDataRules', { userId, subjectCode: val && val[1] ? val[1] : formGroup.subjectId }).then(res => {
@@ -95,6 +99,13 @@ export default {
 </script>
 <style lang="scss">
 .paper-attribute {
+  h2 {
+    margin-bottom: 15px;
+    line-height: 40px;
+    text-align: center;
+    background: #F5F7FA;
+    border-radius: 4px;
+  }
   & > .el-select,
   & > .el-cascader {
     width: 100%;

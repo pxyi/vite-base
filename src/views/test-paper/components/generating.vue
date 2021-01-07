@@ -85,7 +85,7 @@
                   <div class="group-box">
                     <div v-for="n in questionCheckedList" :key="n.typeName" class="hide-icon">
                       <span>{{ n.typeName }}：</span>
-                      <el-input-number v-model="n.score" size="mini" controls-position="right" :min="0" :max="99" />
+                      <el-input-number v-model="n.score" size="mini" :controls="false" :min="0" :max="99" />
                       <div class="append">分/题</div>
                     </div>
                   </div>
@@ -397,10 +397,6 @@ export default {
           }
           input {
             padding-right: 40px !important;
-          }
-          .el-input-number__increase,
-          .el-input-number__decrease {
-            display: none;
           }
         }
       }

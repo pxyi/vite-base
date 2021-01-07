@@ -22,7 +22,7 @@ const create = (component, props = {}) => {
       val ? resolve(val) : reject(false);
     }
     const app = createApp(component, { ...props, close: remove });
-    Object.keys(props).map(key => app.provide(key, props[key]))
+    Object.keys(props).map(key => app.provide(key, props[key]));
     app.use(Components);
     app.use(Store);
     app.use(ElementPlus);

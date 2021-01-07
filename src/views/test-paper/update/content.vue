@@ -1,28 +1,50 @@
 <template>
   <div class="paper_container">
     <div class="paper_content">
-      <div class="sealing"><img src="/src/assets/test-paper/sealing.png" alt="密封线"></div>
-      <div class="cover-map">
+      <div class="sealing" v-show="paperInfo.showSealing"><img src="/src/assets/test-paper/sealing.png" alt="密封线"></div>
+      <div class="cover-map" v-show="paperInfo.showOrgInfo">
         <img src="/src/assets/test-paper/logo.png" alt="logo" class="logo" />
         <img src="/src/assets/test-paper/title.png" alt="title" class="title" />
       </div>
-      <h1>{{ paperInfo.title }}</h1>
-      <h4><span>考试时间：<i>45</i> 分钟</span><span>总分：<i>100</i>分</span></h4>
-      <h6><p><span>姓名：</span><i /></p><p><span>班级：</span><i /></p><p><span>考号：</span><i /></p></h6>
+      <h1 v-show="paperInfo.showTitle">
+        <input type="text" v-model="paperInfo.title" placeholder="请输入试卷标题" />
+      </h1>
+      <h2 v-show="paperInfo.showSideTitle">
+        <input type="text" v-model="paperInfo.sideTitle" placeholder="请输入试卷副标题" />
+      </h2>
+      <h4 v-show="paperInfo.showTime"><span>考试时间：<i>45</i> 分钟</span><span>总分：<i>100</i>分</span></h4>
+      <h6 v-show="paperInfo.showStuInfo"><p><span>姓名：</span><i /></p><p><span>班级：</span><i /></p><p><span>考号：</span><i /></p></h6>
       <div class="tip">
         <p>注意事项:</p>
         <p>1. 答题前填写好自己的姓名、班级、考号等信息；</p>
         <p>2. 请将答案正确填写在答题卡上。</p>
       </div>
+      <div class="paper-score" v-show="paperInfo.showChapterScore">
+        <div>
+          <el-table :data="paperScoreData" border size="mini" :header-cell-style="{background: '#fff'}">
+            <el-table-column prop="name" label="题号" align="center" width="84" />
+            <el-table-column v-for="i in paperInfo.paperCharpts.length" :key="i" :prop="`index${i - 1}`" :label="toChinesNum(i)" align="center" width="60" />
+            <el-table-column prop="score" label="总分" align="center" width="84" />
+          </el-table>
+        </div>
+      </div>
       <div class="paper_main">
         <div class="question_type" v-for="(questionType, index) in paperInfo.paperCharpts" :key="questionType.id">
           <div class="question-title">
-            <span>{{ toChinesNum(index + 1) }}、 {{ questionType.title }}（共{{ questionType.questionCount }}小题）（0）分</span>
+            <div v-show="paperInfo.showScore">
+              <div style="display: inline-block">
+                <el-table :data="[{name: ' ', score: ' '}]" border size="mini" :header-cell-style="{background: '#fff'}">
+                  <el-table-column label="评卷人" align="center" width="84"><template #default>&nbsp;</template></el-table-column>
+                  <el-table-column prop="score" label="得分" align="center" width="84" />
+                </el-table>
+              </div>
+            </div>
+            <span>{{ toChinesNum(index + 1) }}、 {{ questionType.title }}（共{{ questionType.questionCount }}小题）（{{ questionType.questions.reduce((t, n) => t += (n.question.score || 0), 0) }}）分</span>
             <i class="el-icon-plus" />
             <div class="footer">
-              <i class="iconfont iconshangyi" />
-              <i class="iconfont iconxiayi" />
-              <i class="iconfont iconshanchu" />
+              <i class="iconfont iconshangyi" :class="{ 'is__disabled': index === 0 }" @click="moveType(index, -1)" />
+              <i class="iconfont iconxiayi" :class="{ 'is__disabled': index === paperInfo.paperCharpts.length - 1 }" @click="moveType(index, 1)" />
+              <i class="iconfont iconshanchu" :class="{ 'is__disabled': paperInfo.paperCharpts.length === 1 }" @click="deleteQuestType(questionType.id)" />
             </div>
           </div>
           <draggable v-model="questionType.questions" tag="transition-group" animation="250" item-key="id">
@@ -33,7 +55,7 @@
                 <div class="footer">
                   <div>
                     <i class="iconfont iconshezhifenzhi" />
-                    <input type="text" />
+                    <el-input-number :controls="false" size="mini" v-model="element.question.score" />
                     <span>分值</span>
                   </div>
                   <div>
@@ -44,9 +66,9 @@
                     <i class="iconfont iconhuanti" />
                     <span>换题</span>
                   </div>
-                  <i class="iconfont iconshangyi" />
-                  <i class="iconfont iconxiayi" />
-                  <i class="iconfont iconshanchu" />
+                  <i class="iconfont iconshangyi" :class="{ 'is__disabled': index === 0 }" @click="moveQuestion(questionType.id, index, -1)" />
+                  <i class="iconfont iconxiayi" :class="{ 'is__disabled': index === questionType.questions.length - 1 }" @click="moveQuestion(questionType.id, index, 1)" />
+                  <i class="iconfont iconshanchu" :class="{ 'is__disabled': questionType.questions.length === 1 }" @click="deleteQuest(element.id)" />
                 </div>
               </div>
             </template>
@@ -58,17 +80,50 @@
 </template>
 
 <script lang="ts">
-import { ref, computed } from 'vue';
+import { ref, Ref, computed } from 'vue';
 import draggable from 'vuedraggable';
 import axios from 'axios';
 import store from './store';
 import { toChinesNum } from './utils';
-
+import { cloneDeep } from 'lodash';
+const exchangeArrayIndex = (arr, index1, index2) => {
+  arr[index1] = arr.splice(index2, 1, arr[index1])[0];
+  return arr;
+}
 export default {
   components: { draggable },
   setup(props) {
-    let paperInfo = computed(() => store.state.paperInfo);
-    return { paperInfo, toChinesNum }
+    let paperInfo: Ref<any> = computed(() => store.state.paperInfo);
+
+    let classType = computed(() => store.state.classType);
+
+    let paperScoreData = computed(() => {
+      let data = {
+        name: '得分',
+        ...paperInfo.value.paperCharpts.reduce((obj, _, i) => {obj[`index${i}`] = '' ; return obj }, {}),
+        score: ''
+      }
+      return [ data ];
+    })
+
+    const deleteQuestType = (id) => {
+      let data = paperInfo.value.paperCharpts.filter((p: { id }) => p.id !== id);
+      store.commit('set_paper_charpts', data);
+    }
+    const deleteQuest = (id) => {
+      let data = paperInfo.value.paperCharpts.map((data: { questions: any[] }) => { data.questions = data.questions.filter((q: {id}) => q.id !== id); return data; });
+      store.commit('set_paper_charpts', data);
+    }
+    const moveType = (index, arrow) => {
+      store.commit('set_paper_charpts', exchangeArrayIndex(cloneDeep(paperInfo.value.paperCharpts), index, index + arrow));
+    }
+    const moveQuestion = (typeId, index, arrow) => {
+      let typeIndex = paperInfo.value.paperCharpts.findIndex((p: {id}) => p.id === typeId);
+      let data = cloneDeep(paperInfo.value.paperCharpts);
+      data[typeIndex].questions = exchangeArrayIndex(data[typeIndex].questions, index, index + arrow);
+      store.commit('set_paper_charpts', data);
+    }
+    return { paperInfo, toChinesNum, deleteQuestType, deleteQuest, moveType, moveQuestion, paperScoreData, classType }
   }
 }
 </script>
@@ -105,16 +160,31 @@ export default {
       top: 30px;
       left: 6px;
     }
-    h1 {
-      margin: 0 20px;
+    h1 input {
+      display: block;
+      width: 100%;
+      margin: 0 20px 15px;
       padding-bottom: 10px;
       font-size: 28px;
       line-height: 40px;
       text-align: center;
+      border: 0;
       border-bottom: solid 1px #1AAFA7;
+      outline: none;
+    }
+    h2 input{
+      display: block;
+      width: 100%;
+      margin: 0 20px 15px;
+      padding-bottom: 10px;
+      font-size: 20px;
+      line-height: 30px;
+      text-align: center;
+      border: 0;
+      outline: none;
     }
     h4 {
-      margin: 15px 20px;
+      margin: 0 20px 15px;
       color: #303133;
       font-size: 12px;
       line-height: 22px;
@@ -146,6 +216,13 @@ export default {
       font-size: 12px;
       line-height: 20px;
       border-bottom: solid 1px #DCDFE6;
+    }
+    .paper-score {
+      margin: 20px auto 0;
+      text-align: center;
+      & > div {
+        display: inline-block;
+      }
     }
   }
 
@@ -226,14 +303,6 @@ export default {
         color: #77808D;
         font-size: 12px;
         cursor: pointer;
-        input {
-          width: 32px;
-          border: 0;
-          font-size: 12px;
-          text-align: center;
-          border-bottom: solid 1px #77808D;
-          outline: none;
-        }
         &:last-of-type {
           padding-right: 20px;
           height: 16px;
@@ -255,6 +324,20 @@ export default {
           color: #3D7FFF;
           margin-right: 25px;
         }
+        &.is__disabled {
+          color: #999;
+          pointer-events: none;
+        }
+      }
+    }
+    :deep(.footer) .el-input-number {
+      width: 32px;
+      input {
+        height: 20px;
+        padding: 0 5px;
+        border-radius: 0;
+        border: 0;
+        border-bottom: solid 1px #77808D;
       }
     }
   }
