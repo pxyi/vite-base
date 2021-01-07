@@ -94,13 +94,13 @@
   background: #fff;
   &:hover,
   &:focus {
-    color: #409eff;
-    border-color: #c6e2ff;
-    background-color: #ecf5ff;
+    color: rgb(26, 175, 167);
+    border-color: rgba(26, 175, 167, 0.15);
+    background-color: rgba(26, 175, 167, 0.15);
   }
   &:active {
-    color: #3a8ee6;
-    border-color: #3a8ee6;
+    color:rgba(26, 175, 167, 0.8);
+    border-color: rgba(26, 175, 167, 0.8);
     outline: none;
   }
 }
