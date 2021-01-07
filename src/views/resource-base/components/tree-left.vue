@@ -76,6 +76,7 @@ export default {
     const checkChange = (target ,e) => {
       emit("check-change",e)
       emitter.emit("check-change", e);
+      //  console.log( e);
       
     };
 

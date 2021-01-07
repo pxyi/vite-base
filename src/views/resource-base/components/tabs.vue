@@ -188,18 +188,13 @@ export default {
      let chapterId:Ref<any> = ref([])
      emitter.on('check-change',(e)=>{
        chapterId.value = []
-      e.checkedNodes.map((item:any,index)=>{
-     if(item.parentId){
+       console.log(e.checkedNodes);
+      e.checkedNodes.map((item:any)=>{
+     if(item.childs.length===0){
        chapterId.value.push(item.id)
      }
       })
        pageParam.chapterId = chapterId.value
-      // let index = pageParam.chapterId.findIndex(i => i === e.id);
-      // if( index !== -1 ) {
-      //   pageParam.chapterId.splice(index, 1)
-      // } else {
-      //   pageParam.chapterId.push(e.id);
-      // }
       getMaterialQueryPage();
       tabCountRequest()
      
