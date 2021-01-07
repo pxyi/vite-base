@@ -143,7 +143,7 @@ export default {
         margin-bottom: 20px;
         :deep(img) {
           float: none !important;
-          positions: static !important;
+          position: static !important;
         }
       }
       &:hover {
