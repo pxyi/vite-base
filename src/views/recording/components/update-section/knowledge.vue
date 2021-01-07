@@ -20,8 +20,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-<<<<<<< HEAD
 </style>
-=======
-</style>
->>>>>>> 48b271bf50e1353d058a6ad97ded261a5542f404

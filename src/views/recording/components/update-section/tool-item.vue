@@ -130,13 +130,8 @@ export default {
           d.gradeId = data.value.gradeId;
           d.category = data.value.category;
           d.difficult = data.value.difficult;
-<<<<<<< HEAD
           d.knowledgePoints = cloneDeep(data.value.knowledgePoints);
           d.questionSources = cloneDeep(data.value.questionSources);
-=======
-          d.knowledgePoints = data.value.knowledgePoints;
-          d.questionSources = data.value.questionSources;
->>>>>>> 48b271bf50e1353d058a6ad97ded261a5542f404
           return d;
         });
         store.commit('set_data_set', cloneData);

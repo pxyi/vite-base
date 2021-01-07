@@ -418,8 +418,10 @@ export default {
         .e-c-group {
           flex: 1 1 40px;
           display: flex;
+          flex-wrap: wrap;
           .c-t-item {
             flex: 1;
+            white-space: nowrap;
           }
         }
       }
