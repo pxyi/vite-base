@@ -44,7 +44,7 @@ export default {
     });
     const goSystem = async () => {
       let confirm = await ElMessageBox.confirm('是否进入后台管理系统？', '进入后台', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' })
-      confirm && (window.location.href = import.meta.env.VITE_APP_SYSTEM_URL as string);
+      confirm && (window.open(`${import.meta.env.VITE_APP_SYSTEM_URL}`));
     }
 
     return { list, initPath, goSystem }
