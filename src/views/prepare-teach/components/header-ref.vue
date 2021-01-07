@@ -6,7 +6,7 @@
       </ul>
     </div>
     <div class="search" v-if="searchShow == 1">
-      <el-input clearable placeholder="按课程名称搜索" prefix-icon="el-icon-search" v-model="searchText" @keydown.enter="searchHandle" />
+      <el-input clearable placeholder="按课程名称搜索" prefix-icon="el-icon-search" v-model="searchText" @keydown.enter="searchHandle" @clear="searchHandle" />
     </div>
   </div>
 </template>
@@ -31,10 +31,7 @@ export default {
     let classList = [ { name: '近期备课', id: 0 }, { name: '全部课程', id: 1 } ];
     const classChange = (e) => { classType.value = e; emit('type-change', e);};
     let searchText = ref(null);
-    const searchHandle = () => emit('search', searchText);
-
-    let queryClass = {};
-    emitter.on('queryClass', (e) => queryClass = e)
+    const searchHandle = () => emit('search', searchText.value);
 
     return { classType, classList, classChange, searchText, searchHandle }
   }
