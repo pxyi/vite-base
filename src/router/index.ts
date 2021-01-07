@@ -67,6 +67,12 @@ const routes: RouteRecordRaw[] = [
             name: 'recording',
             meta: { title: '批量录题' },
             component: AsyncComponent(() => import('/@/views/recording/index.vue'))
+          },
+          {
+            path: 'database',
+            name: 'database',
+            meta: { title: '资料库' },
+            component: AsyncComponent(() => import('/@/views/database/index.vue'))
           }
         ]
       },
