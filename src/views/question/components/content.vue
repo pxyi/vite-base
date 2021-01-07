@@ -19,8 +19,9 @@
     </div>
     <cus-skeleton :loading="loading">
       <div class="section">
-        <div class="item" v-for="data in dataset" :key="data.id">
-          <div class="update-icon" @click="update(data.id)"><i class="el-icon-edit-outline" /></div>
+        <div class="item" v-for="data in dataset" :key="data.id" @click="isSelected && checkedChange(data)" :class="{'is__checked': isSelected && !!checkedList.find(n => n.id === data.id), 'is__selected': isSelected }">
+          <div class="update-icon" @click="update(data.id)" v-if="!isSelected"><i class="el-icon-edit-outline" /></div>
+          <div class="update-icon" v-else><el-checkbox :modelValue="!!checkedList.find(n => n.id === data.id)" /></div>
           <div class="content-text">
             <div class="title" v-html="data.title"></div>
           </div>
@@ -37,17 +38,16 @@
             <p><span>收录：</span><span>{{ data.createTime }}</span></p>
             <p><span>难度：</span><span>{{ data.difficult }}</span></p>
             <p><span>引用：</span><span>{{ data.useCount }}</span></p>
-            <div>
+            <div v-if="!isSelected">
               <p><i @click="data.showAnalysis = !data.showAnalysis">解析</i></p>
               <!-- <p><i @click="similarPreview(data.id)">相似题</i></p> -->
 
-              <a @click.prevent="addCart(data)" :class="{ active: !!cartList.find(i => i.id === data.id) }" v-if="userId === data.creatorId" />
+              <!-- <a @click.prevent="addCart(data)" :class="{ active: !!cartList.find(i => i.id === data.id) }" v-if="userId === data.creatorId" /> -->
 
               <a @click="remove(data)" v-if="userId === data.creatorId" :class="{ 'is__loading': data.loading }">
                 <i class="el-icon-loading" v-if="data.loading" />
                 <span>删除</span>
               </a>
-              <!-- <i :class="[`el-icon-${data.loading ? 'loading' : 'delete'}`]" @click="remove(data)" v-if="userId === data.creatorId" /> -->
             </div>
           </div>
         </div>
@@ -81,7 +81,13 @@ import { useStore } from 'vuex';
 const difficultFilter = (v) => ([{ name: '易', id: 11 }, { name: '较易', id: 12 }, { name: '中档', id: 13 }, { name: '较难', id: 14 }, { name: '难', id: 15 }].find(i => i.id === v)?.name);
 
 export default {
-  setup() {
+  props: {
+    isSelected: {         // true => 选择试题页面  fale => 题库首页
+      type: Boolean,
+      default: () => false
+    }
+  },
+  setup(props, { emit }) {
     let store = useStore()
     let userId = computed(() => store.getters.userInfo.user.id)
     let dataset: Ref<any[]> = ref([]);
@@ -97,8 +103,15 @@ export default {
       total: 0
     });
 
-    let __params: any = {};
+    let checkedList: Ref<any[]> = ref([]);     // 选中的试题集合
+    const checkedChange = (data: any) => {
+      let index = checkedList.value.findIndex(n => n.id === data.id)
+      index > -1 ? checkedList.value.splice(index, 1) : checkedList.value.push(data);
+      emit('check-change', checkedList.value)
+    }
 
+    let __params: any = {};
+    
     let loading = ref(false);
     const request = async (params?) => {
       loading.value = true;
@@ -149,13 +162,6 @@ export default {
       let res = await axios.post<null, AxResponse>('/tiku/question/querySimilar', { id, subject: __params.subject, count: 10 })
     }
 
-    /* ------------- 加入购物车 ------------- */
-    let cartList: Ref<any[]> = ref([]);
-    const addCart = (data) => {
-      let index = cartList.value.findIndex(c => c.id === data.id);
-      index > -1 ? cartList.value.splice(index, 1) : cartList.value.push(data);
-    }
-
     const update = (id) => {
       Modal.create({ title: '编辑题目', component: updateComponent, width: 640, props: { id } }).then(_ => request() );
     }
@@ -167,7 +173,7 @@ export default {
       request();
     }
 
-    return { request, loading, dataset, pageAorder, orderChange, similarPreview, cartList, addCart, update, showAnswer, remove, userId }
+    return { request, loading, dataset, pageAorder, orderChange, similarPreview, update, showAnswer, remove, userId, checkedList, checkedChange }
   }
 }
 </script>
@@ -201,9 +207,6 @@ export default {
         display: inline-block;
         height: 16px;
         line-height: 16px;
-        padding-right: 10px;
-        margin-right: 10px;
-        border-right: solid 1px #fff;
         vertical-align: middle;
       }
       i {
@@ -213,6 +216,12 @@ export default {
       }
       div {
         display: inline-block;
+        height: 16px;
+        padding-left: 10px;
+        margin-left: 10px;
+        line-height: 16px;
+        vertical-align: middle;
+        border-left: 1px solid rgb(255, 255, 255);
         cursor: pointer;
         img{
           display: inline-block;
@@ -231,6 +240,16 @@ export default {
       border: 1px solid #EBEEF6;
       position: relative;
       transition: all .25s;
+      &.is__selected {
+        cursor: pointer;
+      }
+      &.is__checked {
+        border-color: #19AEA5;
+      }
+      :deep(.update-icon) .el-checkbox {
+        vertical-align: top;
+        pointer-events: none;
+      }
       &:not(:last-child) {
         margin-bottom: 20px;
       }
@@ -351,33 +370,35 @@ export default {
   }
 }
 
-.e-title {
-  margin-bottom: 20px;
-}
-.e-main {
-  .e-m-cell {
-    display: flex;
-    margin-bottom: 10px;
-    .e-c-label {
-      width: 40px;
-    }
-    .e-c-group {
-      flex: 1 1 40px;
-      display: flex;
-      .c-t-item {
-        flex: 1;
-      }
-    }
+:deep(.item) {
+  .e-title {
+    margin-bottom: 20px;
   }
-  &-title {
+  .e-main {
     .e-m-cell {
-      margin-bottom: 20px;
+      display: flex;
+      margin-bottom: 10px;
       .e-c-label {
-        margin-bottom: 5px;
+        width: 40px;
       }
       .e-c-group {
-        line-height: 24px;
-        text-indent: 20px;
+        flex: 1 1 40px;
+        display: flex;
+        .c-t-item {
+          flex: 1;
+        }
+      }
+    }
+    &-title {
+      .e-m-cell {
+        margin-bottom: 20px;
+        .e-c-label {
+          margin-bottom: 5px;
+        }
+        .e-c-group {
+          line-height: 24px;
+          text-indent: 20px;
+        }
       }
     }
   }

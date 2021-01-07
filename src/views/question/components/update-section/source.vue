@@ -121,6 +121,9 @@ export default {
             }
           }
         }
+        :deep(.source-control) .el-cascader {
+          width: 100%;
+        }
       }
     }
     &:hover .source-delete-btn {

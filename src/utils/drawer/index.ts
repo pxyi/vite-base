@@ -12,14 +12,14 @@ const create = (opt: DrawerCreate): Promise<any> => {
     maxWidth: opt.maxWidth || 'auto',
     component: opt.component === 'form' || !opt.component ? AppComponents.CusForm : opt.component,
     props: opt.props || {},
-    zIndex: opt.zIndex || 200,
+    zIndex: opt.zIndex || 2000,
     mask: typeof opt.mask === 'undefined' ? true : opt.mask,
     maskClosable: typeof opt.maskClosable === 'undefined' ? true : opt.maskClosable,
     closable: typeof opt.closable === 'undefined' ? true : opt.closable,
     footed: typeof opt.footed === 'undefined' ? true : opt.footed
   }
 
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
 
     const container = createElement('div', { className: `__drawer__${ Date.now() }` });
 
@@ -33,7 +33,7 @@ const create = (opt: DrawerCreate): Promise<any> => {
         app.unmount(drawerBody);
         document.body.removeChild(container);
       }, 500);
-      val && resolve(val);
+      val ? resolve(val) : reject(false);
     };
 
     const app = createApp(options.component, { ...options.props });

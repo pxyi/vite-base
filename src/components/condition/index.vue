@@ -1,19 +1,29 @@
 <template>
   <div class="cus__condition__container">
     <cus-skeleton :loading="loading">
+      <div class="cus__condition__header"><slot /></div>
       <div class="cus__condition__content">
         <template v-for="node in showNodeList" :key="node.key">
           <div class="cus__class__item" v-show="!node.hide || isOpened">
             <div class="cus__class__label">{{ node.label }}</div>
-            <div class="cus__class__box">
-              <div
-                :class="{ active: cell.id === formGroup[node.key], 'cus__class__cell': true }"
-                v-for="cell in (node.options || list[mapping.find(i => i.text === node.label).key])"
-                :key="cell.id"
-                @click="setQueryValue(node.key, cell.id)"
-              >
-                <span>{{ cell.name }}</span>
-              </div>
+            <div class="cus__class__box is__element">
+              <template v-if="node.type === 'input'">
+                <el-input size="mini" suffix-icon="el-icon-search"
+                  v-model="formGroup[node.key]" 
+                  :placeholder="node.placeholder || `根据${node.label}搜索`"
+                  @keydown.enter="setQueryValue(node.key, formGroup[node.key])"
+                />
+              </template>
+              <template v-else>
+                <div
+                  :class="{ active: cell.id === formGroup[node.key], 'cus__class__cell': true }"
+                  v-for="cell in (node.options || list[mapping.find(i => i.text === node.label).key])"
+                  :key="cell.id"
+                  @click="setQueryValue(node.key, cell.id)"
+                >
+                  <span>{{ cell.name }}</span>
+                </div>
+              </template>
             </div>
           </div>
         </template>
@@ -51,13 +61,15 @@ import emitter from './../../utils/mitt';
 import { AxResponse } from './../../core/axios';
 import { reactive, ref, Ref, PropType, onUnmounted } from 'vue';
 import { useStore } from 'vuex';
+import { ElInput } from 'element-plus';
 
 interface ICondition {
   label : string;
   key   : string;
   default?: any;
   hide  : boolean;
-  options?: any[]
+  options?: any[];
+  hidden?: boolean;
 }
 
 const mapping = [
@@ -84,6 +96,7 @@ export default {
       default: () => false
     }
   },
+  components: { ElInput },
   emit: ['submit'],
   setup(props, { emit }) {
 
@@ -95,6 +108,8 @@ export default {
     let showMoreBtn = ref(false);
     let formGroup = reactive(props.nodeList.reduce( (controls, node) => {
       controls[node.key] = typeof node.default === 'undefined' ? null : node.default;
+      node.options && (node.options = [{ name: '全部', id: null }, ...node.options]);
+      if (node.hidden) { return controls; }
       if (node.hide) {
         hideNodeList.push(node);
         showMoreBtn.value = true;
@@ -202,6 +217,13 @@ const getCondition = (userId, subjectCode, nodeList): Promise<any> => {
       flex: 1 1 124px;
       padding: 0 24px 8px;
       background: #fff;
+      &.is__element {
+        padding: 5px 24px 0;
+        .el-input {
+          width: 300px;
+          height: 28px;
+        }
+      }
       .cus__class__cell {
         display: inline-block;
         margin-right: 22px;
@@ -227,6 +249,18 @@ const getCondition = (userId, subjectCode, nodeList): Promise<any> => {
         &.active {
           pointer-events: none;
         }
+      }
+    }
+  }
+
+  :deep(.cus__class__item) {
+    .el-input {
+      input {
+        font-size: 13px;
+        border-radius: 0;
+        border-top: 0;
+        border-right: 0;
+        border-left: 0;
       }
     }
   }

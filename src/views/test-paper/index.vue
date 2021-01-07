@@ -1,6 +1,6 @@
 <template>
   <template ref="headerRef">
-    <HeaderRefComponent @type-change="params.type = $event" @search="params.title = $event" />
+    <HeaderRefComponent @type-change="query('type', $event)" @search="query('title', $event)" />
   </template>
 
   <div>
@@ -10,11 +10,11 @@
         { label: '年级', key: 'gradeId' },
         { label: '来源', key: 'source' },
       ]"
-      @submit="$refs.list.request($event)" 
+      @submit="$refs.listRef.request($event)" 
     />
 
     <div class="cus-list">
-      <cus-list ref="list" has-page url="/tiku/paper/queryPaperPage" :default="params" :auto-request="false">
+      <cus-list ref="listRef" has-page url="/tiku/paper/queryPaperPage" :default="params" :auto-request="false">
         <template v-slot:avatar>
           <img src="/@/assets/test-paper/list-avatar.png" style="width: 86px" alt="爱学标品">
         </template>
@@ -30,12 +30,12 @@
         </template>
         <template v-slot:actions="{ data }">
           <div class="list__actions">
-            <el-button type="text" @click="preview(data.filePath)"><i class="el-icon-magic-stick" /><span>预览</span></el-button>
-            <el-button type="text" @click="update(data)" v-if="data.sourceFrom !== 3"><i class="el-icon-edit-outline" /><span>编辑</span></el-button>
-            <el-button type="text" @click="download(data)"><i class="el-icon-printer" /><span>下载/打印</span></el-button>
-            <el-popconfirm title="这是一段内容确定删除吗？" confirmButtonText='确定' cancelButtonText='取消' @confirm="remove(data.id, $refs.list)">
+            <el-button type="text" @click="preview(data.filePath)"><i class="iconfont iconsearch-eye-line" /><span>预览</span></el-button>
+            <el-button type="text" @click="update(data)" v-if="data.sourceFrom !== 3"><i class="iconfont iconfile-edit-line" /><span>编辑</span></el-button>
+            <el-button type="text" @click="download(data)"><i class="iconfont icondayin" /><span>下载/打印</span></el-button>
+            <el-popconfirm title="这是一段内容确定删除吗？" confirmButtonText='确定' cancelButtonText='取消' @confirm="remove(data.id)">
               <template #reference>
-                <el-button type="text"><i class="el-icon-delete" /><span>删除</span></el-button>
+                <el-button type="text"><i class="iconfont iconshanchu" /><span>删除</span></el-button>
               </template>
             </el-popconfirm>
           </div>
@@ -65,13 +65,19 @@ export default {
 
     let params: Ref<any> = ref({});
     setTimeout(() => {
-    emitter.emit('effect', (id) => params.value.subjectId = id)
+      emitter.emit('effect', (id) => params.value.subjectId = id)
     });
 
-    const remove = async (id, listRef) => {
+    let listRef = ref();
+    const query = (key, val) => {
+      params.value[key] = val && val.value ? val.value : val;
+      listRef.value.request(params.value);
+    }
+
+    const remove = async (id) => {
       let res = await axios.post<any, AxResponse>('/tiku/paper/deletePaper', { id });
       ElMessage[res.result ? 'success' : 'error'](res.result ? '删除成功' : res.msg);
-      res.result && listRef.request();
+      res.result && listRef.value.request();
     }
 
     const preview = (path) => {
@@ -110,8 +116,13 @@ export default {
     const update = (data) => {
       Screen.create(UpdateComponent, { id: data.id })
     }
+    /* 监听新增试卷成功事件 */
+    emitter.on('add-test-paper-success', e => {
+      update(e);
+      listRef.value.request();
+    });
 
-    return { headerRef, params, remove, preview, download, update }
+    return { headerRef, listRef, params, query, remove, preview, download, update }
   }
 }
 </script>
