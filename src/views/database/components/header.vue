@@ -2,38 +2,43 @@
   <div class="header_ref">
     <div class="tabs_box">
       <ul>
-        <li v-for="p in classList" :key="p.id" :class="{ active: classType === p.id }" @click="classChange(p.id)">{{ p.name }}</li>
+        <li>资料库</li>
       </ul>
     </div>
-    <div class="search" v-if="searchShow == 1">
-      <el-input clearable placeholder="按课程名称搜索" prefix-icon="el-icon-search" v-model="searchText" @keydown.enter="searchHandle" @clear="searchHandle" />
+    <div class="search">
+      <el-input clearable placeholder="按文件名搜索" prefix-icon="el-icon-search" v-model="searchText" @keydown.enter="searchHandle" />
+    </div>
+    <div class="btns">
+      <el-dropdown @command="handle">
+        <el-button round><span>添加题目</span><i class="el-icon-caret-bottom" /></el-button>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item>上传资料</el-dropdown-item>
+            <el-dropdown-item>上传标准教案</el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
     </div>
   </div>
 </template>
 <script lang="ts">
-import { ref } from 'vue';
-import OrganizingPapers from './organizing-papers.vue';
-import emitter from './../../../utils/mitt';
+import { ref, watch } from 'vue';
 import Modal from './../../../utils/modal';
 import { ElMessage } from 'element-plus';
 import axios from 'axios';
 import { AxResponse } from './../../../core/axios';
 
 export default {
-  props:{
-    searchShow:{
-      type: Number,
-      default: 1
-    }
-  },
   setup(props, { emit }) {
-    let classType = ref(1);
-    let classList = [ { name: '近期备课', id: 0 }, { name: '全部课程', id: 1 } ];
-    const classChange = (e) => { classType.value = e; emit('type-change', e);};
+
     let searchText = ref(null);
+   
     const searchHandle = () => emit('search', searchText.value);
 
-    return { classType, classList, classChange, searchText, searchHandle }
+    const handle = () => {
+    }
+
+    return { searchText, searchHandle, handle }
   }
 }
 </script>
@@ -84,9 +89,6 @@ export default {
     button {
       color: #1AAFA7;
       padding: 10px 23px;
-      label {
-        cursor: pointer;
-      }
       input {
         display: none;
       }
