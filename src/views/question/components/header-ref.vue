@@ -6,7 +6,7 @@
       </ul>
     </div>
     <div class="search">
-      <el-input clearable placeholder="按题干搜索" prefix-icon="el-icon-search" v-model="searchText" @keydown.enter="searchHandle" />
+      <el-input clearable placeholder="按题干搜索" prefix-icon="el-icon-search" v-model="searchText" @keydown.enter="searchHandle" @clear="searchHandle" />
     </div>
     <div class="btns">
       <el-button round @click="add">添加题目</el-button>
@@ -31,12 +31,7 @@ export default {
 
     let searchText = ref(null);
    
-    const searchHandle = () => {
-      emit('search', searchText)
-      watch(searchText,(e) => {
-        emit('search', searchText)
-      })
-    };
+    const searchHandle = () => {emit('search', searchText)};
 
     const add = () => {
       Drawer.create({ title: '添加题目', width: 'calc(100% - 200px)', maxWidth: 640, component: UpdateComponent }).then(_ => emit('add-success'));
