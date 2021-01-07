@@ -97,8 +97,6 @@ export default {
       }
       loading.value = false;
       setTimeout(() => {
-        headerRef.value.knowledgeRef.setCheckedKeys(knowledgePoints || []);
-
         sourceRef.value.questionSources = info.questionSources || [];
       });
 

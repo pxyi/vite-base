@@ -5,24 +5,16 @@
       <div class="f-item" style="flex: 2.1">
         <div class="f-i-label">知识点</div>
         <div class="f-i-control">
-          <el-popover placement="bottom-start" :width="220">
-            <div class="knowledge-tree-wrapper">
-              <el-tree
-                class="knowledge-tree"
-                :data="selectMap.knowledgeList"
-                ref="knowledgeRef"
-                show-checkbox
-                node-key="id"
-                :props="{ children: 'childs', label: 'name' }"
-                @check="knowledgeCheck"
-              />
-            </div>
-            <template #reference>
-              <el-input readonly clearable placeholder="选择知识点" size="medium"
-                :model-value="formGroup.knowledgePoints.length ? `已选择${formGroup.knowledgePoints.length}项` : null"
-              />
-            </template>
-          </el-popover>
+          <el-cascader
+            v-model="formGroup.knowledgePoints"
+            :options="selectMap.knowledgeList"
+            :props="{ multiple: true, children: 'childs', label: 'name', value: 'id', emitPath: false}"
+            clearable
+            size="medium"
+            placeholder="选择知识点"
+            :show-all-levels="false"
+            collapse-tags
+          />
         </div>
       </div>
       <div class="f-item">
@@ -88,7 +80,6 @@ export default {
     });
     let subject = computed(() => store.getters.subject.code).value;
     let userId = computed(() => store.getters.userInfo.user.id).value;
-
     let selectMap: any = reactive({
       knowledgeList: [],
       gradeList: [],
@@ -102,27 +93,13 @@ export default {
     axios.post<null, AxResponse>('/permission/user/userDataRules', { userId, subjectCode: subject }).then(res => {
       selectMap.gradeList = res.json.grades;
     });
-    axios.post<any, AxResponse>('/tiku/knowledge/queryTree', { subjectId: subject }).then(res => selectMap.knowledgeList = res.json );
+    axios.post<any, AxResponse>('/tiku/knowledge/queryTree', { subjectId: subject }).then(res => selectMap.knowledgeList = JSON.parse(JSON.stringify(res.json).replaceAll('"childs":[]', '"childs":null')));
 
     const questionTypeChange = (e) => emit('question-type-change', selectMap.questionTypeList.find((q: any) => q.jyQuestionType === e));
 
-
-    let knowledgeRef = ref();
-
     let chooseArr: Ref<any>= ref([])
-    const knowledgeCheck = (target, { checkedNodes } ) => {
-      chooseArr.value = []
-      checkedNodes.map((item)=>{
-        if(item.childs.length === 0) {
-          chooseArr.value.push(item.id)
-        }else {
-          return
-        }
-      })
-      formGroup.knowledgePoints = chooseArr;
-    }
 
-    return { formGroup, selectMap, questionTypeChange, knowledgeRef, knowledgeCheck }
+    return { formGroup, selectMap, questionTypeChange }
   }
 }
 </script>
@@ -148,6 +125,9 @@ export default {
       }
       .f-i-control {
         flex: 1 1 44px;
+        :deep(.el-cascader) {
+          width:100%;
+        }
       }
     }
   }
