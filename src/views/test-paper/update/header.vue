@@ -1,7 +1,7 @@
 <template>
   <div class="paper__header__container">
     <div class="header">
-      <div class="save"><div v-if="!isPreview"><i class="el-icon-edit-outline" /><span>自动保存...</span></div></div>
+      <div class="save"><div v-if="!isPreview" @click="save"><i class="el-icon-edit-outline" /><span>自动保存...</span></div></div>
       <div class="tabs_box" v-if="isPreview">
         <ul>
           <li v-for="p in classList" :key="p.id" :class="{ active: classType === p.id }" @click="classType = p.id">{{ p.name }}</li>
@@ -19,6 +19,7 @@ import { ref, Ref, reactive, computed, inject } from 'vue';
 import Modal from './../../../utils/modal';
 import downloadComponent from './../components/download.vue';
 import store from './store';
+import axios from 'axios';
 
 export default {
   setup(props) {
@@ -41,7 +42,12 @@ export default {
         window.open(`${import.meta.env.VITE_APP_BASE_URL}/tiku/paper/downPaper?paperId=${ id }&type=${ res.type }&templateId=${ res.templateId }`);
       });
     }
-    return { classType, classList, close, download, isPreview }
+
+    let paperInfo = computed(() => store.state.paperInfo);
+    const save = () => {
+      axios.post('/tiku/paper/addPaper', paperInfo.value,{ headers: { 'Content-Type': 'application/json' } })
+    }
+    return { classType, classList, close, download, isPreview, save }
   }
 }
 </script>
@@ -57,6 +63,7 @@ export default {
   }
   .save {
     color: #fff;
+    cursor: pointer;
     i {
       font-size: 24px;
       vertical-align: middle;
