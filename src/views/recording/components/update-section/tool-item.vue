@@ -100,11 +100,9 @@ import store from './../store';
 import axios from 'axios';
 import { AxResponse } from './../../../../core/axios';
 import { useStore } from 'vuex';
-import KnowledgeComponent from './knowledge.vue';
 import { cloneDeep } from 'lodash';
 
 export default {
-  components: { KnowledgeComponent },
   setup() {
     let baseStore = useStore();
     let data: Ref<any> = computed(() => store.state.focusData);
