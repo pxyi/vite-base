@@ -36,13 +36,8 @@ export default({
       if(!dateData && startOrEnd === 'start'){
         return   //起始时间为空 直接返回
       }
-      let date = new Date(dateData)
-      let y = date.getFullYear()
-      let m: any = date.getMonth() + 1
-      m = m < 10 ? ('0' + m) : m
-      let d: any = date.getDate()
-      d = d < 10 ? ('0' + d) : d
-      let time: any = y + '-' + m + '-' + d
+      let time = new Date(dateData).toLocaleDateString()
+      console.log(time)
       return time
     }
     // 起始时间默认
