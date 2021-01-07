@@ -7,7 +7,7 @@
       <template v-for="(menu) in list" :key="menu.key">
         <div class="menu-item" :class="{ 'is-closed': !menu.closed }">
           <div class="menu-title"
-            @click="menu.isLeaf && !$route.path.includes(menu.key) ? $router.push(menu.key) : (menu.closed = !menu.closed)"
+            @click=" menu.isLeaf && !$route.path.includes(menu.key) ? $router.push(menu.key) : (menu.closed = !menu.closed)"
             :class="{ 'active': $route.path.includes(menu.key) }"
           >
             <img :src="`nav-icon/${menu.icon}.png`" alt="icon" />
@@ -27,7 +27,7 @@
 </template>
 
 <script lang="ts">
-import { reactive, ref } from 'vue';
+import { reactive, ref, watch } from 'vue';
 import MenuList, { RouterConf } from './../core/menu-list';
 import { useRoute } from 'vue-router';
 import { ElMessageBox } from 'element-plus';
@@ -42,7 +42,6 @@ export default {
       res.closed = initPath.includes(res.key);
       list.value.push(res);
     });
-
     const goSystem = async () => {
       let confirm = await ElMessageBox.confirm('是否进入后台管理系统？', '进入后台', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' })
       confirm && (window.location.href = import.meta.env.VITE_APP_SYSTEM_URL as string);
