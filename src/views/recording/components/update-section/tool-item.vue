@@ -52,22 +52,11 @@
         <div class="flex-cell">
           <div class="tool-label">知识点</div>
           <div class="tool-control">
-            <el-popover placement="bottom-start" :width="220">
-              <div class="knowledge-tree-wrapper">
-                <el-tree
-                    class="knowledge-tree"
-                    :data="knowledgeList"
-                    ref="knowledgeRef"
-                    show-checkbox
-                    node-key="id"
-                    :props="{ children: 'childs', label: 'name' }"
-                    @check="(target, { checkedKeys }) => { data.knowledgePoints = checkedKeys; syncChange('knowledgePoints') }"
-                />
-              </div>
-              <template #reference>
-                <el-input @click="setTreeKey(data)" :model-value="data.knowledgePoints && data.knowledgePoints.length ? `已选择${data.knowledgePoints.length}项` : null" readonly placeholder="选择知识点" size="medium" />
-              </template>
-            </el-popover>
+            <el-cascader collapse-tags clearable placeholder="选择知识点" size="medium" :show-all-levels="false"
+              v-model="data.knowledgePoints" 
+              :options="knowledgeList" 
+              :props="{ children: 'childs', label: 'name', value: 'id', multiple: true, emitPath: false }" 
+            />
           </div>
         </div>
       </div>
@@ -147,7 +136,6 @@ export default {
       gradeList: [],
       questionTypeList: [],
       difficultyList: [ { name: '易', id: 11 }, { name: '较易', id: 12 }, { name: '中档', id: 13 }, { name: '较难', id: 14 }, { name: '难', id: 15 } ],
-      yearList: [],
       sourceList: [ { name: '单元测试', id: 1 }, { name: '月考', id: 2 }, { name: '期中', id: 3 }, { name: '期末', id: 4 }, { name: '竞赛', id: 5 }, { name: '错题本', id: 6 } ],
       categoryList: [ { name: '真题', id: 1 }, { name: '好题', id: 2 }, { name: '常考题', id: 3 }, { name: '压轴题', id: 4 }, { name: '易错题', id: 5 } ],
       YEAR: [],
@@ -161,9 +149,10 @@ export default {
       axios.post<null, AxResponse>('/tiku/questionType/queryTypeBySubject', { subject }).then(res => selectMap.questionTypeList = res.json );
       axios.post<null, AxResponse>('/permission/user/userDataRules', { userId, subjectCode: subject }).then(res => {
         selectMap.gradeList = res.json.grades;
-        selectMap.yearList = res.json.years;
       });
-      axios.post<any, AxResponse>('/tiku/knowledge/queryTree', { subjectId: subject }).then(res => knowledgeList.value = res.json );
+      axios.post<any, AxResponse>('/tiku/knowledge/queryTree', { subjectId: subject }).then(res => {
+        knowledgeList.value = JSON.parse(JSON.stringify(res.json).replaceAll('"childs":[]', '"childs":null'));
+      } );
 
       axios.post<null, AxResponse>('/system/dictionary/queryDictByCodes', { typeCodesStr: 'YEAR,QUES_SOURCE' }).then(res => {
         selectMap.YEAR = res.json.YEAR;
@@ -199,9 +188,6 @@ export default {
       data.value.basicQuestionType = selectMap.questionTypeList.find(i => i.jyQuestionType === data.value.type).toolQuestionType;
     }
 
-    let knowledgeRef = ref();
-    const setTreeKey = (data) => knowledgeRef.value.setCheckedKeys(data.knowledgePoints || []);
-
     const syncChange = (type) => {
       if (isSync.value) {
         if (type === 'type') {
@@ -213,7 +199,7 @@ export default {
       }
     }
 
-    return { data, dataset, index, indexChange, isSync, syncTag, syncChange, selectMap, addSource, delSource, knowledgeList, typeChange, knowledgeRef, setTreeKey, getProvinceCity, getSchoolList }
+    return { data, dataset, index, indexChange, isSync, syncTag, syncChange, selectMap, addSource, delSource, knowledgeList, typeChange, getProvinceCity, getSchoolList }
   }
 }
 </script>
@@ -264,6 +250,11 @@ export default {
         span {
           color: #1AAFA7;
           line-height: 36px;
+        }
+      }
+      :deep(.tool-control) {
+        .el-cascader {
+          width: 100%;
         }
         .el-select {
           width: 100%;

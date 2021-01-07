@@ -9,6 +9,7 @@ const state = {
 }
 const mutations = {
   [ SET_SUBJECT ] (state, payload) {
+    window.localStorage.setItem('subject', JSON.stringify(payload));
     state.subject = payload;
   },
   [ SET_SUBJECT_LIST ] (state, payload) {

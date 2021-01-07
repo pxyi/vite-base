@@ -55,7 +55,16 @@ const getSubjectList = (store): Promise<any> => {
     } else {
       let res = await axios.post<any, AxResponse>('/permission/user/userDataSubjects');
       store.commit(SET_SUBJECT_LIST, res.json);
-      store.commit(SET_SUBJECT, res.json[0].child[0]);
+      try {
+        let subStr = window.localStorage.getItem('subject')
+        if (subStr) {
+          let subject = JSON.parse(subStr);
+          let has = res.json.some(l => !!l.child.some(s => s.code === subject.code));
+          store.commit(SET_SUBJECT, has ? subject : res.json[0].child[0]);
+        }
+      } catch (error) {
+        store.commit(SET_SUBJECT, res.json[0].child[0]);
+      }
       resolve(res.json);
     }
   })
