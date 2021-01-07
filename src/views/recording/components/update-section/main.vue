@@ -181,7 +181,7 @@ export default {
         }
         :deep(img) {
           float: none !important;
-          positions: static !important;
+          position: static !important;
         }
       }
       .footer {

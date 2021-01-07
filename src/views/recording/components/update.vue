@@ -2,7 +2,8 @@
   <div class="container">
     <div class="header">
       <el-button :loading="saveLoading" round @click="save">保存并返回</el-button>
-      <el-button round @click="generatePaper" :disabled="!allowGenerate">{{ allowGenerate ? '' : '已' }}生成试卷</el-button>
+      <el-button round @click="generatePaper"   v-show='allowGenerate'>生成试卷</el-button>
+      <el-button round @click="generatePaper"  :disabled="!allowGenerate" v-show='!allowGenerate'>已生成试卷</el-button>
     </div>
     <div class="content">
       <div class="main" @click="blur"><MainComponent /></div>
@@ -123,12 +124,12 @@ export default {
     background: #1AAFA7;
     box-shadow: 0px 0px 3px 0px rgba(45, 113, 183, 0.15);
     button {
-      color: #999;
+      color: #1AAFA7;
       padding: 10px 23px;
       margin-right: 20px;
       margin-left: 0;
-      &:first-child {
-        color: #1AAFA7;
+      &:last-child {
+        color: #999;
       }
     }
   }

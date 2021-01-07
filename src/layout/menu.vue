@@ -88,9 +88,9 @@ $--menu--item-height: 45px;
       padding-left: 48px;
       transition: all .1s;
       position: relative;
+
       &.active {
         color: #1AAFA7;
-        font-weight: 600;
         &::after {
           display: block;
           content: '';
@@ -131,11 +131,13 @@ $--menu--item-height: 45px;
       padding-left: 48px;
       line-height: $--menu--item-height;
       transition: all .1s;
-      &:hover, &.active {
-        background: rgba(26, 175, 167, 0.1);
+      font-weight: 500;
+      &:hover{
+        background: #f5f7fa;
       }
       &.active {
         pointer-events: none;
+        background: rgba(26, 175, 167, 0.1);
       }
     }
     img {
