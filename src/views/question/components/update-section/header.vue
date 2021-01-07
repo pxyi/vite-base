@@ -111,7 +111,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
 .form-group {
   margin-bottom: 20px;
   .flex-cell {

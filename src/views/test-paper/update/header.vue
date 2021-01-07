@@ -9,22 +9,38 @@
       </div>
       <div class="btns">
         <el-button round @click="close();$router.push('/teaching/question')">题库</el-button>
-        <el-button round>下载</el-button>
+        <el-button round @click="download">下载</el-button>
       </div>
     </div>
   </div>
 </template>
 <script lang="ts">
-import { ref, Ref, reactive, inject } from 'vue';
+import { ref, Ref, reactive, computed, inject } from 'vue';
+import Modal from './../../../utils/modal';
+import downloadComponent from './../components/download.vue';
+import store from './store';
+
 export default {
-  props: {
-    id: String
-  },
   setup(props) {
-    let classType = ref(1);
+    let classType = computed({
+      get: () => store.state.classType,
+      set: (v) => store.commit('set_class_type', v)
+    });
     let classList = [ { name: '教师版', id: 1 }, { name: '学生版', id: 2 }, { name: '解析版', id: 3 } ];
-    let close = inject('close')
-    return { classType, classList, close }
+    let close = inject('close');
+    let id = inject('id');
+
+    const download = () => {
+      Modal.create({
+        title: '下载试卷',
+        width: 640,
+        zIndex: 2011,
+        component: downloadComponent
+      }).then((res: any) => {
+        window.open(`${import.meta.env.VITE_APP_BASE_URL}/tiku/paper/downPaper?paperId=${ id }&type=${ res.type }&templateId=${ res.templateId }`);
+      });
+    }
+    return { classType, classList, close, download }
   }
 }
 </script>

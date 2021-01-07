@@ -117,7 +117,7 @@ export default {
   }
 }
 </script>
-<style lang="scss" scope>
+<style lang="scss" scoped>
 .lay__header__container {
   display: flex;
   .el-breadcrumb {
@@ -131,7 +131,7 @@ export default {
     line-height: 60px;
   }
   .header-user {
-    .el-dropdown {
+    .user-name, .el-icon-arrow-down {
       color: #fff;
     }
     margin-left: auto;
@@ -143,6 +143,9 @@ export default {
   height: 100%;
   padding: 0 30px;
   overflow: hidden;
+}
+:deep(.header_ref) .el-input__suffix i {
+  color: #fff !important;
 }
 .age__class {
   margin-left: 20px;

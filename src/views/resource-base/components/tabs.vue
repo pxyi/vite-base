@@ -82,7 +82,6 @@ import emitter from "../../../utils/mitt";
 import Modal from "../../../utils/modal";
 import { ElMessage, ElLoading, ElDialog } from "element-plus";
 import createElement from '../../../utils/createElement'
-import OrganizingPapers from './organizing-papers.vue'
 import NewName from './new-name.vue'
 import Prepare from './prepare-lessons.vue'
 import { emit } from 'process';

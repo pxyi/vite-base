@@ -40,7 +40,7 @@ export default {
   props: [],
   setup() {
     let store = useStore();
-    let versionList = [{ label: '学生版(没答案)', value: 2 }, { label: '教师版(有答案)', value: 1 }, { label: '解析版(只有答案)', value: 3 }];
+    let versionList = [{ label: '学生版(没答案解析)', value: 2 }, { label: '教师版(有答案解析)', value: 1 }, { label: '解析版(只有答案解析)', value: 3 }];
     let templateList: Ref<IAny> = ref([]);
     let subjectCode = store.getters.subject.code;
 
@@ -58,7 +58,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
 .label {
   display: inline-block;
   padding: 0 20px 0 10px;

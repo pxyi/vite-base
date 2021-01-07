@@ -89,7 +89,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
   .source-container {
     display: flex;
     padding: 10px;
@@ -117,6 +117,9 @@ export default {
               width: 100%;
             }
           }
+        }
+        :deep(.source-control) .el-cascader {
+          width: 100%;
         }
       }
     }

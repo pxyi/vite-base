@@ -1,6 +1,6 @@
 <template>
   <cus-skeleton :loading="loading">
-    <el-input placeholder="按知识点搜索" prefix-icon="el-icon-search" v-model="filterText" class="search-input" v-if="!hideSearch" />
+    <el-input placeholder="按知识点搜索" prefix-icon="el-icon-search" v-model="filterText" class="search-input" size="medium" v-if="!hideSearch" />
 
     <el-tree 
       class="knowledge-tree"
@@ -24,7 +24,7 @@ import { debounce } from 'lodash'
 
 export default {
   props: { hideSearch: { type: Boolean, default: () => false } },
-  emits: ['check-change'],
+  emits: ['check-change', 'check-node-change'],
   setup(props, { emit }) {
     let loading = ref(true);
 
@@ -41,14 +41,17 @@ export default {
     const filterNode = (val, node) => (!val || node.name.includes(val));
     watch(filterText, debounce(() => knowledgeTree.value.filter(filterText.value) , 300))
     
-    const checkChange = (target, { checkedKeys }) => { emit('check-change', checkedKeys) }
+    const checkChange = (target, { checkedKeys, checkedNodes }) => {
+      emit('check-change', checkedKeys);
+      emit('check-node-change', checkedNodes)
+    } 
 
     return { filterText, dateset, filterNode, knowledgeTree, checkChange, loading };
   }
 }
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
 .search-input {
   margin-bottom: 12px;
 }
