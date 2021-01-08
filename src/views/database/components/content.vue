@@ -264,7 +264,7 @@ export default {
     display: flex;
     padding: 0 30px;
     line-height: 46px;
-    background: #DCDEE3;
+    background: #EBECF0;
     & > div {
       margin-right: 48px;
       cursor: pointer;
