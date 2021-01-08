@@ -300,6 +300,10 @@ export default {
       }
       & > p {
         text-align: center;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
       }
       .mask {
         width: 100%;

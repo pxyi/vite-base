@@ -1,5 +1,5 @@
 <template>
-  <el-form :model="formGroup" :rules="{ dataset: {required: true, message: '请选择数据'} }" ref="formRef" :style="{ width }" class="lesson-container">
+  <el-form :model="formGroup" :rules="{ dataset: {required: true, message: '请选择数据'} }" ref="formRef" class="lesson-container">
     <el-row :gutter="20">
       <el-col :span="12">
         <el-form-item prop="courseTypeId">
