@@ -7,14 +7,13 @@
         :key="cell.key"
       >
         <span>{{ cell.text }}</span>
-        <img v-show="pageAorder.order === cell.key" :src="[pageAorder.orderType === 1 ? '/@/assets/question/arrow-down.png' : '/@/assets/question/arrow-up.png']" alt="爱学标品">
+        <i v-show="pageAorder.order === cell.key"  :class="[ 'iconfont', `${ pageAorder.orderType === 1 ? 'iconpaixu-xia' : 'iconpaixu-shang1' }` ]" />
       </div>
       <div class="statistics">
         <span>共计<i>{{ pageAorder.total }}</i>道相关试题</span>
         <div @click="showAnswer = !showAnswer">
-          <img v-show="showAnswer" src="/@/assets/question/open-eye.png" alt="爱学标品">
-          <img v-show="!showAnswer" src="/@/assets/question/close-eye.png" alt="爱学标品">
-          查看答案</div>
+          <i class="iconfont" :class="[ showAnswer ? 'iconchakandaan' : 'iconbukandaan' ]" />
+          <span>查看答案</span></div>
       </div>
     </div>
     <cus-skeleton :loading="loading">
@@ -195,9 +194,11 @@ export default {
       display: inline-block;
       margin-right: 20px;
       cursor: pointer;
-      img {
-        color: #FAAD14;
+      i {
         margin: 0 3px;
+        color: #FAAD14;
+        font-size: 18px;
+        vertical-align: bottom;
       }
     }
     .statistics {
@@ -222,8 +223,15 @@ export default {
         vertical-align: middle;
         border-left: 1px solid rgb(255, 255, 255);
         cursor: pointer;
-        img{
+        i {
           display: inline-block;
+          width: 20px;
+          text-align: center;
+          vertical-align: bottom;
+          font-size: 16px;
+          &.iconbukandaan {
+            font-size: 12px;
+          }
         }
       }
     }
@@ -374,6 +382,10 @@ export default {
         }
       }
     }
+  }
+
+  :deep(.el-pagination) {
+    text-align: right;
   }
 }
 
