@@ -10,7 +10,7 @@
     </div>
     <div class="btns">
       <el-dropdown @command="handle">
-        <el-button round><span>添加题目</span><i class="el-icon-caret-bottom" /></el-button>
+        <el-button round><span>添加资料</span><i class="el-icon-caret-bottom" /></el-button>
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item :command="null">上传资料</el-dropdown-item>
