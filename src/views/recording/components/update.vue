@@ -48,7 +48,7 @@ export default {
         if (data.basicQuestionType < 3) {
           data.title = `${ data.title }<br>${ data.option ? data.option.map(i => `${i.name}.${i.content}`).join('<br>') : '' }`
         }
-        if (data.basicQuestionType === 9) {
+        if (data.childs && data.childs.length) {
           data.title = `${ data.title }<br>${ data.childs.map((i, idx) => `${idx + 1}.${i.title}<br>${ i.option ? i.option.map(c => `${c.name}.${c.content}`).join('<br>') : [] }`).join('<br>') }`
         }
         if (data.basicQuestionType === 10) {
