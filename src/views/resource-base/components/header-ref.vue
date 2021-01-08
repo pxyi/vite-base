@@ -6,8 +6,7 @@
           v-for="p in classList"
           :key="p.id"
           :class="{ active: classType === p.id }"
-          @click="classChange(p.id)"
-        >
+          @click="classChange(p.id)" >
           {{ p.name }}
         </li>
       </ul>
