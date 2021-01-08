@@ -2,42 +2,43 @@
   <div class="header_ref">
     <div class="tabs_box">
       <ul>
-        <li v-for="p in classList" :key="p.id" :class="{ active: classType === p.id }" @click="classChange(p.id)">{{ p.name }}</li>
+        <li>资料库</li>
       </ul>
     </div>
     <div class="search">
-      <el-input clearable placeholder="按题干搜索" prefix-icon="el-icon-search" v-model="searchText" @keydown.enter="searchHandle" @clear="searchHandle" />
+      <el-input clearable placeholder="按文件名搜索" prefix-icon="el-icon-search" v-model="searchText" @keydown.enter="searchHandle" />
     </div>
     <div class="btns">
-      <el-button round @click="add">添加题目</el-button>
+      <el-dropdown @command="handle">
+        <el-button round><span>添加题目</span><i class="el-icon-caret-bottom" /></el-button>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item>上传资料</el-dropdown-item>
+            <el-dropdown-item>上传标准教案</el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
     </div>
   </div>
 </template>
 <script lang="ts">
 import { ref, watch } from 'vue';
-import emitter from './../../../utils/mitt';
 import Modal from './../../../utils/modal';
 import { ElMessage } from 'element-plus';
 import axios from 'axios';
 import { AxResponse } from './../../../core/axios';
-import Drawer from './../../../utils/drawer';
-import UpdateComponent from './update.vue';
 
 export default {
   setup(props, { emit }) {
-    let classType = ref(2);
-    let classList = [ { name: '区域精品', id: 2 }, { name: '我的题库', id: 3 }, { name: '学科网', id: 1 } ];
-    const classChange = (e) => { classType.value = e; emit('type-change', e) };
 
     let searchText = ref(null);
    
-    const searchHandle = () => {emit('search', searchText.value)};
+    const searchHandle = () => emit('search', searchText.value);
 
-    const add = () => {
-      Drawer.create({ title: '添加题目', width: 'calc(100% - 200px)', maxWidth: 640, component: UpdateComponent }).then(_ => emit('add-success'));
+    const handle = () => {
     }
 
-    return { classType, classList, classChange, searchText, searchHandle, add }
+    return { searchText, searchHandle, handle }
   }
 }
 </script>
