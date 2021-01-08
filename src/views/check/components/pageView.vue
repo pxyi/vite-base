@@ -1,7 +1,7 @@
 <template>
 	<div class="preview">
 		<div class="head">
-			<div @click="$parent.courseIndexDto = []">
+			<div @click="$parent.$parent.courseIndexDto = null">
 				<i class="el-icon-arrow-left"></i>
 				<span>返回</span>
 			</div>

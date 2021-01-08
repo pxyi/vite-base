@@ -35,6 +35,8 @@ export default {
 
     let dataset = computed(() => store.state.dataSet);
 
+    const isSync = computed(() => store.state.isSync);
+
     axios.post<null, { json: any }>('/admin/questionImportLog/queryQuestionByImportId', { importId: props.id }).then(res => {
       let questions = res.json.questionList.map(data => {
         if (data.basicQuestionType === 2 || data.basicQuestionType === 3 || data.basicQuestionType === 9 || data.basicQuestionType === 10) {
@@ -62,7 +64,7 @@ export default {
       loading.close();
     });
 
-    const blur = () => store.dispatch('focus_data_change', null);
+    const blur = () => !isSync.value ? store.dispatch('focus_data_change', null) : false;
 
     let saveLoading = ref(false);
     const save = async () => {

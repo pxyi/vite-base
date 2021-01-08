@@ -9,7 +9,7 @@
             <div class="cus__class__box" :class="{ 'is__element': !!node.type }">
               <template v-if="node.type === 'input'">
                 <el-input size="mini" suffix-icon="el-icon-search"
-                  v-model="formGroup[node.key]" 
+                  v-model="formGroup[node.key]"
                   :placeholder="node.placeholder || `根据${node.label}搜索`"
                   @keydown.enter="setQueryValue(node.key, formGroup[node.key])"
                 />
@@ -164,12 +164,12 @@ const getCondition = (userId, subjectCode, nodeList): Promise<any> => {
         if (Array.isArray(res.json)) {
           condition.questionType = [{ name: '全部', id: null }, ...(res.json.map(i => ({ name: i.jyQuestionTypeName, id: i.jyQuestionType }) )) ];
         } else {
-          res.json.YEAR && (condition.yearList = [{ name: '全部', id: null }, ...(res.json.YEAR.map(i => ({ name: i.name, id: i.id }))) ]);
-          res.json.grades && (condition.gradeList = [{ name: '全部', id: null }, ...res.json.grades ]);
-          res.json.bookVersions && (condition.bookVersionList = [{ name: '全部', id: null }, ...res.json.bookVersions ]);
-          res.json.courseTypes && (condition.courseTypeList = [{ name: '全部', id: null }, ...res.json.courseTypes ]);
-          res.json.terms && (condition.termList = [{ name: '全部', id: null }, ...res.json.terms ]);
-          res.json.QUES_SOURCE && (condition.sourceList = [{ name: '全部', id: null }, ...(res.json.QUES_SOURCE.map(i => ({ name: i.name, id: i.id }))) ])
+          res.json?.YEAR && (condition.yearList = [{ name: '全部', id: null }, ...(res.json.YEAR.map(i => ({ name: i.name, id: i.id }))) ]);
+          res.json?.grades && (condition.gradeList = [{ name: '全部', id: null }, ...res.json.grades ]);
+          res.json?.bookVersions && (condition.bookVersionList = [{ name: '全部', id: null }, ...res.json.bookVersions ]);
+          res.json?.courseTypes && (condition.courseTypeList = [{ name: '全部', id: null }, ...res.json.courseTypes ]);
+          res.json?.terms && (condition.termList = [{ name: '全部', id: null }, ...res.json.terms ]);
+          res.json?.QUES_SOURCE && (condition.sourceList = [{ name: '全部', id: null }, ...(res.json.QUES_SOURCE.map(i => ({ name: i.name, id: i.id }))) ])
 
         }
       });
