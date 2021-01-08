@@ -3,7 +3,7 @@
   <div class="question-content">
     <div class="section">
       <div class="label">题干</div>
-      <div class="title" @click="log">这里填写题目描述</div>
+      <div class="title">这里填写题目描述</div>
       <cus-editor min-height="80px" v-model="formGroup.title" placeholder="请输入题干"></cus-editor>
       <div class="tip" v-if="valid && !formGroup.title">请输入题目描述！</div>
     </div>
@@ -119,7 +119,7 @@ export default {
 
     const deleteOption = (idx) => { options.value.splice(idx, 1); options.value.map((n, idx) => n.no = idx + 1); }
 
-    return { formGroup, valid, validator, questionTypeChange, baseType, answer, options, numberToLetter, radioChange, addOption, deleteOption, log: () => console.log(formGroup) }
+    return { formGroup, valid, validator, questionTypeChange, baseType, answer, options, numberToLetter, radioChange, addOption, deleteOption }
   }
 }
 </script>

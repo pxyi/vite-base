@@ -47,7 +47,7 @@ export default {
 
     let isSync = computed(() => store.state.isSync);
 
-    const focusChange = (data) => store.commit('set_focus_data', data);
+    const focusChange = (data) => !isSync.value ? store.commit('set_focus_data', data) : false;
 
     const remove = async (data) => {
       data.loading = true;

@@ -1,10 +1,10 @@
 <template>
   <template ref="headerRef">
-    <HeaderRefComponent />
+    <HeaderRefComponent @search="handle('fileName', $event)" :get-knowledge="getKnowledge" />
   </template>
   <div class="container">
     <div class="knowledge-tree">
-      <KnowledgeTreeComponent @check-change="query('knowledgePoints', $event)" />
+      <KnowledgeTreeComponent ref="knowledgeRef" @check-change="handle('chapterId', $event)" />
     </div>
     <div class="section-main">
       <ContentComponent ref="contentRef" />
@@ -16,19 +16,29 @@
 import { ref, onMounted } from 'vue'
 import emitter from './../../utils/mitt';
 import HeaderRefComponent from './components/header.vue';
-import KnowledgeTreeComponent from './../question/components/knowledge-tree.vue';
+import KnowledgeTreeComponent from './components/knowledge.vue';
 import ContentComponent from './components/content.vue';
+import { ElMessage } from 'element-plus';
 
 export default {
   components: { HeaderRefComponent, KnowledgeTreeComponent, ContentComponent },
   setup() {
     let headerRef = ref();
+    let contentRef = ref();
+    let knowledgeRef = ref();
     onMounted(() => {
       emitter.emit('slot', headerRef)
-      // emitter.emit('effect', (id) => { query('subject', id) })
     });
 
-    return { headerRef }
+    const handle = (key, val) => { contentRef.value.formGroup[key] = val; contentRef.value.request(); }
+
+    const getKnowledge = () => new Promise((resolve, reject) => {
+      let nodes = knowledgeRef.value.knowledgeRef.getCheckedNodes(true);
+      !nodes.length && ElMessage.warning('请在左侧选择一个章节开始上传吧~！')
+      nodes.length ? resolve(nodes) : reject()
+    })
+
+    return { headerRef, contentRef, knowledgeRef, handle, getKnowledge }
   }
 }
 </script>

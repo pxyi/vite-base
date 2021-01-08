@@ -397,9 +397,11 @@
 				justify-content: space-between;
 				font-size: 14px;
 				margin: 30px 0 10px 0;
+				text-align: center;
 				& > div {
 					padding: 0 15px;
 					cursor: pointer;
+					flex: 1;
 					&.tabActive {
 						color: #1AAFA7;
 					}
