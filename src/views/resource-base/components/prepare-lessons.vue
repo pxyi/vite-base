@@ -24,7 +24,7 @@
 import { ref, Ref, PropType, onMounted, reactive } from "vue";
 import axios from "axios";
 import { useStore } from "vuex";
-import { AxResponse } from "~/@/core/axios";
+import { AxResponse } from "../../../core/axios";
 import emitter from "../../../utils/mitt";
 import { ElMessage } from "element-plus";
 

@@ -23,7 +23,7 @@
       >
       </el-tree>
     </div>
-    <div class="left-radius" v-if="props.tipShow"></div>
+   <div class="left-radius" v-if="props.tipShow"></div>
     <!-- <cus-tree :data-set="dataset" allow-select v-loading="loading"  :props='props' empty-text='正在加载'/> -->
   </div>
 </template>
@@ -48,7 +48,7 @@ export default {
     let highlightCurrent = ref(true);
     let checkonclicknode = ref(true);
     let dataset: Ref<any[]> = ref([]);
-    let isShow = false;
+    let isShow = true;
     emitter.emit("effect", (id) => {
       axios
         .post<any, AxResponse>("/tiku/bookVersion/queryVresionBookTree", {
@@ -63,6 +63,7 @@ export default {
           }
         });
     });
+    
     /* 搜索 */
     let filterText = ref(null);
     let knowledgeTree: Ref<any> = ref(null);
@@ -73,16 +74,16 @@ export default {
     );
     // { checkedKeys }
     const checkChange = (target ,e) => {
-      // console.log(e,'111');
       emit("check-change",e)
       emitter.emit("check-change", e);
+      //  console.log( e);
+      
     };
 
     return {
       dataset,
       highlightCurrent,
       checkonclicknode,
-      isShow,
       loading,
       filterText,
       filterNode,
@@ -95,25 +96,17 @@ export default {
 </script>
 <style lang="scss" scoped>
 .left-tree {
-  // position: relative;
-   width: 250px;
-   height: 100%;
-   
-  .tree {
-    height: 100%;
-  }
+  padding: 12px;
+  height: 100%;
   .seachInput {
-    // padding: 10px;
-     width:95%;
-   padding: 10px 0 10px 15px;
-  // margin-bottom: 10px;
+     width:100%;
   }
   /* 产生动画（向外扩散变大）的圆圈  */
   .left-radius {
     position: absolute;
     width: 140px;
     height: 140px;
-    left: 225px;
+    left: 310px;
     top: 120px;
     border: 4px solid skyblue;
     border-radius: 50%;

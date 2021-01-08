@@ -34,7 +34,7 @@
 					<div class="teacher-query">
 						<div class="query-cell">
 							<span>课程课次</span>
-							<el-cascader clearable size="small" filterable v-model="course" :options="courseOptions" :props="{children: 'courseIndexList', value: 'id'}" @change="[this.lessonParam.courseId, this.lessonParam.courseIndex] = this.course;"></el-cascader>
+							<el-cascader clearable size="small" filterable v-model="this.course" :options="courseOptions" :props="{children: 'courseIndexList', value: 'id'}" @change="this.course !== null ? [this.lessonParam.courseId, this.lessonParam.courseIndex] = this.course : this.lessonParam.courseId = this.lessonParam.courseIndex = null"></el-cascader>
 						</div>
 						<div class="query-cell">
 							<span>备课时间</span>
@@ -46,7 +46,7 @@
 								range-separator="至"
 								start-placeholder="开始日期"
 								end-placeholder="结束日期"
-								@change="() => { this.lessonParam.startTime = new Date(this.lessonParam.startTime).toLocaleDateString(), this.lessonParam.endTime = new Date(this.lessonParam.endTime).toLocaleDateString()}">
+								@change="this.lessonTime !== null ? (this.lessonParam.startTime = new Date(this.lessonTime[0]).toLocaleDateString(), this.lessonParam.endTime = new Date(this.lessonTime[1]).toLocaleDateString()) : (this.lessonParam.startTime = this.lessonParam.endTime = null)">
 							</el-date-picker>
 						</div>
 					</div>
@@ -219,10 +219,9 @@
         }
 			},
 			getLessonData() {
-        axios.post('/admin/prepareLesson/queryPage', {...this.lessonParam}).then(res => {
+        axios.post('/admin/prepareLesson/queryPage', this.lessonParam).then(res => {
         	this.lessonList = res.records;
         	this.total = res.total;
-        	console.log(this.lessonList)
         })
 			},
       getCourseDto(courseIndexId) {
