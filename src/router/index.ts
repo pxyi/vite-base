@@ -8,7 +8,7 @@ const AsyncComponent = (loader) => defineAsyncComponent({
   loader,
   errorComponent: () => h('div', { id: 'timeout' }, '页面请求超时，请刷新页面重试！！！'),
   loadingComponent: () => h('div', { id: 'loading' }, h('i', { class: 'el-icon-loading' })),
-  timeout: 3000,
+  timeout: 5000,
 })
 
 const routes: RouteRecordRaw[] = [
