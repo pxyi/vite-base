@@ -81,8 +81,7 @@ export default {
 
       if (basicQuestionType === 9) {
         contentRef.value.formGroup.title = `${ title }<br>${ info.childs.map((i, idx) => `${idx + 1}.${i.title}<br>${ i.option ? i.option.map(c => `${c.name}.${c.content}`).join('<br>') : [] }`).join('<br>') }`
-      }
-      if (basicQuestionType === 10) {
+      } else if (basicQuestionType === 10) {
         contentRef.value.formGroup.title = `${ title }<br>${ info.option.map(i => `${i.name}.<br>${ i.childs.map(c => `${c.name}.${c.content}`).join('<br>') }`).join('<br>') }`
       } else {
         contentRef.value.formGroup.title = title;
