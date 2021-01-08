@@ -68,14 +68,13 @@ export default {
   setup() {
     const store = useStore();
     let prepareLessonsStatistics = reactive({myPrepareLessonsRank: 0, compareLastWeekRank: 0, compareLastMonthRank: 0, dayTime: {}, monthTime: {}, weekTime: {}, prepareLessonsRank: []});
-    axios.get<any, AxiosResponse>(`/permission/indexStatistics/prepareLessonsStatistics?userId=${store.getters.userInfo.user.id}`).then((res: AxResponse) => {
+    axios.get<any, AxiosResponse>(`/permission/indexStatistics/prepareLessonsStatistics?userId=${store.getters.userInfo.user.id}`).then((res: any) => {
       if ( res.result ) {
         ['dayTime', 'weekTime', 'monthTime'].map(i => {
             res.json[i].class = res.json[i].range === 'DOWN' ? 'is__down' : (res.json[i].range === 'LINE' ? 'is__cn' : '');
             res.json[i].compare = res.json[i].compare === 0 ? '' : res.json[i].compare
         });
         Object.keys(res.json).map(key => prepareLessonsStatistics[key] = res.json[key]);
-        console.log(prepareLessonsStatistics)
       };
     });
     return { prepareLessonsStatistics }

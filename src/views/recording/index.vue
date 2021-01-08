@@ -77,6 +77,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.cus__table__container{
+    padding: 5px 10px 40px;
+  }
 .file-name {
   display: flex;
   color: #333;
@@ -85,6 +88,10 @@ export default {
     margin-left: 10px;
     vertical-align: middle;
     margin-right: 10px;
+  }
+  div{
+    display: flex;
+    align-items: center;
   }
 }
 .btns {

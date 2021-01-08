@@ -11,9 +11,11 @@
   <!-- 内容主体区域 -->
   <div class="content">
     <!-- 左盒子 -->
-    <div class="left_box">
+    <div class="tree_box">
+      <div class="left_box">
       <!-- 左侧树状图 -->
       <TreeLeft @check-change="query('tree', $event)" :tipShow="tipShow" />
+    </div>
     </div>
    
     <!-- 右盒子 -->
@@ -79,7 +81,6 @@
         <Tabs />
       </div>
     </div>
-     <!-- <div class="clear"></div> -->
   </div>
 </template>
 
@@ -342,6 +343,9 @@ export default {
   // display: table;
   background-color: #f6f7f9;
 }
+:deep(.el-main){
+  padding: 20px 20px 0;
+}
   @media only screen and (min-width: 1440px) {
     .cus-list { 
       :deep(.cus__list__item){
@@ -359,16 +363,15 @@ export default {
 .content {
   display: flex;
   flex: 1 5 auto;
+  // height: 100%;
   .left_box {
+    height: 100%;
     overflow: auto;
     width: 250px;
-    height: 100%;
     min-width: 250px;
-    min-height: 860px;
     background-color: #fff;
     border-radius: 6px;
     box-shadow: 0px 1px 6px 0px rgba(91, 125, 255, 0.08);
-    overflow: auto;
   }
   .right_box {
     width: 100%;
@@ -431,9 +434,6 @@ export default {
 .margin1{
   margin-left: 40px;
 }
-.clear{
-        clear:both;
-    }
 .tooltip {
   font-size: 12px;
   line-height: 30px;
