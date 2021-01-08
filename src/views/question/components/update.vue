@@ -84,7 +84,7 @@ export default {
       contentRef.value.baseType = basicQuestionType;
 
       if (basicQuestionType < 3) {
-        contentRef.value.options = info.option ? info.option.map(i => {i.checked = !!info.rightAnswer.find(a => a.no === i.no); return i}) : [
+        contentRef.value.options = info.option && info.rightAnswer !== null ? info.option.map(i => {i.checked = !!info.rightAnswer.find(a => a.no === i.no); return i}) : [
           { no: 1, content: null, checked: false },
           { no: 2, content: null, checked: false },
           { no: 3, content: null, checked: false },
