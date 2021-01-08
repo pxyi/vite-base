@@ -42,7 +42,7 @@ const MenuList: RouterConf[] = [
       },
       {
         title: '资料库',
-        key: '/teaching/resource-base',
+        key: '/teaching/database',
         isLeaf: true
       },
     ]

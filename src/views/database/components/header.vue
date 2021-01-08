@@ -2,19 +2,19 @@
   <div class="header_ref">
     <div class="tabs_box">
       <ul>
-        <li>资料库</li>
+        <li class="active">资料库</li>
       </ul>
     </div>
     <div class="search">
-      <el-input clearable placeholder="按文件名搜索" prefix-icon="el-icon-search" v-model="searchText" @keydown.enter="searchHandle" />
+      <el-input clearable placeholder="按文件名搜索" prefix-icon="el-icon-search" v-model="searchText" @keydown.enter="searchHandle" @clear="searchHandle" />
     </div>
     <div class="btns">
       <el-dropdown @command="handle">
         <el-button round><span>添加题目</span><i class="el-icon-caret-bottom" /></el-button>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item>上传资料</el-dropdown-item>
-            <el-dropdown-item>上传标准教案</el-dropdown-item>
+            <el-dropdown-item :command="null">上传资料</el-dropdown-item>
+            <el-dropdown-item :command="5">上传标准教案</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -27,15 +27,29 @@ import Modal from './../../../utils/modal';
 import { ElMessage } from 'element-plus';
 import axios from 'axios';
 import { AxResponse } from './../../../core/axios';
+import UploadComponent from './upload.vue';
+import emitter from './../../../utils/mitt';
 
 export default {
+  props: ['getKnowledge'],
   setup(props, { emit }) {
 
     let searchText = ref(null);
    
     const searchHandle = () => emit('search', searchText.value);
 
-    const handle = () => {
+    const handle = (type) => {
+      props.getKnowledge().then((knowledgeList: any[]) => {
+        let fileDom = document.createElement('input');
+        fileDom.setAttribute('type', 'file');
+        fileDom.click();
+        fileDom.onchange = async () =>{
+          let files: File[] = Array.from(fileDom.files || []);
+          let res = await Modal.create({ title: '上传资料', width: 480, component: UploadComponent, props: { files, knowledgeList, type } });
+          ElMessage.success('上传资料成功~！');
+          emitter.emit('dataset-reset');
+        }
+      })
     }
 
     return { searchText, searchHandle, handle }
