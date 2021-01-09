@@ -28,41 +28,42 @@
         </div>
       </div>
       <div class="main">
-         <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
-          <el-tab-pane v-for="item in tabCountList" :key="item"  :name="item.nameKey">
-          <template #label>
-            <span>{{ item.name }}</span>
-            <span class="num">{{ item.num }}</span>
-          </template>
-            <div class="btn-box">
-              <el-button type="primary" round @click="uploadMyPlan(item)" >上传我的教案</el-button>
-              <el-button type="primary" round @click="uploadMyVideo(item)">上传我的说课</el-button>
-            </div>
-            <div class="content-list-box">
-              <div class="content-list-box-item" v-for="(item,index) in allFileList" :key="index">
-                <div class="content-list-box-item-bg">
-                  <img class="img-cover" style="width:116px;" 
-                    v-if="item.ext !== 'mp3' && item.ext !== 'zip' && item.ext !== 'rar' && item.mediaType == null" 
-                    :src="`${domain}${item.imgPath}`" 
-                    alt="爱学标品">
-                  <img v-else src="/@/assets/prepare-teach/weizhiwenjian.png" alt="爱学标品"/>
+        <div class="tabs-box">
+          <div class="tab-cell" 
+            :class="{ active: tabType === n.type }" 
+            v-for="n in tabCountList" :key="n"
+            @click="tabType = n.type; request(n.type)"
+          ><div><span>{{ n.name }}</span><i>{{ n.num }}</i></div></div>
+        </div>
+        <div class="main-content">
+          <div class="btn-box">
+            <el-button type="primary" round @click="uploadMyPlan(item)" >上传我的教案</el-button>
+            <el-button type="primary" round @click="uploadMyVideo(item)">上传我的说课</el-button>
+          </div>
+          <div class="content-list-box">
+            <div class="content-list-box-item" v-for="(item,index) in allFileList" :key="index">
+              <div class="content-list-box-item-bg">
+                <img class="img-cover" style="width:116px;" 
+                  v-if="item.ext !== 'mp3' && item.ext !== 'zip' && item.ext !== 'rar' && item.mediaType == null" 
+                  :src="`${domain}${item.imgPath}`" 
+                  alt="爱学标品">
+                <img v-else src="/@/assets/prepare-teach/weizhiwenjian.png" alt="爱学标品"/>
+              </div>
+              <div class="content-list-box-item-title">
+                <p>{{ item.fileName }}</p>
+              </div>
+              <div class="btn-group">
+                <div class="btn-preview">
+                  <div @click="preview(item)"><i class="el-icon-search"/><span>预览</span></div>
                 </div>
-                <div class="content-list-box-item-title">
-                  <p>{{ item.fileName }}</p>
-                </div>
-                <div class="btn-group">
-                  <div class="btn-box">
-                    <el-button size="mini" icon="el-icon-search" @click="preview(item)" round >预览</el-button>
-                  </div>
-                  <div class="private">
-                    <i class="el-icon-lock" v-if="item.isPublic == 0" style="font-size: 12px"></i>
-                  </div>
+                <div class="private">
+                  <i class="el-icon-lock" v-if="item.isPublic == 0" style="font-size: 12px"></i>
                 </div>
               </div>
-              <cus-empty v-if="!allFileList.length" />
             </div>
-          </el-tab-pane>
-        </el-tabs>
+            <cus-empty v-if="!allFileList.length" />
+          </div>
+        </div>
       </div> 
     </div>
   </div>
@@ -85,8 +86,9 @@ export default {
   },
   setup(props) {
     let close: any = inject('close');
-    let activeName = ref('totalCount');
     let domain = import.meta.env.VITE_DOMAIN;
+    let tabType = ref(null)
+
     /*---------获取上部展示数据------------*/
     let courseDto: any = ref({});
     let prepareLesson: any = ref({});
@@ -112,7 +114,7 @@ export default {
         arr.map (( [key, value] ) => {
           tabCountList.value.map( ( item: any ) => {
             if( item.nameKey == key ) {
-              item.num = value
+              return item.num = value
             }
           })
         })
@@ -128,30 +130,20 @@ export default {
       }
     }
     request('')
-    /*---------切换标签获取数据------------*/
-    let tabtype = ref()
-    const handleClick = (e) => {
-      tabCountList.value.map( ( item: any,index ) => {
-        if( index == e.index ){
-          tabtype.value = item.type
-          request(tabtype.value)
-        }
-      })
-    }
     /*---------上传我的教案------------*/
     const uploadMyPlan = () => {
-      Modal.create({ title: '上传我的教案', width: 640, component: MyPlanUpload, props: { id: props.id }, zIndex: 999 }).then((data: any) => {
+      Modal.create({ title: '上传我的教案', width: 640, component: MyPlanUpload, props: { id: props.id }, zIndex: 2011 }).then((data: any) => {
         if(data.json){
-           request(tabtype.value)
+           request(tabType.value)
            tabCountRequest()
         }
       })
     }
     /*---------上传我的说课------------*/
     const uploadMyVideo = () => {
-      Modal.create({ title: '上传我的说课', width: 640, component: MyVideoUpload, props: { id: props.id }, zIndex: 999 }).then((data: any) => {
+      Modal.create({ title: '上传我的说课', width: 640, component: MyVideoUpload, props: { id: props.id }, zIndex: 2011 }).then((data: any) => {
         if(data.json){
-           request(tabtype.value)
+           request(tabType.value)
            tabCountRequest()
         }
       })
@@ -184,36 +176,25 @@ export default {
           style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', top: '40px', right: '40px', zIndex: '10', cursor: 'pointer' },
           on: { click: () => { container.remove(); } }
         });
-        //下载
-        let downloadData = createElement('div', { 
-          className: 'el-icon-download', 
-          style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', bottom: '100px', right: '40px', zIndex: '10', cursor: 'pointer' },
-          on: { click: () => { 
-              let a  = document.createElement('a');
-              a.download = item.fileName;
-              a.href = `${import.meta.env.VITE_DOMAIN}${item.filePath}`;
-              a.click(); } 
-            }
-        }); 
         let container;
         if(item.ext === 'mp4') {
           let video = createElement('video', 
           { attrs: { src:`${import.meta.env.VITE_DOMAIN}${item.filePath}`, width: '100%', height: '100%',controls: true, controlsList: "nodownload" }, style: { background: '#f9f9f9' }});
           video.oncanplay = loading.close;
           container = createElement('div', { 
-            style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '1000' },
+            style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '2012', background: 'rgba(0,0,0,.8)' },
           }, [ closeBtn, video ])
         }else if (item.ext === null && item.mediaType === 'url'){
           loading.close()
           let url = createElement('p', { style: { background: '#f9f9f9', width: '100%', height: '100%', padding: '36px', 'font-size':'20px' }}, '链接地址：' + item.filePath);
           container = createElement('div', { 
-            style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '1000' },
+            style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '2012', background: 'rgba(0,0,0,.8)' },
           }, [ closeBtn, url ])
         }else {
           let iframe = createElement('iframe', { attrs: { src, width: '100%', height: '100%' }, style: { background: '#f9f9f9' } });
           iframe.onload = loading.close;
           container = createElement('div', { 
-            style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '1000' },
+            style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '2012', background: 'rgba(0,0,0,.8)' },
           }, [ closeBtn, iframe, ])
         }
         document.body.appendChild(container);
@@ -221,8 +202,8 @@ export default {
     }
 
     return { 
-      close, activeName, tabCountList, courseDto, request, allFileList, handleClick, prepareLesson, uploadMyPlan,
-      tabCountRequest, uploadMyVideo, savePrepareClass, preview, domain
+      close, tabCountList, courseDto, request, allFileList, prepareLesson, uploadMyPlan,
+      tabCountRequest, uploadMyVideo, savePrepareClass, preview, domain, tabType
     }
   }
 }
@@ -303,12 +284,13 @@ export default {
       border-radius: 10px;
       display: flex;
       justify-content: flex-start;
+      margin-bottom: 30px;
       .class-top{
         padding: 10px 50px;
         h2{
           font-size: 18px;
           color: #333;
-          font-weight: 500;
+          font-weight: 600;
         }
         .class-list{
           margin-top: 30px;
@@ -330,10 +312,60 @@ export default {
         }
       }
     }
-    .main{
-      margin-top: 30px;
+    .tabs-box {
+      display: flex;
+      background: rgb(245, 247, 250);
+      .tab-cell {
+        height: 50px;
+        padding: 0 10px 0 20px;
+        margin-right: 18px;
+        line-height: 50px;
+        box-shadow: 0 -2px 6px 0 rgba(91,125,255,.08);
+        position: relative;
+        cursor: pointer;
+        &.active {
+          &::before {
+            z-index: 1;
+          }
+          i {
+            color: #fff;
+            background: #FAAD14;
+          }
+        }
+        & > div {
+          position: relative;
+          z-index: 2;
+          i {
+            display: inline-block;
+            height: 20px;
+            padding: 0 10px;
+            margin-left: 10px;
+            color: #77808D;
+            line-height: 20px;
+            border-radius: 10px;
+            background: #E0E1E6;
+          }
+        }
+        &::before {
+          content: '';
+          border-bottom: none;
+          background: #fff;
+          box-shadow: 0 -2px 6px 0 rgba(91,125,255,.08);
+          transform: perspective(1em) scale(1.3,1.35) rotateX(5deg);
+          transform-origin: bottom left;
+          border-radius: 6px 6px 0 0;
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+        }
+      }
+    }
+    .main-content{
+      padding: 20px;
       background: #fff;
-      border-radius: 10px;
+      box-shadow: 0px -2px 6px 0px rgba(91, 125, 255, 0.08);
       .num{
         margin-left: 5px;
         padding: 0 15px;
@@ -342,6 +374,13 @@ export default {
         height: 20px;
         width: 50px;
         border-radius: 15px;
+      }
+      .btn-box{
+        .el-button{
+          padding-top: 10px;
+          padding-bottom: 10px;
+          font-weight: 400;
+        }
       }
       .content-list-box{
         padding: 20px 0 ;
@@ -366,27 +405,49 @@ export default {
             display: flex;
           }
           .btn-group{
-            top: 0;
-            left: 15px;
             width: 160px;
             height: 155px;
-            border-radius: 6px;
+            border-radius: 4px;
+            background: rgba($color: #000, $alpha: .15);
             position: absolute;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            background: rgba(0, 0, 0, 0.15);
-            .btn-box{
-              margin-top: -8px;
-              width: 100px;
-              height: 60px;
-              display: flex;
-              flex-direction: column;
-              justify-content: space-between;
-              align-items: center;
+            top: 0;
+            left: 15px;
+            opacity: 0;
+            transition: all .25s;
+            .btn-preview {
+              width: 84px;
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              margin-top: -10px;
+              transform: translate3d(-50%, -50%, 0);
+              div {
+                color: #1AAFA7;
+                font-size: 12px;
+                line-height: 24px;
+                text-align: center;
+                border-radius: 12px;
+                background: #fff;
+                cursor: pointer;
+                &:last-child {
+                  margin-top: 10px;
+                }
+                &:active {
+                  opacity: .8;
+                }
+                i {
+                  font-weight: bold;
+                  margin-right: 3px;
+                }
+              }
             }
             .private{
               display: block;
+            }
+          }
+          &:hover {
+            .btn-group {
+              opacity: 1;
             }
           }
           &-bg{
@@ -445,62 +506,6 @@ export default {
             color: #fff;
           }
         }
-      }
-      :deep(.el-tabs__header){
-        margin-bottom: 0;
-      }
-      :deep(.el-tabs__content){
-        padding: 20px;
-      }
-      :deep(.el-tabs__nav-scroll){
-        background: $--background-color-base;
-      }
-      :deep(.el-tabs__item){
-        background: #fafbfd;
-        border: none;
-        position: relative;
-        height: 44px;
-        width: 120px;
-        line-height: 44px;
-        text-align: center;
-        margin-left: 25px;
-        &:nth-child(1){
-          margin-left: 0;
-        }
-      }
-      :deep(.el-tabs__item)::before{
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: 0;
-        background: #fafbfd;
-        -webkit-box-shadow: 0 -2px 6px 0 rgba(91,125,255,.08);
-        box-shadow: 0 -2px 6px 0 rgba(91,125,255,.08);
-        border-bottom: none;
-        -webkit-transform: perspective(1em) scale(1.3,1.35) rotateX(5deg);
-        transform: perspective(1em) scale(1.3,1.35) rotateX(5deg);
-        z-index: -1;
-        -webkit-transform-origin: bottom;
-        transform-origin: bottom left;
-      }
-      :deep(.el-tabs__item):hover{
-        color: #333;
-      }
-      :deep(.el-tabs__item.is-active){
-        color: #333;
-        background: #fff;
-      }
-      :deep(.el-tabs__item.is-active)::before{
-        background: #fff;
-      }
-      :deep(.el-tabs__item.is-active) > .num{
-        color: #FFFFFF;
-        background: rgba(250, 173, 20, 1);
-      }
-      :deep(.el-tabs__nav){
-        border: none;
       }
     }
   }

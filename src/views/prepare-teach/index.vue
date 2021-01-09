@@ -81,6 +81,12 @@
 </script>
 
 <style lang="scss" scoped>
+    :deep(.modal-body){
+      padding: 0 20px 30px;
+    }
+    :deep(.modal-header){
+      margin-bottom: 20px;
+    }
   .cus-list {
     :deep(.cus__list__container){
       padding: 18px 5px 18px 20px;

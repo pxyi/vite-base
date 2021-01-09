@@ -100,9 +100,6 @@ export default {
     padding: 5px 10px;
     align-items: center;
   }
-  :deep(.cus__list__container .cus__list__item):hover{
-    background: #F5F7FA;
-  }
   .near-list-content{
     display: flex;
     justify-content: space-around;
@@ -147,6 +144,8 @@ export default {
   .menu{
     .el-button{
       margin-right: 10px;
+      font-size: 14px;
+      padding: 10px 11px;
     }
     .btn-hidden{
       visibility: hidden;
