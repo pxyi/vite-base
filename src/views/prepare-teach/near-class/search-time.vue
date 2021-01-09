@@ -68,6 +68,9 @@ export default({
     background-size: cover;
     padding: 20px 30px;
     border-radius: 6px;
+    p{
+      font-weight: 500;
+    }
     .times{
       width: 420px;
       margin-top: 20px;

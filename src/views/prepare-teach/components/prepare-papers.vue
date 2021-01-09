@@ -89,9 +89,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  :deep(.modal-body){
-    padding: 0 20px 30px;
-  }
+    :deep(.modal-body){
+      padding: 0 20px 30px;
+    }
+    :deep(.modal-header){
+      margin-bottom: 20px;
+    }
   .course-details{
     ul{
       max-height: 500px;

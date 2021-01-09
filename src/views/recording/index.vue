@@ -4,7 +4,7 @@
       <HeaderComponent @reset="$refs.tableRef.request()" />
     </template>
     <cus-table ref="tableRef" url="/admin/questionImportLog/queryPageV2" :auto-request="false">
-      <el-table-column prop="fileName" label="文件名称">
+      <el-table-column prop="fileName" label="文件名称" min-width='400'>
         <template #default="{ row }">
           <div class="file-name">
             <img src="/@/assets/file-icon.png" alt="爱学标品">
@@ -12,20 +12,27 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="creatorName" label="上传人" width="100" />
-      <el-table-column prop="createTime" label="上传时间" width="180" />
-      <el-table-column prop="status" label="解析状态" width="120">
+      <el-table-column prop="creatorName" label="上传人"  width="130"/>
+      <el-table-column prop="createTime" label="上传时间" width="180"/>
+      <el-table-column prop="status" label="解析状态" width="160">
         <template #default="{ row }">
-          <span :class="[`i_status-${row.status}`]">{{ row.status === 0 ? '解析中' : row.status === 1 ? '解析失败' : row.status === 2 ? '解析成功' : row.status === 3 ? '导入失败' : '导入成功' }}</span>
-          <el-popover :width="160" trigger="hover">
-            <template #reference v-if="row.status === 1 || row.status === 3"><i class="el-icon-question" /></template>
-            <template #default>
-              <span v-html="row.failReason"></span>
-            </template>
-          </el-popover>
+          <div class="i_status">
+            <div :class="[`i_status-${row.status}`]">
+              <i class="icon-dot"></i>
+              <span>{{ row.status === 0 ? '解析中' : row.status === 1 ? '解析完成' : row.status === 2 ? '解析成功' : row.status === 3 ? '导入失败' : '导入成功' }}</span>
+            </div>
+            <el-popover :width="160" trigger="hover">
+              <template #reference v-if="row.status === 1 || row.status === 3"><i class="iconfont iconyuanyin i-question" /></template>
+              <template #default>
+                <div style="max-height: 250px; overflow: auto">
+                  <span v-html="row.failReason"></span>
+                </div>
+              </template>
+            </el-popover>
+          </div>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="200">
+      <el-table-column label="操作" width="220">
         <template #default="{ row }">
           <div class="btns">
             <el-button type="text" @click="setting(row.id)">设置标签</el-button>
@@ -68,7 +75,7 @@ export default {
     onMounted(() => emitter.emit('effect', (subjectId) => tableRef.value.request({ subjectId }) ) );
 
     const setting = async (id) => {
-      Screen.create(UpdateComponent, { id })
+      Screen.create(UpdateComponent, { id }).then(() => tableRef.value.request());
     }
 
     return { deleteRecord, tableRef, setting, headerRef }
@@ -100,21 +107,71 @@ export default {
     margin-left: 40px;
   }
 }
+.i_status{
+  display: flex;
+  justify-content: flex-start;
+}
+.icon-dot{
+  display: inline-block;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  margin: 0 4px 3px 0;
+}
+.i-question{
+  color: #C0C4CC;
+  margin-left: 3px;
+}
 [class^=i_status-] {
   &.i_status-0 {
-    color: 999;
+    width: 90px;
+    color: #999;
+    background: #FFEFEB;
+    padding-left: 11px;
+    .icon-dot{
+      border: 1px solid  #999;
+      background: #999;
+    }
   }
   &.i_status-1 {
-    color: #F8662F;
+    width: 90px;
+    color: #FC514F;
+    background: #FFEFEB;
+    padding-left: 11px;
+    .icon-dot{
+      border: 1px solid #FC514F;
+      background: #FC514F;
+    }
   }
   &.i_status-2 {
-    color: #409eff;
+    width: 90px;
+    color: #74C874;
+    background: #F2F2F2;
+    padding-left: 11px;
+    .icon-dot{
+      border: 1px solid #74C874;
+      background: #74C874;
+    }
   }
   &.i_status-3 {
-    color: #f56c6c;
+    width: 90px;
+    color: #FC514F;
+    background: #FFEFEB;
+    padding-left: 11px;
+    .icon-dot{
+      border: 1px solid #FC514F;
+      background: #FC514F;
+    }
   }
   &.i_status-4 {
-    color: #19aea6;
+    width: 90px;
+    color: #74C874;
+    background: #F2F2F2;
+    padding-left:11px;
+    .icon-dot{
+      border: 1px solid #74C874;
+      background: #74C874;
+    }
   }
 }
 .el-icon-question {

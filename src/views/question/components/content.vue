@@ -109,7 +109,7 @@ export default {
     }
 
     let __params: any = {};
-    
+
     let loading = ref(false);
     const request = async (params?) => {
       loading.value = true;
@@ -394,9 +394,9 @@ export default {
     margin-bottom: 20px;
   }
   .e-main {
-    text-indent: 2em;
+    padding-left: 20px;
     .e-m-cell {
-      display: flex;
+      //display: flex;
       margin-bottom: 10px;
       .e-c-label {
         width: 40px;
