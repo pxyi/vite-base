@@ -26,7 +26,7 @@ img {
   display: inline-block;
   vertical-align: middle;
 	position: static;
-	float: none;
+	float: none !important;
 }
 i {
   font-style: normal;
