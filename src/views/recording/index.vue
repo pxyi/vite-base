@@ -19,7 +19,7 @@
           <div class="i_status">
             <div :class="[`i_status-${row.status}`]">
               <i class="icon-dot"></i>
-              <span>{{ row.status === 0 ? '解析中' : row.status === 1 ? '解析失败' : row.status === 2 ? '解析成功' : row.status === 3 ? '导入失败' : '导入成功' }}</span>
+              <span>{{ row.status === 0 ? '解析中' : row.status === 1 ? '解析完成' : row.status === 2 ? '解析成功' : row.status === 3 ? '导入失败' : '导入成功' }}</span>
             </div>
             <el-popover :width="160" trigger="hover">
               <template #reference v-if="row.status === 1 || row.status === 3"><i class="iconfont iconyuanyin i-question" /></template>
@@ -159,7 +159,7 @@ export default {
     .icon-dot{
       border: 1px solid #FC514F;
       background: #FC514F;
-    } 
+    }
   }
   &.i_status-4 {
     width: 90px;

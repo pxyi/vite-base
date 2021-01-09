@@ -396,7 +396,7 @@ export default {
   .e-main {
     padding-left: 20px;
     .e-m-cell {
-      display: flex;
+      //display: flex;
       margin-bottom: 10px;
       .e-c-label {
         width: 40px;
