@@ -1,7 +1,12 @@
 <template>
   <div class="main-container">
     <div class="fixed">
-      <h2>检查区：</h2><div v-if="errorList.length"><i>{{ errorList.length }}</i><span>处错误，请参照提示修改</span><a>查看</a></div>
+      <h2>检查区：</h2>
+      <div v-if="errorList.length">
+        <i>{{ errorList.length }}</i>
+        <span>处错误，请参照提示修改</span>
+        <a @click.stop="seeFail">查看</a>
+      </div>
     </div>
     <div class="main-content" :class="{ 'is__sync': isSync }">
       <div class="item" @click.stop :class="{ 'is__focus': focusData?.id === data.id }" v-for="data in dataset" :key="data.id">
@@ -33,7 +38,7 @@
 </template>
 
 <script lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, nextTick } from 'vue';
 import store from './../store';
 import axios from 'axios';
 
@@ -47,7 +52,7 @@ export default {
 
     let isSync = computed(() => store.state.isSync);
 
-    const focusChange = (data) => !isSync.value ? store.commit('set_focus_data', data) : false;
+    const focusChange = (data) => store.commit('set_focus_data', data);
 
     const remove = async (data) => {
       data.loading = true;
@@ -55,7 +60,19 @@ export default {
       res.result && store.commit('delete_data', data.id);
     }
 
-    return { dataset, errorList, focusData, focusChange, remove, isSync }
+    let errorIndex = 0;
+    const seeFail = () => {
+      let errorId = errorList.value[errorIndex]['quesId'];
+      let data = dataset.value.find((d: {id}) => d.id === errorId)
+      data && store.commit('set_focus_data', data);
+      errorIndex = errorIndex < errorList.value.length - 1 ? errorIndex + 1 : 0;
+      nextTick(() => {
+        let top = (document.querySelector('.main-content .item.is__focus') as HTMLElement).offsetTop;
+        (document.querySelector('.main-content') as HTMLElement).scrollTop = top - 50;
+      })
+    }
+
+    return { dataset, errorList, focusData, focusChange, remove, isSync, seeFail }
   }
 }
 </script>
