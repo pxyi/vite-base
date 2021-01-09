@@ -13,7 +13,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="creatorName" label="上传人"  width="130"/>
-      <el-table-column prop="createTime" label="上传时间"  />
+      <el-table-column prop="createTime" label="上传时间" width="180"/>
       <el-table-column prop="status" label="解析状态" width="160">
         <template #default="{ row }">
           <div class="i_status">
@@ -24,7 +24,9 @@
             <el-popover :width="160" trigger="hover">
               <template #reference v-if="row.status === 1 || row.status === 3"><i class="iconfont iconyuanyin i-question" /></template>
               <template #default>
-                <span v-html="row.failReason"></span>
+                <div style="max-height: 250px; overflow: auto">
+                  <span v-html="row.failReason"></span>
+                </div>
               </template>
             </el-popover>
           </div>
@@ -73,7 +75,7 @@ export default {
     onMounted(() => emitter.emit('effect', (subjectId) => tableRef.value.request({ subjectId }) ) );
 
     const setting = async (id) => {
-      Screen.create(UpdateComponent, { id })
+      Screen.create(UpdateComponent, { id }).then(() => tableRef.value.request());
     }
 
     return { deleteRecord, tableRef, setting, headerRef }
