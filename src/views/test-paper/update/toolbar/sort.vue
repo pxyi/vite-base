@@ -36,7 +36,10 @@ import { cloneDeep } from 'lodash';
 export default {
   components: { draggable },
   setup() {
-    let paperCharpts = computed(() => store.getters.paperCharpts);
+    let paperCharpts = computed({
+      get: () => store.getters.paperCharpts,
+      set: (val) => store.commit('set_paper_charpts', val)
+    });
 
     const sortHandle = (type, index) => {
       let data = cloneDeep(paperCharpts.value);

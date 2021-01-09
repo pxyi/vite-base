@@ -22,7 +22,7 @@
             <div class="cover"><el-image :src="`${filePathBase}${data.imgPath}`" fit="cover"></el-image></div>
             <p>{{ data.fileName }}</p>
             <div class="mask">
-              <el-dropdown placement="bottom-end" @command="cellHandle($event, data)">
+              <el-dropdown placement="bottom-end" trigger="click" @command="cellHandle($event, data)">
                 <i class="el-icon-more" />
                 <template #dropdown>
                   <el-dropdown-menu>
@@ -227,6 +227,7 @@ export default {
       }
     }
     & > div {
+      white-space: nowrap;
       position: relative;
       z-index: 2;
       i {

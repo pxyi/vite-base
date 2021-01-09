@@ -5,8 +5,8 @@
     <el-select placeholder="选择年级" v-model="formGroup.gradeId" size="medium">
       <el-option v-for="o in selectMap.gradeList" :key="o.id" :value="o.id" :label="o.name" />
     </el-select>
-    <el-select placeholder="选择班型" v-model="formGroup.courseTypeId" size="medium">
-      <el-option v-for="o in selectMap.courseTypeList" :key="o.id" :value="o.id" :label="o.name" />
+    <el-select placeholder="选择来源" v-model="formGroup.source" size="medium">
+      <el-option v-for="o in selectMap.sourceList" :key="o.id" :value="o.id" :label="o.name" />
     </el-select>
     <el-select placeholder="选择年份" v-model="formGroup.year" size="medium">
       <el-option v-for="o in selectMap.yearList" :key="o.id" :value="o.id" :label="o.name" />
@@ -55,7 +55,7 @@ export default {
     let selectMap: any = reactive({
       gradeList: [{ name: '所有', id: '' }],
       yearList: [{ name: '所有', id: '' }],
-      courseTypeList: [{ name: '所有', id: '' }]
+      sourceList: [{ name: '所有', id: '' }]
     });
 
     let paperInfo = computed(() => store.state.paperInfo);
@@ -72,13 +72,14 @@ export default {
         selectMap.courseTypeList = [{ name: '所有', id: '' }, ...res.json.courseTypes];
         if (val) {
           formGroup.gradeId = '';
-          formGroup.courseTypeId = '';
           formGroup.year = '';
         }
       });
     }
+    
     emitter.emit('ready', () => {
       Object.keys(paperInfo.value).map(key => formGroup[key] = paperInfo.value[key]);
+      axios.post<null, AxResponse>('/system/dictionary/queryDictByCodes', { typeCodesStr: 'QUES_SOURCE' }).then(res => selectMap.sourceList = res.json['QUES_SOURCE'])
       getSelectList();
     });
 

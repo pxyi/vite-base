@@ -155,7 +155,7 @@ const getCondition = (userId, subjectCode, nodeList): Promise<any> => {
     nodeList.some(i => i.label === '题型') && requestList.push(axios.post<null, AxResponse>('/tiku/questionType/queryTypeBySubject', { subject: subjectCode }))
     Promise.all(requestList).then(list => {
       let condition: any = {
-        sourceList: [{ name: '全部', id: null }, { name: '单元测试', id: 1 }, { name: '月考', id: 2 }, { name: '期中', id: 3 }, { name: '期末', id: 4 }, { name: '竞赛', id: 5 }, { name: '错题本', id: 6 }, { name: '测试来源', id: 7 }],
+        sourceList: [{ name: '全部', id: null }],
         difficultyList: [{ name: '全部', id: null }, { name: '易', id: 11 }, { name: '较易', id: 12 }, { name: '中档', id: 13 }, { name: '较难', id: 14 }, { name: '难', id: 15 } ],
         categoryList: [ { name: '全部', id: null }, { name: '真题', id: 1 }, { name: '好题', id: 2 }, { name: '常考题', id: 3 }, { name: '压轴题', id: 4 }, { name: '易错题', id: 5 } ],
         lnowledgeList: [ { name: '全部', id: null }, { name: '已绑定', id: 1 }, { name: '未绑定', id: 0 } ]

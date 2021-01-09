@@ -56,6 +56,7 @@ export default {
             group[group.length] = {
               avgScore: 0,
               totalScore: 0,
+              title: node.questionTypeName,
               questions: [{ score: 0, subjectId: node.subjectId, questionId: node.id }]
             }
           }

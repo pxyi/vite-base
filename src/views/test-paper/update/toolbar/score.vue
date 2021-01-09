@@ -16,14 +16,14 @@
           <div class="td">{{ toChinesNum(index + 1) }}. {{ paper.title }}</div>
           <div class="td">
             <div class="box">
-              <el-input-number size="mini" controls-position="right" :min="0" :max="99" @change="paperTypeScoreChange(paper, $event)" />
+              <el-input-number size="mini" controls-position="right" :min="0" :max="99" v-model="paper.avgScore" @change="paperTypeScoreChange(paper, $event)" />
               <div class="append">分/题</div>
             </div>
           </div>
         </div>
         <div class="tr" v-for="(quest, idx) in paper.questions" :key="quest.id">
           <div class="td">{{ idx + 1 }}</div>
-          <div class="td"><el-input-number v-model="quest.question.score" size="mini" controls-position="right" :min="0" :max="99" /></div>
+          <div class="td"><el-input-number v-model="quest.score" size="mini" controls-position="right" :min="0" :max="99" /></div>
         </div>
       </div>
     </div>
@@ -42,7 +42,7 @@ export default {
     });
     let questionTotal = computed(() => paperCharpts.value.reduce((total, n) => total += n.questions.length, 0));
 
-    let questionScoreTotal = computed(() => paperCharpts.value.reduce((total, n) => { n.questions.map(q => { total += q.question.score || 0 }); return total}, 0));
+    let questionScoreTotal = computed(() => paperCharpts.value.reduce((total, n) => { n.questions.map(q => { total += q.score || 0 }); return total}, 0));
 
     const paperTypeScoreChange = (quest, val) => {
       paperCharpts.value = paperCharpts.value.map(nodes => {

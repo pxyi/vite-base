@@ -41,7 +41,7 @@
                 </el-table>
               </div>
             </div>
-            <span>{{ toChinesNum(idx + 1) }}、 {{ questionType.title }}（共{{ questionType.questionCount }}小题）（{{ questionType.questions.reduce((t, n) => t += (n.question.score || 0), 0) }}）分</span>
+            <span>{{ toChinesNum(idx + 1) }}、 {{ questionType.title }}（共{{ questionType.questionCount }}小题）（{{ questionType.questions.reduce((t, n) => t += (n.score || 0), 0) }}）分</span>
             <i class="el-icon-plus" v-if="!isPreview" />
             <div class="footer" v-if="!isPreview">
               <i class="iconfont iconshangyi" :class="{ 'is__disabled': idx === 0 }" @click="moveType(idx, -1)" />
@@ -66,7 +66,7 @@
                 <div class="footer" v-if="!isPreview">
                   <div>
                     <i class="iconfont iconshezhifenzhi" />
-                    <el-input-number :controls="false" size="mini" v-model="element.question.score" />
+                    <el-input-number :controls="false" size="mini" v-model="element.score" />
                     <span>分值</span>
                   </div>
                   <div @click="element.showAnswer = !element.showAnswer">

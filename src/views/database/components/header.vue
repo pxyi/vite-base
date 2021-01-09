@@ -29,6 +29,7 @@ import axios from 'axios';
 import { AxResponse } from './../../../core/axios';
 import UploadComponent from './upload.vue';
 import emitter from './../../../utils/mitt';
+import createElement from './../../../utils/createElement'
 
 export default {
   props: ['getKnowledge'],
@@ -40,8 +41,7 @@ export default {
 
     const handle = (type) => {
       props.getKnowledge().then((knowledgeList: any[]) => {
-        let fileDom = document.createElement('input');
-        fileDom.setAttribute('type', 'file');
+        let fileDom = createElement('input', { attrs: { type: 'file', multiple: true } });
         fileDom.click();
         fileDom.onchange = async () =>{
           let files: File[] = Array.from(fileDom.files || []);

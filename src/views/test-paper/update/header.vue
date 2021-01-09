@@ -45,7 +45,19 @@ export default {
 
     let paperInfo = computed(() => store.state.paperInfo);
     const save = () => {
-      axios.post('/tiku/paper/addPaper', paperInfo.value,{ headers: { 'Content-Type': 'application/json' } })
+      let params = {
+        ...paperInfo.value,
+        paperChapters: paperInfo.value.paperCharpts
+        // ...paperInfo.value.paperCharpts.reduce((param, quest: any) => {
+        //   param.paperChapters.push({
+        //     avgScore: quest.avgScore,
+        //     paperId: quest.paperId,
+        //     totalScore: quest.questions
+        //   })
+        //   return param;
+        // }, { totalScore: 0, paperChapters: [] } as { totalScore: number, paperChapters: any[]})
+      }
+      axios.post('/tiku/paper/addPaper', params,{ headers: { 'Content-Type': 'application/json' } })
     }
     return { classType, classList, close, download, isPreview, save }
   }

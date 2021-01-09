@@ -6,7 +6,7 @@ import { defineAsyncComponent, h } from 'vue';
 
 const AsyncComponent = (loader) => defineAsyncComponent({
   loader,
-  errorComponent: () => h('div', { id: 'timeout' }, '页面请求超时，请刷新页面重试！！！'),
+  errorComponent: () => h('div', { id: 'timeout' }, '网络环境异常，请刷新页面重试！！！'),
   loadingComponent: () => h('div', { id: 'loading' }, h('i', { class: 'el-icon-loading' })),
   timeout: 5000,
 })

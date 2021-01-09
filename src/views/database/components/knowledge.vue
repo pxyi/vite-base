@@ -1,6 +1,6 @@
 <template>
   <el-skeleton :loading="loading">
-    <el-input placeholder="按教材章节搜索" prefix-icon="el-icon-search" v-model="filterText" class="search-input" size="medium" v-if="!hideSearch" />
+    <el-input placeholder="按教材章节搜索" prefix-icon="el-icon-search" clearable v-model="filterText" class="search-input" size="medium" v-if="!hideSearch" />
 
     <el-tree
       class="knowledge-tree"

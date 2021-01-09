@@ -39,6 +39,7 @@ export default {
       { h4: '手动选题', p: '根据个性化需求，手动添加试卷结构并完成选题', value: 1 }
     ];
 
+    let subjectDefault = [store.getters.subject.parentCode, store.getters.subject.code];
     let nodes: Ref<any[]> = ref([
       {
         label: "试卷名称",
@@ -52,17 +53,10 @@ export default {
         type: "cascader",
         url: "/permission/user/userDataSubjects",
         params: { userId },
-        default: [store.getters.subject.parentCode, store.getters.subject.code],
+        default: subjectDefault,
         rule: { required: true, message: "请选择学科" },
         valueKey: 'code',
-        change: (v) => {
-          axios.post('/permission/user/userDataRules', { userId, subjectCode: v[1] }).then((res: any) => {
-            nodes.value[2].options = res.json.grades;
-            nodes.value[3].options = res.json.years;
-            formRef.value.formGroup.gradeId && (formRef.value.formGroup.gradeId = null);
-            formRef.value.formGroup.year && (formRef.value.formGroup.year = null);
-          })
-        }
+        change: (v) => subjectChange(v)
       },
       {
         label: "年级",
@@ -82,7 +76,7 @@ export default {
         label: "来源",
         key: "source",
         type: "select",
-        options: [{ name: '单元测试', id: 1 }, { name: '月考', id: 2 }, { name: '期中', id: 3 }, { name: '期末', id: 4 }, { name: '竞赛', id: 5 }, { name: '错题本', id: 6 }],
+        options: [],
         rule: { required: true, message: "请选择来源" },
       },
       { 
@@ -94,6 +88,17 @@ export default {
       }
     ]);
 
+    axios.post<null, AxResponse>('/system/dictionary/queryDictByCodes', { typeCodesStr: 'QUES_SOURCE' }).then(res => nodes.value[4].options = res.json['QUES_SOURCE']);
+
+    let subjectChange = (val) => {
+      axios.post('/permission/user/userDataRules', { userId, subjectCode: val[1] }).then((res: any) => {
+        nodes.value[2].options = res.json.grades;
+        nodes.value[3].options = res.json.years;
+        formRef.value.formGroup.gradeId && (formRef.value.formGroup.gradeId = null);
+        formRef.value.formGroup.year && (formRef.value.formGroup.year = null);
+      })
+    }
+    subjectChange(subjectDefault);
 
     const save = (resolve, reject) => {
       formRef.value.validate(valid => {

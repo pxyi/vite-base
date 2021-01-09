@@ -34,7 +34,7 @@ export default {
     const classChange = (e) => { classType.value = e; emit('type-change', e) };
 
     let searchText = ref(null);
-    const searchHandle = () => emit('search', searchText);
+    const searchHandle = () => emit('search', searchText.value);
 
     let queryClass = {};
     emitter.on('queryClass', (e) => queryClass = e);

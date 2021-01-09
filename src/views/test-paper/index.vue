@@ -21,7 +21,7 @@
         <template v-slot="{ data }">
           <div class="cus_content">
             <h2>{{ data.title }}</h2>
-            <p>来源：<span class="cus_tag">{{ data.source }}</span></p>
+            <p>来源：<span class="cus_tag">{{ getSourceName(data.source) }}</span></p>
             <div>
               <div><span>题目数：{{ data.questionCount || 0 }}</span><span>下载次数：{{ data.downloadCount || 0 }}</span></div>
               <div><span>创建人：{{ data.creatorName }}</span><span>创建时间：{{ data.createTime }}</span></div>
@@ -126,7 +126,11 @@ export default {
       listRef.value.request();
     });
 
-    return { headerRef, listRef, params, query, remove, preview, download, update }
+    let sourceList: Ref<any[]> = ref([]);
+    axios.post<null, AxResponse>('/system/dictionary/queryDictByCodes', { typeCodesStr: 'QUES_SOURCE' }).then(res => sourceList.value = res.json['QUES_SOURCE']);
+    const getSourceName = (id): string => sourceList.value.find(i => i.id === id)?.name || '-';
+
+    return { headerRef, listRef, params, query, remove, preview, download, update, getSourceName }
   }
 }
 </script>
