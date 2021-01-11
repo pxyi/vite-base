@@ -73,8 +73,8 @@
 		data() {
 		  return {
 		    currentFile: {},
-			  baseApi: process.env.VITE_APP_BASE_API,
-			  web365: process.env.VITE_APP_OFFICE_WEB365,
+			  baseApi: import.meta.env.VITE_APP_BASE_API,
+			  web365: import.meta.env.VITE_APP_OFFICE_WEB365,
 			  tab:[{label: '教师教案', value: 2}, {label: '教师说课视频', value: 1}],
 			  tabIndex:  1
 		  }
