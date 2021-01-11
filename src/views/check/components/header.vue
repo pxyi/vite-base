@@ -56,7 +56,6 @@
 				const res = await axios.post('/permission/user/querySchoolByUserId', {current: 1, size: 2000, schoolName, userId: this.$store.state.user.userInfo.user.id});
 				if (res.result && res.json.length) {
 					this.schoolOptions = res.json;
-					console.log(this.schoolOptions)
 				};
 		  },
 			async getGroupData(groupName) {
