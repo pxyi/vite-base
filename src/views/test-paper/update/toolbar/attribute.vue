@@ -5,7 +5,7 @@
     <el-select placeholder="选择年级" v-model="formGroup.gradeId" size="medium">
       <el-option v-for="o in selectMap.gradeList" :key="o.id" :value="o.id" :label="o.name" />
     </el-select>
-    <el-select placeholder="选择来源" v-model="formGroup.source" size="medium">
+    <el-select placeholder="选择来源" v-model="formGroup.source" size="medium" v-if="selectMap.sourceList.length > 1">
       <el-option v-for="o in selectMap.sourceList" :key="o.id" :value="o.id" :label="o.name" />
     </el-select>
     <el-select placeholder="选择年份" v-model="formGroup.year" size="medium">

@@ -111,18 +111,21 @@ export default {
         margin-bottom: 12px;
         .source-control {
           &:first-child {
-            width: 130px;
+            width: 200px;
             margin-right: 20px;
           }
           &:last-child {
-            flex: 1 1 130px;
+            flex: 1 1 200px;
             & > div {
               width: 100%;
             }
           }
         }
-        :deep(.source-control) .el-cascader {
-          width: 100%;
+        :deep(.source-control) {
+          .el-cascader,
+          .el-select {
+            width: 100%;
+          }
         }
       }
     }

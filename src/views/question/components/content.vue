@@ -161,13 +161,14 @@ export default {
     }
 
     const update = (id) => {
-      Modal.create({ title: '编辑题目', component: updateComponent, width: 640, props: { id } }).then(_ => request() );
+      Modal.create({ title: '编辑题目', component: updateComponent, width: 840, props: { id } }).then(_ => request() );
     }
 
     const remove = async (data) => {
       data.loading = true;
       let res = await axios.post<null, AxResponse>('/tiku/question/delete', { id: data.id });
       ElMessage[res.result ? 'success' : 'warning'](res.result ? '删除成功~！' : res.msg);
+      document.querySelector('.section-main')!.scrollTop = 0;
       request();
     }
 
