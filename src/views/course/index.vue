@@ -103,17 +103,17 @@
             },
             data
           }
-        }).then(res => {
+        }).then((res: any) => {
           courseModifyOrAdd({...data, ...res}, url);
         })
       };
 
       async function courseModifyOrAdd(data, url) {
-        const res: Promise = await axios.post<any, AxiosResponse>(url, data, {headers: {'Content-Type': 'application/json;charset=UTF-8'}});
-        res.result && ElNotification.success({title: '成功', message: res.msg}) && tableRef.value.request(params.value);
-        !res.result && ElNotification.error({title: '失败', message: res.msg});
+        const res: any = await axios.post<any, AxiosResponse>(url, data, {headers: {'Content-Type': 'application/json;charset=UTF-8'}});
+        res.result && (ElNotification as any).success({title: '成功', message: res.msg}) && tableRef.value.request(params.value);
+        !res.result && (ElNotification as any).error({title: '失败', message: res.msg});
       }
-      const courseDelete = (id) => axios.post('/course/delete', {id}).then(res => res.result && ElNotification.success({title: '成功', message: res.msg}) && tableRef.value.request(params.value));
+      const courseDelete = (id) => axios.post('/course/delete', {id}).then((res: any) => res.result && (ElNotification as any).success({title: '成功', message: res.msg}) && tableRef.value.request(params.value));
 
       const knotSet = (data) => { screen.create(knot, { data, tableRef }) };
       return {headerRef, params, tableRef, openModel, condition, courseDelete, knotSet}
@@ -132,6 +132,12 @@
 	}
 
 	.course .cus__table__container {
-		padding: 0 10px;
+		padding: 15px 10px;
+    :deep(thead) {
+      color: #77808D
+    }
+    :deep(tbody) {
+      color: #333333;
+    }
 	}
 </style>
