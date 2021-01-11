@@ -4,13 +4,13 @@
   </template>
 
   <div>
-    <cus-condition 
+    <cus-condition
       :node-list="[
         { label: '年份', key: 'year' },
         { label: '年级', key: 'gradeId' },
         { label: '来源', key: 'source' },
       ]"
-      @submit="$refs.listRef.request($event)" 
+      @submit="$refs.listRef.request($event)"
     />
 
     <div class="cus-list">
@@ -20,7 +20,7 @@
         </template>
         <template v-slot="{ data }">
           <div class="cus_content">
-            <h2>{{ data.title }}</h2>
+            <h1>{{ data.title }}</h1>
             <p>来源：<span class="cus_tag">{{ getSourceName(data.source) }}</span></p>
             <div>
               <div><span>题目数：{{ data.questionCount || 0 }}</span><span>下载次数：{{ data.downloadCount || 0 }}</span></div>
@@ -57,7 +57,7 @@ import Screen from './../../utils/screen';
 import UpdateComponent from './update/index.vue';
 import downloadComponent from './components/download.vue';
 
-export default { 
+export default {
   components: { HeaderRefComponent },
   setup() {
     let headerRef = ref();
@@ -84,14 +84,14 @@ export default {
       if (data.sourceFrom === 3) {
         const loading = ElLoading.service({ lock: true, background: 'rgba(255, 255, 255, .7)', text: '加载中...' })
         let src = `${import.meta.env.VITE_OFFICE_PREVIEW}?furl=${import.meta.env.VITE_DOMAIN}${data.filePath}`;
-        let closeBtn = createElement('div', { 
-          className: 'el-icon-close', 
+        let closeBtn = createElement('div', {
+          className: 'el-icon-close',
           style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', top: '40px', right: '40px', zIndex: '10', cursor: 'pointer' },
           on: { click: () => { container.remove(); } }
         });
         let iframe = createElement('iframe', { attrs: { src, width: '100%', height: '100%' }, style: { background: '#f9f9f9' } });
         iframe.onload = loading.close;
-        let container = createElement('div', { 
+        let container = createElement('div', {
           style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '9' },
         }, [ closeBtn, iframe ])
         document.body.appendChild(container);
@@ -140,6 +140,7 @@ export default {
   .el-button {
     width: 60px;
     color: #382A74;
+    font-weight: 550;
     &:not(:first-child) {
       margin-left: 30px;
     }
@@ -174,7 +175,7 @@ export default {
 }
 .cus_tag {
   margin-right: 8px;
-  padding: 0 6px;
+  padding: 3px 10px;
   color: #333;
   font-size: 12px;
   line-height: 20px;
