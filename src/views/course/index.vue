@@ -34,7 +34,7 @@
 				<el-table-column label="课程分类" property="courseTypeName"></el-table-column>
 				<el-table-column label="年级" property="gradeName"></el-table-column>
 				<el-table-column label="学期" property="semesterName"></el-table-column>
-				<el-table-column label="年份" property="year"></el-table-column>
+				<el-table-column label="年份" property="yearName"></el-table-column>
 				<el-table-column label="操作" width="280">
 					<template v-slot:default="scope">
 						<el-button @click="openModel( scope.row, '/course/modify')" size="small" type="text">修改</el-button>
