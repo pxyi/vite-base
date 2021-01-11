@@ -89,10 +89,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    :deep(.modal-body){
+    :deep(.modal-confirm .modal-body){
       padding: 0 20px 30px;
     }
-    :deep(.modal-header){
+    :deep(.modal-confirm .modal-header){
       margin-bottom: 20px;
     }
   .course-details{
@@ -117,6 +117,10 @@ export default {
           }
           .menu{
             margin-right: 20px;
+            & > .el-button:last-child{
+              background: #faad14;
+              border: #faad14;
+            }
           }
           &:hover{
             background: #F5F7FA;
