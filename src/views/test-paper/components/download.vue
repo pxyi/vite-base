@@ -37,12 +37,12 @@ import { useStore } from 'vuex';
 type IAny = any[];
 
 export default {
-  props: [],
-  setup() {
+  props: ['subjectId'],
+  setup(props) {
     let store = useStore();
     let versionList = [{ label: '学生版(没答案解析)', value: 2 }, { label: '教师版(有答案解析)', value: 1 }, { label: '解析版(只有答案解析)', value: 3 }];
     let templateList: Ref<IAny> = ref([]);
-    let subjectCode = store.getters.subject.code;
+    let subjectCode = store.getters.subject.code || props.subjectId;
 
     let formGroup = reactive({
       type: 2,

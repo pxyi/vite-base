@@ -1,7 +1,12 @@
 <template>
   <div class="paper__header__container">
     <div class="header">
-      <div class="save"><div v-if="!isPreview" @click="save"><i class="el-icon-edit-outline" /><span>自动保存...</span></div></div>
+      <div class="save">
+        <div v-if="!isPreview" @click="save">
+          <i class="el-icon-edit-outline" />
+          <span>{{ loading ? '保存中...' : isChanged ? '已更改' : '自动保存...' }}</span>
+        </div>
+      </div>
       <div class="tabs_box" v-if="isPreview">
         <ul>
           <li v-for="p in classList" :key="p.id" :class="{ active: classType === p.id }" @click="classType = p.id">{{ p.name }}</li>
@@ -20,6 +25,8 @@ import Modal from './../../../utils/modal';
 import downloadComponent from './../components/download.vue';
 import store from './store';
 import axios from 'axios';
+import emitter from './../../../utils/mitt';
+import { debounce } from 'lodash'
 
 export default {
   setup(props) {
@@ -36,21 +43,39 @@ export default {
         title: '下载试卷',
         width: 640,
         zIndex: 2011,
-        component: downloadComponent
+        component: downloadComponent,
+        props: { subjectId: paperInfo.value.subjectId }
       }).then((res: any) => {
         window.open(`${import.meta.env.VITE_APP_BASE_URL}/tiku/paper/downPaper?paperId=${ id }&type=${ res.type }&templateId=${ res.templateId }`);
       });
     }
 
-    let paperInfo = computed(() => store.state.paperInfo);
+    let loading = ref(false);
+    let isChanged = ref(false);
+    !isPreview && emitter.emit('ready', () => {
+      setTimeout(() => {
+        emitter.on('test-paper-change',() => {
+          isChanged.value = true;
+          autoSave();
+        });
+      });
+    });
+
+    const autoSave = debounce(() => save(), 5000)
+
+    let paperInfo: any = computed(() => store.state.paperInfo);
     const save = () => {
+      loading.value = true;
       let params = {
         ...paperInfo.value,
         paperChapters: paperInfo.value.paperCharpts
       }
-      axios.post('/tiku/paper/addPaper', params,{ headers: { 'Content-Type': 'application/json' } })
+      axios.post('/tiku/paper/addPaper', params,{ headers: { 'Content-Type': 'application/json' } }).then(res => {
+        loading.value = false;
+        isChanged.value = false;
+      })
     }
-    return { classType, classList, download, isPreview, save }
+    return { classType, classList, download, isPreview, save, loading, isChanged }
   }
 }
 </script>
@@ -71,6 +96,11 @@ export default {
       font-size: 24px;
       vertical-align: middle;
       margin-right: 10px;
+    }
+    span {
+      display: inline-block;
+      width: 70px;
+      text-align: left;
     }
   }
   .btns {

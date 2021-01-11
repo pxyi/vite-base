@@ -1,5 +1,5 @@
 <template>
-  <draggable v-model="paperCharpts" tag="transition-group" animation="250" item-key="id">
+  <draggable v-model="paperCharpts" @update:modelValue="sortChange" tag="transition-group" animation="250" item-key="id">
     <template #item="{ element, index }">
       <div class="section">
         <div class="title">
@@ -15,7 +15,7 @@
           </el-dropdown>
         </div>
         <div class="content">
-          <draggable v-model="element.questions" tag="transition-group" animation="250" item-key="id">
+          <draggable v-model="element.questions" @update:modelValue="sortChange" tag="transition-group" animation="250" item-key="id">
             <template #item="{ index }">
               <div class="item">{{ index + 1 }}</div>
             </template>
@@ -32,6 +32,7 @@ import draggable from 'vuedraggable';
 import store from './../store';
 import { toChinesNum } from './../utils';
 import { cloneDeep } from 'lodash';
+import emitter from './../../../../utils/mitt'
 
 export default {
   components: { draggable },
@@ -46,8 +47,9 @@ export default {
       data[index].questions = data[index].questions.sort((a, b) => (type === 'down' ? (a.question.difficult - b.question.difficult) : (b.question.difficult - a.question.difficult) )  );
       store.commit('set_paper_charpts', data);
     }
+    const sortChange = () => emitter.emit('test-paper-change')
 
-    return { paperCharpts, toChinesNum, sortHandle }
+    return { paperCharpts, toChinesNum, sortHandle, sortChange }
   }
 }
 </script>

@@ -23,7 +23,7 @@
         </div>
         <div class="tr" v-for="(quest, idx) in paper.questions" :key="quest.id">
           <div class="td">{{ idx + 1 }}</div>
-          <div class="td"><el-input-number v-model="quest.score" size="mini" controls-position="right" :min="0" :max="99" /></div>
+          <div class="td"><el-input-number v-model="quest.score" @change="emitter.emit('test-paper-change')" size="mini" controls-position="right" :min="0" :max="99" /></div>
         </div>
       </div>
     </div>
@@ -34,6 +34,8 @@
 import { ref, computed } from 'vue';
 import store from './../store';
 import { toChinesNum } from './../utils';
+import emitter from './../../../../utils/mitt';
+
 export default {
   setup() {
     let paperCharpts = computed({
@@ -53,7 +55,7 @@ export default {
       });
     }
 
-    return { paperCharpts, toChinesNum, questionTotal, paperTypeScoreChange, questionScoreTotal }
+    return { paperCharpts, toChinesNum, questionTotal, paperTypeScoreChange, questionScoreTotal, emitter }
   }
 }
 </script>

@@ -4,6 +4,12 @@ export default {
       let html = questToHtml(data.value);
       html ? (el.innerHTML = html) : el.remove();
     }
+  },
+  updated(el, data) {
+    if (data) {
+      let html = questToHtml(data.value);
+      html ? (el.innerHTML = html) : el.remove();
+    }
   }
 }
 
