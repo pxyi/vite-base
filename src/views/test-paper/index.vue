@@ -118,7 +118,7 @@ export default {
     }
 
     const update = (data, preview = false) => {
-      Screen.create(UpdateComponent, { id: data.id, preview })
+      window.open(`./#/test-paper-edit/${preview}/${data.id}`);
     }
     /* 监听新增试卷成功事件 */
     emitter.on('add-test-paper-success', e => {

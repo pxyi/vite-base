@@ -104,6 +104,12 @@ const routes: RouteRecordRaw[] = [
     component: AsyncComponent(() => import('/@/views/login.vue'))
   },
   {
+    path: '/test-paper-edit/:preview/:id',
+    name: 'test-paper-edit',
+    meta: { title: '编辑试卷' },
+    component: () => import('/@/views/test-paper/update/index.vue')
+  },
+  {
     path: '/error',
     name: 'error',
     component: AsyncComponent(() => import('/@/views/error.vue'))

@@ -93,7 +93,6 @@
 <script lang="ts">
 import { ref, Ref, computed, inject } from 'vue';
 import draggable from 'vuedraggable';
-import axios from 'axios';
 import store from './store';
 import { toChinesNum } from './utils';
 import { cloneDeep } from 'lodash';

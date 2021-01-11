@@ -8,14 +8,14 @@
         </ul>
       </div>
       <div class="btns">
-        <el-button round @click="close();$router.push('/teaching/question')" v-if="!isPreview">题库</el-button>
+        <el-button round @click="$router.push('/teaching/question')" v-if="!isPreview">题库</el-button>
         <el-button round @click="download">下载</el-button>
       </div>
     </div>
   </div>
 </template>
 <script lang="ts">
-import { ref, Ref, reactive, computed, inject } from 'vue';
+import { ref, Ref, reactive, inject,  computed } from 'vue';
 import Modal from './../../../utils/modal';
 import downloadComponent from './../components/download.vue';
 import store from './store';
@@ -28,7 +28,6 @@ export default {
       set: (v) => store.commit('set_class_type', v)
     });
     let classList = [ { name: '教师版', id: 1 }, { name: '学生版', id: 2 }, { name: '解析版', id: 3 } ];
-    let close = inject('close');
     let id = inject('id');
     let isPreview = inject('preview');
 
@@ -48,18 +47,10 @@ export default {
       let params = {
         ...paperInfo.value,
         paperChapters: paperInfo.value.paperCharpts
-        // ...paperInfo.value.paperCharpts.reduce((param, quest: any) => {
-        //   param.paperChapters.push({
-        //     avgScore: quest.avgScore,
-        //     paperId: quest.paperId,
-        //     totalScore: quest.questions
-        //   })
-        //   return param;
-        // }, { totalScore: 0, paperChapters: [] } as { totalScore: number, paperChapters: any[]})
       }
       axios.post('/tiku/paper/addPaper', params,{ headers: { 'Content-Type': 'application/json' } })
     }
-    return { classType, classList, close, download, isPreview, save }
+    return { classType, classList, download, isPreview, save }
   }
 }
 </script>

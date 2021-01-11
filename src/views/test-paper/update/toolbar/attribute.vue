@@ -5,11 +5,11 @@
     <el-select placeholder="选择年级" v-model="formGroup.gradeId" size="medium">
       <el-option v-for="o in selectMap.gradeList" :key="o.id" :value="o.id" :label="o.name" />
     </el-select>
-    <el-select placeholder="选择来源" v-model="formGroup.source" size="medium" v-if="selectMap.sourceList.length > 1">
-      <el-option v-for="o in selectMap.sourceList" :key="o.id" :value="o.id" :label="o.name" />
-    </el-select>
     <el-select placeholder="选择年份" v-model="formGroup.year" size="medium">
       <el-option v-for="o in selectMap.yearList" :key="o.id" :value="o.id" :label="o.name" />
+    </el-select>
+    <el-select placeholder="选择来源" v-model="formGroup.source" size="medium" v-if="selectMap.sourceList.length > 1">
+      <el-option v-for="o in selectMap.sourceList" :key="o.id" :value="o.id" :label="o.name" />
     </el-select>
     <h2>试卷排版</h2>
     <div class="paper-typesetting">
@@ -49,8 +49,8 @@ export default {
   setup() {
     let baseStore = useStore();
 
-    let subjectList = computed(() => baseStore.getters.subjectList);
-    let subjectCode = computed(() => baseStore.getters.subject.code);
+    let subjectList = ref([]);
+    axios.post<any, AxResponse>('/permission/user/userDataSubjects').then(res => subjectList.value = res.json )
 
     let selectMap: any = reactive({
       gradeList: [{ name: '所有', id: '' }],

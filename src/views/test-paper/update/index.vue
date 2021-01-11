@@ -17,16 +17,21 @@ import ContentComponent from './content.vue';
 import store from './store/index';
 import emitter from './../../../utils/mitt';
 import { ElLoading } from 'element-plus';
+import { useRoute } from 'vue-router';
 
 export default {
-  props: {
-    id: String,
-    preview: Boolean
-  },
   components: { HeaderComponent, ToolbarComponent, ContentComponent },
   setup(props) {
+    let route = useRoute();
+
+    let preview = route.params.preview === 'true';
+    let id = route.params.id;
+
+    provide('id', id)
+    provide('preview', preview)
+
     const loading = ElLoading.service();
-    axios.post<null, { json: any }>('/tiku/paper/getPaper', { id: props.id }).then((res) => {
+    axios.post<null, { json: any }>('/tiku/paper/getPaper', { id }).then((res) => {
       res.json.paperCharpts = res.json.paperCharpts.map(quest => { quest.questions.map(q => {q.question = q.question || { title: '默认标题' }; return q;}); return quest } )
       store.commit('set_paper_info', res.json);
       readyFns.map(fn => fn());
@@ -34,6 +39,8 @@ export default {
     });
     let readyFns: any[] = [];
     emitter.on('ready', (fn) => readyFns.push(fn));
+
+    return { preview }
   }
 }
 </script>
