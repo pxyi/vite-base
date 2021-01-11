@@ -9,7 +9,7 @@
       </div>
     </div>
     <div class="main-content" :class="{ 'is__sync': isSync }">
-      <div class="item" @click.stop :class="{ 'is__focus': focusData?.id === data.id }" v-for="data in dataset" :key="data.id">
+      <div class="item" @click.stop :class="{ 'is__focus': focusData?.id === data.id }" v-for="(data, index) in dataset" :key="data.id">
         <div class="mask" @click.stop="focusChange(data)"></div>
         <div class="title">
           <cus-editor v-model="data.title" hide-border placeholder="请输入题干" />
@@ -23,12 +23,13 @@
           <cus-editor v-model="data.analysis" hide-border placeholder="请输入题目解析" />
         </div>
         <div class="footer">
-          <h4>{{ data.questionTypeName }}</h4>
+          <h4>{{ data.questionTypeName || '其他' }}</h4>
           <p><span>知识点：</span><i>{{ data.knowledgePoints ? `已选择${data.knowledgePoints.length}项` : '-' }}</i></p>
           <p><span>难度：</span><i>{{ data.difficult ? [ { name: '易', id: 11 }, { name: '较易', id: 12 }, { name: '中档', id: 13 }, { name: '较难', id: 14 }, { name: '难', id: 15 } ].find(i => i.id === data.difficult).name : '-' }}</i></p>
           <div>
             <a v-show="data.failReason">{{ data.failReason }}</a>
-            <a>重复率80%</a>
+            <a v-if="data.similarDegree">重复率{{ data.similarDegree }}%</a>
+            <span v-if="data.similarDegree" @click="questExchange(data.repeatInfos, index)"><i class="iconfont iconhuanti"></i>换题</span>
             <i :class="[`el-icon-${data.loading ? 'loading' : 'delete'}`]" @click="remove(data)" />
           </div>
         </div>
@@ -38,13 +39,16 @@
 </template>
 
 <script lang="ts">
-import { ref, computed, nextTick } from 'vue';
+import { ref, Ref, computed, nextTick } from 'vue';
 import store from './../store';
 import axios from 'axios';
+import Modal from './../../../../utils/modal';
+import ExchangeComponent from './exchange.vue';
+import { cloneDeep } from 'lodash';
 
 export default {
   setup() {
-    let dataset = computed(() => store.state.dataSet);
+    let dataset: Ref<any[]> = computed(() => store.state.dataSet);
 
     let errorList = computed(() => store.state.errorList);
 
@@ -72,7 +76,14 @@ export default {
       })
     }
 
-    return { dataset, errorList, focusData, focusChange, remove, isSync, seeFail }
+    const questExchange = async (repeatInfos, index) => {
+      let question = await Modal.create({ title: '换题', zIndex: 2010, component: ExchangeComponent, props: { repeatInfos } });
+      let data = cloneDeep(dataset.value);
+      data[index] = question;
+      store.commit('set_data_set', data)
+    }
+
+    return { dataset, errorList, focusData, focusChange, remove, isSync, seeFail, questExchange }
   }
 }
 </script>
@@ -249,6 +260,17 @@ export default {
               color: #FF8421;
               background: #FDF5E6;
               border: 1px solid #F5DAB1;
+            }
+          }
+          span {
+            margin-right: 20px;
+            color: #999;
+            cursor: pointer;
+            i {
+              color: #FF8421;
+              font-size: 13px;
+              vertical-align: top;
+              margin-right: 3px;
             }
           }
           i {

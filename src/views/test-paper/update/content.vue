@@ -289,6 +289,7 @@ export default {
       position: relative;
       .title {
         display: flex;
+        overflow: auto;
         &::before {
           content: attr(data-index);
           display: block;

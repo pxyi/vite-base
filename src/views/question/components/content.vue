@@ -11,7 +11,7 @@
       </div>
       <div class="statistics">
         <span>共计<i>{{ pageAorder.total }}</i>道相关试题</span>
-        <div @click="showAnswer = !showAnswer">
+        <div @click="showAnswer = !showAnswer" v-if="!isSelected">
           <i class="iconfont" :class="[ showAnswer ? 'iconchakandaan' : 'iconbukandaan' ]" />
           <span>查看答案</span></div>
       </div>
@@ -243,7 +243,6 @@ export default {
     .item {
       padding: 20px 20px 0;
       border-radius: 10px;
-      border-top-right-radius: 15px;
       border: 1px solid #EBEEF6;
       position: relative;
       transition: all .25s;
@@ -262,7 +261,6 @@ export default {
       }
       &:hover {
         box-shadow: 0px 2px 11px 0px rgba(23, 18, 45, 0.2);
-        border-top-right-radius: 15px;
       }
       .update-icon {
         width: 40px;
@@ -277,7 +275,7 @@ export default {
         cursor: pointer;
         img{
           background: #fff;
-          border-top-right-radius: 15px;
+          border-top-right-radius: 10px;
           display: inline-block;
           position: absolute;
           top: 0;
@@ -288,7 +286,8 @@ export default {
         }
       }
       .content-text {
-        padding-right: 20px;
+        margin-right: 20px;
+        overflow: hidden;
         img {
           display: inline-block;
         }
