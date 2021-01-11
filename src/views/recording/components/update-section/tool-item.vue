@@ -14,7 +14,7 @@
         <div class="flex-cell">
           <div class="tool-label">年级</div>
           <div class="tool-control">
-            <el-select size="medium" placeholder="选择年级" v-model="data.gradeId" v-if="selectMap.gradeList.length" @change="syncTag(false)">
+            <el-select size="medium" placeholder="选择年级" v-model="data.gradeId" v-if="selectMap.gradeList.length" @change="syncTag">
               <el-option v-for="option in selectMap.gradeList" :key="option.id" :value="option.id" :label="option.name" />
             </el-select>
           </div>
@@ -34,7 +34,7 @@
         <div class="flex-cell">
           <div class="tool-label">类别</div>
           <div class="tool-control">
-            <el-select size="medium" placeholder="选择类别" v-model="data.category" v-if="selectMap.categoryList.length" @change="syncTag(false)">
+            <el-select size="medium" placeholder="选择类别" v-model="data.category" v-if="selectMap.categoryList.length" @change="syncTag">
               <el-option v-for="option in selectMap.categoryList" :key="option.id" :value="option.id" :label="option.name" />
             </el-select>
           </div>
@@ -42,7 +42,7 @@
         <div class="flex-cell">
           <div class="tool-label">难度</div>
           <div class="tool-control">
-            <el-select size="medium" placeholder="选择难度" v-model="data.difficult" v-if="selectMap.difficultyList.length" @change="syncTag(false)">
+            <el-select size="medium" placeholder="选择难度" v-model="data.difficult" v-if="selectMap.difficultyList.length" @change="syncTag">
               <el-option v-for="option in selectMap.difficultyList" :key="option.id" :value="option.id" :label="option.name" />
             </el-select>
           </div>
@@ -52,7 +52,7 @@
         <div class="flex-cell">
           <div class="tool-label">知识点</div>
           <div class="tool-control">
-            <el-cascader collapse-tags clearable placeholder="选择知识点" size="medium" :show-all-levels="false" @change="syncTag(false)"
+            <el-cascader collapse-tags clearable placeholder="选择知识点" size="medium" :show-all-levels="false" @change="syncTag"
               v-model="data.knowledgePoints" 
               :options="knowledgeList" 
               :props="{ children: 'childs', label: 'name', value: 'id', multiple: true, emitPath: false }" 
@@ -65,10 +65,10 @@
       <div class="source-section" v-for="(s, idx) in data.questionSources" :key="s">
         <h6><span>来源{{ idx + 1 }}</span><i class="el-icon-circle-close" @click="delSource(idx)" /></h6>
         <div class="source-item">
-          <el-select placeholder="选择年份" size="medium" v-model="s.year" @change="syncTag(false)">
+          <el-select placeholder="选择年份" size="medium" v-model="s.year" @change="syncTag">
             <el-option v-for="option in selectMap.YEAR" :key="option.id" :value="option.id" :label="option.name" />
           </el-select>
-          <el-select placeholder="试卷类型" size="medium" v-model="s.dictSourceId" @change="syncTag(false)">
+          <el-select placeholder="试卷类型" size="medium" v-model="s.dictSourceId" @change="syncTag">
             <el-option v-for="option in selectMap.QUES_SOURCE" :key="option.id" :value="option.id" :label="option.name" />
           </el-select>
         </div>
@@ -76,11 +76,11 @@
           <el-cascader placeholder="选择省市区"
             v-model="s.provinceCity"
             :props="{ lazy: true, lazyLoad: getProvinceCity, label: 'name', value: 'id' }"
-            @change="getSchoolList($event, s); syncTag(false)"
+            @change="getSchoolList($event, s); syncTag"
           />
         </div>
         <div class="source-item">
-          <el-select placeholder="选择学校" filterable size="medium" v-model="s.publicSchoolId" @change="syncTag(false)">
+          <el-select placeholder="选择学校" filterable size="medium" v-model="s.publicSchoolId" @change="syncTag">
             <el-option v-for="option in s.schoolList" :key="option.id" :value="option.id" :label="option.name" />
           </el-select>
         </div>
@@ -90,7 +90,7 @@
   </div>
 
   <div class="turn-sync-switch" v-if="data">
-    <span>同步标签设置到所有题目</span><el-switch :modelValue="isSync" @update:modelValue="syncTag(true)" />
+    <span>同步标签设置到所有题目</span><el-switch :modelValue="isSync" @update:modelValue="syncSwitchChange" />
   </div>
 </template>
 
@@ -116,8 +116,8 @@ export default {
     let index: Ref<number> = computed(() => dataset.value.findIndex((i: any) => i.id === data.value.id) );
 
     let isSync: Ref<boolean> = computed(() => store.state.isSync);
-    const syncTag = (isSwitch) => {
-      if (!isSync.value) {
+    const syncTag = () => {
+      if (isSync.value) {
         let cloneData = cloneDeep(dataset.value);
         cloneData = cloneData.map(d => {
           d.gradeId = data.value.gradeId;
@@ -129,7 +129,10 @@ export default {
         });
         store.commit('set_data_set', cloneData);
       }
-      isSwitch && store.commit('set_is_sync', !isSync.value);
+    }
+    const syncSwitchChange = (e) => {
+      store.commit('set_is_sync', !isSync.value);
+      syncTag();
     }
 
     const indexChange = (n: number) => {
@@ -206,7 +209,7 @@ export default {
       dataset.value = cloneData;
     }
 
-    return { data, dataset, index, indexChange, isSync, syncTag, selectMap, addSource, delSource, knowledgeList, typeChange, getProvinceCity, getSchoolList }
+    return { data, dataset, index, indexChange, isSync, syncTag, selectMap, addSource, delSource, knowledgeList, typeChange, getProvinceCity, getSchoolList, syncSwitchChange }
   }
 }
 </script>

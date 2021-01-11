@@ -32,7 +32,7 @@ import draggable from 'vuedraggable';
 import store from './../store';
 import { toChinesNum } from './../utils';
 import { cloneDeep } from 'lodash';
-import emitter from './../../../../utils/mitt'
+import emitter from './../../../../utils/mitt';
 
 export default {
   components: { draggable },
