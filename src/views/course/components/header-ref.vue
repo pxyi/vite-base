@@ -24,7 +24,7 @@
       const route = useRoute();
       const router = useRouter();
 			let searchText:Ref<string> = ref('');
-			const searchHandle = () => { emit('searchHandle', searchText) }
+			const searchHandle = () => { emit('searchHandle', searchText.value) }
       return { route, router, searchText, searchHandle }
     }
   })
