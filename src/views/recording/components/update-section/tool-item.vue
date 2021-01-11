@@ -105,8 +105,14 @@ import { cloneDeep } from 'lodash';
 export default {
   setup() {
     let baseStore = useStore();
-    let data: Ref<any> = computed(() => store.state.focusData);
-    let dataset: Ref<any[]> =  computed(() => store.state.dataSet);
+    let data: Ref<any> = computed({
+      get: () => store.state.focusData,
+      set: (val) => store.commit('set_focus_data', val)
+    });
+    let dataset: Ref<any[]> =  computed({
+      get: () => store.state.dataSet,
+      set: (val) => store.commit('set_data_set', val)
+    });
     let index: Ref<number> = computed(() => dataset.value.findIndex((i: any) => i.id === data.value.id) );
 
     let isSync: Ref<boolean> = computed(() => store.state.isSync);
@@ -183,7 +189,21 @@ export default {
     }
 
     const typeChange = () => {
-      data.value.basicQuestionType = selectMap.questionTypeList.find(i => i.jyQuestionType === data.value.type).toolQuestionType;
+      let current = selectMap.questionTypeList.find(i => i.jyQuestionType === data.value.type);
+
+      data.value.basicQuestionType = current.toolQuestionType;
+      data.value.questionTypeName = current.jyQuestionTypeName;
+      let focusId = data.value.id;
+
+      let cloneData = cloneDeep(dataset.value);
+      cloneData = cloneData.map(q => {
+        if (q.id === focusId) {
+          q.basicQuestionType = current.toolQuestionType;
+          q.questionTypeName = current.jyQuestionTypeName;
+        }
+        return q;
+      });
+      dataset.value = cloneData;
     }
 
     return { data, dataset, index, indexChange, isSync, syncTag, selectMap, addSource, delSource, knowledgeList, typeChange, getProvinceCity, getSchoolList }
