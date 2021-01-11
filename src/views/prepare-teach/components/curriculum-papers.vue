@@ -57,7 +57,7 @@
                   <div @click="preview(item)"><i class="el-icon-search"/><span>预览</span></div>
                 </div>
                 <div class="private">
-                  <i class="el-icon-lock" v-if="item.isPublic == 0" style="font-size: 12px"></i>
+                  <i class="iconfont iconyinsi" v-if="item.isPublic == 0" style="font-size: 12px"></i>
                 </div>
               </div>
             </div>

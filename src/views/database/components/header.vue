@@ -13,8 +13,21 @@
         <el-button round><span>添加资料</span><i class="el-icon-caret-bottom" /></el-button>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item :command="null">上传资料</el-dropdown-item>
-            <el-dropdown-item :command="5">上传标准教案</el-dropdown-item>
+            <el-popover placement="left-start" trigger="hover" :width="350">
+              <template #reference>
+                <el-dropdown-item :command="null">上传资料</el-dropdown-item>
+              </template>
+              <p class="upload-format">课件支持的格式：.ppt .pptx</p>
+              <p class="upload-format">讲义支持的格式：.doc .docx .pdf</p>
+              <p class="upload-format">说课视频支持的格式：.mp4（H264）</p>
+              <p class="upload-format">其他支持的格式：.png .jpg .jpeg .mp3 .zip .rar</p>
+            </el-popover>
+            <el-popover placement="left-start" trigger="hover" :width="350">
+              <template #reference>
+                <el-dropdown-item :command="5">上传标准教案</el-dropdown-item>
+              </template>
+                <p class="upload-format">标准教案支持的格式：.doc .docx</p>
+            </el-popover>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -107,6 +120,12 @@ export default {
         display: none;
       }
     }
+    p{
+      line-height: 25px;
+    }
+  }
+  .upload-format{
+    line-height: 25px;
   }
 }
 </style>

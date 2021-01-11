@@ -72,7 +72,14 @@
       // 课程详情弹窗
       const godetails = (item) => {
         let courseId = item.id
-        Modal.create({ title: item.courseName, width: 640,zIndex:998, footed: false , component: PreparePapers, props: { courseId }})
+        Modal.create({ title: item.courseName, 
+        width: 640, zIndex:998, 
+        footed: false , 
+        component: PreparePapers, 
+        props: { courseId }, 
+        headerStyle: { 'margin-bottom': '20px' },
+        bodyStyle: { padding: '0 20px 28px' }
+        })
       }
 
       return { headerRef, params,  typeChange, listShow, godetails }
@@ -81,12 +88,6 @@
 </script>
 
 <style lang="scss" scoped>
-    :deep(.modal-body){
-      padding: 0 20px 30px;
-    }
-    :deep(.modal-header){
-      margin-bottom: 20px;
-    }
   .cus-list {
     :deep(.cus__list__container){
       padding: 18px 5px 18px 20px;
