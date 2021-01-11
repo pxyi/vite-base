@@ -11,7 +11,7 @@ import Store from './../store';
 /* ------------------------- 默认请求格式, 和全局请求地址 ------------------------- */
 axios.defaults.headers['Content-Type'] = 'application/x-www-form-urlencoded';
 axios.defaults.baseURL = import.meta.env.VITE_APP_BASE_URL as string;
-// axios.defaults.baseURL = 'http://192.168.1.41:8080' as string;
+// axios.defaults.baseURL = 'http://192.168.1.179:8080' as string;
 axios.interceptors.request.use((res: AxiosRequestConfig) => {
   res.headers['accessToken'] = window.localStorage.getItem('token');
   res.headers['userId'] = Store.getters.userInfo ? Store.getters.userInfo.user.id : null;

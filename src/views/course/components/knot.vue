@@ -5,7 +5,7 @@
 				<span>{{ data.courseName }}</span>
 			</div>
 			<div class="kont-head-aoto">
-				<div class="save"><i class="el-icon-wallet" /><span>自动保存...</span></div>
+				<div class="save" @click="$notify({title: '成功', message: '保存成功', type: 'success'})"><i class="el-icon-wallet" /><span>自动保存...</span></div>
 <!--				<div class="btns">-->
 <!--					<el-button round>添加课次</el-button>-->
 <!--				</div>-->
@@ -43,7 +43,7 @@
 										<span>{{v.name}}</span>
 									</div>
 									<div @click.stop="deleteChapter(v, item, i)">
-										<i class="icon iconfont icon-shanchu"></i>
+										<i class="icon iconfont iconshanchu"></i>
 									</div>
 								</div>
 							</template>
@@ -62,8 +62,8 @@
 </template>
 
 <script lang="ts">
-	import { defineComponent, ref, onMounted, getCurrentInstance, unref } from 'vue'
-	import increaseCourseIndex from "/@/views/course/components/increaseCourseIndex.vue";
+	import { defineComponent, ref, Ref, onMounted, getCurrentInstance, unref } from 'vue'
+	import increaseCourseIndex from "./increaseCourseIndex.vue";
   import Model from '../../../utils/modal/index';
   import axios from "axios";
   import emitter from "../../../utils/mitt";
@@ -79,8 +79,8 @@
 		    type: Object
       }
 		},
-		setup(props) {
-		  let courseIndexList = ref([]);
+		setup(props:any) {
+		  let courseIndexList:Ref<Array<any>> = ref([]);
 		  let loading = ref(true);
       let subjectCode = ref('');
       onMounted(() => {
@@ -91,19 +91,20 @@
         Model.create({
           component: increaseCourseIndex,
 	        title: '新增课次',
+          zIndex: 2011,
           props: {
             VresionData
           }
         }).then(chapterIds => {
-					axios.post('/courseChapter/add', {chapterIds, courseIndexId: id}, {headers: {'Content-Type': 'application/json'}}).then(res => res.result && ElNotification.success({title: '成功', message: '添加章节成功'}) && getCourseDto())
+					axios.post('/courseChapter/add', {chapterIds, courseIndexId: id}, {headers: {'Content-Type': 'application/json'}}).then((res: any) => res.result && ElNotification['success']({title: '成功', message: '添加章节成功'}) && getCourseDto())
         })
       };
       const deleteChapter = ({ id }, courseIndex, i) => {
-        axios.post('/courseChapter/deleteByCourseIndexId', {chapterId: id, courseIndexId: courseIndex.id}).then(res => {res.result && ElNotification.success({title: '成功', message: '删除章节成功'}) && courseIndex.hasChapters.splice(i, 1)})
+        axios.post('/courseChapter/deleteByCourseIndexId', {chapterId: id, courseIndexId: courseIndex.id}).then((res: any) => {res.result && ElNotification['success']({title: '成功', message: '删除章节成功'}) && courseIndex.hasChapters.splice(i, 1)})
       };
-      const deleteCourseIndex = ({ id }, i) => {axios.post('/courseIndex/delete', { id }).then(res => {res.result && ElNotification.success({title: '成功', message: '删除章节成功'}) && courseIndexList.value.splice(i, 1) && tableRef.value.request()})};
+      const deleteCourseIndex = ({ id }, i) => {axios.post('/courseIndex/delete', { id }).then((res: any) => {res.result && ElNotification['success']({title: '成功', message: '删除章节成功'}) && courseIndexList.value.splice(i, 1) && props.tableRef.value.request()})};
       const indexNameChange = (data) => {
-        axios.post('/courseIndex/modify', data, {headers: {'Content-Type': 'application/json'}}).then(res => res.result && ElNotification.success({title: '成功', message: '修改名称成功'}) && getCourseDto())
+        axios.post('/courseIndex/modify', data, {headers: {'Content-Type': 'application/json'}}).then((res :any) => res.result && ElNotification['success']({title: '成功', message: '修改名称成功'}) && getCourseDto())
       }
       const move = (i, type) => {
         if (type === 1) {
@@ -111,7 +112,7 @@
         } else {
           if (i === courseIndexList.value.length - 1) return false;
         }
-        axios.post('/courseIndex/modifyCourseIndexUpOrDown', {courseIndexId: courseIndexList.value[i].id, moveType: type}).then(res => {
+        axios.post('/courseIndex/modifyCourseIndexUpOrDown', {courseIndexId: courseIndexList.value[i].id, moveType: type}).then((res: any) => {
           if (res.result) {
             if (type === 1 ) {
               let pre = courseIndexList.value[i - 1];
@@ -128,7 +129,7 @@
 			};
       function getCourseDto() {
 		    loading.value = true;
-				axios.post('/courseIndex/query', { courseId: props.data.id }, {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then(res => {
+				axios.post('/courseIndex/query', { courseId: props.data.id }, {headers: {'Content-Type': 'application/json;charset=UTF-8'}}).then((res: any) => {
           if (res.result) {
             res.json.map(i => i.close = true);
             courseIndexList.value = res.json;
@@ -140,7 +141,7 @@
 
       let VresionData = [];
       function getVresion(subjectCode) {
-        axios.post('/tiku/bookVersion/queryVresionBookTree', {subject: subjectCode}).then(res => {if (res.result) VresionData = res.json});
+        axios.post('/tiku/bookVersion/queryVresionBookTree', {subject: subjectCode}).then((res: any) => {if (res.result) VresionData = res.json});
       }
 
       return { courseIndexList, loading, increaseChapter, deleteChapter, deleteCourseIndex, move, indexNameChange}
@@ -221,6 +222,7 @@
 					display: flex;
 					justify-content: space-between;
 					padding: 15px 15px 15px 10px;
+          cursor: pointer;
 					span {
 						margin-left: 15px;
 						line-height: 18px;
@@ -228,7 +230,7 @@
 					&:hover {
 						background: #F5F7FA;
 					}
-					.icon-shanchu {
+					.iconshanchu {
 						color: #3f3279;
 						cursor: pointer;
 					}
@@ -265,7 +267,7 @@
 					}
 					.courseIndex {
 						margin: 0 10px 0 20px;
-						flex: .15;
+            flex: 0.2 1 0%;
 					}
 					.el-input {
 						flex: 1;
@@ -281,13 +283,15 @@
 					.icon {
 						color: $--color-primary;
 						cursor: pointer;
-						background: #f2f6fc;
 						padding: 4px 5px;
 						border-radius: 4px;
 						margin: 0 5px;
+            &:hover {
+              background: #f2f6fc;
+            }
 					}
-					.icon.icon-shanchu {
-						color: #3f3279;
+					.icon.iconshanchu {
+						color: #382A74;
 						&:hover {
 							color: #ff3d3d;
 						}
