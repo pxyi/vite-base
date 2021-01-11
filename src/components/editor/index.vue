@@ -37,6 +37,14 @@ export default {
         editor.on('change', () => { let data = editor.getData(); emit('update:modelValue', data); hasContent.value = !!data; } );
         editor.on('focus', () => { emit('focus', editor.getData()); isFocus.value = true; } );
         editor.on('blur', () => { emit('blur', editor.getData()); isFocus.value = false; } );
+        editor.on('paste', (e) => {
+          let files = e.data.dataTransfer._.files;
+          files.map(file => {
+            let reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = (e) => editor.insertHtml(`<img src="${e.target?.result}" alt="爱学标品"/>`)
+          });
+        })
       });
     });
 

@@ -36,7 +36,7 @@
             <p>{{ data.questionTypeName }}</p>
             <p><span>收录：</span><span>{{ data.createTime }}</span></p>
             <p><span>难度：</span><span>{{ data.difficult }}</span></p>
-            <p><span>引用：</span><span>{{ data.useCount }}</span></p>
+            <p><span>引用：</span><span>{{ data.useCount || 0 }}</span></p>
             <div v-if="!isSelected">
               <p><i @click="data.showAnalysis = !data.showAnalysis">解析</i></p>
               <!-- <p><i @click="similarPreview(data.id)">相似题</i></p> -->
