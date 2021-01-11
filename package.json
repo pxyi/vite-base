@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "scripts": {
     "serve": "vite serve",
-    "build": "typecheck . && vite build"
+    "build": "typecheck . && vite build",
+    "build:xinzhou": "typecheck . && vite build --mode xinzhou"
   },
   "dependencies": {
     "axios": "^0.21.0",

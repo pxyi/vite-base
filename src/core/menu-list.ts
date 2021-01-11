@@ -8,7 +8,36 @@ export interface RouterConf {
   children?: RouterConf[]
 }
 
-const MenuList: RouterConf[] = [
+const MenuList: RouterConf[] = import.meta.env.VITE_IS_XINZHOU ? [
+  {
+    title: '首页',
+    key: '/index',
+    isLeaf: true,
+    icon: 'home'
+  },
+  {
+    title: '教研中台',
+    key: '/teaching',
+    icon: 'teaching',
+    children: [
+      {
+        title: '题库',
+        key: '/teaching/question',
+        isLeaf: true
+      },
+      {
+        title: '试卷库',
+        key: '/teaching/test-paper',
+        isLeaf: true
+      },
+      {
+        title: '批量录题',
+        key: '/teaching/recording',
+        isLeaf: true
+      }
+    ]
+  }
+] : [
   {
     title: '首页',
     key: '/index',

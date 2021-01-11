@@ -24,7 +24,7 @@
     <div class="header-user">
       <el-dropdown @command="commandList.get($event)()">
         <div class="el-dropdown-link">
-          <span class="user-name">Hi，用户名</span>
+          <span class="user-name">Hi，{{ userInfo.username }}</span>
           <i class="el-icon-arrow-down"></i>
         </div>
         <template #dropdown>
@@ -81,6 +81,8 @@ export default {
     let router = useRouter();
     let store = useStore();
 
+    let userInfo = computed(() => store.getters.userInfo.user);
+
     let breadcrumb = computed( () => route.matched.reduce((t: string[], c) => { c.meta.title && t.push(c.meta.title); return t; }, []) );
 		let visible = ref(false)
 
@@ -125,7 +127,7 @@ export default {
       emitter.off('effect', __setFns );
     });
 
-    return { breadcrumb, slot, commandList, subjectList, subject, setSubject, visible }
+    return { breadcrumb, slot, commandList, subjectList, subject, setSubject, visible, userInfo }
   }
 }
 </script>

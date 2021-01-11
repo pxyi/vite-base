@@ -1,7 +1,10 @@
 <template>
   <div class="lay__menu__container">
-    <div class="logo">
-      <img src="/src/assets/menu/logo.png" alt="logo">
+    <div class="logo-xinzhou" v-if="isXinzhou">
+      <img src="./../assets/menu/logo-xinzhou.png" alt="logo">
+    </div>
+    <div class="logo" v-else>
+      <img src="./../assets/menu/logo.png" alt="logo">
     </div>
     <div class="menu-content">
       <template v-for="(menu) in list" :key="menu.key">
@@ -47,8 +50,10 @@ export default {
         window.open(`${import.meta.env.VITE_APP_SYSTEM_URL}`)
       }).catch(_ => {})
     }
+    
+    let isXinzhou = import.meta.env.VITE_IS_XINZHOU === 'true';
 
-    return { list, initPath, goSystem }
+    return { list, initPath, goSystem, isXinzhou }
   }
 }
 </script>
@@ -73,6 +78,17 @@ $--menu--item-height: 45px;
       display: block;
       width: 80px;
       margin: 30px 0 0 65px;
+    }
+  }
+  .logo-xinzhou {
+    height: 120px;
+    text-align: center;
+    overflow: hidden;
+    cursor: pointer;
+    img {
+      display: inline-block;
+      width: 120px;
+      margin-top: 30px;
     }
   }
 }
