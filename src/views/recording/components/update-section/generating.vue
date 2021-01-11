@@ -19,7 +19,7 @@ export default {
       { label: '学科', key: 'hide', type: 'input', disabled: true, default: store.getters.subject.name, rule: { required: 'true' } },
       { label: '年级', key: 'gradeId', type: 'select', options: [], rule: { required: 'true', message: '请选择年级' } },
       { label: '年份', key: 'year', type: 'select', options: [], rule: { required: 'true', message: '请选择年份' } },
-      { key: 'subjectId', type: 'hidden', default: store.getters.subject.name },
+      { key: 'subjectId', type: 'hidden', default: store.getters.subject.code },
     ]);
 
     let loading = ref(true);

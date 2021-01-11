@@ -147,7 +147,6 @@ export default {
           position: absolute;
           top: 3px;
           left: 2px;
-          vertical-align: middle;
           transform: rotate(-45deg);
           border-radius: 0px;
           background: none;
@@ -169,7 +168,6 @@ export default {
             position: absolute;
             top: 3px;
             left: 2px;
-            vertical-align: middle;
             transform: rotate(-45deg);
             border-radius: 0px;
             background: none;
@@ -216,7 +214,6 @@ export default {
         position: absolute;
         top: 3px;
         left: 2px;
-        vertical-align: middle;
         transform: rotate(-45deg);
         border-radius: 0px;
         background: none;

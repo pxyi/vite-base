@@ -2,7 +2,7 @@
   <div class="container">
     <div class="header">
       <el-button :loading="saveLoading" round @click="save">保存并返回</el-button>
-      <el-button round @click="generatePaper"   v-show='allowGenerate'>生成试卷</el-button>
+      <el-button round @click="generatePaper" v-show='allowGenerate'>生成试卷</el-button>
       <el-button round :disabled="!allowGenerate" v-show='!allowGenerate'>已生成试卷</el-button>
     </div>
     <div class="content">

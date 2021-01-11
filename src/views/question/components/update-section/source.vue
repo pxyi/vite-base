@@ -24,7 +24,7 @@
           </el-select>
         </div>
         <div class="source-control">
-          <el-select placeholder="选择学校" clearable size="medium" v-model="s.publicSchoolId" >
+          <el-select placeholder="选择学校" filterable clearable size="medium" v-model="s.publicSchoolId" >
             <el-option v-for="option in s.schoolList" :key="option.id" :value="option.id" :label="option.name" />
           </el-select>
         </div>
