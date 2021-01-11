@@ -3,7 +3,7 @@
     <div class="header">
       <el-button :loading="saveLoading" round @click="save">保存并返回</el-button>
       <el-button round @click="generatePaper"   v-show='allowGenerate'>生成试卷</el-button>
-      <el-button round @click="generatePaper"  :disabled="!allowGenerate" v-show='!allowGenerate'>已生成试卷</el-button>
+      <el-button round :disabled="!allowGenerate" v-show='!allowGenerate'>已生成试卷</el-button>
     </div>
     <div class="content">
       <div class="main" @click="blur"><MainComponent /></div>
@@ -77,7 +77,7 @@ export default {
     let allowGenerate = ref(true);
     const generatePaper = () => {
       let questions = __cloneData(dataset.value);
-      Modal.create({ component: GeneratingComponent, title: '生成试卷', width: 420, props: { questions, id: props.id } }).then((res: any) => {
+      Modal.create({ component: GeneratingComponent, title: '生成试卷', width: 420, zIndex: 2010, props: { questions, id: props.id } }).then((res: any) => {
         ElMessage[res.result ? 'success' : 'warning'](res.result ? '生成试卷成功' : '生成试卷失败，请重试');
         allowGenerate.value = !res.result;
       })
