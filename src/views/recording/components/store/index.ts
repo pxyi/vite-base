@@ -51,7 +51,7 @@ export default new Vuex.Store({
           data, 
           { headers: { 'Content-Type': 'application/json' } 
         }).then(res => {
-          commit('set_data_set', state.dataSet.map((d: any) => { d.id === res.json.id && (d.failReason = res.json.failReason); return d;}) );
+          commit('set_data_set', cloneDeep(state.dataSet.map((d: any) => { d.id === res.json.id && (d.failReason = res.json.failReason); return d;}) ));
         });
         commit('set_focus_data', payload);
       }

@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { ref, computed, inject, provide, getCurrentInstance } from 'vue';
+import { ref, computed, inject, provide, nextTick } from 'vue';
 import { ElMessage, ElLoading } from 'element-plus';
 import store from './store';
 import axios from 'axios';
@@ -44,7 +44,7 @@ export default {
       store.commit('set_data_set', questions);
 
       allowGenerate.value = !res.json.paperId;
-      loading.close();
+      setTimeout(() => loading.close(), 100);
     });
 
     const blur = () => !isSync.value ? store.dispatch('focus_data_change', null) : false;

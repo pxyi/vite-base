@@ -42,9 +42,10 @@ export default {
       res.closed = initPath.includes(res.key);
       list.value.push(res);
     });
-    const goSystem = async () => {
-      let confirm = await ElMessageBox.confirm('是否进入后台管理系统？', '进入后台', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' })
-      confirm && (window.open(`${import.meta.env.VITE_APP_SYSTEM_URL}`));
+    const goSystem = () => {
+      ElMessageBox.confirm('是否进入后台管理系统？', '进入后台', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }).then(_ => {
+        window.open(`${import.meta.env.VITE_APP_SYSTEM_URL}`)
+      }).catch(_ => {})
     }
 
     return { list, initPath, goSystem }
