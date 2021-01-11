@@ -5,7 +5,7 @@
       <div v-for="(data, index) in dataset" :key="data.id" :class="{'is__checked': checkedIndex === index}" @click="checkedIndex = index">
         <div class="title" v-html="data.title"></div>
         <div class="main" v-questhtml="data"></div>
-        <el-radio :modelValue="checkedIndex === index" :label="true">
+        <el-radio :modelValue="checkedIndex === index" :label="true" />
       </div>
     </section>
   </div>
@@ -24,9 +24,9 @@ export default {
     let dataset = ref([]);
 
     let checkedIndex: Ref<number> = ref(-1);
-    axios.post('/tiku/question/querySimilarQuestions', 
-      { repeatInfos: props.repeatInfos }, 
-      { headers: { 'Content-Type': 'application/json' } 
+    axios.post('/tiku/question/querySimilarQuestions',
+      { repeatInfos: props.repeatInfos },
+      { headers: { 'Content-Type': 'application/json' }
     }).then((res: any) => {
       dataset.value = res.json;
     });
