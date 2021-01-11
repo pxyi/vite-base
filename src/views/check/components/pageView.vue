@@ -13,8 +13,8 @@
 					<div v-for="i in tab" @click="tabIndex = i.value" :key="i.id" :class="{'tabActive': tabIndex == i.value}">{{i.label}}</div>
 				</div>
 				<div class="content">
-					<ul class="content-ul" v-show="tabIndex == 1">
-						<li v-for="(item, index) in courseIndexDto" :key="index" :class="{'active': item.id == currentFile.id}">
+					<ul class="content-ul teach-ul" v-show="tabIndex == 1">
+						<li v-for="(item, index) in courseIndexDto" :key="index" :class="[item.id == currentFile.id ? 'active' : '', item.type !== 3 ? '' : 'teach']">
 							<div class="content-cell-wrapper"  @click="currentFile = item" v-if="item.type !== 3">
 								<div class="img">
 									<img src="/@/assets/lessonImg.png" alt="">
@@ -23,8 +23,8 @@
 							</div>
 						</li>
 					</ul>
-					<ul class="content-ul" v-show="tabIndex == 2">
-						<li v-for="(item, index) in courseIndexDto" :key="index" :class="{'active': item.id == currentFile.id}">
+					<ul class="content-ul video-ul" v-show="tabIndex == 2">
+						<li v-for="(item, index) in courseIndexDto" :key="index" :class="[item.id == currentFile.id ? 'active' : '', item.type == 3 ? '' : 'video']">
 							<div class="content-cell-wrapper"  @click="currentFile = item" v-if="item.type == 3">
 								<div class="img">
 									<img src="/@/assets/lessonImg.png" alt="">
@@ -73,8 +73,8 @@
 		data() {
 		  return {
 		    currentFile: {},
-			  baseApi: process.env.VUE_APP_BASE_API,
-			  web365: process.env.VUE_APP_OFFICE_WEB365,
+			  baseApi: import.meta.env.VITE_APP_BASE_URL,
+			  web365: import.meta.env.VITE_APP_OFFICE_WEB365,
 			  tab:[{label: '教师教案', value: 2}, {label: '教师说课视频', value: 1}],
 			  tabIndex:  1
 		  }

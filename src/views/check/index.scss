@@ -219,6 +219,9 @@
 						&:not(:last-child) {
 							margin-right: 25px;
 						}
+						.el-cascader {
+							width: auto;
+						}
 					}
 				}
 			}
@@ -235,6 +238,7 @@
 					padding: 15px 0;
 					margin-top: 15px;
 					&-basic {
+						flex: .5;
 						display: flex;
 						align-items: center;
 						.lesson-img {
@@ -399,7 +403,6 @@
 				margin: 30px 0 10px 0;
 				text-align: center;
 				& > div {
-					padding: 0 15px;
 					cursor: pointer;
 					flex: 1;
 					&.tabActive {
@@ -425,6 +428,16 @@
 						text-align: center;
 						.img {
 							margin-bottom: 5px;
+						}
+					}
+					&.teach-ul {
+						.teach {
+							display: none;
+						}
+					}
+					&.video-ul {
+						.video {
+							display: none;
 						}
 					}
 				}

@@ -1,6 +1,6 @@
 <template>
   <div class="cus__table__container">
-    <el-table v-loading="loading" :data="dataset">
+    <el-table :loading="loading" :data="dataset">
       <slot />
       <template #empty><cus-empty /></template>
     </el-table>

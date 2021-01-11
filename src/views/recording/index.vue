@@ -36,11 +36,7 @@
         <template #default="{ row }">
           <div class="btns">
             <el-button type="text" @click="setting(row.id)">设置标签</el-button>
-            <el-popconfirm title="确定删除此记录吗？" confirmButtonText="确定" cancelButtonText="取消" @confirm="deleteRecord(row.id)">
-              <template #reference>
-                <el-button type="text">删除记录</el-button>
-              </template>
-            </el-popconfirm>
+            <el-button type="text" @click="deleteRecord(row.id)">删除记录</el-button>
           </div>
         </template>
       </el-table-column>
@@ -52,7 +48,7 @@
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import { AxResponse } from './../../core/axios';
-import { ElMessage } from 'element-plus';
+import { ElMessage, ElMessageBox } from 'element-plus';
 import Screen from './../../utils/screen';
 import UpdateComponent from './components/update.vue';
 import HeaderComponent from './components/header.vue';
@@ -66,10 +62,12 @@ export default {
     let headerRef = ref();
     onMounted(() => emitter.emit('slot', headerRef));
 
-    const deleteRecord = async (id) => {
-      let res = await axios.post<null, { result }>(`/admin/questionImportLog/deleteById/${id}`);
-      ElMessage[res.result ? 'success' : 'warning'](res.result ? '删除成功' : '操作失败');
-      res.result && tableRef.value.request();
+    const deleteRecord = (id) => {
+      ElMessageBox.confirm('确定删除此记录吗？删除记录后题目也会全部删除', '提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }).then(async _ => {
+        let res = await axios.post<null, { result }>(`/admin/questionImportLog/deleteById/${id}`);
+        ElMessage[res.result ? 'success' : 'warning'](res.result ? '删除成功' : '操作失败');
+        res.result && tableRef.value.request();
+      }).catch(_ => {});
     }
 
     onMounted(() => emitter.emit('effect', (subjectId) => tableRef.value.request({ subjectId }) ) );

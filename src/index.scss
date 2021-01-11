@@ -40,6 +40,33 @@ html, body, #app {
   font-size: 14px;
 	overflow: hidden;
 }
+/*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
+::-webkit-scrollbar
+{
+	width: 5px;
+	height: 11px;
+}
+
+/*定义滚动条轨道 内阴影+圆角*/
+::-webkit-scrollbar-track {
+	background: #F4F5F9;
+	border: 0px none #ffffff;
+	border-radius: 53px;
+}
+::-webkit-scrollbar-button {
+	width: 5px;
+	height: 0px;
+}
+::-webkit-scrollbar-corner {
+	background: transparent;
+}
+
+/*定义滑块 内阴影+圆角*/
+::-webkit-scrollbar-thumb {
+	background: linear-gradient(to top right, #41b782, #1AAFA7);
+	border: 0px solid transparent;
+	border-radius: 50px;
+}
 .el-popover { min-width: 80px !important; }
 .clear__float::after {
   content: '';
