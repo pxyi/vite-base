@@ -12,15 +12,15 @@
       <div class="item" @click.stop :class="{ 'is__focus': focusData?.id === data.id }" v-for="(data, index) in dataset" :key="data.id">
         <div class="mask" @click.stop="focusChange(data)"></div>
         <div class="title">
-          <cus-editor v-model="data.title" hide-border placeholder="请输入题干" />
+          <cus-editor v-model="data.title" hide-border placeholder="请输入题干" :modelValue="data.title" @update:model-value="changeHandle(index, 'title', $event)" />
         </div>
         <div class="answer">
           <h6>答案</h6>
-          <cus-editor v-model="data.answer" hide-border placeholder="请输入答案" />
+          <cus-editor v-model="data.answer" hide-border placeholder="请输入答案" :modelValue="data.answer" @update:model-value="changeHandle(index, 'answer', $event)" />
         </div>
         <div class="analysis">
           <h6>解析</h6>
-          <cus-editor v-model="data.analysis" hide-border placeholder="请输入题目解析" />
+          <cus-editor :modelValue="data.analysis" @update:model-value="changeHandle(index, 'analysis', $event)" hide-border placeholder="请输入题目解析" />
         </div>
         <div class="footer">
           <h4>{{ data.questionTypeName || '其他' }}</h4>
@@ -44,15 +44,28 @@ import store from './../store';
 import axios from 'axios';
 import Modal from './../../../../utils/modal';
 import ExchangeComponent from './exchange.vue';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, debounce } from 'lodash';
+import { questionFormat } from './../../utils/question-format';
 
 export default {
   setup() {
-    let dataset: Ref<any[]> = computed(() => store.state.dataSet);
+    let dataset: Ref<any[]> = computed({
+      get: () => store.state.dataSet,
+      set: (val) => store.commit('set_data_set', val)
+    });
+    const changeHandle = debounce((index, key, val) => {
+      let data = cloneDeep(dataset.value);
+      data[index][key] = val;
+      focusData.value = data[index];
+      dataset.value = data;
+    }, 300)
 
     let errorList = computed(() => store.state.errorList);
 
-    let focusData = computed(() => store.state.focusData);
+    let focusData = computed({
+      get: () => store.state.focusData,
+      set: (val) => store.commit('set_focus_data', val)
+    });
 
     let isSync = computed(() => store.state.isSync);
 
@@ -77,13 +90,16 @@ export default {
     }
 
     const questExchange = async (repeatInfos, index) => {
-      let question = await Modal.create({ title: '换题', zIndex: 2010, component: ExchangeComponent, props: { repeatInfos } });
-      let data = cloneDeep(dataset.value);
-      data[index] = question;
-      store.commit('set_data_set', data)
+      let res: any = await Modal.create({ title: '换题', zIndex: 2010, component: ExchangeComponent, props: { repeatInfos } });
+      let data = questionFormat(res);
+
+      let dataSet = cloneDeep(dataset.value);
+      dataSet[index] = data;
+      focusData.value = data;
+      dataset.value = dataSet;
     }
 
-    return { dataset, errorList, focusData, focusChange, remove, isSync, seeFail, questExchange }
+    return { dataset, errorList, focusData, focusChange, remove, isSync, seeFail, questExchange, changeHandle }
   }
 }
 </script>
