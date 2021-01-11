@@ -2,9 +2,9 @@
   <div class="tool-list-content" v-if="!data">
     <h4>共解析出 {{ questionList.length }} 题</h4>
     <ul>
-      <li v-for="(data, idx) in questionList" :key="data.id">
+      <li v-for="(data, idx) in questionList" :key="data.id" @click.stop="setFocusData(data, idx)">
         <span>第<i>{{ idx + 1 }}</i>题</span>
-        <a @click.stop="setFocusData(data, idx)">{{ data.questionTypeName }}</a>
+        <a>{{ data.questionTypeName }}</a>
       </li>
     </ul>
   </div>
@@ -45,6 +45,7 @@ export default {
     color: #333;
     line-height: 50px;
     border-bottom: 1px solid #EBF0FC;
+    cursor: pointer;
     i {
       color: #1AAFA7;
       margin: 0 8px;
