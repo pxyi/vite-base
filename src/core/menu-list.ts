@@ -8,7 +8,7 @@ export interface RouterConf {
   children?: RouterConf[]
 }
 
-const MenuList: RouterConf[] = import.meta.env.VITE_IS_XINZHOU ? [
+const MenuList: RouterConf[] = import.meta.env.VITE_IS_XINZHOU === 'true' ? [
   {
     title: '首页',
     key: '/index',
