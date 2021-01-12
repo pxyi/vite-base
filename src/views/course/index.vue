@@ -1,6 +1,6 @@
 <template>
 	<template ref="headerRef">
-		<header-ref @searchHandle="params.courseName = $event" @add="openModel( {}, '/course/add')"/>
+		<header-ref @searchHandle="params.courseName = $event; $refs.tableRef.request(params)" @add="openModel( {}, '/course/add')"/>
 	</template>
 	<div class="course">
 		<cus-condition
