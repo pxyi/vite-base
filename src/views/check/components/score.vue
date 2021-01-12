@@ -47,8 +47,7 @@
 		name: "score",
 		props:{
       lessonInfo: {
-        type: Object,
-        default:() => ({}),
+        type: Object
       }
 		},
 		data() {
@@ -123,7 +122,7 @@
 		watch: {
       lessonInfo: {
         deep: true,
-	      handler: function () {
+	      handler: function (val) {
 					Object.assign(this.$data, this.$options.data());
           if (this.lessonInfo.checkStaus == 2) {
             axios.post('admin/prepareLesson/queryPrepareLessonScoreByPreId', {prepareLessonId: this.lessonInfo.id}).then(res => {
@@ -155,7 +154,21 @@
         });
         this.$emit('sendParam', Param);
       }
-		}
+		},
+    created() {
+      if (this.lessonInfo.checkStaus == 2) {
+        axios.post('admin/prepareLesson/queryPrepareLessonScoreByPreId', {prepareLessonId: this.lessonInfo.id}).then(res => {
+          if (res.result && res.json != null) {
+            this.qualityGroup.forEach(item => {
+              item.model = res.json[item.value].toString()
+            });
+            this.yetGroup.forEach(item => {
+              item.model = res.json[item.value].toString()
+            })
+          }
+        })
+      }
+    }
   }
 </script>
 

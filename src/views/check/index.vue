@@ -68,10 +68,10 @@
 							<p class="plan-status">教师教案:&nbsp;&nbsp;<span :style="{'background': item.teachPlan ? '#F2F2F2' : '#FFEFEB', 'color': item.teachPlan ? '#74C874' : '#FC514F' }"><b>·</b>{{item.teachPlan ? '已上传' : '未上传'}}</span></p>
 							<p class="video-status">还课视频:&nbsp;&nbsp;<span :style="{'background': item.reviewVideo ? '#F2F2F2' : '#FFEFEB', 'color': item.reviewVideo ? '#74C874' : '#FC514F' }"><b>·</b>{{item.reviewVideo ? '已上传' : '未上传'}}</span></p>
 						</div>
-						<div class="right-content-cell-score" v-if="item.checkStaus == 1" @click.stop="scoreDialogVisible = true, handelLessonInfo = item">
+						<div class="right-content-cell-score" v-if="item.checkStaus == 1" @click.stop="scoreDialogVisible = true;handelLessonInfo = item">
 							备课评分:&nbsp;&nbsp;&nbsp;未评价
 						</div>
-						<div class="right-content-cell-score" v-else @click.stop="scoreDialogVisible = true, handelLessonInfo = item">
+						<div class="right-content-cell-score" v-else @click.stop="scoreDialogVisible = true;handelLessonInfo = item">
 							备课评分:&nbsp;&nbsp;&nbsp;{{item.score}} 分
 						</div>
 					</li>
@@ -87,7 +87,7 @@
 			</div>
 		</div>
 		<el-dialog title="备课评分" v-model="scoreDialogVisible" width="40%">
-			<score @sendParam="openScore" :lessonInfo="handelLessonInfo"/>
+			<score v-if="handelLessonInfo !== null" @sendParam="openScore" :lessonInfo="handelLessonInfo"/>
 			<template #footer>
 				<span class="dialog-footer">
 				<el-button @click="scoreDialogVisible = false">取 消</el-button>
