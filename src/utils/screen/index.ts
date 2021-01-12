@@ -3,10 +3,20 @@ import { createApp } from 'vue';
 import createElement from './../createElement';
 import Components from './../../components';
 import Store from './../../store';
-import router from './../../router'
+import router from './../../router';
+
 const create = (component, props = {}) => {
-  
   return new Promise((resolve, reject) => {
+
+    let historyState = history.state;
+    let url = document.URL;
+    const popstateFn = () => {
+      remove();
+      history.replaceState(historyState, '', url);
+      history.go(1);
+    }
+
+    window.addEventListener('popstate', popstateFn);
 
     let body = createElement('div', { className: `__screen__${ Date.now() }`, style: { overflow: 'auto', height: '100%', background: '#fff' } });
 
@@ -17,6 +27,7 @@ const create = (component, props = {}) => {
     })
 
     const remove = (val?) => {
+      window.removeEventListener('popstate', popstateFn);
       container.remove();
       app.unmount(body);
       val ? resolve(val) : reject(false);
