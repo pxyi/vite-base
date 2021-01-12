@@ -3,15 +3,15 @@
     <HeaderRefComponent @type-change="typeChange" @search="params.courseName = $event" :searchShow='listShow' />
   </template>
   <div>
-    <cus-condition 
+    <cus-condition
       v-if="listShow === 1"
       :node-list="[
         { label: '年份', key: 'year' },
         { label: '年级', key: 'gradeId' },
         { label: '学期', key: 'semesterId' },
-        { label: '班型', key: 'courseTypeList' },
+        { label: '班型', key: 'courseTypeId' },
       ]"
-      @submit="$refs.list.request($event)" 
+      @submit="$refs.list.request($event)"
     />
     <div class="cus-list" v-if="listShow == 1">
       <cus-list ref="list" has-page url="/course/queryByPage" :default="params" :auto-request="true" :headers='{ type: 1, "Content-Type": "application/json" }' >
@@ -32,10 +32,10 @@
         </div>
         </template>
       </cus-list>
-    </div> 
+    </div>
     <div  v-if="listShow === 0">
       <NearClass :listShow='listShow'/>
-    </div>   
+    </div>
   </div>
 </template>
 
@@ -54,7 +54,7 @@
 
   export default {
     components: { HeaderRefComponent, NearClass },
-    
+
     setup(props,{ emit }) {
       let store = useStore()
       let headerRef = ref();
@@ -72,11 +72,11 @@
       // 课程详情弹窗
       const godetails = (item) => {
         let courseId = item.id
-        Modal.create({ title: item.courseName, 
-        width: 640, zIndex:998, 
-        footed: false , 
-        component: PreparePapers, 
-        props: { courseId }, 
+        Modal.create({ title: item.courseName,
+        width: 640, zIndex:998,
+        footed: false ,
+        component: PreparePapers,
+        props: { courseId },
         headerStyle: { 'margin-bottom': '20px' },
         bodyStyle: { padding: '0 20px 28px' }
         })
@@ -123,7 +123,7 @@
         text-overflow: -o-ellipsis-lastline;
         overflow: hidden;
         text-overflow: ellipsis;
-        display: -webkit-box;   /*以下为webkit系兼容必须写法*/  
+        display: -webkit-box;   /*以下为webkit系兼容必须写法*/
         -webkit-line-clamp: 2; /*在第2行显示省略号*/
         -webkit-box-orient: vertical;
       }
@@ -132,7 +132,7 @@
         color: #77808D;
         overflow: hidden;
         text-overflow: ellipsis;
-        display: -webkit-box;   /*以下为webkit系兼容必须写法*/  
+        display: -webkit-box;   /*以下为webkit系兼容必须写法*/
         -webkit-line-clamp: 1; /*在第2行显示省略号*/
         -webkit-box-orient: vertical;
       }
@@ -156,16 +156,16 @@
         opacity: .8;
       }
     }
-  } 
+  }
   @media only screen and (min-width: 1440px) {
-    .cus-list { 
+    .cus-list {
       :deep(.cus__list__item){
         flex: 0 0 19%;
       }
     }
   }
   @media only screen and (min-width: 1680px) {
-    .cus-list { 
+    .cus-list {
       :deep(.cus__list__item){
         flex: 0 0 15.6%;
       }

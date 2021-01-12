@@ -10,10 +10,10 @@
           <el-button type="primary" round size="small" v-show="item.lessonStatus === 2" @click="courseDetailFileList(item)">已备课</el-button>
         </div>
       </li>
-    </ul>   
+    </ul>
     <cus-empty v-if="!courseIndexList.length && !dialogLoading" />
   </div>
-</template>   
+</template>
 
 <script lang='ts'>
 import { ref, inject } from 'vue';
@@ -28,7 +28,7 @@ export default {
   props: {
     courseId: String
   },
-  setup(props, { emit }) {   
+  setup(props, { emit }) {
     // 列表数据
     let courseIndexList = ref([])
     let dialogLoading = ref(false)
@@ -43,8 +43,8 @@ export default {
     }
     queryData()
     const courseDetailFileList = (item, index) => {
-      Screen.create( CurriculumPapers, { title: item.courseIndexName, id: item.id }).then((data: any) => {
-        if(data) {
+      Screen.create( CurriculumPapers, { title: item.courseIndexName, id: item.id }).catch((data: any) => {
+        if(!data) {
           queryData()
           close(data)
         }
@@ -57,7 +57,7 @@ export default {
       //获取提交备课参数
       const prepareLessonRequest = new Promise((resolve, reject) => {
         axios.post<any,AxResponse>('/admin/prepareLesson/queryPrepareLessonByCourseIndexId',{ courseIndexId: item.id }).then(res => {
-          if(res.result) {  
+          if(res.result) {
             resolve(res.json)
           }else{
             ElMessage.error(res.msg)
@@ -81,7 +81,7 @@ export default {
             ElMessage.error(res.json)
           }
         })
-      }) 
+      })
     }
     return { courseIndexList, dialogLoading, courseDetailFileList, queryData, savePrepareClass }
   }

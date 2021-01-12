@@ -8,7 +8,7 @@
 			<div class="left">
 				<div class="title-search">
 					<p class="title-box" :style="{'display': active ? 'none' : 'block'}"><span>教师排名</span><span style="font-size: 13px">(共{{teacherList.length}}位)</span></p>
-					<p class="search-box" @click.stop="active = true" :class="{'active': active}"><el-input placeholder="按教师搜索" @blur="active = false, teacherName = ''" size="small" prefix-icon="el-icon-search" v-model="teacherName"></el-input></p>
+					<p class="search-box" @click.stop="active = true" :class="{'active': active}"><el-input placeholder="按教师搜索" @blur=" teacherName == '' ? active = false : active = true" size="small" prefix-icon="el-icon-search" v-model="teacherName"></el-input></p>
 				</div>
 				<div class="tip">
 					<div>教师名称</div>
@@ -17,8 +17,8 @@
 						<el-button>？</el-button>
 					</el-tooltip></div>
 				</div>
-				<ul class="teach-box">
-					<li class="teacher-item" :class="{'teacher-item-active': item.id === currentTeacher.id}" @click="selectTeacher(item)" v-for="item in filterTeacher" :key="item.id">
+				<ul class="teach-box" v-loading="filterTeacher.length > 0 ? false : true">
+					<li class="teacher-item" :class="{'teacher-item-active': item.id === this.currentTeacher?.id}" @click="selectTeacher(item)" v-for="item in filterTeacher" :key="item.id">
 						<span>{{item.nickname}}</span>
 						<span style="font-weight: 500">{{item.prepareLessonAvgScore == 100000 ? '---' : item.prepareLessonAvgScore}} 分</span>
 					</li>
@@ -66,12 +66,12 @@
 						<div class="right-content-cell-name">{{item.creatorName}}</div>
 						<div class="right-content-cell-status">
 							<p class="plan-status">教师教案:&nbsp;&nbsp;<span :style="{'background': item.teachPlan ? '#F2F2F2' : '#FFEFEB', 'color': item.teachPlan ? '#74C874' : '#FC514F' }"><b>·</b>{{item.teachPlan ? '已上传' : '未上传'}}</span></p>
-							<p class="video-status">还课视频:&nbsp;&nbsp;<span :style="{'background': item.teachPlan ? '#F2F2F2' : '#FFEFEB', 'color': item.teachPlan ? '#74C874' : '#FC514F' }"><b>·</b>{{item.reviewVideo ? '已上传' : '未上传'}}</span></p>
+							<p class="video-status">还课视频:&nbsp;&nbsp;<span :style="{'background': item.reviewVideo ? '#F2F2F2' : '#FFEFEB', 'color': item.reviewVideo ? '#74C874' : '#FC514F' }"><b>·</b>{{item.reviewVideo ? '已上传' : '未上传'}}</span></p>
 						</div>
-						<div class="right-content-cell-score" v-if="item.checkStaus == 1" @click.stop="scoreDialogVisible = true, handelLessonInfo = item">
+						<div class="right-content-cell-score" v-if="item.checkStaus == 1" @click.stop="scoreDialogVisible = true;handelLessonInfo = item">
 							备课评分:&nbsp;&nbsp;&nbsp;未评价
 						</div>
-						<div class="right-content-cell-score" v-else @click.stop="scoreDialogVisible = true, handelLessonInfo = item">
+						<div class="right-content-cell-score" v-else @click.stop="scoreDialogVisible = true;handelLessonInfo = item">
 							备课评分:&nbsp;&nbsp;&nbsp;{{item.score}} 分
 						</div>
 					</li>
@@ -87,7 +87,7 @@
 			</div>
 		</div>
 		<el-dialog title="备课评分" v-model="scoreDialogVisible" width="40%">
-			<score @sendParam="openScore" :lessonInfo="handelLessonInfo"/>
+			<score v-if="handelLessonInfo !== null" @sendParam="openScore" :lessonInfo="handelLessonInfo"/>
 			<template #footer>
 				<span class="dialog-footer">
 				<el-button @click="scoreDialogVisible = false">取 消</el-button>
@@ -125,7 +125,7 @@
         active: false,
         teacherName: '',
 			  teacherList: [{nickname: ''}],
-			  currentTeacher: {},
+			  currentTeacher: null,
 			  statusOpt: [{label: '待审核', val: 0}, {label: '已审核', val: 1}, {label: '全部', val: 2}],
         course: null,
         courseOptions: [{}],
@@ -197,6 +197,11 @@
         this.getTeacherData(this.researchId, this.schoolId)
       },
       selectTeacher(item) {
+        if (this.currentTeacher !== null && this.lessonParam.creatorId !== '') {
+          this.currentTeacher = null;
+          this.lessonParam.creatorId = '';
+          return;
+        }
         this.currentTeacher = item;
         this.lessonParam.creatorId = item.id;
       },

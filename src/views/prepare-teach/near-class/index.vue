@@ -6,10 +6,10 @@
          <img src="/@/assets/prepare-teach/book-logo.png" width="36"  alt="爱学标品">
       </template>
       <template v-slot="{ data }">
-         <div class="near-list-content">  
+         <div class="near-list-content">
           <div class="title">{{ data.courseName }}</div>
           <div class="session" >{{ data.courseIndexName }}</div>
-          <div class="time">上次保存时间：{{ data.lastSaveDate ||'无'}}</div>
+          <div class="time">上次保存时间：{{ new Date(data.lastSaveDate).toLocaleString() ||'无'}}</div>
         </div>
       </template>
       <template v-slot:actions="{ data }">
@@ -17,7 +17,7 @@
           <el-button size="small" round :class="{ 'btn-hidden': data.checkStaus !== 0 }"  @click="savePrepareClass(data)">提交备课</el-button>
           <el-button size="small" round type='primary' v-if="data.checkStaus === 0"  @click="courseDetailFileList(data)">继续备课</el-button>
           <el-button size="small" round type='primary' v-if="data.checkStaus === 2 || data.checkStaus === 1"  @click="courseDetailFileList(data)">查看备课</el-button>
-        </div>  
+        </div>
       </template>
     </cus-list>
   </div>
@@ -57,7 +57,7 @@ export default {
         }
       })
     }
-   
+
     // 提交备课
     const savePrepareClass = async(data) => {
       //获取提交备课参数
@@ -86,7 +86,7 @@ export default {
             ElMessage.error(res.json)
           }
         })
-      }) 
+      })
     }
 
     return { params, courseDetailFileList, nearList, savePrepareClass, searchTime }
