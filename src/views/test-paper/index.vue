@@ -33,7 +33,7 @@
             <el-button type="text" @click="preview(data)"><i class="iconfont iconsearch-eye-line" /><span>预览</span></el-button>
             <el-button type="text" @click="update(data)" v-if="data.sourceFrom !== 3"><i class="iconfont iconfile-edit-line" /><span>编辑</span></el-button>
             <el-button type="text" @click="download(data)"><i class="iconfont icondayin" /><span>下载/打印</span></el-button>
-            <el-popconfirm title="这是一段内容确定删除吗？" confirmButtonText='确定' cancelButtonText='取消' @confirm="remove(data.id)">
+            <el-popconfirm title="确定要删除此试卷吗？" confirmButtonText='确定' cancelButtonText='取消' @confirm="remove(data.id)">
               <template #reference>
                 <el-button type="text"><i class="iconfont iconshanchu" /><span>删除</span></el-button>
               </template>

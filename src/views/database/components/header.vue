@@ -55,6 +55,7 @@ export default {
     const handle = (type) => {
       props.getKnowledge().then((knowledgeList: any[]) => {
         let fileDom = createElement('input', { attrs: { type: 'file', multiple: true } });
+        type && fileDom.setAttribute('accept', '.docx,.doc');
         fileDom.click();
         fileDom.onchange = async () =>{
           let files: File[] = Array.from(fileDom.files || []);
