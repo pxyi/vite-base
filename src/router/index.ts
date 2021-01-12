@@ -33,12 +33,6 @@ const routes: RouteRecordRaw[] = [
         meta: { title: '教研中台' },
         children: [
           {
-            path: 'test-paper',
-            name: 'test-paper',
-            meta: { title: '试卷库' },
-            component: () => import('/@/views/test-paper/index.vue')
-          },
-          {
             path: 'question',
             name: 'question',
             meta: { title: '题库' },
@@ -48,19 +42,19 @@ const routes: RouteRecordRaw[] = [
             path: 'test-paper',
             name: 'test-paper',
             meta: { title: '试卷库' },
-            component: () => import('/@/views/test-paper/index.vue')
-          },
-          {
-            path: 'course',
-            name: 'course',
-            meta: { title: '课程管理' },
-            component: AsyncComponent(() => import('/@/views/course/index.vue'))
+            component: AsyncComponent(() => import('/@/views/test-paper/index.vue'))
           },
           {
             path: 'recording',
             name: 'recording',
             meta: { title: '批量录题' },
             component: AsyncComponent(() => import('/@/views/recording/index.vue'))
+          },
+          {
+            path: 'course',
+            name: 'course',
+            meta: { title: '课程管理' },
+            component: AsyncComponent(() => import('/@/views/course/index.vue'))
           },
           {
             path: 'database',
