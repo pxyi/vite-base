@@ -51,12 +51,6 @@ const routes: RouteRecordRaw[] = [
             component: () => import('/@/views/test-paper/index.vue')
           },
           {
-            path: 'resource-base',
-            name: 'resource-base',
-            meta: { title: '资料库' },
-            component: () => import('/@/views/resource-base/index.vue')
-          },
-          {
             path: 'course',
             name: 'course',
             meta: { title: '课程管理' },
