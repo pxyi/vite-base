@@ -17,7 +17,7 @@
             :key="node"
             :data-index="baseType === 3 ? node.no : numberToLetter(node.no)"
           >
-            <div class="check" v-if="baseType === 1"><el-radio v-model="node.checked" :label="true" @change="radioChange(node.no)"></el-radio></div>
+            <div class="check radio" v-if="baseType === 1"><el-checkbox v-model="node.checked" :label="true" @change="radioChange(node.no)"></el-checkbox></div>
             <div class="check" v-if="baseType === 2"><el-checkbox v-model="node.checked"></el-checkbox></div>
             <cus-editor v-model="node.content" />
             <div class="tip" v-if="valid && !node.content">请输入题目描述！</div>
@@ -52,7 +52,7 @@
 </template>
 
 <script lang="ts">
-import { ref, Ref, unref, reactive, getCurrentInstance } from 'vue';
+import { ref, Ref, unref, reactive } from 'vue';
 import { cloneDeep } from 'lodash';
 import { ElMessage } from 'element-plus';
 
@@ -65,7 +65,6 @@ export default {
     });
 
     let answer: Ref<string | null> = ref(null)      // 答案
-
 
     let valid = ref(false);
     const validator = () => {
@@ -106,8 +105,7 @@ export default {
       baseType.value = question.toolQuestionType;
       if (baseType.value === 4) { answer.value = '正确' }
       if (baseType.value === 1 || baseType.value === 3) {
-        options.value = [];
-        for (let no = 1; no <= 4; no++) { options.value.push( { no, content: null, checked: false } ) }
+        options.value = Array.from(new Array(4), (i, idx) => ({ no: idx + 1, content: null, checked: false }));
       }
     }
 
@@ -322,6 +320,9 @@ export default {
           left: 0;
           margin-left: -42px;
           overflow: hidden;
+        }
+        :deep(.radio) .el-checkbox__inner {
+          border-radius: 50%;
         }
       }
     }

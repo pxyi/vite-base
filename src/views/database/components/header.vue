@@ -58,7 +58,7 @@ export default {
         fileDom.click();
         fileDom.onchange = async () =>{
           let files: File[] = Array.from(fileDom.files || []);
-          let res = await Modal.create({ title: '上传资料', width: 480, component: UploadComponent, props: { files, knowledgeList, type } });
+          let res = await Modal.create({ title: type ? '上传标准教案' : '上传资料', width: 480, component: UploadComponent, props: { files, knowledgeList, type } });
           ElMessage.success('上传资料成功~！');
           emitter.emit('dataset-reset');
         }

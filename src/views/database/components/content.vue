@@ -157,7 +157,7 @@ export default {
         let downloadData = createElement('div', {
           className: 'el-icon-download',
           style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', bottom: '100px', right: '40px', zIndex: '10', cursor: 'pointer' },
-          on: { click: () => { let a  = document.createElement('a');a.download = item.fileName+'.'+item.ext;a.href = `${import.meta.env.VITE_DOMAIN}${item.filePath}`;a.click(); } }
+          on: { click: () => { let a  = createElement('a', { attrs:{ target: '_blank' } });a.download = item.fileName+'.'+item.ext;a.href = `${import.meta.env.VITE_DOMAIN}${item.filePath}`;a.click(); } }
 
         }); 
         let container;
@@ -175,7 +175,7 @@ export default {
           container = createElement('div', { 
             style: { width: '100%', height: '100%', background: 'rgba(0,0,0,.8)', position: 'absolute', top: '0', left: '0', zIndex: '1000' },
           }, [ closeBtn, video, downloadData ])
-        } else if(item.ext === 'ppt'||item.ext==='pptx'||item.ext==='dec'||item.ext==='docx'||item.ext==='pdf') {
+        } else if(item.ext === 'ppt'||item.ext==='pptx'||item.ext==='doc'||item.ext==='docx'||item.ext==='pdf') {
           let iframe = createElement('iframe', { attrs: { src, width: '100%', height: '100%' }, style: { background: '#f9f9f9' } });
           iframe.onload = loading.close;
           container = createElement('div', { 

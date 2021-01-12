@@ -43,7 +43,7 @@ export default {
     let store = useStore();
     let uploadRef = ref();
     let action = `${import.meta.env.VITE_APP_BASE_URL}/system/file/uploadFile`;
-    let acceptFormat = ['ppt', 'pptx', 'doc', 'docx', 'pdf', 'mp4', 'mp3', 'jpg', 'png' , 'jpeg', 'zip', 'rar'];
+    let acceptFormat = props.type ? ['doc', 'docx'] : ['ppt', 'pptx', 'doc', 'docx', 'pdf', 'mp4', 'mp3', 'jpg', 'png' , 'jpeg', 'zip', 'rar'];
 
     let userId = store.getters.userInfo.user.id;
     let subjectCode = store.getters.subject.code;

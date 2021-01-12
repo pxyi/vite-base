@@ -38,7 +38,7 @@
 </template>
 
 <script lang="ts">
-import { ref } from 'vue';
+import { getCurrentInstance, ref } from 'vue';
 import axios from 'axios';
 import { AxResponse } from './../../../../core/axios';
 
@@ -53,6 +53,8 @@ export default {
         publicSchoolId: null
       }
     ]);
+
+    let instance = getCurrentInstance();
 
     let yearList = ref([]);
     let quesList = ref([]);
@@ -78,6 +80,7 @@ export default {
       } else {
         source.schoolList = [];
       }
+      instance?.proxy?.$forceUpdate();
     }
     const addSource = () => {
       questionSources.value.push({
