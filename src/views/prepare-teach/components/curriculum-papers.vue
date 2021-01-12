@@ -24,13 +24,13 @@
               <p class="front"><span class="span-title">课程类型：</span><span class="span-content">{{ courseDto.gradeName ||'无' }}</span></p>
               <p><span class="span-title">保存时间：</span><span class="span-content">{{ prepareLesson.modifyTime ||'无' }}</span></p>
             </div>
-          </div>       
+          </div>
         </div>
       </div>
       <div class="main">
         <div class="tabs-box">
-          <div class="tab-cell" 
-            :class="{ active: tabType === n.type }" 
+          <div class="tab-cell"
+            :class="{ active: tabType === n.type }"
             v-for="n in tabCountList" :key="n"
             @click="tabType = n.type; request(n.type)"
           ><div><span>{{ n.name }}</span><i>{{ n.num }}</i></div></div>
@@ -43,9 +43,9 @@
           <div class="content-list-box">
             <div class="content-list-box-item" v-for="(item,index) in allFileList" :key="index">
               <div class="content-list-box-item-bg">
-                <img class="img-cover" style="width:116px;" 
-                  v-if="item.ext !== 'mp3' && item.ext !== 'zip' && item.ext !== 'rar' && item.mediaType == null" 
-                  :src="`${domain}${item.imgPath}`" 
+                <img class="img-cover" style="width:116px;"
+                  v-if="item.ext !== 'mp3' && item.ext !== 'zip' && item.ext !== 'rar' && item.mediaType == null"
+                  :src="`${domain}${item.imgPath}`"
                   alt="爱学标品">
                 <img v-else src="/@/assets/prepare-teach/weizhiwenjian.png" alt="爱学标品"/>
               </div>
@@ -64,7 +64,7 @@
             <cus-empty v-if="!allFileList.length" />
           </div>
         </div>
-      </div> 
+      </div>
     </div>
   </div>
 </template>
@@ -100,10 +100,10 @@ export default {
       })
     /*---------获取tab标签数据------------*/
     let tabCountList = ref([
-      { name: '全部', nameKey: 'totalCount', num: 0, type: null }, 
-      { name: '课件', nameKey: 'courseWareCount', num: 0, type: 1 }, 
-      { name: '讲义', nameKey: 'handoutCount', num: 0, type: 2 }, 
-      { name: '标准教案', nameKey: 'teachplanCount', num: 0, type: 5 }, 
+      { name: '全部', nameKey: 'totalCount', num: 0, type: null },
+      { name: '课件', nameKey: 'courseWareCount', num: 0, type: 1 },
+      { name: '讲义', nameKey: 'handoutCount', num: 0, type: 2 },
+      { name: '教案', nameKey: 'teachplanCount', num: 0, type: 5 },
       { name: '说课视频', nameKey: 'mediaCount', num: 0, type: 3 },
       { name: '其他', nameKey: 'otherCount', num: 0, type: 4 },
     ])
@@ -162,7 +162,7 @@ export default {
         }else {
           ElMessage.error(res.json)
         }
-      }) 
+      })
     }
     /*-----预览-----*/
     const preview = (item) => {
@@ -171,29 +171,29 @@ export default {
       }else{
         const loading = ElLoading.service({ lock: true, background: 'rgba(255, 255, 255, .7)', text: '加载中...' })
         let src = `${import.meta.env.VITE_OFFICE_PREVIEW}?furl=${import.meta.env.VITE_DOMAIN}${item.filePath}`;
-        let closeBtn = createElement('div', { 
-          className: 'el-icon-close', 
+        let closeBtn = createElement('div', {
+          className: 'el-icon-close',
           style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', top: '40px', right: '40px', zIndex: '10', cursor: 'pointer' },
           on: { click: () => { container.remove(); } }
         });
         let container;
         if(item.ext === 'mp4') {
-          let video = createElement('video', 
+          let video = createElement('video',
           { attrs: { src:`${import.meta.env.VITE_DOMAIN}${item.filePath}`, width: '100%', height: '100%',controls: true, controlsList: "nodownload" }, style: { background: '#f9f9f9' }});
           video.oncanplay = loading.close;
-          container = createElement('div', { 
+          container = createElement('div', {
             style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '2012', background: 'rgba(0,0,0,.8)' },
           }, [ closeBtn, video ])
         }else if (item.ext === null && item.mediaType === 'url'){
           loading.close()
           let url = createElement('p', { style: { background: '#f9f9f9', width: '100%', height: '100%', padding: '36px', 'font-size':'20px' }}, '链接地址：' + item.filePath);
-          container = createElement('div', { 
+          container = createElement('div', {
             style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '2012', background: 'rgba(0,0,0,.8)' },
           }, [ closeBtn, url ])
         }else {
           let iframe = createElement('iframe', { attrs: { src, width: '100%', height: '100%' }, style: { background: '#f9f9f9' } });
           iframe.onload = loading.close;
-          container = createElement('div', { 
+          container = createElement('div', {
             style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '2012', background: 'rgba(0,0,0,.8)' },
           }, [ closeBtn, iframe, ])
         }
@@ -201,7 +201,7 @@ export default {
       }
     }
 
-    return { 
+    return {
       close, tabCountList, courseDto, request, allFileList, prepareLesson, uploadMyPlan,
       tabCountRequest, uploadMyVideo, savePrepareClass, preview, domain, tabType
     }

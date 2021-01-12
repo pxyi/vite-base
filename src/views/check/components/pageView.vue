@@ -14,8 +14,8 @@
 				</div>
 				<div class="content">
 					<ul class="content-ul teach-ul" v-show="tabIndex == 1">
-						<li v-for="(item, index) in courseIndexDto" :key="index" :class="[item.id == currentFile.id ? 'active' : '', item.type !== 3 ? '' : 'teach']">
-							<div class="content-cell-wrapper"  @click="currentFile = item" v-if="item.type !== 3">
+						<li v-for="(item, index) in courseIndexDto" :key="index" :class="[item.id == currentFile.id ? 'active' : '', item.type === 3 ? '' : 'teach']">
+							<div class="content-cell-wrapper"  @click="currentFile = item" v-if="item.type === 3">
 								<div class="img">
 									<img src="/@/assets/lessonImg.png" alt="">
 								</div>
@@ -24,8 +24,8 @@
 						</li>
 					</ul>
 					<ul class="content-ul video-ul" v-show="tabIndex == 2">
-						<li v-for="(item, index) in courseIndexDto" :key="index" :class="[item.id == currentFile.id ? 'active' : '', item.type == 3 ? '' : 'video']">
-							<div class="content-cell-wrapper"  @click="currentFile = item" v-if="item.type == 3">
+						<li v-for="(item, index) in courseIndexDto" :key="index" :class="[item.id == currentFile.id ? 'active' : '', item.type !== 3 ? '' : 'video']">
+							<div class="content-cell-wrapper"  @click="currentFile = item" v-if="item.type !== 3">
 								<div class="img">
 									<img src="/@/assets/lessonImg.png" alt="">
 								</div>

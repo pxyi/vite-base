@@ -6,18 +6,24 @@
 </template>
 
 <script lang="ts">
-	import { defineComponent, ref, watch } from 'vue'
+	import { defineComponent, ref, watch, Ref, onMounted } from 'vue'
 	import axios from "axios";
 	export default defineComponent({
 		name: "increaseCourseIndex",
 		props: {
       VresionData: {
         type: Array
+      },
+      defaultChecked: {
+        type: Array
       }
 		},
 		setup(props) {
 		  let filterText = ref('');
-		  const tree = ref(null)
+		  const tree: Ref<any> = ref(null);
+      onMounted(() => {
+        tree.value.setCheckedKeys(props.defaultChecked)
+      })
       const filterNode = (value, data) =>  {
         if (!value) return true;
         return data.name.indexOf(value) !== -1;

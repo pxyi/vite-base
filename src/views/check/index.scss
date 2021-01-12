@@ -345,7 +345,7 @@
 			margin-bottom: 20px;
 			.quality-body-cell {
 				span:nth-of-type(1) {
-					flex: .19;
+					flex: .25;
 				}
 				display: flex;
 				align-items: center;
@@ -360,7 +360,7 @@
 				}
 			}
 			.el-radio-group {
-				flex: .6;
+				flex: .7;
 				display: flex;
 				justify-content: space-between;
 				label.el-radio {
