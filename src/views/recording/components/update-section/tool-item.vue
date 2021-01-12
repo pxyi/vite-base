@@ -105,14 +105,11 @@ import { cloneDeep } from 'lodash';
 export default {
   setup() {
     let baseStore = useStore();
-    let data: Ref<any> = computed({
-      get: () => store.state.focusData,
-      set: (val) => store.commit('set_focus_data', val)
-    });
     let dataset: Ref<any[]> =  computed({
       get: () => store.state.dataSet,
       set: (val) => store.commit('set_data_set', val)
     });
+    let data: Ref<any> = computed(() => dataset.value[store.state.checkedIndex]);
     let index: Ref<number> = computed(() => dataset.value.findIndex((i: any) => i.id === data.value.id) );
 
     let isSync: Ref<boolean> = computed(() => store.state.isSync);
@@ -136,7 +133,7 @@ export default {
     }
 
     const indexChange = (n: number) => {
-      store.dispatch('focus_data_change', dataset.value[index.value + n]);
+      store.dispatch('checked_index_change', dataset.value[index.value + n]);
     }
 
     let selectMap: any = reactive({

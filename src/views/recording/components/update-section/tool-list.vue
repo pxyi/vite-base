@@ -1,8 +1,8 @@
 <template>
   <div class="tool-list-content" v-if="!data">
-    <h4>共解析出 {{ questionList.length }} 题</h4>
+    <h4>共解析出 {{ dataset.length }} 题</h4>
     <ul>
-      <li v-for="(data, idx) in questionList" :key="data.id" @click.stop="setFocusData(data, idx)">
+      <li v-for="(data, idx) in dataset" :key="data.id" @click.stop="setFocusData(idx)">
         <span>第<i>{{ idx + 1 }}</i>题</span>
         <a>{{ data.questionTypeName }}</a>
       </li>
@@ -15,18 +15,18 @@ import { ref, Ref, computed } from 'vue';
 import store from './../store';
 export default {
   setup() {
-    let questionList = computed(() => store.state.dataSet );
+    let dataset = computed(() => store.state.dataSet );
 
-    let data: Ref<any> = computed(() => store.state.focusData);
+    let data: Ref<any> = computed(() => dataset.value[store.state.checkedIndex]);
 
-    let setFocusData = (data, idx) => {
+    let setFocusData = (idx) => {
       let top = (document.querySelectorAll('.main-content .item')[idx] as HTMLElement).offsetTop;
       document.querySelector('.main-content')!.scrollTop = top - 80;
 
-      store.commit('set_focus_data', data)
+      store.commit('set_checked_index', idx)
     };
 
-    return { questionList, setFocusData, data }
+    return { dataset, setFocusData, data }
   }
 }
 </script>

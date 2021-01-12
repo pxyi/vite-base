@@ -15,7 +15,7 @@ import store from './../store';
 export default {
   components:{ ToolList, ToolItem },
   setup() {
-    let isItem = computed(() => store.state.focusData);
+    let isItem = computed(() => store.state.checkedIndex > -1);
 
     return { isItem };
   }

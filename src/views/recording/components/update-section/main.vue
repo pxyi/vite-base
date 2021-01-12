@@ -10,7 +10,7 @@
     </div>
     <div class="main-content" :class="{ 'is__sync': isSync }">
       <div class="item" @click.stop :class="{ 'is__focus': focusData?.id === data.id }" v-for="(data, index) in dataset" :key="data.id">
-        <div class="mask" @click.stop="focusChange(data)"></div>
+        <div class="mask" @click.stop="focusChange(index)"></div>
         <div class="title">
           <cus-editor v-model="data.title" hide-border placeholder="请输入题干" :modelValue="data.title" @update:model-value="changeHandle(index, 'title', $event)" />
         </div>
@@ -56,20 +56,16 @@ export default {
     const changeHandle = debounce((index, key, val) => {
       let data = cloneDeep(dataset.value);
       data[index][key] = val;
-      focusData.value = data[index];
       dataset.value = data;
     }, 300)
 
     let errorList = computed(() => store.state.errorList);
 
-    let focusData = computed({
-      get: () => store.state.focusData,
-      set: (val) => store.commit('set_focus_data', val)
-    });
+    let focusData = computed(() => dataset.value[store.state.checkedIndex]);
 
     let isSync = computed(() => store.state.isSync);
 
-    const focusChange = (data) => store.commit('set_focus_data', data);
+    const focusChange = (index) => store.commit('set_checked_index', index);
 
     const remove = async (data) => {
       data.loading = true;
@@ -80,8 +76,8 @@ export default {
     let errorIndex = 0;
     const seeFail = () => {
       let errorId = errorList.value[errorIndex]['quesId'];
-      let data = dataset.value.find((d: {id}) => d.id === errorId)
-      data && store.commit('set_focus_data', data);
+      let index = dataset.value.findIndex((d: {id}) => d.id === errorId)
+      index > -1 && store.commit('set_checked_index', index > -1);
       errorIndex = errorIndex < errorList.value.length - 1 ? errorIndex + 1 : 0;
       nextTick(() => {
         let top = (document.querySelector('.main-content .item.is__focus') as HTMLElement).offsetTop;
@@ -95,7 +91,6 @@ export default {
 
       let dataSet = cloneDeep(dataset.value);
       dataSet[index] = data;
-      focusData.value = data;
       dataset.value = dataSet;
     }
 

@@ -32,9 +32,9 @@ export default {
 
     store.commit('reset');
 
-    let focusData = computed(() => store.state.focusData);
-
     let dataset = computed(() => store.state.dataSet);
+
+    let focusData = computed(() => dataset.value[store.state.checkedIndex]);
 
     const isSync = computed(() => store.state.isSync);
 
@@ -47,7 +47,7 @@ export default {
       setTimeout(() => loading.close(), 100);
     });
 
-    const blur = () => !isSync.value ? store.dispatch('focus_data_change', null) : false;
+    const blur = () => !isSync.value ? store.dispatch('checked_index_change', -1) : false;
 
     let saveLoading = ref(false);
     const save = async () => {
