@@ -53,9 +53,9 @@
           <div class="tool-label">知识点</div>
           <div class="tool-control">
             <el-cascader collapse-tags clearable placeholder="选择知识点" size="medium" :show-all-levels="false" @change="syncTag"
-              v-model="data.knowledgePoints" 
-              :options="knowledgeList" 
-              :props="{ children: 'childs', label: 'name', value: 'id', multiple: true, emitPath: false }" 
+              v-model="data.knowledgePoints"
+              :options="knowledgeList"
+              :props="{ children: 'childs', label: 'name', value: 'id', multiple: true, emitPath: false }"
             />
           </div>
         </div>
@@ -133,7 +133,7 @@ export default {
     }
 
     const indexChange = (n: number) => {
-      store.dispatch('checked_index_change', dataset.value[index.value + n]);
+      store.dispatch('checked_index_change', dataset.value.findIndex(i => i.id === dataset.value[index.value + n].id));
     }
 
     let selectMap: any = reactive({

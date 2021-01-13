@@ -90,7 +90,7 @@
       const increaseChapter = ({ id, hasChapters }) => {
         Model.create({
           component: increaseCourseIndex,
-	        title: '新增课次',
+	        title: '添加章节',
           zIndex: 2011,
           props: {
             VresionData,
