@@ -57,10 +57,20 @@ const MenuListSike :RouterConf[] = [
         isLeaf: true
       },
       {
+        title: '批量录题',
+        key: '/teaching/recording',
+        isLeaf: true
+      },
+      {
         title: '试卷库',
         key: '/teaching/test-paper',
         isLeaf: true
-      }
+      },
+      {
+        title: '资料库',
+        key: '/teaching/database',
+        isLeaf: true
+      },
     ]
   }
 ]
