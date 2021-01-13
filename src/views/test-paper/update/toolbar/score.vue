@@ -49,7 +49,7 @@ export default {
     const paperTypeScoreChange = (quest, val) => {
       paperCharpts.value = paperCharpts.value.map(nodes => {
         if (nodes.id === quest.id) {
-          quest.questions = quest.questions.map(n => { n.question.score = val; return n; })
+          nodes.questions = nodes.questions.map(n => { n.score = val; return n; })
         }
         return nodes;
       });
