@@ -33,9 +33,14 @@ export default {
     const handle = (key, val) => { contentRef.value.formGroup[key] = val; contentRef.value.request(); }
 
     const getKnowledge = () => new Promise((resolve, reject) => {
-      let nodes = knowledgeRef.value.knowledgeRef.getCheckedNodes(true);
-      !nodes.length && ElMessage.warning('请在左侧选择一个章节开始上传吧~！')
-      nodes.length ? resolve(nodes) : reject()
+      try {
+        let nodes = knowledgeRef.value.knowledgeRef.getCheckedNodes(true);
+        !nodes.length && ElMessage.warning('请在左侧选择一个章节开始上传吧~！')
+        nodes.length ? resolve(nodes) : reject()
+      } catch (error) {
+        ElMessage.warning('请在左侧选择一个章节开始上传吧~！');
+        reject()
+      }
     })
 
     return { headerRef, contentRef, knowledgeRef, handle, getKnowledge }

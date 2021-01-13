@@ -55,12 +55,15 @@ export default {
       return acceptFormat.includes(ext);
     })
     if (files.length) {
+      fileList.value = files.map(file => ({ name: file.name }));
       Promise.all(props.files.map(file => {
         let formdata = new FormData();
         formdata.append('file', file);
         return axios.post('/system/file/uploadFile', formdata, { headers: { 'Content-Type': 'multipart/form-data' } });
       })).then((list: any[]) => {
-        fileList.value = list.map(res => ({ ...res.json, name: res.json.oriFilename, url: res.json.filePath }))
+        list.map(res => {
+          fileList.value.splice(fileList.value.findIndex(f => f.name === res.json.oriFilename), 1, { ...res.json, name: res.json.oriFilename, url: res.json.filePath })
+        });
       });
     } else {
       ElMessage.warning(`请上传以下指定格式文件，${acceptFormat.join('、')}`)
