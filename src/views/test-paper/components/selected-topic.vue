@@ -74,7 +74,7 @@ export default {
           ElMessage[res.result ? 'success' : 'warning'](res.result ? '生成试卷成功~！' : res.msg);
           res.result && emitter.emit('add-test-paper-success', res.json);
           res.result ? resolve(res.json) : reject();
-        })
+        }).catch(_ => reject())
       } else {
         ElMessage.warning('请至少选择一道试题！');
         reject();

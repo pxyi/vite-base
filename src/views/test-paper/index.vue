@@ -45,7 +45,7 @@
   </div>
 </template>
 <script lang="ts">
-import { ref, onMounted, Ref } from 'vue';
+import { ref, onMounted, Ref, onUnmounted } from 'vue';
 import HeaderRefComponent from './components/header-ref.vue';
 import emitter from './../../utils/mitt';
 import axios from 'axios';
@@ -121,10 +121,10 @@ export default {
       window.open(`./#/test-paper-edit/${preview}/${data.id}`);
     }
     /* 监听新增试卷成功事件 */
-    emitter.on('add-test-paper-success', e => {
-      update(e);
-      listRef.value.request();
-    });
+
+    const addEventHandle = (e) => { update(e); listRef.value && listRef.value.request(); }
+    emitter.on('add-test-paper-success', addEventHandle);
+    onUnmounted(() => emitter.off('add-test-paper-success', addEventHandle))
 
     let sourceList: Ref<any[]> = ref([]);
     axios.post<null, AxResponse>('/system/dictionary/queryDictByCodes', { typeCodesStr: 'QUES_SOURCE' }).then(res => sourceList.value = res.json['QUES_SOURCE']);
