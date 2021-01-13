@@ -5,7 +5,9 @@ export const questionFormat = (quest) => {
   if (data.basicQuestionType === 2 || data.basicQuestionType === 10) {
     let f = data.basicQuestionType === 2 ? ';' : ''
     data.answer = data.rightAnswer ? data.rightAnswer.map(i => i.content).join(f) : '';
-  } else if (data.basicQuestionType === 3 || data.basicQuestionType === 9) {
+  } else if (data.basicQuestionType === 3) {
+    data.answer = data.rightAnswer ? data.rightAnswer.map((i) => `${i.content}`).join('<br>') : '';
+  } else if (data.basicQuestionType === 9) {
     data.answer = data.rightAnswer ? data.rightAnswer.map((i, idx) => `${idx + 1}.${i.content}`).join('<br>') : '';
   } else {
     data.answer = data.rightAnswer ? data.rightAnswer[0].content : '';
