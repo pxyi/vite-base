@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="tabs-box">
-      <div class="tab-cell" 
-        :class="{ active: formGroup.type === n.type }" 
+      <div class="tab-cell"
+        :class="{ active: formGroup.type === n.type }"
         v-for="n in typeList" :key="n.type"
         @click="formGroup.type = n.type; request(false)"
       ><div><span>{{ n.name }}</span><i>{{ n.count }}</i></div></div>
@@ -141,7 +141,7 @@ export default {
         window.open(item.filePath)
       }else{
         const loading = ElLoading.service({ lock: true, background: 'rgba(255, 255, 255, .7)', text: '加载中...' })
-        let src = `${import.meta.env.VITE_OFFICE_PREVIEW}?furl=${import.meta.env.VITE_DOMAIN}${item.filePath}`;
+        let src = `${import.meta.env.VITE_APP_OFFICE_WEB365}?furl=${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`;
         let closeBtn = createElement('div', {
           className: 'el-icon-close',
           style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', top: '40px', right: '40px', zIndex: '10', cursor: 'pointer' },
@@ -159,32 +159,32 @@ export default {
           style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', bottom: '100px', right: '40px', zIndex: '10', cursor: 'pointer' },
           on: { click: () => { let a  = createElement('a', { attrs:{ target: '_blank' } });a.download = item.fileName+'.'+item.ext;a.href = `${import.meta.env.VITE_DOMAIN}${item.filePath}`;a.click(); } }
 
-        }); 
+        });
         let container;
         if(item.ext === 'mp4') {
           let video = createElement('video',
           { attrs: { src:`${import.meta.env.VITE_DOMAIN}${item.filePath}`, width: '100%', height: '100%',controls: true, controlsList: "nodownload" }, style: { background: '#f9f9f9' }});
           video.oncanplay = loading.close;
-          container = createElement('div', { 
+          container = createElement('div', {
             style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '1000' , background: 'rgba(0,0,0,.8)'},
           }, [ closeBtn, video, downloadData ])
         }else if(item.ext === 'mp3') {
-          let video = createElement('video', 
+          let video = createElement('video',
           { attrs: { src:`${import.meta.env.VITE_DOMAIN}${item.filePath}`, width: '', height: '',controls: true, controlsList: "nodownload" }, style: { background: '#333', position:'absolute', top: '50%', left: '50%', transform:'translate(-50%,-50%)'}});
           video.oncanplay = loading.close;
-          container = createElement('div', { 
+          container = createElement('div', {
             style: { width: '100%', height: '100%', background: 'rgba(0,0,0,.8)', position: 'absolute', top: '0', left: '0', zIndex: '1000' },
           }, [ closeBtn, video, downloadData ])
         } else if(item.ext === 'ppt'||item.ext==='pptx'||item.ext==='doc'||item.ext==='docx'||item.ext==='pdf') {
           let iframe = createElement('iframe', { attrs: { src, width: '100%', height: '100%' }, style: { background: '#f9f9f9' } });
           iframe.onload = loading.close;
-          container = createElement('div', { 
+          container = createElement('div', {
             style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '1000', background: 'rgba(0,0,0,.8)' },
           }, [ closeBtn, iframe, downloadData,printData ])
         }else if(item.ext==='zip'||item.ext==='rar'||item.ext==='png'||item.ext==='jpeg'||item.ext==='jpg') {
           let iframe = createElement('iframe', { attrs: { src, width: '100%', height: '100%' }, style: { background: '#f9f9f9' } });
           iframe.onload = loading.close;
-          container = createElement('div', { 
+          container = createElement('div', {
             style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '1000', background: 'rgba(0,0,0,.8)' },
           }, [ closeBtn, iframe, downloadData ])
         }
@@ -200,7 +200,7 @@ export default {
         props: { id }
       })
     }
-    
+
     return { typeList, formGroup, request, loading, dataset, cellHandle, preview, addLesson, filePathBase, sortHandle }
   }
 }
