@@ -43,11 +43,16 @@ export default {
     }
     queryData()
     const courseDetailFileList = (item, index) => {
-      Screen.create( CurriculumPapers, { title: item.courseIndexName, id: item.id }).catch((data: any) => {
+      Screen.create( CurriculumPapers, { title: item.courseIndexName, id: item.id }).then((data: any) => {
+        if(data) {
+          queryData()
+          close(data)
+        };
+      }).catch((data: any) => {
         if(!data) {
           queryData()
           close(data)
-        }
+        };
       })
     }
 
