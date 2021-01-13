@@ -1,6 +1,6 @@
 <template>
   <el-container>
-    <el-aside width="200px"><lay-menu /></el-aside>
+    <el-aside :width="asideWidth"><lay-menu /></el-aside>
     <el-container>
       <el-header height="60px" v-if="!hideHeader"><lay-header /></el-header>
       <el-main :class="{ is__index: hideHeader}">
@@ -19,20 +19,17 @@ import LayMenu from './menu.vue';
 import LayHeader from './header.vue';
 import TreeItem from '../components/tree/components/tree-item.vue';
 import { ref, computed, Ref, onUnmounted } from 'vue';
-import { onBeforeRouteUpdate, useRoute } from 'vue-router';
+import { useRoute } from 'vue-router';
 
 export default {
   name: 'lay-base',
   components: { LayMenu, LayHeader, TreeItem },
   setup() {
-    let route = useRoute()
-    let transitionName: Ref<string> = ref('slide-right');
-    onBeforeRouteUpdate((to, from) => {
-      const toDepth = to.path.split('/').length
-      const fromDepth = from.path.split('/').length
-      transitionName.value = toDepth < fromDepth ? 'slide-right' : 'slide-left'
-    });
+    let route = useRoute();
+
     let hideHeader = computed(() => ['/index'].includes(route.path));
+
+    let asideWidth = ref(document.body.offsetWidth > 1080 ? '200px' : '54px');
 
     onUnmounted(() => {
       let drawer = document.querySelectorAll('[class^=__drawer__]') || [];
@@ -43,7 +40,7 @@ export default {
       screen.forEach(i => i.remove());
     })
     
-    return { transitionName, hideHeader }
+    return { hideHeader, asideWidth }
   }
 }
 </script>

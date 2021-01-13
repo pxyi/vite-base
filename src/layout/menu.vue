@@ -1,50 +1,78 @@
 <template>
-  <div class="lay__menu__container">
-    <div class="logo-xinzhou" v-if="isXinzhou">
-      <img src="./../assets/menu/logo-xinzhou.png" alt="logo">
-    </div>
-    <div class="logo" v-else>
-      <img src="./../assets/menu/logo.png" alt="logo">
-    </div>
-    <div class="menu-content">
-      <template v-for="(menu) in list" :key="menu.key">
-        <div class="menu-item" :class="{ 'is-closed': !menu.closed }">
-          <div class="menu-title"
-            @click=" menu.isLeaf && !$route.path.includes(menu.key) ? $router.push(menu.key) : (menu.closed = !menu.closed)"
-            :class="{ 'active': $route.path.includes(menu.key) }"
-          >
-            <img :src="`nav-icon/${menu.icon}.png`" alt="icon" />
-            <span>{{ menu.title }}</span>
-            <i class="el-icon-arrow-up" v-if="!menu.isLeaf"></i>
+  <div class="lay__menu__container" :class="{ 'is__ipad': isIpad, 'is__slide': isSlide }">
+    <template v-if="isIpad && !isSlide">
+      <div class="logo"></div>
+      <div class="menu-content">
+        <template v-for="(menu) in list" :key="menu.key">
+          <div class="menu-cell" :class="{ 'is__current': $route.path.includes(menu.key) }">
+            <template v-if="menu.isLeaf" @click="!$route.path.includes(menu.key) && $router.push(menu.key)">
+              <img :src="`nav-icon/${menu.icon}.png`" alt="icon" />
+            </template>
+            <template v-else>
+              <el-popover placement="right-start" :width="100" :title="menu.title" trigger="hover">
+                <ul class="menu-item-box">
+                  <li v-for="item in menu.children" :key="item.key" 
+                    @click="!$route.path.includes(item.key) && $router.push(item.key)"
+                    :class="{ 'is__current': $route.path.includes(item.key) }"
+                  >{{ item.title }}</li>
+                </ul>
+                <template #reference><img :src="`nav-icon/${menu.icon}.png`" alt="icon" /></template>
+              </el-popover>
+            </template>
           </div>
-          <div class="menu-sub" v-if="!menu.isLeaf" :style="{ height: `${menu.children.length * 45}px` }">
-            <div class="menu-sub-item" v-for="link in menu.children" :key="link.key" @click="$router.push(link.key)" :class="{ 'active': $route.path === link.key }">{{ link.title }}</div>
-          </div>
-        </div>
-      </template>
-      <div class="menu-item">
-        <div class="menu-title" @click="goSystem"><img :src="'nav-icon/system.png'" alt="进入后台"><span>进入后台</span></div>
+        </template>
+        <div class="menu-cell" @click="goSystem"><img :src="'nav-icon/system.png'" alt="进入后台"></div>
       </div>
-    </div>
+    </template>
+    <template v-else>
+      <div class="logo-xinzhou" v-if="isXinzhou">
+        <img src="./../assets/menu/logo-xinzhou.png" alt="logo">
+      </div>
+      <div class="logo" v-else>
+        <img src="./../assets/menu/logo.png" alt="logo">
+      </div>
+      <div class="menu-content">
+        <template v-for="(menu) in list" :key="menu.key">
+          <div class="menu-item" :class="{ 'is-closed': !menu.closed }">
+            <div class="menu-title"
+              @click=" menu.isLeaf && !$route.path.includes(menu.key) ? $router.push(menu.key) : (menu.closed = !menu.closed)"
+              :class="{ 'active': $route.path.includes(menu.key) }"
+            >
+              <img :src="`nav-icon/${menu.icon}.png`" alt="icon" />
+              <span>{{ menu.title }}</span>
+              <i class="el-icon-arrow-up" v-if="!menu.isLeaf"></i>
+            </div>
+            <div class="menu-sub" v-if="!menu.isLeaf" :style="{ height: `${menu.children.length * 45}px` }">
+              <div class="menu-sub-item" v-for="link in menu.children" :key="link.key" @click="$router.push(link.key)" :class="{ 'active': $route.path === link.key }">{{ link.title }}</div>
+            </div>
+          </div>
+        </template>
+        <div class="menu-item">
+          <div class="menu-title" @click="goSystem"><img :src="'nav-icon/system.png'" alt="进入后台"><span>进入后台</span></div>
+        </div>
+      </div>
+    </template>
+
+    <div class="lay__menu__slide-btn" v-if="isIpad" @click="isSlide = !isSlide"><img src="/src/assets/menu/slide-icon.png" alt="爱学标品"></div>
   </div>
 </template>
 
 <script lang="ts">
-import { reactive, ref, watch } from 'vue';
+import { reactive, ref, Ref, watch } from 'vue';
 import MenuList, { RouterConf } from './../core/menu-list';
 import { useRoute } from 'vue-router';
 import { ElMessageBox } from 'element-plus';
+interface IlistItem extends RouterConf { closed?: boolean };
 
 export default {
   name: 'lay-menu',
   setup() {
-    let list: { value: RouterConf[] } = ref([]);
-
     let initPath = useRoute().path;
-    MenuList.map((res: any) => {
-      res.closed = initPath.includes(res.key);
-      list.value.push(res);
-    });
+    
+    let list: Ref<IlistItem[]> = ref(MenuList.reduce((arr, node: IlistItem) => {
+      node.closed = initPath.includes(node.key); arr.push(node); return arr;
+    }, [] as IlistItem[]));
+    
     const goSystem = () => {
       ElMessageBox.confirm('是否进入后台管理系统？', '进入后台', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }).then(_ => {
         window.open(`${import.meta.env.VITE_APP_SYSTEM_URL}`)
@@ -53,12 +81,16 @@ export default {
     
     let isXinzhou = import.meta.env.VITE_IS_XINZHOU === 'true';
 
-    return { list, initPath, goSystem, isXinzhou }
+    let isIpad = ref(document.body.offsetWidth <= 1080);
+
+    let isSlide = ref(false);
+
+    return { list, initPath, goSystem, isXinzhou, isIpad, isSlide }
   }
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 $--menu--item-height: 45px;
 .lay__menu__container {
   display: flex;
@@ -68,6 +100,15 @@ $--menu--item-height: 45px;
   overflow: hidden;
   background: #fff;
   box-shadow: 2px 0px 8px 0px rgba(45, 113, 183, 0.15);
+  z-index: 9;
+  transition: all .25s;
+  width: 100%;
+  &.is__slide {
+    width: 200px;
+    .lay__menu__slide-btn img {
+      transform: rotate(180deg);
+    }
+  }
   .logo {
     height: 120px;
     background: url('./../assets/menu/logo-bg.png') no-repeat 0 0;
@@ -89,6 +130,46 @@ $--menu--item-height: 45px;
       display: inline-block;
       width: 120px;
       margin-top: 30px;
+    }
+  }
+  .menu-content .menu-cell {
+    height: 44px;
+    line-height: 44px;
+    text-align: center;
+    &.is__current,
+    &:active {
+      background: rgba(26,175,167,.1);
+    }
+    img {
+      width: 22px;
+      display: inline-block;
+      vertical-align: middle;
+    }
+  }
+  .lay__menu__slide-btn {
+    width: 30px;
+    height: 52px;
+    line-height: 52px;
+    text-align: center;
+    border-radius: 10px 0 0 10px;
+    background: #D1D6DF;
+    position: absolute;
+    bottom: 100px;
+    right: 0;
+    img {
+      display: inline-block;
+      width: 17px;
+    }
+  }
+}
+.menu-item-box {
+  margin: 0 -12px;
+  li {
+    line-height: 32px;
+    padding: 0 12px;
+    &.is__current,
+    &:active {
+      background: rgba(26,175,167,.1);
     }
   }
 }
