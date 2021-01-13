@@ -60,10 +60,10 @@ export default {
     const __cloneData = (data) => {
       let questions = cloneDeep(data).map(data => {
         data.questionSources && data.questionSources.length && data.questionSources.map(i => {
-          if (i.provinceCity) {
+          if (i.provinceCity && i.provinceCity.length) {
             i.provinceId = i.provinceCity[0];
-            i.cityId = i.provinceCity[1];
-            i.areaId = i.provinceCity[2];
+            i.cityId = i.provinceCity[1] || null;
+            i.areaId = i.provinceCity[2] || null;
           };
           return i;
         })
