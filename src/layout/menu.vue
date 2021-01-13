@@ -3,6 +3,9 @@
     <div class="logo-xinzhou" v-if="isXinzhou">
       <img src="./../assets/menu/logo-xinzhou.png" alt="logo">
     </div>
+    <div class="logo-xinzhou" v-else-if="isSike" style="height: 90px;">
+      <img src="./../assets/menu/logo-sike.png" width="150" alt="logo">
+    </div>
     <div class="logo" v-else>
       <img src="./../assets/menu/logo.png" alt="logo">
     </div>
@@ -50,10 +53,11 @@ export default {
         window.open(`${import.meta.env.VITE_APP_SYSTEM_URL}`)
       }).catch(_ => {})
     }
-    
-    let isXinzhou = import.meta.env.VITE_IS_XINZHOU === 'true';
 
-    return { list, initPath, goSystem, isXinzhou }
+    let isXinzhou = import.meta.env.VITE_IS_XINZHOU === 'true';
+    let isSike = import.meta.env.VITE_IS_SIKE === 'true';
+
+    return { list, initPath, goSystem, isXinzhou, isSike }
   }
 }
 </script>
