@@ -8,7 +8,7 @@ export interface RouterConf {
   children?: RouterConf[]
 }
 
-const MenuList: RouterConf[] = import.meta.env.VITE_IS_XINZHOU === 'true' ? [
+const MenuListXinzhou: RouterConf[] =[
   {
     title: '首页',
     key: '/index',
@@ -37,7 +37,35 @@ const MenuList: RouterConf[] = import.meta.env.VITE_IS_XINZHOU === 'true' ? [
       }
     ]
   }
-] : [
+]
+
+const MenuListSike :RouterConf[] = [
+  {
+    title: '首页',
+    key: '/index',
+    isLeaf: true,
+    icon: 'home'
+  },
+  {
+    title: '教研中台',
+    key: '/teaching',
+    icon: 'teaching',
+    children: [
+      {
+        title: '题库',
+        key: '/teaching/question',
+        isLeaf: true
+      },
+      {
+        title: '试卷库',
+        key: '/teaching/test-paper',
+        isLeaf: true
+      }
+    ]
+  }
+]
+
+const MenuList: RouterConf[] = [
   {
     title: '首页',
     key: '/index',
@@ -95,4 +123,4 @@ const MenuList: RouterConf[] = import.meta.env.VITE_IS_XINZHOU === 'true' ? [
   }
 ]
 
-export default MenuList;
+export default import.meta.env.VITE_IS_XINZHOU === 'true' ? MenuListXinzhou : import.meta.env.VITE_IS_SIKE === 'true' ? MenuListSike : MenuList;

@@ -94,7 +94,7 @@
           zIndex: 2011,
           props: {
             VresionData,
-            defaultChecked: hasChapters.map(i => i.id)
+            defaultChecked: hasChapters?.map(i => i.id)
           }
         }).then(chapterIds => {
 					axios.post('/courseChapter/add', {chapterIds, courseIndexId: id}, {headers: {'Content-Type': 'application/json'}}).then((res: any) => res.result && ElNotification['success']({title: '成功', message: '添加章节成功'}) && getCourseDto())

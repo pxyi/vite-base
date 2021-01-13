@@ -4,7 +4,9 @@
   "scripts": {
     "serve": "vite serve",
     "build": "typecheck . && vite build",
-    "build:xinzhou": "typecheck . && vite build --mode xinzhou"
+	  "build:xinzhou": "typecheck . && vite build --mode xinzhou",
+	  "build:sike": "typecheck . && vite build --mode sike",
+	  "build:siketest": "typecheck . && vite build --mode siketest"
   },
   "dependencies": {
     "axios": "^0.21.0",

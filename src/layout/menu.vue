@@ -78,8 +78,9 @@ export default {
         window.open(`${import.meta.env.VITE_APP_SYSTEM_URL}`)
       }).catch(_ => {})
     }
-    
+
     let isXinzhou = import.meta.env.VITE_IS_XINZHOU === 'true';
+    let isSike = import.meta.env.VITE_IS_SIKE === 'true';
 
     let isIpad = ref(document.body.offsetWidth <= 1080);
 

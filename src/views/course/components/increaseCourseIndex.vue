@@ -15,7 +15,8 @@
         type: Array
       },
       defaultChecked: {
-        type: Array
+        type: Array,
+        default: () => []
       }
 		},
 		setup(props) {
