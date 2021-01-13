@@ -6,7 +6,7 @@
       <el-button round :disabled="!allowGenerate" v-show='!allowGenerate'>已生成试卷</el-button>
     </div>
     <div class="content">
-      <div class="main" @click="blur"><MainComponent /></div>
+      <div class="main" @click="blur"><MainComponent @editor-ready="editorReady" /></div>
       <div class="toolbar"><ToolbarComponent /></div>
     </div>
   </div>
@@ -28,7 +28,7 @@ export default {
   components: { MainComponent, ToolbarComponent },
   props: ['id', 'close'],
   setup(props) {
-    let loading = ElLoading.service();
+    let loading = ElLoading.service({ customClass: 'loading-z-index' });
 
     store.commit('reset');
 
@@ -44,7 +44,6 @@ export default {
       store.commit('set_data_set', questions);
 
       allowGenerate.value = !res.json.paperId;
-      setTimeout(() => loading.close(), 100);
     });
 
     const blur = () => !isSync.value ? store.dispatch('checked_index_change', -1) : false;
@@ -83,13 +82,20 @@ export default {
       })
     }
 
-    return { blur, save, saveLoading, generatePaper, allowGenerate };
+    /* -------- 子组件富文本完全渲染完毕后关闭loading -------- */
+    let editorReadyNumber = 0;
+    const editorReady = () => {
+      editorReadyNumber === dataset.value.length - 1 ? loading.close() : (editorReadyNumber++);
+    }
+
+    return { blur, save, saveLoading, generatePaper, allowGenerate, editorReady };
 
   }
 }
 </script>
 
 <style lang="scss" scoped>
+:deep(.loading-z-index) { z-index: 3000!important; }
 .container {
   height: 100%;
   display: flex;

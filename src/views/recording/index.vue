@@ -32,7 +32,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="220">
+      <el-table-column label="操作" width="200">
         <template #default="{ row }">
           <div class="btns">
             <el-button type="text" @click="setting(row.id)">设置标签</el-button>
@@ -82,9 +82,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.cus__table__container{
-    padding: 5px 10px 40px;
-  }
+.cus__table__container {
+  padding: 5px 10px 40px;
+}
 .file-name {
   display: flex;
   color: #333;

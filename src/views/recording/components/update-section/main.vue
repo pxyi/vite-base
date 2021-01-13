@@ -12,7 +12,7 @@
       <div class="item" @click.stop :class="{ 'is__focus': focusData?.id === data.id }" v-for="(data, index) in dataset" :key="data.id">
         <div class="mask" @click.stop="focusChange(index)"></div>
         <div class="title">
-          <cus-editor v-model="data.title" hide-border placeholder="请输入题干" :modelValue="data.title" @update:model-value="changeHandle(index, 'title', $event)" />
+          <cus-editor v-model="data.title" hide-border placeholder="请输入题干" :modelValue="data.title" @update:model-value="changeHandle(index, 'title', $event)" @ready="$emit('editor-ready')" />
         </div>
         <div class="answer">
           <h6>答案</h6>
