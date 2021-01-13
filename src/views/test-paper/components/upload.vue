@@ -43,6 +43,7 @@ export default {
     let userId = store.getters.userInfo.user.id;
     let subjectCode = store.getters.subject.code;
 
+    let subjectDefault = [store.getters.subject.parentCode, store.getters.subject.code];
     let nodes: Ref<any[]> = ref([
       {
         label: "学科",
@@ -50,17 +51,10 @@ export default {
         type: "cascader",
         url: "/permission/user/userDataSubjects",
         params: { userId },
-        default: [store.getters.subject.parentCode, store.getters.subject.code],
+        default: subjectDefault,
         rule: { required: true, message: "请选择学科" },
         valueKey: 'code',
-        change: (v) => {
-          axios.post('/permission/user/userDataRules', { userId, subjectCode: v[1] }).then((res: any) => {
-            nodes.value[1].options = res.json.grades;
-            nodes.value[2].options = res.json.years;
-            formRef.value.formGroup.gradeId = null;
-            formRef.value.formGroup.year = null;
-          })
-        }
+        change: (v) => subjectChange(v)
       },
       {
         label: "年级",
@@ -91,6 +85,16 @@ export default {
         options: [ { name: '我的试卷', id: 0 },{ name: '公共试卷', id: 1 } ] 
       }
     ]);
+    const subjectChange = (v) => {
+      axios.post('/permission/user/userDataRules', { userId, subjectCode: v[1] }).then((res: any) => {
+        nodes.value[1].options = res.json.grades;
+        nodes.value[2].options = res.json.years;
+        formRef.value.formGroup.gradeId = null;
+        formRef.value.formGroup.year = null;
+        setTimeout(() => formRef.value.formRef.clearValidate() );
+      })
+    }
+    subjectChange(subjectDefault)
 
     let fileList: Ref<any[]> = ref([]);
     Promise.all(props.files.map(file => {
