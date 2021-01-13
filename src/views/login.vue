@@ -85,8 +85,8 @@ export default {
     let router = useRouter();
     let loading = ref(false);
     let formGroup = reactive({
-      mobile: "15701215206",
-      md5Password: "15701215206",
+      mobile: '',
+      md5Password: '',
     });
     let rules = {
       mobile: [{ required: true, message: "请输入用户名" }],

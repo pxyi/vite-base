@@ -76,8 +76,8 @@ export default {
     let errorIndex = 0;
     const seeFail = () => {
       let errorId = errorList.value[errorIndex]['quesId'];
-      let index = dataset.value.findIndex((d: {id}) => d.id === errorId)
-      index > -1 && store.commit('set_checked_index', index > -1);
+      let index = dataset.value.findIndex((d: {id}) => d.id === errorId);
+      index > -1 && store.commit('set_checked_index', index);
       errorIndex = errorIndex < errorList.value.length - 1 ? errorIndex + 1 : 0;
       nextTick(() => {
         let top = (document.querySelector('.main-content .item.is__focus') as HTMLElement).offsetTop;

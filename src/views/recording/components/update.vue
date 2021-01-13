@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { ref, computed, inject, provide, nextTick } from 'vue';
+import { ref, computed, inject, provide } from 'vue';
 import { ElMessage, ElLoading } from 'element-plus';
 import store from './store';
 import axios from 'axios';

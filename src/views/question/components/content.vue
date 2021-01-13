@@ -30,7 +30,7 @@
           </div>
           <div class="flex-box" v-show="data.showAnalysis">
             <div class="label">解析</div>
-            <div class="flex-main" v-html="data.analysis"></div>
+            <div class="flex-main"><span v-html="data.analysis" v-if="data.analysis" /><span v-else>暂无解析</span></div>
           </div>
           <div class="footer">
             <p>{{ data.questionTypeName }}</p>
@@ -121,7 +121,7 @@ export default {
             title: __strToHtml(n),
             createTime: n.createTime.split('-').join('/'),
             difficult: difficultFilter(n.difficult),
-            answer: n.rightAnswer ? n.rightAnswer.map(a => a.content).join('、') : '-'
+            answer: n.rightAnswer ? n.rightAnswer.map(a => a[n.basicQuestionType === 1 ? 'name' : 'content']).join('、') : '-'
            }
         })
       );
@@ -230,6 +230,7 @@ export default {
           text-align: center;
           vertical-align: bottom;
           font-size: 16px;
+          transform: scale(.8);
           &.iconbukandaan {
             font-size: 12px;
           }
