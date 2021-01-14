@@ -49,7 +49,7 @@
               <i class="iconfont iconshanchu" :class="{ 'is__disabled': paperInfo.paperCharpts.length === 1 }" @click="deleteQuestType(questionType.id)" />
             </div>
           </div>
-          <draggable v-model="questionType.questions" :disabled="isPreview" tag="transition-group" animation="250" item-key="id">
+          <draggable v-model="questionType.questions" :disabled="isPreview" tag="transition-group" animation="250" item-key="questionId">
             <template #item="{ element, index }">
               <div class="item">
                 <i class="el-icon-plus" v-if="!isPreview" />

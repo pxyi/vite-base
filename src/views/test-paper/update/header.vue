@@ -13,7 +13,7 @@
         </ul>
       </div>
       <div class="btns">
-        <el-button round @click="$router.push('/teaching/question')" v-if="!isPreview">题库</el-button>
+        <el-button round @click="addPaper" v-if="!isPreview">添加试题</el-button>
         <el-button round @click="download">下载</el-button>
       </div>
     </div>
@@ -22,11 +22,13 @@
 <script lang="ts">
 import { ref, Ref, reactive, inject,  computed } from 'vue';
 import Modal from './../../../utils/modal';
+import Drawer from './../../../utils/drawer';
 import downloadComponent from './../components/download.vue';
 import store from './store';
 import axios from 'axios';
 import emitter from './../../../utils/mitt';
-import { debounce } from 'lodash'
+import { debounce, cloneDeep } from 'lodash';
+import addPaperComponent from './components/add-paper.vue';
 
 export default {
   setup(props) {
@@ -75,7 +77,31 @@ export default {
         isChanged.value = false;
       })
     }
-    return { classType, classList, download, isPreview, save, loading, isChanged }
+
+    const addPaper = () => {
+      Drawer.create({ 
+        title: '选择试题',
+        closable: false,
+        width: 'calc(100% - 200px)',
+        component: addPaperComponent,
+        props: { questionList: paperInfo.value.paperCharpts }
+      }).then(res => {
+        let newQuestList = cloneDeep(res);
+        let currentQuestList = cloneDeep(paperInfo.value.paperCharpts);
+        newQuestList.map(quest => {
+          let index = currentQuestList.findIndex(node => node.title === quest.questionTypeName);
+          index > -1 ? currentQuestList[index].questions.push({ question: quest, score: 0, questionId: quest.id }) : currentQuestList.push({
+            title: quest.questionTypeName,
+            questions: [ { question: quest, score: 0, questionId: quest.id } ]
+          })
+        })
+        console.log(currentQuestList)
+        store.commit('set_paper_charpts', currentQuestList);
+      });
+    }
+
+
+    return { classType, classList, download, isPreview, save, loading, isChanged, addPaper }
   }
 }
 </script>

@@ -18,9 +18,17 @@
     </div>
     <cus-skeleton :loading="loading">
       <div class="section">
-        <div class="item" v-for="data in dataset" :key="data.id" @click="isSelected && checkedChange(data)" :class="{'is__checked': isSelected && !!checkedList.find(n => n.id === data.id), 'is__selected': isSelected }">
+        <div class="item" 
+          v-for="data in dataset" :key="data.id" 
+          @click="isSelected && checkedChange(data)" 
+          :class="{
+            'is__checked': isSelected && !!checkedList.find(n => n.id === data.id), 
+            'is__selected': isSelected,
+            'is__disabled': isSelected && disabledList.find(id => id === data.id)
+          }"
+        >
           <div class="update-icon" @click="update(data.id)" v-if="!isSelected"><i class="el-icon-edit-outline" /></div>
-          <div class="update-icon" v-else><el-checkbox :modelValue="!!checkedList.find(n => n.id === data.id)" /></div>
+          <div class="update-icon" v-else><el-checkbox :disabled="isSelected && disabledList.find(id => id === data.id)" :modelValue="!!checkedList.find(n => n.id === data.id) || !!disabledList.find(id => id === data.id)" /></div>
           <div class="content-text">
             <div class="title" v-html="data.title"></div>
           </div>
@@ -83,6 +91,10 @@ export default {
     isSelected: {         // true => 选择试题页面  fale => 题库首页
       type: Boolean,
       default: () => false
+    },
+    disabledList: {
+      type: Array,
+      default: () => []
     }
   },
   setup(props, { emit }) {
@@ -250,6 +262,10 @@ export default {
       transition: all .25s;
       &.is__selected {
         cursor: pointer;
+      }
+      &.is__disabled {
+        pointer-events: none;
+        background: #f9f9f9;
       }
       &.is__checked {
         border-color: #19AEA5;
