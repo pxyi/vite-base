@@ -1,6 +1,6 @@
 <template>
   <div class="paper_container" :class="{ 'is__preview': isPreview }">
-    <div class="paper_content">
+    <div class="paper_content" ref="paperContentRef">
       <div class="paper-tool-header">
         <div class="sealing" v-show="paperInfo.showSealing"><img src="/src/assets/test-paper/sealing.png" alt="密封线"></div>
         <div class="cover-map" v-show="paperInfo.showOrgInfo">
@@ -51,7 +51,7 @@
           </div>
           <draggable v-model="questionType.questions" :disabled="isPreview" tag="transition-group" animation="250" item-key="questionId">
             <template #item="{ element, index }">
-              <div class="item" :data-uuid="`${idx}-${index}`">
+              <div class="item" :data-id="element.id" :data-uuid="`${idx}-${index}`">
                 <i class="el-icon-plus" v-if="!isPreview" />
                 <div class="title" :data-index="`${index + 1}.`"><div v-html="element.question.title" v-if="isPreview && classType !== 3 || !isPreview"></div></div>
                 <div class="content" v-question="element.question" v-if="isPreview && classType !== 3 || !isPreview"></div>
@@ -91,7 +91,7 @@
 </template>
 
 <script lang="ts">
-import { ref, Ref, computed, inject } from 'vue';
+import { ref, Ref, computed, inject, watch, nextTick} from 'vue';
 import draggable from 'vuedraggable';
 import store from './store';
 import { toChinesNum } from './utils';
@@ -100,6 +100,7 @@ import QuestionDirective from './../../utils/question.directive';
 import Modal from './../../../utils/modal';
 import ExchangeComponent from './components/exchange.vue';
 import emitter from './../../../utils/mitt';
+import { ScrollTop } from './../../../utils/base'
 
 const exchangeArrayIndex = (arr, index1, index2) => {
   arr[index1] = arr.splice(index2, 1, arr[index1])[0];
@@ -111,6 +112,11 @@ export default {
     question: QuestionDirective
   },
   setup(props) {
+    const paperContentRef = ref(null);
+    watch(() => store.state.handelSortItemId, (value) => {
+      nextTick(() => ScrollTop(paperContentRef.value, document.querySelector(`div[data-id='${value}']`).offsetTop, 200))
+    })
+
     let paperInfo: Ref<any> = computed(() => store.state.paperInfo);
 
     let isPreview = inject('preview');
@@ -158,7 +164,7 @@ export default {
       })
     }
 
-    return { paperInfo, toChinesNum, deleteQuestType, deleteQuest, moveType, moveQuestion, paperScoreData, classType, questExchange, isPreview, emitter }
+    return { paperInfo, toChinesNum, deleteQuestType, deleteQuest, moveType, moveQuestion, paperScoreData, classType, questExchange, isPreview, emitter, paperContentRef }
   }
 }
 </script>
