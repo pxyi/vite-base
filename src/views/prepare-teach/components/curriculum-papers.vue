@@ -126,7 +126,7 @@ export default {
     const request = async (type) =>{
       let res = await axios.post<any,AxResponse>('/admin/prepareLesson/queryMaterialByCourseIndexId', { courseIndexId: props.id, type: type })
       if(res.result) {
-        allFileList.value = res.json
+        allFileList.value = res.json.sort((a, b) => a.resCreateTime - b.resCreateTime)
       }
     }
     request('')

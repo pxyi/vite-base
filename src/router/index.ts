@@ -14,7 +14,7 @@ const AsyncComponent = (loader) => defineAsyncComponent({
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    redirect: '/index',
+    redirect: '/home',
     component: () => import('/@/layout/base.vue'),
     beforeEnter: (to, from, next) => {
       if (store.getters.userInfo) {
@@ -26,8 +26,8 @@ const routes: RouteRecordRaw[] = [
     },
     children: [
       {
-        path: 'index',
-        name: 'index',
+        path: 'home',
+        name: 'home',
         meta: { title: '首页' },
         component: AsyncComponent(() => import('/@/views/index/index.vue'))
       },
