@@ -12,7 +12,7 @@
         <div class="source-control">
           <el-cascader placeholder="选择省市区" clearable size="medium"
             v-model="s.provinceCity"
-            :props="{ lazy: true, lazyLoad: getProvinceCity, label: 'name', value: 'id' }"
+            :props="{ lazy: true, lazyLoad: getProvinceCity, label: 'name', value: 'id', checkStrictly: true }"
             @change="getSchoolList($event, s, idx)"
           />
         </div>
@@ -69,18 +69,13 @@ export default {
     }
 
     const getSchoolList = async (e, source, idx) => {
-      if (e && e.length) {
-        if(questionSources.value[idx]){
-          questionSources.value.map((item) => {
-            questionSources.value[idx].publicSchoolId = null
-          })
-        }
+      source.schoolList = [];
+      if (e && e[2]) {
         let res = await axios.post<null, AxResponse>('/admin/publicSchool/queryAll', { areaId: e[2] });
         source.schoolList = res.json;
-      } else {
-        source.schoolList = [];
       }
-      instance?.proxy?.$forceUpdate();
+      questionSources.value[idx] && (questionSources.value[idx].publicSchoolId = null);
+      instance?.proxy?.$forceUpdate()
     }
     const addSource = () => {
       questionSources.value.push({
