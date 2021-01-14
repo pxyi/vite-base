@@ -11,7 +11,7 @@
             <template v-else>
               <el-popover placement="right-start" :width="100" :title="menu.title" trigger="hover">
                 <ul class="menu-item-box">
-                  <li v-for="item in menu.children" :key="item.key" 
+                  <li v-for="item in menu.children" :key="item.key"
                     @click="!$route.path.includes(item.key) && $router.push(item.key)"
                     :class="{ 'is__current': $route.path.includes(item.key) }"
                   >{{ item.title }}</li>
@@ -27,6 +27,9 @@
     <template v-else>
       <div class="logo-xinzhou" v-if="isXinzhou">
         <img src="./../assets/menu/logo-xinzhou.png" alt="logo">
+      </div>
+      <div class="logo-xinzhou" v-else-if="isSike" style="height: 90px;">
+        <img src="./../assets/menu/logo-sike.png" width="150" alt="logo">
       </div>
       <div class="logo" v-else>
         <img src="./../assets/menu/logo.png" alt="logo">
@@ -86,7 +89,7 @@ export default {
       return arr;
     }, [] as IlistItem[]);
     let list: Ref<IlistItem[]> = ref(dynamicRoutes);
-    
+
     const goSystem = () => {
       ElMessageBox.confirm('是否进入后台管理系统？', '进入后台', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }).then(_ => {
         window.open(`${import.meta.env.VITE_APP_SYSTEM_URL}`)
@@ -100,7 +103,7 @@ export default {
 
     let isSlide = ref(false);
 
-    return { list, initPath, goSystem, isXinzhou, isIpad, isSlide }
+    return { list, initPath, goSystem, isXinzhou, isIpad, isSlide, isSike }
   }
 }
 </script>
