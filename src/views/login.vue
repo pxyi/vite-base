@@ -84,9 +84,10 @@ export default {
     let store = useStore();
     let router = useRouter();
     let loading = ref(false);
+    let rememberAccount = window.localStorage.getItem('account') ? JSON.parse(window.localStorage.getItem('account')!) : {};
     let formGroup = reactive({
-      mobile: '',
-      md5Password: '',
+      mobile: rememberAccount.mobile,
+      md5Password: rememberAccount.md5Password,
     });
     let rules = {
       mobile: [{ required: true, message: "请输入用户名" }],
@@ -99,6 +100,7 @@ export default {
         md5Password: md5(formGroup.md5Password),
       };
       loading.value = true;
+      if (remember.value) { window.localStorage.setItem('account', JSON.stringify(formGroup)) } else { window.localStorage.removeItem('account') }
       let res: AxResponse = await axios.post("/permission/auth/login", params);
       if (res.result) {
         store.commit(SET_USER_INFO, res.json);

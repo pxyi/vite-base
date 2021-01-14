@@ -15,9 +15,9 @@ const mutations = {
     window.localStorage.setItem('userinfo', JSON.stringify(payload))
   },
   [ REMOVE_USER_INFO ] (state: UserState) {
-    state.userInfo = null;
     window.localStorage.removeItem('userinfo');
     window.localStorage.removeItem('token');
+    setTimeout(() => state.userInfo = null );
   }
 }
 

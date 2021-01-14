@@ -21,7 +21,7 @@
 
     <div ref="slot" class="cus__slot"></div>
 
-    <div class="header-user">
+    <div class="header-user" v-if="userInfo">
       <el-dropdown @command="commandList.get($event)()">
         <div class="el-dropdown-link">
           <span class="user-name">Hi，{{ userInfo.username }}</span>
@@ -81,9 +81,8 @@ export default {
     let router = useRouter();
     let store = useStore();
 
-    let userInfo = computed(() => store.getters.userInfo.user);
+    let userInfo = computed(() => store.getters?.userInfo?.user);
 
-    let breadcrumb = computed( () => route.matched.reduce((t: string[], c) => { c.meta.title && t.push(c.meta.title); return t; }, []) );
 		let visible = ref(false)
 
     /* 接受组件传递内容插入至 slot, 路由变更时，清空 slot 内容 */
@@ -127,23 +126,13 @@ export default {
       emitter.off('effect', __setFns );
     });
 
-    return { breadcrumb, slot, commandList, subjectList, subject, setSubject, visible, userInfo }
+    return { slot, commandList, subjectList, subject, setSubject, visible, userInfo }
   }
 }
 </script>
 <style lang="scss" scoped>
 .lay__header__container {
   display: flex;
-  .el-breadcrumb {
-    .el-breadcrumb__inner,
-    .el-breadcrumb__separator {
-      color: #fff;
-      &:hover {
-        color: #fff;
-      }
-    }
-    line-height: 60px;
-  }
   .header-user {
     .user-name, .el-icon-arrow-down {
       color: #fff;
