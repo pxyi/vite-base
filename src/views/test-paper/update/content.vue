@@ -91,7 +91,7 @@
 </template>
 
 <script lang="ts">
-import { ref, Ref, computed, inject } from 'vue';
+import { ref, Ref, computed, inject, watch, nextTick} from 'vue';
 import draggable from 'vuedraggable';
 import store from './store';
 import { toChinesNum } from './utils';
@@ -111,6 +111,7 @@ export default {
     question: QuestionDirective
   },
   setup(props) {
+
     let paperInfo: Ref<any> = computed(() => store.state.paperInfo);
 
     let isPreview = inject('preview');

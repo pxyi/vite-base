@@ -24,7 +24,7 @@
     <div class="header-user" v-if="userInfo">
       <el-dropdown @command="commandList.get($event)()">
         <div class="el-dropdown-link">
-          <span class="user-name">Hi，{{ userInfo.username }}</span>
+          <span class="user-name">Hi，{{ userInfo.nickname }}</span>
           <i class="el-icon-arrow-down"></i>
         </div>
         <template #dropdown>

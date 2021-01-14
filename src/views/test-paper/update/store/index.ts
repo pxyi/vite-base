@@ -13,7 +13,7 @@ export default new Vuex.Store({
     set_paper_info(state, payload) {
       emitter.emit('test-paper-change');
       state.paperInfo = cloneDeep(payload);
-    }, 
+    },
     set_paper_charpts(state, payload) {
       emitter.emit('test-paper-change');
       state.paperInfo.paperCharpts = cloneDeep(payload);
