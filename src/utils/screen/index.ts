@@ -22,7 +22,7 @@ const create = (component, props = {}) => {
 
     let closeBtn = createElement('div', { 
       className: 'el-icon-back', 
-      style: { fontSize: '28px', position: 'fixed', top: '15px', left: '30px', color: '#fff', cursor: 'pointer', zIndex: 1 },
+      style: { fontSize: '28px', position: 'absolute', top: '15px', left: '30px', color: '#fff', cursor: 'pointer', zIndex: 1 },
       on: { click: () => remove() }
     })
 

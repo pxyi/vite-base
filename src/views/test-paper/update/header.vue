@@ -88,10 +88,11 @@ export default {
       }).then(res => {
         let newQuestList = cloneDeep(res);
         let currentQuestList = cloneDeep(paperInfo.value.paperCharpts);
-        newQuestList.map(quest => {
+        newQuestList.map((quest, idx) => {
           let index = currentQuestList.findIndex(node => node.title === quest.questionTypeName);
           index > -1 ? currentQuestList[index].questions.push({ question: quest, score: 0, questionId: quest.id }) : currentQuestList.push({
             title: quest.questionTypeName,
+            id: `${idx}${Date.now()}`,
             questions: [ { question: quest, score: 0, questionId: quest.id } ]
           })
         })

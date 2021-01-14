@@ -16,12 +16,12 @@
           <div class="td">{{ toChinesNum(index + 1) }}. {{ paper.title }}</div>
           <div class="td">
             <div class="box">
-              <el-input-number size="mini" controls-position="right" :min="0" :max="99" v-model="paper.avgScore" @change="paperTypeScoreChange(paper, $event)" />
+              <el-input-number size="mini" controls-position="right" :min="0" :max="99" v-model="paper.avgScore" @change="paperTypeScoreChange(index, $event)" />
               <div class="append">分/题</div>
             </div>
           </div>
         </div>
-        <div class="tr" v-for="(quest, idx) in paper.questions" :key="quest.id">
+        <div class="tr" v-for="(quest, idx) in paper.questions" :key="quest.questionId">
           <div class="td">{{ idx + 1 }}</div>
           <div class="td"><el-input-number v-model="quest.score" @change="emitter.emit('test-paper-change')" size="mini" controls-position="right" :min="0" :max="99" /></div>
         </div>
@@ -40,19 +40,14 @@ export default {
   setup() {
     let paperCharpts = computed({
       get: () => store.getters.paperCharpts,
-      set: (val) => store.commit('set_paper_charpts', val)
+      set: (val) => {store.commit('set_paper_charpts', val); console.log(val)}
     });
     let questionTotal = computed(() => paperCharpts.value.reduce((total, n) => total += n.questions.length, 0));
 
     let questionScoreTotal = computed(() => paperCharpts.value.reduce((total, n) => { n.questions.map(q => { total += q.score || 0 }); return total}, 0));
 
-    const paperTypeScoreChange = (quest, val) => {
-      paperCharpts.value = paperCharpts.value.map(nodes => {
-        if (nodes.id === quest.id) {
-          nodes.questions = nodes.questions.map(n => { n.score = val; return n; })
-        }
-        return nodes;
-      });
+    const paperTypeScoreChange = (index, val) => {
+      paperCharpts.value[index].questions = paperCharpts.value[index].questions.map(n => { n.score = val; return n; });
     }
 
     return { paperCharpts, toChinesNum, questionTotal, paperTypeScoreChange, questionScoreTotal, emitter }
