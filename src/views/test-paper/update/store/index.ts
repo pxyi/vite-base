@@ -7,8 +7,7 @@ export default new Vuex.Store({
     paperInfo: {
       paperCharpts: []
     },
-    classType: 1,
-    handelSortItemId: null
+    classType: 1
   },
   mutations: {
     set_paper_info(state, payload) {
@@ -21,13 +20,9 @@ export default new Vuex.Store({
     },
     set_class_type(state, payload) {
       state.classType = payload
-    },
-    set_handelSortItem_id(state, payload) {
-      state.handelSortItemId = payload;
     }
   },
   getters: {
-    paperCharpts: state => state.paperInfo.paperCharpts,
-    handelSortItemId: state => state.handelSortItemId
+    paperCharpts: state => state.paperInfo.paperCharpts
   }
 });

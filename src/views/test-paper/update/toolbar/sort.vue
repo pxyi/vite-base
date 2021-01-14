@@ -33,6 +33,7 @@ import store from './../store';
 import { toChinesNum } from './../utils';
 import { cloneDeep } from 'lodash';
 import emitter from './../../../../utils/mitt';
+import { ScrollTop } from "../../../../utils/base";
 
 export default {
   components: { draggable },
@@ -50,8 +51,8 @@ export default {
     const sortChange = () => emitter.emit('test-paper-change');
 
     const scrollTo = (idx, index) => {
-        let top = (document.querySelector(`.paper_content .item[data-uuid="${idx}-${index}"]`) as HTMLElement).offsetTop;
-        (document.querySelector('.paper_content') as HTMLElement).scrollTop = top - 0;
+      let top = (document.querySelector(`.paper_content .item[data-uuid="${idx}-${index}"]`) as HTMLElement).offsetTop;
+      ScrollTop(document.querySelector('.paper_content'), top, 200);
     }
 
     return { paperCharpts, toChinesNum, sortHandle, sortChange, scrollTo }
