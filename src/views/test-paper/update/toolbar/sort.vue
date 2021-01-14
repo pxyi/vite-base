@@ -52,7 +52,7 @@ export default {
 
     const scrollTo = (idx, index) => {
       let top = (document.querySelector(`.paper_content .item[data-uuid="${idx}-${index}"]`) as HTMLElement).offsetTop;
-      ScrollTop(document.querySelector('.paper_content'), top, 200);
+      ScrollTop(document.querySelector('.paper_content'), top, 50, 2000);
     }
 
     return { paperCharpts, toChinesNum, sortHandle, sortChange, scrollTo }
