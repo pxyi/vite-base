@@ -9,38 +9,16 @@
     <div class="login__content">
       <h1>登录</h1>
       <p>自主、可配、安全、高效</p>
-      <el-form
-        :model="formGroup"
-        :rules="rules"
-        ref="formRef"
-        class="login__form"
-      >
+      <el-form :model="formGroup" :rules="rules" ref="formRef" class="login__form">
         <el-form-item prop="mobile">
-          <el-input
-            placeholder="请输入用户名"
-            prefix-icon="el-icon-mobile-phone"
-            v-model="formGroup.mobile"
-          />
+          <el-input placeholder="请输入用户名" prefix-icon="el-icon-mobile-phone" v-model="formGroup.mobile" />
         </el-form-item>
         <el-form-item prop="md5Password">
-          <el-input
-            placeholder="请输入密码"
-            :type="showPassword ? 'test' : 'password'"
-            prefix-icon="el-icon-lock"
-            v-model="formGroup.md5Password"
-          >
+          <el-input placeholder="请输入密码" :type="showPassword ? 'test' : 'password'" prefix-icon="el-icon-lock" v-model="formGroup.md5Password">
             <template #suffix>
               <div @click="showPassword = !showPassword">
-                <img
-                  src="/src/assets/login-password-hide.png"
-                  class="password__icon"
-                  v-if="!showPassword"
-                />
-                <img
-                  src="/src/assets/login-password-show.png"
-                  class="password__icon"
-                  v-if="showPassword"
-                />
+                <img src="/src/assets/login-password-hide.png" class="password__icon" v-if="!showPassword" />
+                <img src="/src/assets/login-password-show.png" class="password__icon" v-if="showPassword" />
               </div>
             </template>
           </el-input>
@@ -51,13 +29,7 @@
             <span>记住密码</span>
           </div>
         </div>
-        <div
-          class="login__submit"
-          :class="{ is__disabled: loading }"
-          @click="login"
-        >
-          登录
-        </div>
+        <div class="login__submit" :class="{ is__disabled: loading }" @click="login">登录</div>
       </el-form>
       <div class="login__desc">
         <span>忘记密码请联系管理员哟！</span>
@@ -102,24 +74,16 @@ export default {
       loading.value = true;
       if (remember.value) { window.localStorage.setItem('account', JSON.stringify(formGroup)) } else { window.localStorage.removeItem('account') }
       let res: AxResponse = await axios.post("/permission/auth/login", params);
-      if (res.result) {
+      loading.value = false;
+      if (res && res.result) {
         store.commit(SET_USER_INFO, res.json);
         localStorage.setItem("token", res.json.accessToken);
         router.push("/index");
       } else {
         ElMessage.warning(res.msg);
       }
-      loading.value = false;
     };
-    return {
-      showPassword,
-      remember,
-      formRef,
-      formGroup,
-      rules,
-      login,
-      loading,
-    };
+    return { showPassword, remember, formRef, formGroup, rules, login, loading };
   },
 };
 </script>

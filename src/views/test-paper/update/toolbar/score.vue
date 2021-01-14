@@ -40,7 +40,7 @@ export default {
   setup() {
     let paperCharpts = computed({
       get: () => store.getters.paperCharpts,
-      set: (val) => {store.commit('set_paper_charpts', val); console.log(val)}
+      set: (val) => store.commit('set_paper_charpts', val)
     });
     let questionTotal = computed(() => paperCharpts.value.reduce((total, n) => total += n.questions.length, 0));
 
@@ -48,6 +48,7 @@ export default {
 
     const paperTypeScoreChange = (index, val) => {
       paperCharpts.value[index].questions = paperCharpts.value[index].questions.map(n => { n.score = val; return n; });
+      paperCharpts.value = [ ...paperCharpts.value ];
     }
 
     return { paperCharpts, toChinesNum, questionTotal, paperTypeScoreChange, questionScoreTotal, emitter }

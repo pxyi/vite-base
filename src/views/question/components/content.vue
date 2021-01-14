@@ -49,7 +49,7 @@
               <p><i @click="data.showAnalysis = !data.showAnalysis">解析</i></p>
               <!-- <p><i @click="similarPreview(data.id)">相似题</i></p> -->
 
-              <!-- <a @click.prevent="addCart(data)" :class="{ active: !!cartList.find(i => i.id === data.id) }" v-if="userId === data.creatorId" /> -->
+              <a class="cart-icon" @click.prevent="addCart(data)" :class="{ active: !!cartList.find(i => i.id === data.id) }" />
 
               <a @click="remove(data)" v-if="userId === data.creatorId" :class="{ 'is__loading': data.loading }">
                 <i class="el-icon-loading" v-if="data.loading" />
@@ -74,6 +74,8 @@
       </div>
     </cus-skeleton>
   </div>
+
+  <TestBasketComponent v-if="!isSelected" :question-list="cartList" />
 </template>
 
 <script lang="ts">
@@ -84,6 +86,7 @@ import Modal from './../../../utils/modal';
 import updateComponent from './update.vue';
 import { ElMessage } from 'element-plus';
 import { useStore } from 'vuex';
+import TestBasketComponent from './test-basket.vue';
 const difficultFilter = (v) => ([{ name: '易', id: 11 }, { name: '较易', id: 12 }, { name: '中档', id: 13 }, { name: '较难', id: 14 }, { name: '难', id: 15 }].find(i => i.id === v)?.name);
 
 export default {
@@ -97,6 +100,7 @@ export default {
       default: () => []
     }
   },
+  components: { TestBasketComponent },
   setup(props, { emit }) {
     let store = useStore()
     let userId = computed(() => store.getters.userInfo.user.id)
@@ -184,7 +188,13 @@ export default {
       request();
     }
 
-    return { request, loading, dataset, pageAorder, orderChange, similarPreview, update, showAnswer, remove, userId, checkedList, checkedChange }
+    let cartList: Ref<any[]> = ref([]);
+    const addCart = (data) => {
+      let index = cartList.value.findIndex(d => d.id === data.id);
+      index > -1 ? cartList.value.splice(index, 1)  : cartList.value.push(data);
+    }
+
+    return { request, loading, dataset, pageAorder, orderChange, similarPreview, update, showAnswer, remove, userId, checkedList, checkedChange, cartList, addCart }
   }
 }
 </script>
@@ -371,7 +381,7 @@ export default {
               pointer-events: none;
               opacity: .6;
             }
-            &.active {
+            &.cart-icon.active {
               color: #FAAD14;
               border: solid 1px #FAAD14;
               background: #FFF7E9;
@@ -379,7 +389,7 @@ export default {
                 content: '移出试题篮'
               }
             }
-            &:not(:last-child)::before {
+            &.cart-icon::before {
               content: '加入试题篮';
               display: inline-block;
             }
