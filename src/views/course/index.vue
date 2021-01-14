@@ -14,7 +14,7 @@
 		></cus-condition>
 		<cus-table :auto-request="false" :default="params" ref="tableRef" url="/course/queryByPageV2">
 			<template #default>
-				<el-table-column label="课程名称" property="courseName" width="300">
+				<el-table-column label="课程名称" property="courseName">
 					<template v-slot:default="scope">
 						<div class="courseName">
 							<div class="img-box">
@@ -24,18 +24,18 @@
 						</div>
 					</template>
 				</el-table-column>
-				<el-table-column label="课次数" property="courseIndexNum">
+				<el-table-column label="课次数" property="courseIndexNum" width="80">
 					<template v-slot:default="scope">
 						<div class="courseName">
 							<p>{{scope.row.courseIndexNum}}讲</p>
 						</div>
 					</template>
 				</el-table-column>
-				<el-table-column label="课程分类" property="courseTypeName"></el-table-column>
-				<el-table-column label="年级" property="gradeName"></el-table-column>
-				<el-table-column label="学期" property="semesterName"></el-table-column>
-				<el-table-column label="年份" property="yearName"></el-table-column>
-				<el-table-column label="操作" width="280">
+				<el-table-column label="课程分类" property="courseTypeName" width="80"></el-table-column>
+				<el-table-column label="年级" property="gradeName" width="100"></el-table-column>
+				<el-table-column label="学期" property="semesterName" width="80"></el-table-column>
+				<el-table-column label="年份" property="yearName" width="80"></el-table-column>
+				<el-table-column label="操作" width="200">
 					<template v-slot:default="scope">
 						<el-button v-permissions="'update'" @click="openModel( scope.row, '/course/modify')" size="small" type="text">修改</el-button>
 						<el-divider direction="vertical" v-permissions="'update'"></el-divider>
