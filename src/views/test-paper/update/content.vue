@@ -51,7 +51,7 @@
           </div>
           <draggable v-model="questionType.questions" :disabled="isPreview" tag="transition-group" animation="250" item-key="questionId">
             <template #item="{ element, index }">
-              <div class="item">
+              <div class="item" :data-uuid="`${idx}-${index}`">
                 <i class="el-icon-plus" v-if="!isPreview" />
                 <div class="title" :data-index="`${index + 1}.`"><div v-html="element.question.title" v-if="isPreview && classType !== 3 || !isPreview"></div></div>
                 <div class="content" v-question="element.question" v-if="isPreview && classType !== 3 || !isPreview"></div>

@@ -21,7 +21,12 @@ export const questionFormat = (quest) => {
   if (data.basicQuestionType === 10) {
     data.title = `${data.title}<br>${data.option.map(i => `${i.name}.<br>${i.childs.map(c => `${c.name}.${c.content}`).join('<br>')}`).join('<br>')}`
   }
-  data.questionSources && data.questionSources.map(i => { i.provinceCity = i.areaId ? [i.provinceId, i.cityId, i.areaId] : null; return i; });
-
+  data.questionSources = data.questionSources ? data.questionSources.map(i => {
+    let provinceCity: string[] = [];
+    i.cityId && (provinceCity = [i.provinceId, i.cityId]);
+    i.areaId && provinceCity.push(i.areaId)
+    i.provinceCity = provinceCity;
+    return i; 
+  }) : [];
   return data;
 }

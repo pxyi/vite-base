@@ -32,7 +32,7 @@ export default {
       let sourceGroup = cloneDeep(sourceRef.value.questionSources);
       if (contentGroup) {
          sourceGroup && sourceGroup.map(s => {
-          if (s.provinceCity && s.provinceCity[2]) {
+          if (s.provinceCity) {
             let [ provinceId, cityId, areaId ] = s.provinceCity;
             s.provinceId = provinceId; s.cityId = cityId; s.areaId = areaId;
           }
@@ -63,10 +63,13 @@ export default {
     const __init = (info) => {
       let { knowledgePoints, type, difficult, year, source, category, title, analysis, basicQuestionType, gradeId} = info;
       info.questionSources && info.questionSources.map(s => {
-        if (s.areaId) {
-          s.provinceCity = [ s.provinceId, s.cityId, s.areaId ];
-          sourceRef.value.getSchoolList(s.provinceCity, s);
-        }
+        let provinceCity: string[] = [];
+        s.cityId && (provinceCity = [s.provinceId, s.cityId]);
+        s.areaId && provinceCity.push(s.areaId)
+        s.provinceCity = provinceCity;
+        
+        s.areaId && sourceRef.value.getSchoolList(s.provinceCity, s);
+        
         return s;
       })
 

@@ -16,8 +16,8 @@
         </div>
         <div class="content">
           <draggable v-model="element.questions" @update:modelValue="sortChange" tag="transition-group" animation="250" item-key="id">
-            <template #item="{ index }">
-              <div class="item">{{ index + 1 }}</div>
+            <template #item="data">
+              <div class="item" @click="scrollTo(index, data.index)">{{ data.index + 1 }}</div>
             </template>
           </draggable>
         </div>
@@ -47,9 +47,14 @@ export default {
       data[index].questions = data[index].questions.sort((a, b) => (type === 'down' ? (a.question.difficult - b.question.difficult) : (b.question.difficult - a.question.difficult) )  );
       store.commit('set_paper_charpts', data);
     }
-    const sortChange = () => emitter.emit('test-paper-change')
+    const sortChange = () => emitter.emit('test-paper-change');
 
-    return { paperCharpts, toChinesNum, sortHandle, sortChange }
+    const scrollTo = (idx, index) => {
+        let top = (document.querySelector(`.paper_content .item[data-uuid="${idx}-${index}"]`) as HTMLElement).offsetTop;
+        (document.querySelector('.paper_content') as HTMLElement).scrollTop = top - 0;
+    }
+
+    return { paperCharpts, toChinesNum, sortHandle, sortChange, scrollTo }
   }
 }
 </script>
