@@ -26,15 +26,15 @@
                 <i class="el-icon-more" />
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item command="rename">重命名</el-dropdown-item>
-                    <el-dropdown-item command="remove">删除</el-dropdown-item>
-                    <el-dropdown-item command="download">下载</el-dropdown-item>
+                    <el-dropdown-item command="rename" v-permissions="'teaching/database#rename'">重命名</el-dropdown-item>
+                    <el-dropdown-item command="remove" v-permissions="'teaching/database#delete'">删除</el-dropdown-item>
+                    <el-dropdown-item command="download" v-permissions="'teaching/database#download'">下载</el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
               </el-dropdown>
               <div class="btns">
                 <div @click="preview(data)"><i class="el-icon-search"/><span>预览</span></div>
-                <div @click="addLesson(data.id)"><span>添加到备课</span></div>
+                <div @click="addLesson(data.id)" v-permissions="'teaching/database#addToCourse'"><span>添加到备课</span></div>
               </div>
             </div>
           </div>

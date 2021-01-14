@@ -8,7 +8,7 @@
 		<div class="search">
 			<el-input clearable placeholder="按课程名称搜索" prefix-icon="el-icon-search" v-model="searchText" @keydown.enter="searchHandle" />
 		</div>
-		<div class="btns">
+		<div class="btns" v-permissions="'teaching/course#add'">
 			<el-button round @click="$emit('add')">添加课程</el-button>
 		</div>
 	</div>

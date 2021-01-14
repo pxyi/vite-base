@@ -8,7 +8,7 @@
     <div class="search">
       <el-input clearable placeholder="按题干搜索" prefix-icon="el-icon-search" v-model="searchText" @keydown.enter="searchHandle" @clear="searchHandle" />
     </div>
-    <div class="btns">
+    <div class="btns" v-permissions="'teaching/question#add'">
       <el-button round @click="add">添加题目</el-button>
     </div>
   </div>

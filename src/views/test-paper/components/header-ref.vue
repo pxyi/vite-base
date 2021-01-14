@@ -9,8 +9,8 @@
       <el-input clearable placeholder="按试卷名称搜索" prefix-icon="el-icon-search" v-model="searchText" @keydown.enter="searchHandle" />
     </div>
     <div class="btns">
-      <el-button round @click="addPaper">组卷</el-button>
-      <el-button round @click="$refs.uploadRef.click()">
+      <el-button round @click="addPaper" v-permissions="'teaching/test-paper#add'">组卷</el-button>
+      <el-button round @click="$refs.uploadRef.click()" v-permissions="'teaching/test-paper#upload'">
         <span>上传试卷</span>
         <input type="file" ref="uploadRef" @change="upload" multiple accept=".docx,.doc,.pdf">
       </el-button>

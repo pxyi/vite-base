@@ -37,11 +37,11 @@
 				<el-table-column label="年份" property="yearName"></el-table-column>
 				<el-table-column label="操作" width="280">
 					<template v-slot:default="scope">
-						<el-button @click="openModel( scope.row, '/course/modify')" size="small" type="text">修改</el-button>
-						<el-divider direction="vertical"></el-divider>
+						<el-button @click="openModel( scope.row, '/course/modify')" size="small" type="text" v-permissions="'teaching/course#update'">修改</el-button>
+						<el-divider direction="vertical" v-permissions="'teaching/course#update'"></el-divider>
 						<el-button size="small" type="text" @click="knotSet(scope.row)">设置课次</el-button>
-						<el-divider direction="vertical"></el-divider>
-						<el-button size="small" type="text" @click="courseDelete(scope.row.id)">删除</el-button>
+						<el-divider direction="vertical" v-permissions="'teaching/course#delete'"></el-divider>
+						<el-button size="small" type="text" @click="courseDelete(scope.row.id)" v-permissions="'teaching/course#delete'">删除</el-button>
 						<!--					<el-divider direction="vertical"></el-divider>-->
 						<!--					<el-button size="mini" type="text">备课流程</el-button>-->
 					</template>
