@@ -58,20 +58,34 @@
 </template>
 
 <script lang="ts">
-import { reactive, ref, Ref, watch } from 'vue';
+import { reactive, ref, Ref, watch, computed, nextTick } from 'vue';
 import MenuList, { RouterConf } from './../core/menu-list';
 import { useRoute } from 'vue-router';
 import { ElMessageBox } from 'element-plus';
+import { useStore } from 'vuex';
+import { cloneDeep } from 'lodash';
 interface IlistItem extends RouterConf { closed?: boolean };
 
 export default {
   name: 'lay-menu',
   setup() {
+    let store = useStore();
+
     let initPath = useRoute().path;
-    
-    let list: Ref<IlistItem[]> = ref(MenuList.reduce((arr, node: IlistItem) => {
-      node.closed = initPath.includes(node.key); arr.push(node); return arr;
-    }, [] as IlistItem[]));
+
+    let userInfo = computed(() => store.getters.userInfo);
+    let allowPath = ref(userInfo.value.roles.reduce((path, role) => path += role.menuUrls, '') || '');
+    let dynamicRoutes = cloneDeep(MenuList).reduce((arr, node: IlistItem) => {
+      node.closed = initPath.includes(node.key);
+      if (allowPath.value.includes(node.key)) {
+        if (!node.isLeaf) {
+          node.children = node.children!.filter(item => allowPath.value.includes(item.key));
+        }
+        arr.push(node);
+      }
+      return arr;
+    }, [] as IlistItem[]);
+    let list: Ref<IlistItem[]> = ref(dynamicRoutes);
     
     const goSystem = () => {
       ElMessageBox.confirm('是否进入后台管理系统？', '进入后台', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }).then(_ => {

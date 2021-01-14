@@ -17,7 +17,6 @@ const mutations = {
   [ REMOVE_USER_INFO ] (state: UserState) {
     window.localStorage.removeItem('userinfo');
     window.localStorage.removeItem('token');
-    setTimeout(() => state.userInfo = null );
   }
 }
 

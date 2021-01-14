@@ -1,80 +1,12 @@
 export interface RouterConf {
-  title: string     // 标题
-  key: string
-  brief?: string     // 简称
-  icon?: any
-  disabled?: boolean,
-  isLeaf?: boolean
-  children?: RouterConf[]
+  title     : string     // 标题
+  key       : string
+  brief?    : string     // 简称
+  icon?     : any
+  disabled? : boolean,
+  isLeaf?   : boolean
+  children? : RouterConf[]
 }
-
-const MenuListXinzhou: RouterConf[] =[
-  {
-    title: '首页',
-    key: '/index',
-    isLeaf: true,
-    icon: 'home'
-  },
-  {
-    title: '教研中台',
-    key: '/teaching',
-    icon: 'teaching',
-    children: [
-      {
-        title: '题库',
-        key: '/teaching/question',
-        isLeaf: true
-      },
-      {
-        title: '试卷库',
-        key: '/teaching/test-paper',
-        isLeaf: true
-      },
-      {
-        title: '批量录题',
-        key: '/teaching/recording',
-        isLeaf: true
-      }
-    ]
-  }
-]
-
-const MenuListSike :RouterConf[] = [
-  {
-    title: '首页',
-    key: '/index',
-    isLeaf: true,
-    icon: 'home'
-  },
-  {
-    title: '教研中台',
-    key: '/teaching',
-    icon: 'teaching',
-    children: [
-      {
-        title: '题库',
-        key: '/teaching/question',
-        isLeaf: true
-      },
-      {
-        title: '批量录题',
-        key: '/teaching/recording',
-        isLeaf: true
-      },
-      {
-        title: '试卷库',
-        key: '/teaching/test-paper',
-        isLeaf: true
-      },
-      {
-        title: '资料库',
-        key: '/teaching/database',
-        isLeaf: true
-      },
-    ]
-  }
-]
-
 const MenuList: RouterConf[] = [
   {
     title: '首页',
@@ -133,4 +65,4 @@ const MenuList: RouterConf[] = [
   }
 ]
 
-export default import.meta.env.VITE_IS_XINZHOU === 'true' ? MenuListXinzhou : import.meta.env.VITE_IS_SIKE === 'true' ? MenuListSike : MenuList;
+export default MenuList;

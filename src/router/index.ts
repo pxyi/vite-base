@@ -17,13 +17,12 @@ const routes: RouteRecordRaw[] = [
     redirect: '/index',
     component: () => import('/@/layout/base.vue'),
     beforeEnter: (to, from, next) => {
-      // if (store.getters.userInfo) {
-      //   let allowPath = store.getters.userInfo.roles.reduce((path, role) => path += role.menuUrls, '');
-      //   allowPath.includes(to.path) ? next() : next('/login');
-      // } else {
-      //   next('/login');
-      // }
-      localStorage.getItem('token') ? next() : next('/login');
+      if (store.getters.userInfo) {
+        let allowPath = store.getters.userInfo.roles.reduce((path, role) => path += role.menuUrls, '');
+        allowPath.includes(to.path) ? next() : next('/login');
+      } else {
+        next('/login');
+      }
     },
     children: [
       {
