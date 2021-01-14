@@ -10,7 +10,7 @@ export interface RouterConf {
 const MenuList: RouterConf[] = [
   {
     title: '首页',
-    key: '/index',
+    key: '/home',
     isLeaf: true,
     icon: 'home'
   },

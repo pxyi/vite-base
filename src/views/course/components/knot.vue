@@ -103,9 +103,9 @@
       const deleteChapter = ({ id }, courseIndex, i) => {
         axios.post('/courseChapter/deleteByCourseIndexId', {chapterId: id, courseIndexId: courseIndex.id}).then((res: any) => {res.result && ElNotification['success']({title: '成功', message: '删除章节成功'}) && courseIndex.hasChapters.splice(i, 1)})
       };
-      const deleteCourseIndex = ({ id }, i) => {axios.post('/courseIndex/delete', { id }).then((res: any) => {res.result && ElNotification['success']({title: '成功', message: '删除章节成功'}) && courseIndexList.value.splice(i, 1) && props.tableRef.value.request()})};
+      const deleteCourseIndex = ({ id }, i) => {axios.post('/courseIndex/delete', { id }).then((res: any) => {ElNotification[res.result? 'success' : 'error']({title: res.result ? '成功' : '失败', message: res.result? '删除章节成功' : res.msg}) && courseIndexList.value.splice(i, 1) && props.tableRef.value.request()})};
       const indexNameChange = (data) => {
-        axios.post('/courseIndex/modify', data, {headers: {'Content-Type': 'application/json'}}).then((res :any) => res.result && ElNotification['success']({title: '成功', message: '修改名称成功'}) && getCourseDto())
+        axios.post('/courseIndex/modify', data, {headers: {'Content-Type': 'application/json'}}).then((res :any) => ElNotification[ res.result ? 'success' : 'error' ]({title: res.result ? '成功' : '失败', message: res.result ? '修改名称成功' : res.msg}))
       }
       const move = (i, type) => {
         if (type === 1) {

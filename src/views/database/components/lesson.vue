@@ -19,9 +19,9 @@
       </el-row>
       <el-form-item prop="dataset">
         <el-cascader collapse-tags clearable placeholder="请选择数据" :show-all-levels="false"
-          v-model="formGroup.dataset" 
-          :options="selectMap.cascaderOptions" 
-          :props="{ children: 'courseIndexList', label: 'courseName', value: 'id', multiple: true, emitPath: false }" 
+          v-model="formGroup.dataset"
+          :options="selectMap.cascaderOptions"
+          :props="{ children: 'courseIndexList', label: 'courseName', value: 'id', multiple: true, emitPath: false, disabled: 'isExist' }"
         />
       </el-form-item>
     </el-form>
@@ -58,7 +58,7 @@ export default {
     const handle = async () => {
       let { courseTypeId, gradeId } = formGroup;
       let res = await axios.post<null, { json }>('/course/query', { subjectId: store.getters.subject.code, materialId: props.id, courseTypeId, gradeId });
-      let data = res.json.map(i => { i.courseIndexList = i.courseIndexList.map(a => { a.courseName = a.courseIndexName; return a }); return i; })
+      let data = res.json.map(i => { i.courseIndexList = i.courseIndexList.map(a => { a.courseName = a.courseIndexName; a.isExist = a.isExist > 0 ? true : false; return a }); return i; })
       selectMap.cascaderOptions = data;
     }
     handle();
@@ -66,9 +66,9 @@ export default {
     const save = (resolve, reject) => {
       formRef.value.validate(async valid => {
         if (valid) {
-          let params = formGroup.dataset.map(i => ({ 
-            courseIndexId: i, 
-            materialId: props.id, 
+          let params = formGroup.dataset.map(i => ({
+            courseIndexId: i,
+            materialId: props.id,
             courseId: (selectMap.cascaderOptions.find((c: any) => !!c.courseIndexList.find((a: any) => a.id === i)) as any).id
           }))
           let res: any = await axios.post('/admin/materialCourseIndex/add', params ,{ headers: { 'Content-Type': 'application/json' } });
@@ -81,7 +81,7 @@ export default {
     }
 
     return { formGroup, selectMap, handle, save, formRef, loading }
-    
+
   }
 }
 </script>

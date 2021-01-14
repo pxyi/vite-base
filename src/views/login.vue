@@ -78,7 +78,7 @@ export default {
       if (res && res.result) {
         store.commit(SET_USER_INFO, res.json);
         localStorage.setItem("token", res.json.accessToken);
-        router.push("/index");
+        router.push("/home");
       } else {
         ElMessage.warning(res.msg);
       }
