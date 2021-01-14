@@ -8,8 +8,8 @@
     <div class="search">
       <el-input clearable placeholder="按文件名搜索" prefix-icon="el-icon-search" v-model="searchText" @keydown.enter="searchHandle" @clear="searchHandle" />
     </div>
-    <div class="btns">
-      <el-dropdown @command="handle" v-permissions="'teaching/database#add'">
+    <div class="btns" v-permissions="'teaching/database#add'">
+      <el-dropdown @command="handle">
         <el-button round><span>添加资料</span><i class="el-icon-caret-bottom" /></el-button>
         <template #dropdown>
           <el-dropdown-menu>

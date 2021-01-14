@@ -26,9 +26,9 @@
                 <i class="el-icon-more" />
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item command="rename" v-permissions="'teaching/database#rename'">重命名</el-dropdown-item>
-                    <el-dropdown-item command="remove" v-permissions="'teaching/database#delete'">删除</el-dropdown-item>
-                    <el-dropdown-item command="download" v-permissions="'teaching/database#download'">下载</el-dropdown-item>
+                    <el-dropdown-item command="rename"><div v-permissions="'teaching/database#rename'">重命名</div></el-dropdown-item>
+                    <el-dropdown-item command="remove"><div v-permissions="'teaching/database#delete'">删除</div></el-dropdown-item>
+                    <el-dropdown-item command="download"><div v-permissions="'teaching/database#download'">下载</div></el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
               </el-dropdown>
