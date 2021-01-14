@@ -74,10 +74,10 @@ export default {
         label: "来源",
         key: "source",
         type: "select",
-        options: [{ name: '单元测试', id: 1 }, { name: '月考', id: 2 }, { name: '期中', id: 3 }, { name: '期末', id: 4 }, { name: '竞赛', id: 5 }, { name: '错题本', id: 6 }],
+        options: [],
         rule: { required: true, message: "请选择来源" },
       },
-      { 
+      {
         label: '共享范围', 
         key: 'isPublic', 
         type: 'radio', 
@@ -85,6 +85,7 @@ export default {
         options: [ { name: '我的试卷', id: 0 },{ name: '公共试卷', id: 1 } ] 
       }
     ]);
+    axios.post<null, AxResponse>('/system/dictionary/queryDictByCodes', { typeCodesStr: 'QUES_SOURCE' }).then(res => nodes.value[3].options = res.json['QUES_SOURCE']);
     const subjectChange = (v) => {
       axios.post('/permission/user/userDataRules', { userId, subjectCode: v[1] }).then((res: any) => {
         nodes.value[1].options = res.json.grades;
