@@ -15,7 +15,7 @@ export default {
     let store = useStore();
 
     let controls = ref([
-      { label: '试卷名称', key: 'name', type: 'input', rule: { required: 'true', message: '请输入试卷名称' } },
+      { label: '试卷名称', key: 'title', type: 'input', rule: { required: 'true', message: '请输入试卷名称' } },
       { label: '学科', key: 'hide', type: 'input', disabled: true, default: store.getters.subject.name, rule: { required: 'true' } },
       { label: '年级', key: 'gradeId', type: 'select', options: [], rule: { required: 'true', message: '请选择年级' } },
       { label: '年份', key: 'year', type: 'select', options: [], rule: { required: 'true', message: '请选择年份' } },
@@ -54,7 +54,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-
-</style>
