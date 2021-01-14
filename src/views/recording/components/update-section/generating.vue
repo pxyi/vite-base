@@ -35,13 +35,28 @@ export default {
 
     const save = (resolve, reject) => {
       formRef.value.validate(async valid => {
-        let res = await axios.post<null, AxResponse>('/tiku/paper/addPaper', Object.assign(
-          {
-            questions: props.questions.map(i => ({ score: 0, subjectId: i.subjectId, questionId: i.id })),
-            sourceFrom: 4
-          },
-          valid
-        ), { headers: { 'Content-Type': 'application/json' } });
+        let paperChapters = props.questions!.reduce((group, node: any) => {
+          let index = group.findIndex((n: any)=> n.title === node.questionTypeName)
+          if (index > -1) {
+            group[index].questions.push({ score: 0, subjectId: node.subjectId, questionId: node.id });
+          } else {
+            group[group.length] = {
+              avgScore: 0,
+              totalScore: 0,
+              title: node.questionTypeName,
+              questions: [{ score: 0, subjectId: node.subjectId, questionId: node.id }]
+            }
+          }
+          return group;
+        }, [] as any[])
+        let params = {
+          ...valid,
+          sourceFrom: 4,
+          paperChapters,
+          totalScore: 0,
+          questionCount: paperChapters.length
+        }
+        let res = await axios.post<null, AxResponse>('/tiku/paper/addPaper', params, { headers: { 'Content-Type': 'application/json' } });
         if (res.result) {
           await axios.post<null, AxResponse>('/admin/questionImportLog/bindQuestionImportLogPaper', { importLogId: props.id, paperId: res.json.id })
           resolve(res)

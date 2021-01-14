@@ -95,7 +95,7 @@
 </template>
 
 <script lang="ts">
-import { ref, Ref, computed, reactive, watch } from 'vue';
+import { ref, Ref, computed, reactive, watch, nextTick } from 'vue';
 import store from './../store';
 import axios from 'axios';
 import { AxResponse } from './../../../../core/axios';
@@ -134,6 +134,10 @@ export default {
 
     const indexChange = (n: number) => {
       store.dispatch('checked_index_change', dataset.value.findIndex(i => i.id === dataset.value[index.value + n].id));
+      nextTick(() => {
+        let top = (document.querySelector('.main-content .item.is__focus') as HTMLElement).offsetTop;
+        (document.querySelector('.main-content') as HTMLElement).scrollTop = top - 50;
+      })
     }
 
     let selectMap: any = reactive({
