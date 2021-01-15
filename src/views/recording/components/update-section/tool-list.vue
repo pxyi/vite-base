@@ -13,6 +13,8 @@
 <script lang="ts">
 import { ref, Ref, computed } from 'vue';
 import store from './../store';
+import { ScrollTop } from "../../../../utils/base";
+
 export default {
   setup() {
     let dataset = computed(() => store.state.dataSet );
@@ -21,8 +23,7 @@ export default {
 
     let setFocusData = (idx) => {
       let top = (document.querySelectorAll('.main-content .item')[idx] as HTMLElement).offsetTop;
-      document.querySelector('.main-content')!.scrollTop = top - 80;
-
+      ScrollTop(document.querySelector('.main-content'), top - 80, 2000);
       store.commit('set_checked_index', idx)
     };
 
