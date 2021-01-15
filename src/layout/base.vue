@@ -27,7 +27,7 @@ export default {
   setup() {
     let route = useRoute();
 
-    let hideHeader = computed(() => ['/index'].includes(route.path));
+    let hideHeader = computed(() => ['/home'].includes(route.path));
 
     let asideWidth = ref(document.body.offsetWidth > 1080 ? '200px' : '54px');
 
