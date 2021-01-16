@@ -3,7 +3,7 @@
     <SearchTime :params='params' @search="searchTime"/>
     <cus-list has-page url="/admin/prepareLesson/queryPageV2" :default="params" :auto-request="true" :headers='{ type: 1 }' ref="nearList" >
       <template v-slot:avatar>
-         <img src="/@/assets/prepare-teach/book-logo.png" width="36"  alt="爱学标品">
+         <img src="/src/assets/prepare-teach/book-logo.png" width="36"  alt="爱学标品">
       </template>
       <template v-slot="{ data }">
          <div class="near-list-content">

@@ -39,7 +39,7 @@
 							<template v-if="item.hasChapters && item.hasChapters.length">
 								<div class="chapter-cell" v-for="(v, i) in item.hasChapters">
 									<div style="display: flex">
-										<img src="/@/assets/chapter.png" alt='章节' width="38" height="18">
+										<img src="/src/assets/chapter.png" alt='章节' width="38" height="18">
 										<span>{{v.name}}</span>
 									</div>
 									<div @click.stop="deleteChapter(v, item, i)">

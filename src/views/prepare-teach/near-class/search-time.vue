@@ -2,7 +2,7 @@
   <div class="search-time">
       <p>备课日期</p>
       <div class="times">
-        <img src="/@/assets/prepare-teach/date.png" alt="爱学标品">
+        <img src="/src/assets/prepare-teach/date.png" alt="爱学标品">
          <el-date-picker
           v-model="startTime"
           size='small'
@@ -17,7 +17,7 @@
           :disabled-date="disabledEndDate"
           placeholder="结束日期">
         </el-date-picker>
-      </div>  
+      </div>
     </div>
 </template>
 
@@ -25,7 +25,7 @@
 import { ref, watch } from 'vue'
 export default({
   setup(props, { emit }) {
-    /*---按时间搜索---*/ 
+    /*---按时间搜索---*/
     let startTime = ref()
     let endTime = ref()
     // 将数据格式化成YYYY-MM-dd
@@ -57,7 +57,7 @@ export default({
 
     return { startTime, endTime, disabledDate, disabledEndDate }
   }
-  
+
 })
 </script>
 
@@ -102,5 +102,5 @@ export default({
       min-height: 157px;
     }
   }
-  
+
 </style>

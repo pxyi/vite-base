@@ -23,12 +23,12 @@
               {{ data.gradeName || '--'}}/{{ data.courseTypeName || '--'}}/{{ data.semesterName || '--' }}</p>
           </div>
           <div class="course-img">
-            <img src="/@/assets/prepare-teach/course-bg.png" width="60" alt="爱学标品">
+            <img src="/src/assets/prepare-teach/course-bg.png" width="60" alt="爱学标品">
           </div>
         </div>
         <div class="btn-box" @click="godetails(data)">
           <span>课程详情</span>
-          <img src="/@/assets/prepare-teach/enter.png" width="16" height="16" alt="爱学标品">
+          <img src="/src/assets/prepare-teach/enter.png" width="16" height="16" alt="爱学标品">
         </div>
         </template>
       </cus-list>

@@ -16,7 +16,7 @@
     <div class="cus-list">
       <cus-list ref="listRef" has-page url="/tiku/paper/queryPaperPage" :default="params" :auto-request="false">
         <template v-slot:avatar>
-          <img src="/@/assets/test-paper/list-avatar.png" style="width: 86px" alt="爱学标品">
+          <img src="/src/assets/test-paper/list-avatar.png" style="width: 86px" alt="爱学标品">
         </template>
         <template v-slot="{ data }">
           <div class="cus_content">

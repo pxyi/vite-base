@@ -11,7 +11,7 @@
     <div class="content">
       <div class="content-top">
         <div class="course-img">
-          <img src="/@/assets/prepare-teach/course-bg.png" style="width: 130px" alt="爱学标品">
+          <img src="/src/assets/prepare-teach/course-bg.png" style="width: 130px" alt="爱学标品">
         </div>
         <div class="class-top">
           <h2>{{ courseDto.courseName || title }}</h2>
@@ -47,7 +47,7 @@
                   v-if="item.ext !== 'mp3' && item.ext !== 'zip' && item.ext !== 'rar' && item.mediaType == null"
                   :src="`${domain}${item.imgPath}`"
                   alt="爱学标品">
-                <img v-else src="/@/assets/prepare-teach/weizhiwenjian.png" alt="爱学标品"/>
+                <img v-else src="/src/assets/prepare-teach/weizhiwenjian.png" alt="爱学标品"/>
               </div>
               <div class="content-list-box-item-title">
                 <p>{{ item.fileName }}</p>

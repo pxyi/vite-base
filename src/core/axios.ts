@@ -6,7 +6,7 @@ import axios, { AxiosRequestConfig } from 'axios';
 import VueAxios from 'vue-axios';
 import { ElMessage, ElLoading } from 'element-plus';
 import { App } from 'vue';
-import Store from './../store';
+import Store from '../store';
 
 /* ------------------------- 默认请求格式, 和全局请求地址 ------------------------- */
 axios.defaults.headers['Content-Type'] = 'application/x-www-form-urlencoded';

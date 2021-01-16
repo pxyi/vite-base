@@ -1,4 +1,4 @@
-import { SET_SUBJECT, SET_SUBJECT_LIST } from '../types';
+import { SET_SUBJECT, SET_SUBJECT_LIST, REMOVE_SUBJECT_LIST } from '../types';
 
 const state = {
   subjectList: null,
@@ -14,6 +14,9 @@ const mutations = {
   },
   [ SET_SUBJECT_LIST ] (state, payload) {
     state.subjectList = payload;
+  },
+  [ REMOVE_SUBJECT_LIST ] (state) {
+    state.subjectList = null
   }
 }
 

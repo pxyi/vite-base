@@ -9,9 +9,9 @@
       <el-button round @click="showRule = true">查看规则</el-button>
       <el-popover :width="300" trigger="hover" >
         <div class="tmpt-type">
-          <div @click="download('http://axxinbiaopin.xiaohe.com/test/upload/语文v1.1的副本.docx')"><span>语文模板</span><img src="/@/assets/record/icon-1.png" alt="语文模板"></div>
-          <div @click="download('http://axxinbiaopin.xiaohe.com/test/upload/数学v1.1.docx')"><span>数学模板</span><img src="/@/assets/record/icon-2.png" alt="数学模板"></div>
-          <div @click="download('http://axxinbiaopin.xiaohe.com/test/upload/英语v1.1.docx')"><span>英语模板</span><img src="/@/assets/record/icon-3.png" alt="英语模板"></div>
+          <div @click="download('http://axxinbiaopin.xiaohe.com/test/upload/语文v1.1的副本.docx')"><span>语文模板</span><img src="/src/assets/record/icon-1.png" alt="语文模板"></div>
+          <div @click="download('http://axxinbiaopin.xiaohe.com/test/upload/数学v1.1.docx')"><span>数学模板</span><img src="/src/assets/record/icon-2.png" alt="数学模板"></div>
+          <div @click="download('http://axxinbiaopin.xiaohe.com/test/upload/英语v1.1.docx')"><span>英语模板</span><img src="/src/assets/record/icon-3.png" alt="英语模板"></div>
         </div>
         <template #reference><el-button round>下载模板</el-button></template>
       </el-popover>
@@ -21,12 +21,12 @@
       </el-button>
     </div>
     <div class="rule-box" v-show="showRule" @click="showRule = false">
-      <div @click.stop><img src="/@/assets/import-rule.png" alt="爱学标品导入规则"></div>
+      <div @click.stop><img src="/src/assets/import-rule.png" alt="爱学标品导入规则"></div>
       <i class="el-icon-close" @click="showRule = false" />
     </div>
   </div>
 
-  
+
 </template>
 <script lang="ts">
 import { ref } from 'vue';
@@ -69,7 +69,7 @@ export default {
           return axios.post('/system/file/uploadFile', formdata, { headers: { 'Content-Type': 'multipart/form-data' } });
         }))
         uploadList.map(res => ({ name: res.json.oriFilename, url: res.json.filePath }))
-        let result = ( await Promise.all(uploadList.map(file => axios.post<null, AxResponse>('/tiku/question/importWordQuestions', { 
+        let result = ( await Promise.all(uploadList.map(file => axios.post<null, AxResponse>('/tiku/question/importWordQuestions', {
           path: file.json.filePath,
           fileName: file.json.oriFilename,
           subjectId: store.getters.subject.code

@@ -17,7 +17,7 @@
 						<li v-for="(item, index) in courseIndexDto" :key="index" :class="[item.id == currentFile.id ? 'active' : '', item.type === 3 ? '' : 'teach']">
 							<div class="content-cell-wrapper"  @click="currentFile = item" v-if="item.type === 3">
 								<div class="img">
-									<img src="/@/assets/lessonImg.png" alt="">
+									<img src="/src/assets/lessonImg.png" alt="">
 								</div>
 								{{item.fileName}}.{{item.ext}}
 							</div>
@@ -27,7 +27,7 @@
 						<li v-for="(item, index) in courseIndexDto" :key="index" :class="[item.id == currentFile.id ? 'active' : '', item.type !== 3 ? '' : 'video']">
 							<div class="content-cell-wrapper"  @click="currentFile = item" v-if="item.type !== 3">
 								<div class="img">
-									<img src="/@/assets/lessonImg.png" alt="">
+									<img src="/src/assets/lessonImg.png" alt="">
 								</div>
 								{{item.fileName}}.{{item.ext}}
 							</div>

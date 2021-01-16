@@ -4,7 +4,7 @@
     <h2>Welcome back to aixue education</h2>
   </div>
   <div class="c__main">
-    <img class="m__head_bg" src="/@/assets/index/head-bg.png" alt="爱学标品" />
+    <img class="m__head_bg" src="/src/assets/index/head-bg.png" alt="爱学标品" />
     <div class="m__menu">
       <div class="m__inline_title">快捷入口:</div>
       <!-- <div class="m__menu_cell">备授课</div>

@@ -2,7 +2,7 @@
   <div class="index__head">
     <el-dropdown @command="commandList.get($event)()">
       <div>
-        <img src="/@/assets/default-boy.png" alt="爱学标品">
+        <img src="/src/assets/default-boy.png" alt="爱学标品">
         <span>{{ nickName }}</span>
         <i class="el-icon-arrow-down" />
       </div>
@@ -70,7 +70,7 @@ export default {
     let weekString = computed(() => moment(weekInput.value).format('gggg 第 ww 周'));
     let weekList = computed(() => [...dayList.map((day, i) => ([day, moment(weekInput.value).add(i, 'days').format('YYYY-MM-DD')]))]);
     const weekHandle = (type) => (weekInput.value = moment(weekInput.value).add(type === 'prev' ? -7: 7, 'days').toDate());
-    
+
     let store = useStore();
     let router = useRouter();
     let commandList = new Map([
@@ -79,7 +79,7 @@ export default {
         router.push('/login');
       }]
     ]);
-    
+
 
     return { today, weekInput, weekString, weekList, weekHandle, commandList }
   }
@@ -269,8 +269,8 @@ export default {
         height: auto;
         text-align: center;
         sub { font-size: 12px; margin-bottom: 2px; }
-        p { 
-          width: auto; font-size: 18px; line-height: 1.4; 
+        p {
+          width: auto; font-size: 18px; line-height: 1.4;
           span { transform: none; }
         }
         &:not(:last-child) { margin-right: 0; }
@@ -280,7 +280,7 @@ export default {
   .fixed__timetable {
     h2 { margin-bottom: 16px; }
     .f__t_cell {
-      li { 
+      li {
         padding: 8px 20px 0 60px;
         background-position-x: 16px;
         background-size: 34px 34px !important;
@@ -303,8 +303,8 @@ export default {
         height: auto;
         text-align: center;
         sub { font-size: 12px; margin-bottom: 2px; }
-        p { 
-          width: auto; font-size: 18px; line-height: 1.4; 
+        p {
+          width: auto; font-size: 18px; line-height: 1.4;
           span { transform: none; }
         }
         &:not(:last-child) { margin-right: 0; }
@@ -314,7 +314,7 @@ export default {
   .fixed__timetable {
     h2 { margin-bottom: 16px; }
     .f__t_cell {
-      li { 
+      li {
         height: 50px; padding: 7px 10px 0 50px;
         background-size: 30px 30px !important;
         h6 { font-size: 14px; }
@@ -337,8 +337,8 @@ export default {
         height: auto;
         text-align: center;
         sub { font-size: 12px; margin-bottom: 2px; }
-        p { 
-          width: auto; font-size: 18px; line-height: 1.4; 
+        p {
+          width: auto; font-size: 18px; line-height: 1.4;
           span { transform: none; }
         }
         &:not(:last-child) { margin-right: 0; }
@@ -348,7 +348,7 @@ export default {
   .fixed__timetable {
     h2 { margin-bottom: 16px; }
     .f__t_cell {
-      li { 
+      li {
         height: 50px; padding: 7px 10px 0 50px;
         background-size: 30px 30px !important;
         h6 { font-size: 14px; }
