@@ -45,7 +45,7 @@ import { useRoute, useRouter } from 'vue-router';
 import emitter from './../utils/mitt';
 import { useStore } from 'vuex';
 import axios from 'axios';
-import { REMOVE_USER_INFO, SET_SUBJECT, SET_SUBJECT_LIST } from '../store/types';
+import {REMOVE_SUBJECT_LIST, REMOVE_USER_INFO, SET_SUBJECT, SET_SUBJECT_LIST} from '../store/types';
 import { AxResponse } from '../core/axios';
 
 const getSubjectList = (store): Promise<any> => {
@@ -116,7 +116,8 @@ export default {
 
     let commandList = new Map([
       ['logout', () => {
-        store.commit(REMOVE_USER_INFO)
+        store.commit(REMOVE_USER_INFO);
+        store.commit(REMOVE_SUBJECT_LIST);
         router.push('/login');
       }]
     ]);

@@ -7,7 +7,7 @@
       <el-table-column prop="fileName" label="文件名称" min-width='400'>
         <template #default="{ row }">
           <div class="file-name">
-            <img src="/@/assets/file-icon.png" alt="爱学标品">
+            <img src="/src/assets/file-icon.png" alt="爱学标品">
             <div>{{ row.fileName }}</div>
           </div>
         </template>

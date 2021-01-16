@@ -18,7 +18,7 @@
 					<template v-slot:default="scope">
 						<div class="courseName">
 							<div class="img-box">
-								<img src="/@/assets/course.png" width="70">
+								<img src="/src/assets/course.png" width="70">
 							</div>
 							<p>{{scope.row.courseName}}</p>
 						</div>
@@ -56,9 +56,9 @@
   import { ElNotification } from 'element-plus'
   import headerRef from './components/header-ref.vue'
   import knot from './components/knot.vue';
-  import emitter from '../../utils/mitt';
-  import Model from '../../utils/modal/index';
-  import screen from '../../utils/screen/index';
+  import emitter from '/@/utils/mitt';
+  import Model from '/@/utils/modal';
+  import screen from '/@/utils/screen/index';
   import axios, {AxiosResponse} from "axios";
   import {useStore} from "vuex"
 

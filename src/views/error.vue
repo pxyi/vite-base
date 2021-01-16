@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="box">
-      <div class="picture"><img src="/@/assets/404.png" alt="404"></div>
+      <div class="picture"><img src="/src/assets/404.png" alt="404"></div>
       <div class="text">
         <h2>迷路了！</h2>
         <h4>您无法进入此页面...</h4>

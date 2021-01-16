@@ -55,7 +55,7 @@
 					<li class="right-content-cell" v-for="item in lessonList" @click="() => {handelLessonInfo = item, getCourseDto(item.courseIndex)}" :key="item.id">
 						<div class="right-content-cell-basic">
 							<div class="lesson-img">
-								<img src="/@/assets/lessonImg.png" alt="">
+								<img src="/src/assets/lessonImg.png" alt="">
 							</div>
 							<div class="lesson-info">
 								<p class="lesson-info-courseIndex">{{item.courseIndexName}}</p>
@@ -75,10 +75,11 @@
 							备课评分:&nbsp;&nbsp;&nbsp;{{item.score}} 分
 						</div>
 					</li>
-					<div class="page" v-if="total != 0">
+					<div class="page" v-if="total > 0">
 						<el-pagination
 							background
 							layout="prev, pager, next"
+              :page-size="lessonParam.size"
 							:total="total"
 							@current-change="(page) => lessonParam.current = page">
 						</el-pagination>
@@ -107,8 +108,8 @@
 	import score from './components/score.vue'
 	import axios from 'axios';
 	import emitter from "../../utils/mitt";
-	import headerRef from './components/header-ref.vue';
-	import pageView from './components/pageView.vue'
+	import headerRef from '/@/views/check/components/header-ref.vue';
+	import pageView from '/@/views/check/components/pageView.vue'
 
   export default {
 		name: "index",
@@ -146,7 +147,7 @@
 			  },
 			  lessonList: [],
 			  scoreParam: null,
-			  total: 0,
+			  total: 10,
 			  courseIndexDto: null,
 			  subjectParam: null
 		  }
@@ -232,7 +233,7 @@
         })
 			},
       getCourseDto(courseIndexId) {
-				axios.post('admin/prepareLesson/queryMaterialByCourseIndexId', {courseIndexId}).then(res => this.courseIndexDto = res.json);
+				axios.post('admin/prepareLesson/queryMaterialByCourseIndexId', {courseIndexId, isPrepareCheck: 1}).then(res => this.courseIndexDto = res.json);
       }
 		},
     created() {
