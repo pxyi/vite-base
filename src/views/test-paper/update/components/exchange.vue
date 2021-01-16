@@ -19,7 +19,7 @@
 <script lang="ts">
 import { ref } from 'vue';
 import axios from 'axios';
-import { questToHtml } from './../../../utils/question.directive';
+import { questToHtml } from '/@/views/utils/question.directive';
 import { cloneDeep } from 'lodash';
 
 export default {

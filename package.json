@@ -3,10 +3,11 @@
   "version": "0.0.0",
   "scripts": {
     "serve": "vite serve",
-    "build": "typecheck . && vite build",
-	  "build:xinzhou": "typecheck . && vite build --mode xinzhou",
-	  "build:sike": "typecheck . && vite build --mode sike",
-	  "build:siketest": "typecheck . && vite build --mode siketest"
+    "build": "vite build",
+	  "build:xinzhou": "vite build --mode xinzhou",
+	  "build:sike": "vite build --mode sike",
+    "build:siketest": "vite build --mode siketest",
+    "typecheck": "vuedx-typecheck"
   },
   "dependencies": {
     "axios": "^0.21.0",
@@ -17,7 +18,7 @@
     "moment": "^2.29.1",
     "vue": "^3.0.5",
     "vue-axios": "^3.2.2",
-    "vue-router": "4.0.3",
+    "vue-router": "4.0.2",
     "vuedraggable": "^4.0.1",
     "vuex": "4.0.0-rc.2"
   },

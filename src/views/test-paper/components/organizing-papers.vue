@@ -14,11 +14,11 @@
 </template>
 <script lang="ts">
 import { ref, Ref, PropType, onMounted, inject } from 'vue';
-import { AxResponse } from './../../../core/axios';
+import { AxResponse } from '/@/core/axios';
 import axios from 'axios';
 import { useStore } from 'vuex';
-import Drawer from './../../../utils/drawer';
-import Screen from './../../../utils/screen';
+import Drawer from '/@/utils/drawer';
+import Screen from '/@/utils/screen';
 import SelectedTopicComponent from './selected-topic.vue';
 import GeneratingComponent from './generating.vue';
 

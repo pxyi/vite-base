@@ -14,7 +14,7 @@
 <script lang="ts">
 import { ref, Ref } from 'vue';
 import axios from 'axios';
-import questHtml from './../../../utils/question.directive';
+import questHtml from '/@/views/utils/question.directive';
 import { ElMessage } from 'element-plus';
 
 export default {

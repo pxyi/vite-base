@@ -8,7 +8,7 @@
 import { ref } from 'vue'
 import axios from 'axios';
 import { useStore } from 'vuex';
-import { AxResponse } from './../../../../core/axios';
+import { AxResponse } from '/@/core/axios';
 export default {
   props: ['questions', 'id'],
   setup(props) {

@@ -41,9 +41,9 @@
 import { ref, reactive, computed, watch } from 'vue';
 import store from './../store/index';
 import axios from 'axios';
-import { AxResponse } from './../../../../core/axios'
+import { AxResponse } from '/@/core/axios'
 import { useStore } from 'vuex';
-import emitter from './../../../../utils/mitt';
+import emitter from '/@/utils/mitt';
 
 export default {
   setup() {

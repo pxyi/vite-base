@@ -97,9 +97,9 @@ import store from './store';
 import { toChinesNum } from './utils';
 import { cloneDeep } from 'lodash';
 import QuestionDirective from './../../utils/question.directive';
-import Modal from './../../../utils/modal';
+import Modal from '/@/utils/modal';
 import ExchangeComponent from './components/exchange.vue';
-import emitter from './../../../utils/mitt';
+import emitter from '/@/utils/mitt';
 
 const exchangeArrayIndex = (arr, index1, index2) => {
   arr[index1] = arr.splice(index2, 1, arr[index1])[0];

@@ -6,7 +6,7 @@ export default () => {
  * @param to          滚动条位置
  * @param duration    动画持续时间
  */
-export const ScrollTop = (el:Element, to = 0, duration?) => {
+export const ScrollTop = (el:Element | HTMLElement, to = 0, duration?) => {
   const spacingTime = 20; //设置循环的间隔时间
   let spacingInex = duration / spacingTime; // 计算requestAnimationFrame次数
   function step(newTimestamp) {

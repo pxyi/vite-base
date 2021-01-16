@@ -36,13 +36,13 @@
 </template>
 <script lang="ts">
 import { ref, watch } from 'vue';
-import Modal from './../../../utils/modal';
+import Modal from '/@/utils/modal';
 import { ElMessage } from 'element-plus';
 import axios from 'axios';
-import { AxResponse } from './../../../core/axios';
+import { AxResponse } from '/@/core/axios';
 import UploadComponent from './upload.vue';
-import emitter from './../../../utils/mitt';
-import createElement from './../../../utils/createElement'
+import emitter from '/@/utils/mitt';
+import createElement from '/@/utils/createElement'
 
 export default {
   props: ['getKnowledge'],

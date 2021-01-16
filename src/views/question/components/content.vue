@@ -81,8 +81,8 @@
 <script lang="ts">
 import { ref, Ref, reactive, computed, watch } from 'vue';
 import axios from 'axios';
-import { AxResponse } from './../../../core/axios';
-import Modal from './../../../utils/modal';
+import { AxResponse } from '/@/core/axios';
+import Modal from '/@/utils/modal';
 import updateComponent from './update.vue';
 import { ElMessage } from 'element-plus';
 import { useStore } from 'vuex';

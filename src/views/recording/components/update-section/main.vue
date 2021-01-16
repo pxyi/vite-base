@@ -42,7 +42,7 @@
 import { ref, Ref, computed, nextTick } from 'vue';
 import store from './../store';
 import axios from 'axios';
-import Modal from './../../../../utils/modal';
+import Modal from '/@/utils/modal';
 import ExchangeComponent from './exchange.vue';
 import { cloneDeep, debounce } from 'lodash';
 import { questionFormat } from './../../utils/question-format';

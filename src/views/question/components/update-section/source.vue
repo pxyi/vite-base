@@ -40,7 +40,7 @@
 <script lang="ts">
 import { getCurrentInstance, ref } from 'vue';
 import axios from 'axios';
-import { AxResponse } from './../../../../core/axios';
+import { AxResponse } from '/@/core/axios';
 
 export default {
   props: ['loading'],

@@ -1,6 +1,6 @@
 import Vuex from 'vuex';
 import { cloneDeep } from 'lodash';
-import emitter from './../../../../utils/mitt'
+import emitter from '/@/utils/mitt'
 
 export default new Vuex.Store({
   state: {

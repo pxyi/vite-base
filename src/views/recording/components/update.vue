@@ -20,7 +20,7 @@ import axios from 'axios';
 import MainComponent from './update-section/main.vue';
 import ToolbarComponent from './update-section/toolbar.vue';
 import { cloneDeep } from 'lodash';
-import Modal from './../../../utils/modal';
+import Modal from '/@/utils/modal';
 import GeneratingComponent from './update-section/generating.vue';
 import { questionFormat } from './../utils/question-format'
 

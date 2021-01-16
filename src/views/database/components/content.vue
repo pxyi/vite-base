@@ -57,11 +57,11 @@
 <script lang="ts">
 import { ref, Ref, reactive } from 'vue';
 import axios from 'axios';
-import emitter from './../../../utils/mitt';
-import { AxResponse } from './../../../core/axios';
+import emitter from '/@/utils/mitt';
+import { AxResponse } from '/@/core/axios';
 import { ElMessage, ElLoading } from 'element-plus';
-import createElement from './../../../utils/createElement';
-import Modal from './../../../utils/modal';
+import createElement from '/@/utils/createElement';
+import Modal from '/@/utils/modal';
 import LessonComponent from './lesson.vue';
 
 export default {

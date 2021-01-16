@@ -56,12 +56,12 @@
 </template>
 <script lang="ts">
 import { useStore } from 'vuex';
-import MenuList, { RouterConf } from './../../../core/menu-list';
+import MenuList, { RouterConf } from '/@/core/menu-list';
 import { useRoute, useRouter } from 'vue-router';
 import RankingComponent from './ranking.vue';
 import axios, {AxiosResponse} from 'axios';
 import { reactive, ref, watch } from 'vue';
-import { AxResponse } from '../../../core/axios'
+import { AxResponse } from '/@/core/axios'
 export default {
   name: 'index-content',
   components: { RankingComponent },

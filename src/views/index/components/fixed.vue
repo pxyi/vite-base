@@ -57,7 +57,7 @@
 import { ref, computed } from 'vue';
 import moment from 'moment';
 import { useStore } from 'vuex';
-import { REMOVE_USER_INFO } from './../../../store/types';
+import { REMOVE_USER_INFO } from '/@/store/types';
 import { useRouter } from 'vue-router';
 const monthList = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const dayList = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];

@@ -60,7 +60,7 @@
 <script lang="ts">
 import axios, {AxiosResponse} from 'axios';
 import { reactive, ref } from 'vue';
-import { AxResponse } from '../../../core/axios';
+import { AxResponse } from '/@/core/axios';
 import { useStore } from 'vuex';
 
 export default {

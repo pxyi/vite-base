@@ -15,7 +15,7 @@ import HeaderComponent from './header.vue';
 import ToolbarComponent from './toolbar.vue';
 import ContentComponent from './content.vue';
 import store from './store/index';
-import emitter from './../../../utils/mitt';
+import emitter from '/@/utils/mitt';
 import { ElLoading } from 'element-plus';
 import { useRoute } from 'vue-router';
 

@@ -98,7 +98,7 @@
 import { ref, Ref, computed, reactive, watch, nextTick } from 'vue';
 import store from './../store';
 import axios from 'axios';
-import { AxResponse } from './../../../../core/axios';
+import { AxResponse } from '/@/core/axios';
 import { useStore } from 'vuex';
 import { cloneDeep } from 'lodash';
 

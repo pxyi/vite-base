@@ -29,7 +29,7 @@ import { ref, reactive,toRefs, onMounted, Ref, watch } from 'vue';
 import HeaderRefComponent from './components/header-ref.vue';
 import ContentComponent from './components/content.vue';
 import KnowledgeTree from './components/knowledge-tree.vue';
-import emitter from './../../utils/mitt';
+import emitter from '/@/utils/mitt';
 import { useStore } from 'vuex';
 
 export default {

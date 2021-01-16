@@ -43,9 +43,9 @@ import { ref, reactive } from "vue";
 import axios from "axios";
 import md5 from "js-md5";
 import { ElMessage } from "element-plus";
-import { AxResponse } from "./../core/axios";
+import { AxResponse } from "/@/core/axios";
 import { useStore } from "vuex";
-import { SET_USER_INFO } from "../store/types";
+import { SET_USER_INFO } from "/@/store/types";
 import { useRoute, useRouter } from "vue-router";
 
 export default {

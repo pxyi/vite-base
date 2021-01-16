@@ -30,11 +30,11 @@
 </template>
 <script lang="ts">
 import { ref } from 'vue';
-import emitter from './../../../utils/mitt';
-import Modal from './../../../utils/modal';
+import emitter from '/@/utils/mitt';
+import Modal from '/@/utils/modal';
 import { ElMessage } from 'element-plus';
 import axios from 'axios';
-import { AxResponse } from './../../../core/axios';
+import { AxResponse } from '/@/core/axios';
 import { useStore } from 'vuex';
 
 export default {

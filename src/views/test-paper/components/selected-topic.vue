@@ -21,12 +21,12 @@
 
 <script lang="ts">
 import { ref, onMounted } from 'vue';
-import ListComponent from './../../question/components/content.vue';
+import ListComponent from '/@/views/question/components/content.vue';
 import { useStore } from 'vuex';
 import { ElMessage } from 'element-plus';
 import axios from 'axios';
-import emitter from './../../../utils/mitt';
-import KnowledgeTree from './../../question/components/knowledge-tree.vue';
+import emitter from '/@/utils/mitt';
+import KnowledgeTree from '/@/views/question/components/knowledge-tree.vue';
 
 export default {
   props: {

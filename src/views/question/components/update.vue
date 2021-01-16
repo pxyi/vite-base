@@ -10,7 +10,7 @@ import HeaderComponent from './update-section/header.vue';
 import ContentComponent from './update-section/content.vue';
 import SourceComponent from './update-section/source.vue';
 import axios from 'axios';
-import { AxResponse } from './../../../core/axios';
+import { AxResponse } from '/@/core/axios';
 import { useStore } from 'vuex';
 import { ElMessage } from 'element-plus';
 import { cloneDeep } from 'lodash';

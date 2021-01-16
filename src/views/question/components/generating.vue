@@ -3,10 +3,10 @@
 </template>
 <script lang="ts">
 import { ref, Ref, PropType } from 'vue';
-import { AxResponse } from './../../../core/axios';
+import { AxResponse } from '/@/core/axios';
 import axios from 'axios';
 import { useStore } from 'vuex';
-import Drawer from './../../../utils/drawer';
+import Drawer from '/@/utils/drawer';
 
 export default {
   props: {

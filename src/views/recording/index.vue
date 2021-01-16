@@ -47,12 +47,12 @@
 <script lang="ts">
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
-import { AxResponse } from './../../core/axios';
+import { AxResponse } from '/@/core/axios';
 import { ElMessage, ElMessageBox } from 'element-plus';
-import Screen from './../../utils/screen';
+import Screen from '/@/utils/screen';
 import UpdateComponent from './components/update.vue';
 import HeaderComponent from './components/header.vue';
-import emitter from './../../utils/mitt';
+import emitter from '/@/utils/mitt';
 
 export default {
   components: { HeaderComponent },
