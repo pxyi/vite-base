@@ -6,7 +6,8 @@
     "build": "vite build",
 	  "build:xinzhou": "vite build --mode xinzhou",
 	  "build:sike": "vite build --mode sike",
-    "build:siketest": "vite build --mode siketest",
+	  "build:siketest": "vite build --mode siketest",
+	  "build:xiaoshou": "vite build --mode xiaoshou",
     "typecheck": "vuedx-typecheck"
   },
   "dependencies": {
