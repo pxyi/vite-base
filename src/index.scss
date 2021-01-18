@@ -4,6 +4,7 @@ html, body, div, h1, h2, h3, h4, h5, h6, ul, ol, dl, li, dt, dd, p, blockquote, 
   color: inherit;
 	font-size: inherit;
 	box-sizing: border-box;
+	-webkit-overflow-scrolling: touch;
 }
 body {
   color: #333;
