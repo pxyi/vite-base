@@ -87,7 +87,7 @@ export default {
     let isPublic = ref(0);
 
     const save = (resolve, reject) => {
-      if (fileList.value.every(file => file.status === 'success')) {
+      if (!fileList.value.every(file => file.status === 'success')) {
         ElMessage.warning('文件正在上传中.... 请稍等片刻~！');
         reject();
       } else if (fileList.value.length) {
@@ -115,7 +115,7 @@ export default {
   width: 100%;
   .el-upload-dragger {
     width: 100%;
-    height: 160px;
+    height: 180px;
     background: none;
   }
 }
