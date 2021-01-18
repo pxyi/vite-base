@@ -55,7 +55,7 @@ export default {
       return acceptFormat.includes(ext);
     })
     if (files.length) {
-      fileList.value = files.map(file => ({ name: file.name }));
+      fileList.value = files.map(file => ({ name: file.name, status: 'ready' }));
       Promise.all(props.files.map(file => {
         let formdata = new FormData();
         formdata.append('file', file);
@@ -87,7 +87,10 @@ export default {
     let isPublic = ref(0);
 
     const save = (resolve, reject) => {
-      if (fileList.value.length) {
+      if (fileList.value.every(file => file.status === 'success')) {
+        ElMessage.warning('文件正在上传中.... 请稍等片刻~！');
+        reject();
+      } else if (fileList.value.length) {
         axios.post('/admin/material/batchSave', { 
           chapterId: props.knowledgeList.map(i => i.id),
           isPublic: isPublic.value,
