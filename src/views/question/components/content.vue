@@ -31,6 +31,7 @@
           <div class="update-icon" v-else><el-checkbox :disabled="isSelected && disabledList.find(id => id === data.id)" :modelValue="!!checkedList.find(n => n.id === data.id) || !!disabledList.find(id => id === data.id)" /></div>
           <div class="content-text">
             <div class="title" v-html="data.title"></div>
+            <div v-question="data"></div>
           </div>
           <div class="flex-box" v-show="showAnswer">
             <div class="label">答案</div>
@@ -87,6 +88,7 @@ import updateComponent from './update.vue';
 import { ElMessage } from 'element-plus';
 import { useStore } from 'vuex';
 import TestBasketComponent from './test-basket.vue';
+import QuestionDirective from '/@/views/utils/question.directive'
 const difficultFilter = (v) => ([{ name: '易', id: 11 }, { name: '较易', id: 12 }, { name: '中档', id: 13 }, { name: '较难', id: 14 }, { name: '难', id: 15 }].find(i => i.id === v)?.name);
 
 export default {
@@ -101,6 +103,7 @@ export default {
     }
   },
   components: { TestBasketComponent },
+  directives: { question: QuestionDirective },
   setup(props, { emit }) {
     let store = useStore()
     let userId = computed(() => store.getters.userInfo.user.id)
@@ -134,7 +137,6 @@ export default {
       dataset.value = res.json.records.map(n => ({
          ...n,
          ...{
-            title: __strToHtml(n),
             createTime: n.createTime.split('-').join('/'),
             difficult: difficultFilter(n.difficult),
             answer: n.rightAnswer ? n.rightAnswer.map(a => a[n.basicQuestionType === 1 ? 'name' : 'content']).join('、') : '-'
@@ -143,27 +145,6 @@ export default {
       );
       pageAorder.total = res.json.total;
       loading.value = false;
-    }
-    const __strToHtml = (data) => {
-      if (data.basicQuestionType < 3) {
-        let options = `<div class="e-m-cell">${data.option ? data.option.map(e => `${e.name}.${e.content}`).join(`</div><div class="e-m-cell">`) : ''}</div>`
-        let html = `<div class="e-title">${data.title}</div><div class="e-main">${options}</div>`
-        return html
-      } else if (data.basicQuestionType === 9) {
-        let child = (c) => `<div>${c.name}.${c.content}</div>`;
-        let cell = (c, idx) => `<div class="e-c-label">${idx + 1}.${c.title}</div>${c.option ? `<div class="e-c-group">${c.option.map(child).join(``)}</div>` : ''}`;
-        let options = `<div class="e-m-cell">${data.childs.map(cell).join(`</div><div class="e-m-cell">`)}</div>`
-        let html = `<div class="e-title">${data.title}</div><div class="e-main-title">${options}</div>`;
-        return html;
-      } else if (data.basicQuestionType === 10) {
-        let child = (c) => `${c.name}.${c.content}`;
-        let cell = (c) => `<div class="e-c-label">${c.name}.</div><div class="e-c-group"><div class="c-t-item">${c.childs.map(child).join(`</div><div class="c-t-item">`)}</div></div>`;
-        let options = `<div class="e-m-cell">${data.option.map(cell).join(`</div><div class="e-m-cell">`)}</div>`
-        let html = `<div class="e-title">${data.title}</div><div class="e-main">${options}</div>`
-        return html
-      } else {
-        return data.title
-      }
     }
 
     /* ------------- 排序设置 ------------- */
@@ -289,6 +270,9 @@ export default {
       }
       &:hover {
         box-shadow: 0px 2px 11px 0px rgba(23, 18, 45, 0.2);
+      }
+      .title {
+        margin-bottom: 20px;
       }
       .update-icon {
         width: 40px;
@@ -417,13 +401,20 @@ export default {
 }
 
 :deep(.item) {
-  .e-title {
-    margin-bottom: 20px;
-  }
   .e-main {
+    display: flex;
+    flex-wrap: wrap;
     padding-left: 20px;
     .e-m-cell {
-      //display: flex;
+      &.w-1 {
+        width: 100%;
+      }
+      &.w-2 {
+        width: 50%;
+      }
+      &.w-4 {
+        width: 25%;
+      }
       margin-bottom: 10px;
       .e-c-label {
         width: 40px;
