@@ -8,6 +8,7 @@
 	  "build:sike": "vite build --mode sike",
 	  "build:siketest": "vite build --mode siketest",
 	  "build:xiaoshou": "vite build --mode xiaoshou",
+	  "build:jinbang": "vite build --mode jinbang",
     "typecheck": "vuedx-typecheck"
   },
   "dependencies": {
