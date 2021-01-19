@@ -1,9 +1,10 @@
 import ElementPlus from 'element-plus';
 import { Component, createApp } from 'vue';
 import createElement from './../createElement';
-import Components, { AppComponents } from './../../components';
+import Components, { AppComponents } from '/@/components';
 import './drawer.scss';
-import Store from './../../store';
+import Store from '/@/store';
+import Directives from '/@/utils/directives';
 
 const create = (opt: DrawerCreate): Promise<any> => {
   let options = {
@@ -37,6 +38,7 @@ const create = (opt: DrawerCreate): Promise<any> => {
     };
 
     const app = createApp(options.component, { ...options.props });
+    Directives(app)
     app.use(Components);
     app.use(Store);
     app.use(ElementPlus);

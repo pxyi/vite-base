@@ -9,10 +9,11 @@
       >{{ i }}</el-tag>
       <div class="reset" @click="getQuestionList"><i class="iconfont iconhuanti" />换一批</div>
     </div>
-    <div class="content">
+    <div class="content" v-if="dataset[checkedIndex]">
       <div class="title" v-html="dataset[checkedIndex].title"></div>
       <div class="main" v-html="dataset[checkedIndex].html"></div>
     </div>
+    <cus-empty v-if="!dataset.length" />
   </el-skeleton>
 </template>
 
@@ -27,22 +28,22 @@ export default {
   setup(props) {
     let loading = ref(true);
     let dataset = ref([]);
-    let checkedIndex = ref(0);
+    let checkedIndex = ref(-1);
     let current = 1;
     const getQuestionList = async () => {
       loading.value = true;
       let res: any = await axios.post('/tiku/question/querySimilar', { id: props.id, current,size: 10 });
+      loading.value = false;
       if (res.result) {
         checkedIndex.value = 0;
         dataset.value = res.json.records.map(i => { i.html = questToHtml(i); return i; });
         current = res.json.records.length < 10 || res.json.total <= current * 10 ? 1 : current + 1;
       }
-      loading.value = false;
     }
     getQuestionList();
 
     const save = (resolve) => {
-      resolve(cloneDeep(dataset.value[checkedIndex.value]))
+      resolve(cloneDeep(checkedIndex.value > -1 ? dataset.value[checkedIndex.value] : false));
     }
 
     return { loading, dataset, checkedIndex, getQuestionList, save };

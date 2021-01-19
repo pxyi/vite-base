@@ -27,8 +27,8 @@
             'is__disabled': isSelected && disabledList.find(id => id === data.id)
           }"
         >
-          <div class="update-icon" v-permissions="'update'" @click="update(data.id)" v-if="!isSelected"><i class="el-icon-edit-outline" /></div>
-          <div class="update-icon" v-else><el-checkbox :disabled="isSelected && disabledList.find(id => id === data.id)" :modelValue="!!checkedList.find(n => n.id === data.id) || !!disabledList.find(id => id === data.id)" /></div>
+          <div class="update-icon" v-if="!isSelected" v-permissions="'update'" @click="update(data.id)"><i class="el-icon-edit-outline" /></div>
+          <div class="update-icon" v-else><el-checkbox :disabled="isSelected && !!disabledList.find(id => id === data.id)" :modelValue="!!checkedList.find(n => n.id === data.id) || !!disabledList.find(id => id === data.id)" /></div>
           <div class="content-text">
             <div class="title" v-html="data.title"></div>
             <div v-question="data"></div>
@@ -104,6 +104,7 @@ export default {
   },
   components: { TestBasketComponent },
   directives: { question: QuestionDirective },
+  emits: ['check-change'],
   setup(props, { emit }) {
     let store = useStore()
     let userId = computed(() => store.getters.userInfo.user.id)

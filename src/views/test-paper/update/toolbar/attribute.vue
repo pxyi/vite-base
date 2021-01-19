@@ -92,6 +92,7 @@ export default {
       formGroup.showSealing = formGroup.format === 1 ? 0 : 1;
       formGroup.showSideTitle = formGroup.format === 1 ? 0 : 1;
       formGroup.showChapterScore = formGroup.format === 1 ? 0 : 1;
+      emitter.emit('test-paper-change');
     }
 
     return { selectMap, subjectList, formGroup, getSelectList, formatChange }

@@ -8,10 +8,10 @@
           <img src="/src/assets/test-paper/title.png" alt="title" class="title" />
         </div>
         <h1 v-show="paperInfo.showTitle">
-          <input type="text" v-model="paperInfo.title" placeholder="请输入试卷标题" :readonly="isPreview" />
+          <input type="text" v-model="paperInfo.title" placeholder="请输入试卷标题" :readonly="isPreview" @change="emitter.emit('test-paper-change')" />
         </h1>
         <h2 v-show="paperInfo.showSideTitle">
-          <input type="text" v-model="paperInfo.sideTitle" placeholder="请输入试卷副标题" :readonly="isPreview" />
+          <input type="text" v-model="paperInfo.sideTitle" placeholder="请输入试卷副标题" :readonly="isPreview" @change="emitter.emit('test-paper-change')" />
         </h2>
         <h4 v-show="paperInfo.showTime"><span>考试时间：<i>45</i> 分钟</span><span>总分：<i>100</i>分</span></h4>
         <h6 v-show="paperInfo.showStuInfo"><p><span>姓名：</span><i /></p><p><span>班级：</span><i /></p><p><span>考号：</span><i /></p></h6>
@@ -73,7 +73,7 @@
                     <i class="iconfont icondaan" />
                     <span>答案</span>
                   </div>
-                  <div @click="questExchange(idx, index, element.question.id)">
+                  <div @click="questExchange(idx, index, element.questionId)">
                     <i class="iconfont iconhuanti" />
                     <span>换题</span>
                   </div>
@@ -152,10 +152,12 @@ export default {
         component: ExchangeComponent,
         props: { id }
       }).then((res: any) => {
-        let data = cloneDeep(paperInfo.value.paperCharpts);
-        data[typeIndex].questions[index].question = res;
-        data[typeIndex].questions[index].questionId = res.id;
-        store.commit('set_paper_charpts', data);
+        if (res) {
+          let data = cloneDeep(paperInfo.value.paperCharpts);
+          data[typeIndex].questions[index].question = res;
+          data[typeIndex].questions[index].questionId = res.id;
+          store.commit('set_paper_charpts', data);
+        }
       })
     }
 
