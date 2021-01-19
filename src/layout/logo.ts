@@ -1,4 +1,8 @@
 import { h } from 'vue'
+import xinzhou from '../assets/menu/logo-xinzhou.png';
+import sike from '../assets/menu/logo-sike.png';
+import logo from '../assets/menu/logo.png';
+import jinbang from '../assets/menu/logo-jinbang.png';
 
 const menuLogo = (props, context) => {
   return h('div', {
@@ -11,7 +15,7 @@ const menuLogo = (props, context) => {
     }
   }, [
     h('img',{
-      src: `${props.isSike ? '../assets/menu/logo-sike.png' : props.isXinzhou ? '../assets/menu/logo-xinzhou.png' : props.isJinbang ? '../src/assets/menu/logo-jinbang.png' : '../src/assets/menu/logo.png'}`,
+      src: `${props.isSike ? sike : props.isXinzhou ? xinzhou : props.isJinbang ? jinbang : logo}`,
       alt: 'logo'
     })
   ])
