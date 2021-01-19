@@ -83,7 +83,7 @@ export default {
     const preview = (data) => {
       if (data.sourceFrom === 3) {
         const loading = ElLoading.service({ lock: true, background: 'rgba(255, 255, 255, .7)', text: '加载中...' })
-        let src = `${import.meta.env.VITE_OFFICE_PREVIEW}?furl=${import.meta.env.VITE_DOMAIN}${data.filePath}`;
+        let src = `${import.meta.env.VITE_OFFICE_PREVIEW}?furl=${import.meta.env.VITE_APP_BASE_URL}${data.filePath}`;
         let closeBtn = createElement('div', {
           className: 'el-icon-close',
           style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', top: '40px', right: '40px', zIndex: '10', cursor: 'pointer' },

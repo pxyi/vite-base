@@ -68,7 +68,7 @@ export default {
   setup() {
     let dataset = ref([]);
     let loading = ref(true);
-    let filePathBase = import.meta.env.VITE_DOMAIN;
+    let filePathBase = import.meta.env.VITE_APP_BASE_URL;
     let formGroup = reactive({
       type: null,
       fileName: null,
@@ -157,20 +157,20 @@ export default {
         let downloadData = createElement('div', {
           className: 'el-icon-download',
           style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', bottom: '100px', right: '40px', zIndex: '10', cursor: 'pointer' },
-          on: { click: () => { let a  = createElement('a', { attrs:{ target: '_blank' } });a.download = item.fileName+'.'+item.ext;a.href = `${import.meta.env.VITE_DOMAIN}${item.filePath}`;a.click(); } }
+          on: { click: () => { let a  = createElement('a', { attrs:{ target: '_blank' } });a.download = item.fileName+'.'+item.ext;a.href = `${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`;a.click(); } }
 
         });
         let container;
         if(item.ext === 'mp4') {
           let video = createElement('video',
-          { attrs: { src:`${import.meta.env.VITE_DOMAIN}${item.filePath}`, width: '100%', height: '100%',controls: true, controlsList: "nodownload" }, style: { background: '#f9f9f9' }});
+          { attrs: { src:`${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`, width: '100%', height: '100%',controls: true, controlsList: "nodownload" }, style: { background: '#f9f9f9' }});
           video.oncanplay = loading.close;
           container = createElement('div', {
             style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '1000' , background: 'rgba(0,0,0,.8)'},
           }, [ closeBtn, video, downloadData ])
         }else if(item.ext === 'mp3') {
           let video = createElement('video',
-          { attrs: { src:`${import.meta.env.VITE_DOMAIN}${item.filePath}`, width: '', height: '',controls: true, controlsList: "nodownload" }, style: { background: '#333', position:'absolute', top: '50%', left: '50%', transform:'translate(-50%,-50%)'}});
+          { attrs: { src:`${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`, width: '', height: '',controls: true, controlsList: "nodownload" }, style: { background: '#333', position:'absolute', top: '50%', left: '50%', transform:'translate(-50%,-50%)'}});
           video.oncanplay = loading.close;
           container = createElement('div', {
             style: { width: '100%', height: '100%', background: 'rgba(0,0,0,.8)', position: 'absolute', top: '0', left: '0', zIndex: '1000' },
