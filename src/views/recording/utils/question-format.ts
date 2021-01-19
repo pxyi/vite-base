@@ -19,14 +19,14 @@ export const questionFormat = (quest) => {
     data.title = `${data.title}<br>${data.childs.map((i, idx) => `${idx + 1}.${i.title}<br>${i.option ? i.option.map(c => `${c.name}.${c.content}`).join('<br>') : []}`).join('<br>')}`
   }
   if (data.basicQuestionType === 10) {
-    data.title = `${data.title}<br>${data.option.map(i => `${i.name}.<br>${i.childs.map(c => `${c.name}.${c.content}`).join('<br>')}`).join('<br>')}`
+    data.title = `${data.title}<br>${data.option ? data.option.map(i => `${i.name}.<br>${i.childs.map(c => `${c.name}.${c.content}`).join('<br>')}`).join('<br>') : ''}`
   }
   data.questionSources = data.questionSources ? data.questionSources.map(i => {
     let provinceCity: string[] = [];
     i.cityId && (provinceCity = [i.provinceId, i.cityId]);
     i.areaId && provinceCity.push(i.areaId)
     i.provinceCity = provinceCity;
-    return i; 
+    return i;
   }) : [];
   return data;
 }
