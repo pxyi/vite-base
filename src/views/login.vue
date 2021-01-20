@@ -11,7 +11,8 @@
           <el-input placeholder="请输入密码" :type="showPassword ? 'test' : 'password'" prefix-icon="el-icon-lock" v-model="formGroup.md5Password">
             <template #suffix>
               <div @click="showPassword = !showPassword" class="show-password-icon">
-                <img :src="`/@/assets/login/login-password-${showPassword ? 'show' : 'hide'}.png`" class="password__icon" />
+                <img v-if="showPassword" src="/@/assets/login/login-password-show.png" />
+                <img v-else src="/@/assets/login/login-password-hide.png" />
               </div>
             </template>
           </el-input>
@@ -99,7 +100,7 @@ export default {
   position: relative;
   overflow: hidden;
   .login-title {
-    width: 356px;
+    width: 15%;
     position: absolute;
     top: 50px;
     left: 160px;
@@ -115,7 +116,7 @@ export default {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate3d(200px, -300px, 0);
+    transform: translate3d(200px, -200px, 0);
     h1 {
       font-size: 22px;
       line-height: 40px;
