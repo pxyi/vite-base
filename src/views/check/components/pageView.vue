@@ -50,7 +50,7 @@
 				/>
 				<iframe
 					v-if="['zip','rar'].indexOf(currentFile.ext) !== -1"
-					:src="`${web365}/?furl=${baseApi + currentFile.filePath}`"
+					:src="`${web365}furl=${baseApi + currentFile.filePath}`"
 					frameborder="0"
 					style="width:100%; height:100%;"></iframe>
 			</div>
