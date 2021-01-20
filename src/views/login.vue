@@ -38,7 +38,9 @@ import { AxResponse } from "/@/core/axios";
 import { useStore } from "vuex";
 import { SET_USER_INFO } from "/@/store/types";
 import { useRoute, useRouter } from "vue-router";
-const backgroundList = Array.from(new Array(3), (v, i) => import(`/@/assets/login/login-bg-${ i + 1 }.jpg`));
+import backgroundImage1 from '/@/assets/login/login-bg-1.jpg';
+import backgroundImage2 from '/@/assets/login/login-bg-2.jpg';
+import backgroundImage3 from '/@/assets/login/login-bg-3.jpg';
 
 export default {
   setup() {
@@ -79,14 +81,13 @@ export default {
     let loading = ElLoading.service();
     let backgroundRef: Ref<HTMLElement | null> = ref(null);
     let index = Math.floor(Math.random() * 3);
-    backgroundList[index].then(url => {
-      let image = new Image();
-      image.src = url.default;
-      image.onload = () => {
-        loading.close();
-        backgroundRef.value!.style.background = `url(${ url.default }) center center / cover no-repeat`;
-      }
-    })
+    let image = new Image();
+    let url = [backgroundImage1, backgroundImage2, backgroundImage3][index]
+    image.src = url;
+    image.onload = () => {
+      loading.close();
+      backgroundRef.value!.style.background = `url(${ url }) center center / cover no-repeat`;
+    }
     return { backgroundRef, showPassword, remember, formRef, formGroup, rules, login, saveLoading };
   },
 };
