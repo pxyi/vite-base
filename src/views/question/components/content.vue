@@ -83,12 +83,12 @@
 import { ref, Ref, reactive, computed, watch } from 'vue';
 import axios from 'axios';
 import { AxResponse } from '/@/core/axios';
-import Modal from '/@/utils/modal';
 import updateComponent from './update.vue';
 import { ElMessage } from 'element-plus';
 import { useStore } from 'vuex';
 import TestBasketComponent from './test-basket.vue';
 import QuestionDirective from '/@/views/utils/question.directive'
+import drawer from '/@/utils/drawer';
 const difficultFilter = (v) => ([{ name: '易', id: 11 }, { name: '较易', id: 12 }, { name: '中档', id: 13 }, { name: '较难', id: 14 }, { name: '难', id: 15 }].find(i => i.id === v)?.name);
 
 export default {
@@ -159,7 +159,7 @@ export default {
     }
 
     const update = (id) => {
-      Modal.create({ title: '编辑题目', component: updateComponent, width: 840, props: { id } }).then(_ => request() );
+      drawer.create({ title: '编辑题目', component: updateComponent, width: 840, props: { id } }).then(_ => request() );
     }
 
     const remove = async (data) => {

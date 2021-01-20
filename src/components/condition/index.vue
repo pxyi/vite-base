@@ -153,11 +153,12 @@ const getCondition = (userId, subjectCode, nodeList): Promise<any> => {
       axios.post<null, AxResponse>('/system/dictionary/queryDictByCodes', { typeCodesStr: 'YEAR,QUES_SOURCE' })
     ]
     nodeList.some(i => i.label === '题型') && requestList.push(axios.post<null, AxResponse>('/tiku/questionType/queryTypeBySubject', { subject: subjectCode }))
+    nodeList.some(i => i.label === '题类') && requestList.push(axios.post<null, AxResponse>('/system/dictionary/queryDictByCodes', { typeCodesStr: 'QUES_CATEGORY' }))
     Promise.all(requestList).then(list => {
       let condition: any = {
         sourceList: [{ name: '全部', id: null }],
         difficultyList: [{ name: '全部', id: null }, { name: '易', id: 11 }, { name: '较易', id: 12 }, { name: '中档', id: 13 }, { name: '较难', id: 14 }, { name: '难', id: 15 } ],
-        categoryList: [ { name: '全部', id: null }, { name: '真题', id: 1 }, { name: '好题', id: 2 }, { name: '常考题', id: 3 }, { name: '压轴题', id: 4 }, { name: '易错题', id: 5 } ],
+        categoryList: [ { name: '全部', id: null } ],
         lnowledgeList: [ { name: '全部', id: null }, { name: '已绑定', id: 1 }, { name: '未绑定', id: 0 } ]
       }
       list.map(res => {
@@ -170,7 +171,7 @@ const getCondition = (userId, subjectCode, nodeList): Promise<any> => {
           res.json?.courseTypes && (condition.courseTypeList = [{ name: '全部', id: null }, ...res.json.courseTypes ]);
           res.json?.terms && (condition.termList = [{ name: '全部', id: null }, ...res.json.terms ]);
           res.json?.QUES_SOURCE && (condition.sourceList = [{ name: '全部', id: null }, ...(res.json.QUES_SOURCE.map(i => ({ name: i.name, id: i.id }))) ])
-
+          res.json?.QUES_CATEGORY && (condition.categoryList = [{ name: '全部', id: null }, ...(res.json.QUES_CATEGORY.map(i => {i.id = i.val; return i;})) ]);
         }
       });
       resolve(condition)

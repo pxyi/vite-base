@@ -83,16 +83,17 @@ export default {
     let selectMap: any = reactive({
       knowledgeList: [],
       gradeList: [],
-      questionTypeList: [],
+      questionTypeList: [], 
       difficultyList: [ { name: '易', id: 11 }, { name: '较易', id: 12 }, { name: '中档', id: 13 }, { name: '较难', id: 14 }, { name: '难', id: 15 } ],
-      sourceList: [ { name: '单元测试', id: 1 }, { name: '月考', id: 2 }, { name: '期中', id: 3 }, { name: '期末', id: 4 }, { name: '竞赛', id: 5 }, { name: '错题本', id: 6 } ],
-      categoryList: [ { name: '真题', id: 1 }, { name: '好题', id: 2 }, { name: '常考题', id: 3 }, { name: '压轴题', id: 4 }, { name: '易错题', id: 5 } ],
+      categoryList: [ ],
     });
 
     axios.post<null, AxResponse>('/tiku/questionType/queryTypeBySubject', { subject }).then(res => selectMap.questionTypeList = res.json );
     axios.post<null, AxResponse>('/permission/user/userDataRules', { userId, subjectCode: subject }).then(res => {
       selectMap.gradeList = res.json.grades;
     });
+
+    axios.post<null, AxResponse>('/system/dictionary/queryDictByCodes', { typeCodesStr: 'QUES_CATEGORY' }).then(res => selectMap.categoryList = res.json.QUES_CATEGORY.map(i => { i.id = i.val; return i }) );
     axios.post<any, AxResponse>('/tiku/knowledge/queryTree', { subjectId: subject }).then(res => selectMap.knowledgeList = JSON.parse(JSON.stringify(res.json).replaceAll('"childs":[]', '"childs":null')));
 
     const questionTypeChange = (e) => emit('question-type-change', selectMap.questionTypeList.find((q: any) => q.jyQuestionType === e));
