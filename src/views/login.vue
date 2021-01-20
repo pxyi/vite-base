@@ -11,7 +11,7 @@
           <el-input placeholder="请输入密码" :type="showPassword ? 'test' : 'password'" prefix-icon="el-icon-lock" v-model="formGroup.md5Password">
             <template #suffix>
               <div @click="showPassword = !showPassword" class="show-password-icon">
-                <img :src="`/@/assets/login-password-${showPassword ? 'show' : 'hide'}.png`" class="password__icon" />
+                <img :src="`/@/assets/login/login-password-${showPassword ? 'show' : 'hide'}.png`" class="password__icon" />
               </div>
             </template>
           </el-input>
