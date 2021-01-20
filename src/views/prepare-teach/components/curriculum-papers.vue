@@ -86,7 +86,7 @@ export default {
   },
   setup(props) {
     let close: any = inject('close');
-    let domain = import.meta.env.VITE_DOMAIN;
+    let domain = import.meta.env.VITE_APP_BASE_URL;
     let tabType = ref(null)
 
     /*---------获取上部展示数据------------*/
@@ -170,7 +170,7 @@ export default {
         window.open(item.filePath)
       }else{
         const loading = ElLoading.service({ lock: true, background: 'rgba(255, 255, 255, .7)', text: '加载中...' })
-        let src = `${import.meta.env.VITE_OFFICE_PREVIEW}?furl=${import.meta.env.VITE_DOMAIN}${item.filePath}`;
+        let src = `${import.meta.env.VITE_OFFICE_PREVIEW}?furl=${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`;
         let closeBtn = createElement('div', {
           className: 'el-icon-close',
           style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', top: '40px', right: '40px', zIndex: '10', cursor: 'pointer' },
@@ -179,7 +179,7 @@ export default {
         let container;
         if(item.ext === 'mp4') {
           let video = createElement('video',
-          { attrs: { src:`${import.meta.env.VITE_DOMAIN}${item.filePath}`, width: '100%', height: '100%',controls: true, controlsList: "nodownload" }, style: { background: '#f9f9f9' }});
+          { attrs: { src:`${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`, width: '100%', height: '100%',controls: true, controlsList: "nodownload" }, style: { background: '#f9f9f9' }});
           video.oncanplay = loading.close;
           container = createElement('div', {
             style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '2012', background: 'rgba(0,0,0,.8)' },

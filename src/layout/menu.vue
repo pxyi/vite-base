@@ -25,15 +25,7 @@
       </div>
     </template>
     <template v-else>
-      <div class="logo-xinzhou" v-if="isXinzhou">
-        <img src="./../assets/menu/logo-xinzhou.png" alt="logo">
-      </div>
-      <div class="logo-xinzhou" v-else-if="isSike" style="height: 90px;">
-        <img src="./../assets/menu/logo-sike.png" width="150" alt="logo">
-      </div>
-      <div class="logo" v-else>
-        <img src="./../assets/menu/logo.png" alt="logo">
-      </div>
+      <menuLogo :isSike="isSike" :isXinzhou="isXinzhou" :isJinbang="isJinbang" />
       <div class="menu-content">
         <template v-for="(menu) in list" :key="menu.key">
           <div class="menu-item" :class="{ 'is-closed': !menu.closed }">
@@ -67,10 +59,12 @@ import { useRoute } from 'vue-router';
 import { ElMessageBox } from 'element-plus';
 import { useStore } from 'vuex';
 import { cloneDeep } from 'lodash';
+import menuLogo from "/@/layout/logo";
 interface IlistItem extends RouterConf { closed?: boolean };
 
 export default {
   name: 'lay-menu',
+  components: { menuLogo },
   setup() {
     let store = useStore();
 
@@ -98,12 +92,14 @@ export default {
 
     let isXinzhou = import.meta.env.VITE_IS_XINZHOU === 'true';
     let isSike = import.meta.env.VITE_IS_SIKE === 'true';
+    let isJinbang = import.meta.env.VITE_IS_Jinbang === 'true'
 
     let isIpad = ref(document.body.offsetWidth <= 1080);
 
     let isSlide = ref(false);
+    menuLogo({isXinzhou, isSike});
 
-    return { list, initPath, goSystem, isXinzhou, isIpad, isSlide, isSike }
+    return { list, initPath, goSystem, isXinzhou, isIpad, isSlide, isSike, isJinbang }
   }
 }
 </script>
@@ -146,7 +142,7 @@ $--menu--item-height: 45px;
     cursor: pointer;
     img {
       display: inline-block;
-      width: 120px;
+      width: 150px;
       margin-top: 30px;
     }
   }
