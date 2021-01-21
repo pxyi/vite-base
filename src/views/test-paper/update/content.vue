@@ -3,7 +3,7 @@
     <div class="paper_content">
       <div class="paper-tool-header">
         <div class="sealing" v-show="paperInfo.showSealing"><img src="/src/assets/test-paper/sealing.png" alt="密封线"></div>
-        <div class="cover-map" v-show="paperInfo.showOrgInfo">
+        <div class="cover-map" v-show="paperInfo.showOrgInfo && isBiaopin">
           <img src="/src/assets/test-paper/logo.png" alt="logo" class="logo" />
           <img src="/src/assets/test-paper/title.png" alt="title" class="title" />
         </div>
@@ -161,7 +161,7 @@ export default {
       })
     }
 
-    return { paperInfo, toChinesNum, deleteQuestType, deleteQuest, moveType, moveQuestion, paperScoreData, classType, questExchange, isPreview, emitter }
+    return { paperInfo, toChinesNum, deleteQuestType, deleteQuest, moveType, moveQuestion, paperScoreData, classType, questExchange, isPreview, emitter, isBiaopin: import.meta.env.VITE_IS_BIAOPIN === 'true' }
   }
 }
 </script>
