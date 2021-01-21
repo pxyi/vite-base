@@ -18,10 +18,10 @@
           </el-input>
         </el-form-item>
         <div class="login-remember">
-<!--          <div class="login__label" @click="remember = !remember">-->
-<!--            <i class="el-icon-check" v-show="remember" />-->
-<!--            <span>记住密码</span>-->
-<!--          </div>-->
+          <!-- <div class="login__label" @click="remember = !remember">
+            <i class="el-icon-check" v-show="remember" />
+            <span>记住密码</span>
+          </div> -->
           <p>忘记密码请联系管理员</p>
         </div>
         <el-button type="primary" loading:="saveLoading" @click="login">登 录</el-button>

@@ -41,8 +41,7 @@ html, body, #app {
 	overflow: hidden;
 }
 /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
-::-webkit-scrollbar
-{
+::-webkit-scrollbar {
 	width: 5px;
 	height: 11px;
 }

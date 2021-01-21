@@ -35,7 +35,7 @@
           <div class="tool-label">类别</div>
           <div class="tool-control">
             <el-select size="medium" placeholder="选择类别" v-model="data.category" v-if="selectMap.categoryList.length" @change="syncTag">
-              <el-option v-for="option in selectMap.categoryList" :key="option.id" :value="option.id" :label="option.name" />
+              <el-option v-for="option in selectMap.categoryList" :key="option.val" :value="option.val" :label="option.name" />
             </el-select>
           </div>
         </div>
