@@ -1,6 +1,6 @@
 <template>
   <div class="login__container" ref="backgroundRef">
-    <div class="login-title"><img src="/src/assets/login/login-title.png" alt="爱学标品"></div>
+    <div class="login-title" v-if="system"><img src="/src/assets/login/login-title.png" alt="爱学标品"></div>
     <div class="login-content">
       <h1>欢迎登录</h1>
       <el-form :model="formGroup" :rules="rules" ref="formRef">
@@ -46,6 +46,7 @@ import backgroundImage3 from '/@/assets/login/login-bg-3.jpg';
 
 export default {
   setup() {
+    const system = import.meta.env.VITE_IS_BIAOPIN;
     let remember = ref(false);
     let showPassword = ref(false);
     let formRef = ref();
@@ -91,7 +92,7 @@ export default {
       loading.close();
       backgroundRef.value!.style.background = `url(${ url }) center center / cover no-repeat`;
     }
-    return { backgroundRef, showPassword, remember, formRef, formGroup, rules, login, saveLoading };
+    return { backgroundRef, showPassword, remember, formRef, formGroup, rules, login, saveLoading, system };
   },
 };
 </script>
