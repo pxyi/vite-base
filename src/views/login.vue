@@ -1,6 +1,6 @@
 <template>
   <div class="login__container" ref="backgroundRef">
-    <div class="login-title"><img src="/@/assets/login/login-title.png" alt="爱学标品"></div>
+    <div class="login-title"><img src="/src/assets/login/login-title.png" alt="爱学标品"></div>
     <div class="login-content">
       <h1>欢迎登录</h1>
       <el-form :model="formGroup" :rules="rules" ref="formRef">
@@ -11,17 +11,17 @@
           <el-input placeholder="请输入密码" :type="showPassword ? 'test' : 'password'" prefix-icon="el-icon-lock" v-model="formGroup.md5Password">
             <template #suffix>
               <div @click="showPassword = !showPassword" class="show-password-icon">
-                <img v-if="showPassword" src="/@/assets/login/login-password-show.png" />
-                <img v-else src="/@/assets/login/login-password-hide.png" />
+                <img v-if="showPassword" src="/src/assets/login/login-password-show.png" />
+                <img v-else src="/src/assets/login/login-password-hide.png" />
               </div>
             </template>
           </el-input>
         </el-form-item>
         <div class="login-remember">
-          <div class="login__label" @click="remember = !remember">
-            <i class="el-icon-check" v-show="remember" />
-            <span>记住密码</span>
-          </div>
+<!--          <div class="login__label" @click="remember = !remember">-->
+<!--            <i class="el-icon-check" v-show="remember" />-->
+<!--            <span>记住密码</span>-->
+<!--          </div>-->
           <p>忘记密码请联系管理员</p>
         </div>
         <el-button type="primary" loading:="saveLoading" @click="login">登 录</el-button>
@@ -45,7 +45,7 @@ import backgroundImage3 from '/@/assets/login/login-bg-3.jpg';
 
 export default {
   setup() {
-    let remember = ref(true);
+    let remember = ref(false);
     let showPassword = ref(false);
     let formRef = ref();
     let store = useStore();
@@ -67,7 +67,7 @@ export default {
         md5Password: md5(formGroup.md5Password),
       };
       saveLoading.value = true;
-      if (remember.value) { window.localStorage.setItem('account', JSON.stringify(formGroup)) } else { window.localStorage.removeItem('account') }
+      if (remember.value) { window.localStorage.setItem('account', JSON.stringify(formGroup)) } else { console.log(123); window.localStorage.removeItem('account') }
       let res: AxResponse = await axios.post("/permission/auth/login", params);
       saveLoading.value = false;
       if (res && res.result) {
@@ -145,6 +145,7 @@ export default {
     font-size: 14px;
     line-height: 16px;
     margin-bottom: 30px;
+    text-align: center;
     .login__label {
       display: inline-block;
       position: relative;
@@ -169,7 +170,7 @@ export default {
       }
     }
     p {
-      float: right;
+      //float: right;
       color: #3ABAB3;
     }
   }

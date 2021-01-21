@@ -59,7 +59,7 @@ import { useRoute } from 'vue-router';
 import { ElMessageBox } from 'element-plus';
 import { useStore } from 'vuex';
 import { cloneDeep } from 'lodash';
-import menuLogo from "/@/layout/logo";
+import menuLogo from "/@/layout/components/logo";
 interface IlistItem extends RouterConf { closed?: boolean };
 
 export default {
