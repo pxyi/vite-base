@@ -9,6 +9,9 @@
         <template v-else-if="node.type === 'number'">
           <el-input-number clearable controls-position="right" v-model="formGroup[node.key]" :min="node.min" :max="node.max" :placeholder="node.placeholder || `请输入${node.label}`" />
         </template>
+        <template v-if="node.type === 'password'">
+          <el-input clearable show-password v-model="formGroup[node.key]" :placeholder="node.placeholder || `请输入${node.label}`" :disabled="node.disabled" />
+        </template>
         <template v-else-if="node.type === 'select'">
           <el-select clearable :multiple="node.multiple" v-model="formGroup[node.key]" :placeholder="node.placeholder || `请选择${node.label}`">
             <el-option v-for="option in node.options" :key="option[node.valueKey || 'id']" :label="option[node.labelKey || 'name']" :value="option[node.valueKey || 'id']" :disabled="option.disabled" />
@@ -95,7 +98,14 @@ export default {
         });
       }
       if (node.rule && node.key) {
-        collect.rules[node.key] = node.rule
+        /* ---- 为自定义校验注入formGroup值，用户可在校验规则内获取 formGroup  ---- */
+        let rules = Array.isArray(node.rule) ? node.rule : [ node.rule ];
+        collect.rules[node.key] = rules.map(rule => { if (rule.validator) {
+          let validate = rule.validator;
+          rule.validator = (rule, value, callback) => {
+            validate(rule, value, callback, formGroup);
+          }
+        } return rule })
       }
       return collect;
     }, { formGroup: {}, rules: {} })

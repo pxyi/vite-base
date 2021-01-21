@@ -29,9 +29,9 @@
         </div>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item icon="el-icon-user" disabled>个人中心</el-dropdown-item>
+            <el-dropdown-item icon="el-icon-user" command="changePassword">修改密码</el-dropdown-item>
             <el-dropdown-item icon="el-icon-setting" disabled>主题设置</el-dropdown-item>
-            <el-dropdown-item divided command="logout">退出登录</el-dropdown-item>
+            <el-dropdown-item icon="el-icon-switch-button" divided command="logout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -48,6 +48,8 @@ import axios from 'axios';
 import {REMOVE_SUBJECT_LIST, REMOVE_USER_INFO, SET_SUBJECT, SET_SUBJECT_LIST} from '../store/types';
 import { AxResponse } from '../core/axios';
 import storage from '../utils/storage';
+import modal from '../utils/modal';
+import ChangePasswordComponent from './components/change-password.vue';
 
 const getSubjectList = (store): Promise<any> => {
   return new Promise(async resolve => {
@@ -112,7 +114,6 @@ export default {
     const setSubject = (course) => {
       store.commit(SET_SUBJECT, course);
       visible.value = false;
-
     }
 
     let commandList = new Map([
@@ -120,6 +121,9 @@ export default {
         store.commit(REMOVE_USER_INFO);
         store.commit(REMOVE_SUBJECT_LIST);
         router.push('/login');
+      }],
+      ['changePassword', () => {
+        modal.create({ title: '修改密码', width: 480, component: ChangePasswordComponent })
       }]
     ]);
 

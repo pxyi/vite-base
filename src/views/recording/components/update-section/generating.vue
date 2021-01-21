@@ -54,6 +54,7 @@ export default {
           sourceFrom: 4,
           paperChapters,
           totalScore: 0,
+          isPublic: 1,
           questionCount: paperChapters.length
         }
         let res = await axios.post<null, AxResponse>('/tiku/paper/addPaper', params, { headers: { 'Content-Type': 'application/json' } });
