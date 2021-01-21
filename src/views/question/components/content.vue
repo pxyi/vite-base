@@ -135,16 +135,18 @@ export default {
       loading.value = true;
       params && (__params = params);
       let res = await axios.post<null, AxResponse>(`/tiku/question/queryPage`, { ...__params, ...pageAorder}, { headers: { 'Content-Type': 'application/json' } });
-      dataset.value = res.json.records.map(n => ({
-         ...n,
-         ...{
-            createTime: n.createTime.split('-').join('/'),
-            difficult: difficultFilter(n.difficult),
-            answer: n.rightAnswer ? n.rightAnswer.map(a => a[n.basicQuestionType === 1 ? 'name' : 'content']).join('、') : '-'
-           }
-        })
-      );
-      pageAorder.total = res.json.total;
+      if (res.result) {
+        dataset.value = res.json.records.map(n => ({
+          ...n,
+          ...{
+              createTime: n.createTime.split('-').join('/'),
+              difficult: difficultFilter(n.difficult),
+              answer: n.rightAnswer ? n.rightAnswer.map(a => a[n.basicQuestionType === 1 ? 'name' : 'content']).join('、') : '-'
+            }
+          })
+        );
+        pageAorder.total = res.json.total;
+      }
       loading.value = false;
     }
 

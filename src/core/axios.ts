@@ -28,6 +28,7 @@ axios.interceptors.request.use((res: AxiosRequestConfig) => {
 axios.interceptors.response.use(res => {
   /* 1s 内禁止重复请求 */
   // setTimeout(() => { delete requestMap[res.config.url as string]; }, 1000);
+  res.data.errorCode && (res.data.errorCode === -1) && ElMessage({ type: 'warning', message: res.data.msg });
   return res.data;
 }, err => {
   ElLoading.service().close();
