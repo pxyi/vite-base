@@ -77,7 +77,7 @@ export default {
       });
     }
     
-    emitter.emit('ready', () => {
+    emitter.on('ready', () => {
       Object.keys(paperInfo.value).map(key => formGroup[key] = paperInfo.value[key]);
       axios.post<null, AxResponse>('/system/dictionary/queryDictByCodes', { typeCodesStr: 'QUES_SOURCE' }).then(res => selectMap.sourceList = res.json['QUES_SOURCE'])
       getSelectList();

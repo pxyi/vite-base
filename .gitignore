@@ -6,3 +6,4 @@ yarn.lock
 .history
 .idea
 yarn.json
+package-lock.json

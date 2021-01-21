@@ -54,14 +54,16 @@ export default {
 
     let loading = ref(false);
     let isChanged = ref(false);
-    !isPreview && emitter.emit('ready', () => {
-      setTimeout(() => {
-        emitter.on('test-paper-change',() => {
+    if (!isPreview) {
+      let isReady = false;
+      emitter.on('ready', () => setTimeout(() => isReady = true) );
+      emitter.on('test-paper-change',() => {
+        if (isReady) {
           isChanged.value = true;
           autoSave();
-        });
+        }
       });
-    });
+    }
 
     const autoSave = debounce(() => save(), 5000)
 

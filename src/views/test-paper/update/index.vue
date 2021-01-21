@@ -34,11 +34,9 @@ export default {
     axios.post<null, { json: any }>('/tiku/paper/getPaper', { id }).then((res) => {
       res.json.paperCharpts = res.json.paperCharpts.map(quest => { quest.questions.map(q => {q.question = q.question || { title: '默认标题' }; return q;}); return quest } )
       store.commit('set_paper_info', res.json);
-      readyFns.map(fn => fn());
       loading.close();
+      setTimeout(() => emitter.emit('ready') );
     });
-    let readyFns: any[] = [];
-    emitter.on('ready', (fn) => readyFns.push(fn));
 
     return { preview }
   }
