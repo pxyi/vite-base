@@ -4,6 +4,7 @@ import { RouterView } from 'vue-router';
 
 import './index.scss';
 import './element-variables.scss'
+import './setHead';
 
 import ElementPlus from 'element-plus';
 
