@@ -4,15 +4,16 @@
   "scripts": {
     "serve": "vite serve",
     "build": "vite build",
-	  "build:xinzhou": "vite build --mode xinzhou",
-	  "build:sike": "vite build --mode sike",
-	  "build:siketest": "vite build --mode siketest",
-	  "build:xiaoshou": "vite build --mode xiaoshou",
-	  "build:jinbang": "vite build --mode jinbang",
+    "build:xinzhou": "vite build --mode xinzhou",
+    "build:sike": "vite build --mode sike",
+    "build:siketest": "vite build --mode siketest",
+    "build:xiaoshou": "vite build --mode xiaoshou",
+    "build:jinbang": "vite build --mode jinbang",
     "typecheck": "vuedx-typecheck"
   },
   "dependencies": {
     "axios": "^0.21.0",
+    "crypto-js": "^4.0.0",
     "element-plus": "^1.0.1-beta.26",
     "js-md5": "^0.7.3",
     "lodash": "^4.17.20",

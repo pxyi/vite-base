@@ -7,6 +7,6 @@ export default {
   ...emitter,
   on: (eventName, fn) => {
     emitter.on(eventName, fn);
-    onUnmounted(() => emitter.off(eventName, fn) )
+    onUnmounted(() => emitter.off(eventName, fn))
   }
 };

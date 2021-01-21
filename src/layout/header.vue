@@ -40,7 +40,7 @@
 </template>
 
 <script lang="ts">
-import { computed, ref, onMounted, watch, onBeforeUnmount, Ref, isRef} from 'vue';
+import { computed, ref, onMounted, watch, Ref, isRef} from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import emitter from './../utils/mitt';
 import { useStore } from 'vuex';
@@ -121,11 +121,6 @@ export default {
         router.push('/login');
       }]
     ]);
-
-    onBeforeUnmount(() => {
-      emitter.off('slot', __setSlot );
-      emitter.off('effect', __setFns );
-    });
 
     return { slot, commandList, subjectList, subject, setSubject, visible, userInfo }
   }
