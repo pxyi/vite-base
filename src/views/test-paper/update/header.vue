@@ -14,7 +14,7 @@
       </div>
       <div class="btns">
         <el-button round @click="addPaper" v-if="!isPreview">添加试题</el-button>
-        <el-button round @click="download">下载</el-button>
+        <el-button round @click="download" v-if="allowPath.includes(`/teaching/test-paper#download`)">下载</el-button>
       </div>
     </div>
   </div>
@@ -29,6 +29,7 @@ import axios from 'axios';
 import emitter from '/@/utils/mitt';
 import { debounce, cloneDeep } from 'lodash';
 import addPaperComponent from './components/add-paper.vue';
+import { useStore } from 'vuex';
 
 export default {
   setup(props) {
@@ -103,8 +104,9 @@ export default {
       });
     }
 
+    let allowPath = useStore().getters.userInfo.roles.reduce((path, role) => path += role.menuUrls, '');
 
-    return { classType, classList, download, isPreview, save, loading, isChanged, addPaper }
+    return { classType, classList, download, isPreview, save, loading, isChanged, addPaper, allowPath }
   }
 }
 </script>

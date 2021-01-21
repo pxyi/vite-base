@@ -63,6 +63,7 @@ import { ElMessage, ElLoading } from 'element-plus';
 import createElement from '/@/utils/createElement';
 import Modal from '/@/utils/modal';
 import LessonComponent from './lesson.vue';
+import { useStore } from 'vuex';
 
 export default {
   setup() {
@@ -136,6 +137,8 @@ export default {
       request(false);
     }
 
+    let store = useStore();
+    let allowPath = store.getters.userInfo.roles.reduce((path, role) => path += role.menuUrls, '');
     const preview = (item) => {
       if(item.mediaType === 'url') {
         window.open(item.filePath)
@@ -148,18 +151,17 @@ export default {
           on: { click: () => { container.remove(); } }
         });
         // 打印
-        let printData = createElement('div', {
+        let printData = createElement('div', allowPath.includes(`/teaching/database#download`) ? {
           className: 'el-icon-printer',
           style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', bottom: '40px', right: '40px', zIndex: '10', cursor: 'pointer' },
           on: { click: () => { window.open(`${import.meta.env.VITE_APP_OFFICE_WEB365}info=2&furl=${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`) } }
-        });
+        } : {});
         //下载
-        let downloadData = createElement('div', {
+        let downloadData = createElement('div', allowPath.includes(`/teaching/database#download`) ? {
           className: 'el-icon-download',
           style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', bottom: '100px', right: '40px', zIndex: '10', cursor: 'pointer' },
-          on: { click: () => { let a  = createElement('a', { attrs:{ target: '_blank' } });a.download = item.fileName+'.'+item.ext;a.href = `${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`;a.click(); } }
-
-        });
+          on: { click: () => { let a = createElement('a', { attrs:{ target: '_blank' } });a.download = item.fileName+'.'+item.ext;a.href = `${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`;a.click(); } }
+        } : {});
         let container;
         if(item.ext === 'mp4') {
           let video = createElement('video',
