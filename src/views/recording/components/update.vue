@@ -23,6 +23,7 @@ import { cloneDeep } from 'lodash';
 import Modal from '/@/utils/modal';
 import GeneratingComponent from './update-section/generating.vue';
 import { questionFormat } from './../utils/question-format'
+import { AxResponse } from '/@/core/axios';
 
 export default {
   components: { MainComponent, ToolbarComponent },
@@ -38,12 +39,17 @@ export default {
 
     const isSync = computed(() => store.state.isSync);
 
-    axios.post<null, { json: any }>('/admin/questionImportLog/queryQuestionByImportId', { importId: props.id }).then(res => {
-      let questions = res.json.questionList.map(data => questionFormat(data));
-      store.commit('set_error_list', res.json.failInfo);
-      store.commit('set_data_set', questions);
+    axios.post<null, AxResponse>('/admin/questionImportLog/queryQuestionByImportId', { importId: props.id }).then(res => {
+      loading.close();
+      if (res.result) {
+        let questions = res.json.questionList.map(data => questionFormat(data));
+        store.commit('set_error_list', res.json.failInfo);
+        store.commit('set_data_set', questions);
 
-      allowGenerate.value = !res.json.paperId;
+        allowGenerate.value = !res.json.paperId;
+      } else {
+        ElMessage.warning(res.msg)
+      }
     });
 
     const blur = () => !isSync.value ? store.dispatch('checked_index_change', -1) : false;

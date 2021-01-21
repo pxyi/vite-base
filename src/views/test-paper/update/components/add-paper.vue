@@ -27,6 +27,7 @@ import axios from 'axios';
 import emitter from '/@/utils/mitt';
 import KnowledgeTree from '/@/views/question/components/knowledge-tree.vue';
 import Drawer from '/@/utils/drawer'
+import storage from '/@/utils/storage';
 
 export default {
   props: {
@@ -49,7 +50,7 @@ export default {
 
     const effectHandle = (fn) => fn(subject)
     try {
-      var subject = JSON.parse(window.localStorage.getItem('subject')!).code;
+      var subject = storage.get<any>('subject').code;
       emitter.on('effect', effectHandle);
     } catch (error) {
       window.location.href = './#/index';

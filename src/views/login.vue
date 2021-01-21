@@ -39,6 +39,7 @@ import { AxResponse } from "/@/core/axios";
 import { useStore } from "vuex";
 import { SET_USER_INFO } from "/@/store/types";
 import { useRoute, useRouter } from "vue-router";
+import storage from '/@/utils/storage';
 import backgroundImage1 from '/@/assets/login/login-bg-1.jpg';
 import backgroundImage2 from '/@/assets/login/login-bg-2.jpg';
 import backgroundImage3 from '/@/assets/login/login-bg-3.jpg';
@@ -51,7 +52,7 @@ export default {
     let store = useStore();
     let router = useRouter();
     let saveLoading = ref(false);
-    let rememberAccount = window.localStorage.getItem('account') ? JSON.parse(window.localStorage.getItem('account')!) : {};
+    let rememberAccount = storage.get<any>('account') || {};
     let formGroup = reactive({
       mobile: rememberAccount.mobile,
       md5Password: rememberAccount.md5Password,
@@ -67,12 +68,13 @@ export default {
         md5Password: md5(formGroup.md5Password),
       };
       saveLoading.value = true;
-      if (remember.value) { window.localStorage.setItem('account', JSON.stringify(formGroup)) } else { window.localStorage.removeItem('account') }
+      if (remember.value) { storage.set('account', formGroup) } else { storage.remove('account') }
       let res: AxResponse = await axios.post("/permission/auth/login", params);
       saveLoading.value = false;
       if (res && res.result) {
         store.commit(SET_USER_INFO, res.json);
-        localStorage.setItem("token", res.json.accessToken);
+
+        storage.set('token', res.json.accessToken);
         router.push("/home");
       } else {
         ElMessage.warning(res.msg);
@@ -111,20 +113,21 @@ export default {
   .login-content {
     width: 360px;
     padding: 40px 36px 60px;
-    border-radius: 20px;
-    background: rgba(255, 255, 255, .7);
+    border-radius: 10px;
+    background: rgba(15, 15, 15, .6);
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate3d(200px, -200px, 0);
     h1 {
+      color: #fff;
       font-size: 22px;
       line-height: 40px;
       text-align: center;
       margin-bottom: 30px;
     }
     .el-input__inner {
-      border-radius: 8px;
+      border-radius: 6px;
     }
     .el-input__prefix {
       font-size: 16px;
@@ -155,9 +158,10 @@ export default {
         width: 16px;
         height: 16px;
         border-radius: 4px;
-        background: #e9edf3;
+        background: #1AAFA7;
       }
       i {
+        color: #fff;
         position: absolute;
         top: 2px;
         left: 1px;
@@ -165,12 +169,13 @@ export default {
       span {
         display: inline-block;
         margin-left: 6px;
+        color: #fff;
         vertical-align: top;
       }
     }
     p {
       float: right;
-      color: #3ABAB3;
+      color: #fff;
     }
   }
 }

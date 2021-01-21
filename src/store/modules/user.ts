@@ -1,23 +1,23 @@
-import Vuex from 'vuex';
 import { SET_USER_INFO, REMOVE_USER_INFO } from '../types';
+import storage from '/@/utils/storage';
 interface UserState {
   userInfo: any;
   accessToken: string;
 }
-let userInfo = window.localStorage.getItem('userinfo');
+let userInfo = storage.get('userinfo');
 const state = {
-  userInfo: userInfo ? JSON.parse(userInfo) : null,
+  userInfo: userInfo,
   accessToken: ''
 }
 const mutations = {
   [ SET_USER_INFO ] (state: UserState, payload: any) {
     state.userInfo = payload;
-    window.localStorage.setItem('userinfo', JSON.stringify(payload))
+    storage.set('userinfo', JSON.stringify(payload))
   },
   [ REMOVE_USER_INFO ] (state: UserState) {
-    window.localStorage.removeItem('userinfo');
-    window.localStorage.removeItem('token');
-    window.localStorage.removeItem('subject')
+    storage.remove('userinfo');
+    storage.remove('token');
+    storage.remove('subject')
   }
 }
 

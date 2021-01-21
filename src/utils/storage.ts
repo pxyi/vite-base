@@ -3,6 +3,7 @@ import { encrypt, decrypt } from './aes';
 interface StorageInterface {
   get: <T>(key: string) => null | string | T;
   set: (key: string, value: object | string) => void;
+  remove: (key: string) => void;
 }
 
 const Storage: StorageInterface = {
@@ -18,6 +19,9 @@ const Storage: StorageInterface = {
     let val = value instanceof Object ? JSON.stringify(value) : value;
     window.localStorage.setItem(encrypt(key), encrypt(val));
   },
+  remove(key: string) {
+    window.localStorage.removeItem(encrypt(key));
+  }
 };
 
 export default Storage

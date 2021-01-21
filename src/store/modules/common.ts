@@ -1,4 +1,5 @@
 import { SET_SUBJECT, SET_SUBJECT_LIST, REMOVE_SUBJECT_LIST } from '../types';
+import storage from '/@/utils/storage';
 
 const state = {
   subjectList: null,
@@ -9,7 +10,7 @@ const state = {
 }
 const mutations = {
   [ SET_SUBJECT ] (state, payload) {
-    window.localStorage.setItem('subject', JSON.stringify(payload));
+    storage.set('subject', payload);
     state.subject = payload;
   },
   [ SET_SUBJECT_LIST ] (state, payload) {

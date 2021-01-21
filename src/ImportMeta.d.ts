@@ -18,9 +18,10 @@ declare interface ImportMeta {
 }
 
 declare interface ImportMetaEnv {
-  [key: string]: string | boolean | undefined
   BASE_URL: string
   MODE: string
   DEV: boolean
   PROD: boolean
+  VITE_APP_BASE_URL: string
+  [key: string]: string | boolean | undefined
 }
