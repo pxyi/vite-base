@@ -1,52 +1,56 @@
 <template>
   <div class="cus__condition__container">
     <cus-skeleton :loading="loading">
-      <div class="cus__condition__header"><slot /></div>
       <div class="cus__condition__content">
-        <template v-for="node in showNodeList" :key="node.key">
-          <div class="cus__class__item" v-show="!node.hide || isOpened">
+        <div class="cus__condition__header">
+          <template v-for="key in Object.keys(multipleGroup)" :key="key">
+            <el-tag type="warning" effect="plain" size="small" closable v-if="multipleGroup[key].value.length" @close="multipleGroup[key].value = []; submit()">
+              <i>{{ multipleGroup[key].label }}：</i>
+              <span v-for="cell in multipleGroup[key].value" :key="cell.id">{{ cell.name }}</span>
+            </el-tag>
+          </template>
+        </div>
+        <template v-for="node in conditions" :key="node.key">
+          <div class="cus__class__item" v-show="(!node.isHide || !multipleGroup[node.key]) && !multipleGroup[node.key]?.value.length">
             <div class="cus__class__label">{{ node.label }}</div>
-            <div class="cus__class__box" :class="{ 'is__element': !!node.type }">
+            <div :class="['cus__class__box', { 'is__element': !!node.type, 'is__multiple': !!node.multiple }]">
               <template v-if="node.type === 'input'">
                 <el-input size="mini" suffix-icon="el-icon-search"
                   v-model="formGroup[node.key]"
                   :placeholder="node.placeholder || `根据${node.label}搜索`"
-                  @keydown.enter="setQueryValue(node.key, formGroup[node.key])"
+                  @keydown.enter="setQueryValue(node, formGroup[node.key])"
                 />
               </template>
               <template v-else>
-                <div
-                  :class="{ active: cell.id === formGroup[node.key], 'cus__class__cell': true }"
-                  v-for="cell in (node.options || list[mapping.find(i => i.text === node.label).key])"
-                  :key="cell.id"
-                  @click="setQueryValue(node.key, cell.id)"
-                >
-                  <span>{{ cell.name }}</span>
+                <template v-for="(cell, idx) in (node.options || list[mapping.find(i => i.text === node.label).key])" :key="cell.id">
+                  <div :class="['cus__class__cell', { active: cell.id === formGroup[node.key] || formGroup[node.key] && cell.id === formGroup[node.key][0] }]"
+                    @click="setQueryValue(node, cell.id)"
+                    v-if="!node.isMultiple"
+                  >
+                    <span>{{ cell.name }}</span>
+                  </div>
+                  <template v-else>
+                    <div class="cus__class__cell" v-if="idx > 0" @click.prevent="multipleChange(node, cell)">
+                      <el-checkbox readonly :modelValue="!!node[node.key]?.find(i => i.id === cell.id)">{{ cell.name }}</el-checkbox>
+                    </div>
+                  </template>
+                </template>
+              </template>
+              <template v-if="!!node.multiple">
+                <div :class="['cus__switch__btn', { 'is__active': node.isMultiple }]" @click="node.isMultiple = true">
+                  <span>多选</span>
                 </div>
               </template>
             </div>
           </div>
+
+          <div v-show="node.isMultiple" class="cus__cell__multiple">
+            <el-tag size="small" effect="plain" type="info" @click="node[node.key] = null; node.isMultiple = false">取消</el-tag>
+            <el-tag size="small" effect="dark" type="warning" @click="multipleSubmit(node)">提交</el-tag>
+          </div>
         </template>
         <template v-if="showMoreBtn">
-          <div class="cus__condition--hide-list" ref="hideRef" v-show="isOpened">
-            <template v-for="node in hideNodeList" :key="node.key">
-              <div class="cus__class__item">
-                <div class="cus__class__label">{{ node.label }}</div>
-                <div class="cus__class__box">
-                  <div
-                    :class="{ active: cell.id === formGroup[node.key], 'cus__class__cell': true }"
-                    v-for="cell in (node.options || list[mapping.find(i => i.text === node.label).key])"
-                    :key="cell.id"
-                    @click="setQueryValue(node.key, cell.id)"
-                  >
-                    <span>{{ cell.name }}</span>
-                  </div>
-                </div>
-              </div>
-            </template>
-          </div>
-
-          <div class="cus__condition--toggle" @click="isOpened = !isOpened">
+          <div class="cus__condition--toggle" @click="slideChange">
             <span>高级筛选</span>
             <i :class="[`el-icon-caret-${isOpened ? 'top' : 'bottom'}`]" />
           </div>
@@ -59,7 +63,7 @@
 import axios from 'axios';
 import emitter from './../../utils/mitt';
 import { AxResponse } from './../../core/axios';
-import { reactive, ref, Ref, PropType, onUnmounted } from 'vue';
+import { reactive, ref, Ref, PropType } from 'vue';
 import { useStore } from 'vuex';
 import { ElInput } from 'element-plus';
 
@@ -70,6 +74,8 @@ interface ICondition {
   hide  : boolean;
   options?: any[];
   hidden?: boolean;
+  isHide?: boolean;
+  multiple?: string;
 }
 
 const mapping = [
@@ -90,10 +96,6 @@ export default {
     nodeList: {
       type: Array as PropType<ICondition[]>,
       default: () => []
-    },
-    multiple: {
-      type: Boolean,
-      default: () => false
     }
   },
   components: { ElInput },
@@ -102,24 +104,44 @@ export default {
 
     let store = useStore();
 
-    let showNodeList: ICondition[] = [];
-    let hideNodeList: ICondition[] = [];
+    let conditions: Ref<ICondition[]> = ref([]);
+
+    let multipleGroup = reactive({});
 
     let showMoreBtn = ref(false);
     let formGroup = reactive(props.nodeList.reduce( (controls, node) => {
       controls[node.key] = typeof node.default === 'undefined' ? null : node.default;
       node.options && (node.options = [{ name: '全部', id: null }, ...node.options]);
       if (node.hidden) { return controls; }
-      if (node.hide) {
-        hideNodeList.push(node);
-        showMoreBtn.value = true;
-      } else {
-        showNodeList.push(node);
-      }
+      if (node.hide) { showMoreBtn.value = true; }
+      if (node.multiple) { multipleGroup[node.key] = { label: node.label, value: []}; }
+      conditions.value.push({...node, isHide: !!node.hide })
       return controls;
     }, {}));
 
-    onUnmounted(() => { emitter.off('effect', getRules) } );
+    const multipleChange = (node, cell) => {
+      if (node[node.key]) {
+        let index = node[node.key].findIndex(i => i.id === cell.id);
+        index > -1 ? node[node.key].splice(index, 1) : node[node.key].push(cell)
+      } else {
+        node[node.key] = [ cell ]
+      }
+    }
+    const multipleSubmit = (node) => {
+      if (node[node.key] && node[node.key].length) {
+        multipleGroup[node.key].value = node[node.key];
+      }
+      formGroup[node.key] = null;
+      node[node.key] = null;
+      node.isMultiple = false;
+      submit();
+    }
+
+    let isOpened = ref(false);
+    const slideChange = () => {
+      conditions.value.map(c =>  c.hide && (c.isHide = isOpened.value) )
+      isOpened.value = !isOpened.value;
+    }
 
     let list = ref({});
     let loading = ref(true);
@@ -131,18 +153,20 @@ export default {
     }
     emitter.emit('effect', getRules);
 
-    const setQueryValue = (type, val) => {
-      formGroup[type] = val;
-      emit('submit', Object.entries(formGroup).reduce((group, node) => {
-        node[1] !== '' && (group[node[0]] = node[1])
+    const setQueryValue = (node, val) => {
+      formGroup[node.key] = node.multiple ? [val] : val;
+      submit();
+    }
+    const submit = () => {
+      let val = props.nodeList.reduce((group, node) => {
+        group[node.key] = node.multiple && multipleGroup[node.key].value.length ? multipleGroup[node.key].value.map(i => i.id) : formGroup[node.key];
         return group;
-      }, {}) );
+      }, {});
+      console.log(val)
+      emit('submit', val);
     }
 
-    let hideRef: Ref<HTMLElement | null> = ref(null);
-    let isOpened = ref(false);
-
-    return { list, showNodeList, hideNodeList,  formGroup, setQueryValue, mapping, showMoreBtn, hideRef, isOpened, loading }
+    return { list, conditions, formGroup, setQueryValue, mapping, showMoreBtn, isOpened, loading, slideChange, multipleGroup, multipleChange, multipleSubmit, submit }
   }
 }
 
@@ -183,6 +207,27 @@ const getCondition = (userId, subjectCode, nodeList): Promise<any> => {
 .cus__condition__container {
   margin-bottom: 20px;
   position: relative;
+  .cus__condition__header {
+    padding: 0 24px;
+    .el-tag {
+      margin: 10px 17px 10px 0;
+      vertical-align: top;
+      padding-right: 20px;
+      margin-right: 17px;
+      border-radius: 14px;
+      overflow: hidden;
+      position: relative;
+      span:not(:last-of-type)::after {
+        content: '、'
+      }
+      :deep(.el-icon-close) {
+        font-size: 16px;
+        position: absolute;
+        top: 3px;
+        right: 4px;
+      }
+    }
+  }
   .cus__condition__content {
     background: #fff;
     border-radius: 6px;
@@ -192,7 +237,7 @@ const getCondition = (userId, subjectCode, nodeList): Promise<any> => {
   }
   .cus__class__item {
     display: flex;
-    background: rgba(250, 173, 20, 0.14);
+    background: rgba(250, 173, 20, .14);
     &:not(:last-child) {
       border-bottom: solid 1px #fff;
     }
@@ -216,13 +261,17 @@ const getCondition = (userId, subjectCode, nodeList): Promise<any> => {
       display: flex;
       flex-wrap: wrap;
       flex: 1 1 124px;
-      padding: 7px 24px 0;
+      padding: 7px 0 0 24px;
       background: #fff;
+      position: relative;
       &.is__element {
         .el-input {
           width: 300px;
           height: 28px;
         }
+      }
+      &.is__multiple {
+        padding-right: 64px;
       }
       .cus__class__cell {
         display: inline-block;
@@ -249,6 +298,38 @@ const getCondition = (userId, subjectCode, nodeList): Promise<any> => {
         &.active {
           pointer-events: none;
         }
+      }
+      .cus__switch__btn {
+        padding: 0 12px;
+        color: #77808D;
+        height: 24px;
+        line-height: 24px;
+        border-radius: 16px;
+        border: 1px solid #E6E6E6;
+        cursor: pointer;
+        transition: all .25s;
+        position: absolute;
+        top: 7px;
+        right: 12px;
+        &.is__active {
+          color: #FAAD14;
+          border-color: #FAAD14;
+        }
+      }
+    }
+  }
+
+  .cus__cell__multiple {
+    height: 34px;
+    line-height: 34px;
+    text-align: center;
+    background: #FEF3DE;
+    border-bottom: solid 1px #fff;
+    .el-tag {
+      margin: 0 8px;
+      cursor: pointer;
+      &:active {
+        opacity: .8;
       }
     }
   }

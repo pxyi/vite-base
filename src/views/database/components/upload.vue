@@ -84,7 +84,7 @@ export default {
       fileList.value.splice(fileList.value.findIndex(f => file.filePath === f.filePath), 1);
     };
 
-    let isPublic = ref(0);
+    let isPublic = ref(1);
 
     const save = (resolve, reject) => {
       if (!fileList.value.every(file => file.status === 'success')) {
