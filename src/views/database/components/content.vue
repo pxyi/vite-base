@@ -97,7 +97,7 @@ export default {
     const request = async (reset = true) => {
       loading.value = true;
       let list = [ axios.post<null, AxResponse>('/admin/material/queryPage', { ...formGroup, isPublic: 1 },{ headers: { 'Content-Type': 'application/json' } }) ];
-      reset && list.push(axios.post<null, AxResponse>('/admin/material/queryCountByType', { ...formGroup },{ headers: { 'Content-Type': 'application/json' } }));
+      reset && list.push(axios.post<null, AxResponse>('/admin/material/queryCountByType', { ...formGroup, isPublic: 1 },{ headers: { 'Content-Type': 'application/json' } }));
       let results = await Promise.all(list);
       if (reset) {
         typeList.value = typeList.value.map(item => { item.count = results[1].json[item.key]; return item; });
