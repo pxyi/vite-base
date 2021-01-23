@@ -151,7 +151,7 @@ export default {
           on: { click: () => { container.remove(); } }
         });
         // 打印
-        let printData = createElement('div', allowPath.includes(`/teaching/database#download`) ? {
+        let printData = createElement('div', allowPath.includes(`/teaching/database#print`) ? {
           className: 'el-icon-printer',
           style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', bottom: '40px', right: '40px', zIndex: '10', cursor: 'pointer' },
           on: { click: () => { window.open(`${import.meta.env.VITE_APP_OFFICE_WEB365}info=2&furl=${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`) } }
