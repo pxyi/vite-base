@@ -57,10 +57,16 @@ export default {
     let templateList: Ref<IAny> = ref([]);
     let subjectCode = store.getters.subject.code || props.subjectId;
 
+
+    let [allowPath, isAdmin] = store.getters.userInfo.roles.reduce((group, role) => {
+        group[0] += role.menuUrls;
+        group[1] = group[1] || !!role.isAdmin;
+        return group;
+      }, ['', false]);
     let formGroup = reactive({
       type: 2,
       templateId: null,
-      format: 1
+      format: isAdmin || allowPath.includes('/test-paper#download') ? 1 : 2
     })
     axios.post<null, { json: IAny }>('/system/paperTemplate/queryBySubjectCode', { subjectCode }).then(res => {
       templateList.value = res.json;

@@ -8,9 +8,8 @@ const handle = (el, binding) => {
   if (isAdmin) { return; }
   let path = binding.instance.$route.path;
   if (binding.value) {
-    
     if (Array.isArray(binding.value)) {
-      !binding.value.reduce((allow, str) => allow || allowPath.includes(`${path}#${str}`), false) && el && el.remove()
+      !binding.value.reduce((allow, str) => allow || allowPath.includes(`${path}#${str}`), false) && el.remove()
     } else {
       !allowPath.includes(`${path}#${binding.value}`) && el && el.remove();
     }

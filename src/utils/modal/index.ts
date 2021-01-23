@@ -2,8 +2,10 @@ import ElementPlus from 'element-plus';
 import { Component, createApp } from 'vue';
 import createElement from './../createElement';
 import Components, { AppComponents } from './../../components';
-import Store from './../../store';
+import Store from '/@/store';
 import Directives from '/@/utils/directives';
+import router from '/@/router'
+
 import './modal.scss';
 const create = (opt: ModalCreate) => {
   let options = {
@@ -77,6 +79,7 @@ const create = (opt: ModalCreate) => {
     app.use(Components);
     app.use(Store);
     app.use(ElementPlus);
+    app.use(router);
     app.provide('close', remove);
     const vm = app.mount(modalBody);
     document.body.appendChild(container);
