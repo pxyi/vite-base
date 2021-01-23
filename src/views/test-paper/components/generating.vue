@@ -103,7 +103,7 @@
 import { ref, Ref, reactive, computed, inject } from 'vue';
 import axios from 'axios';
 import { AxResponse } from '/@/core/axios';
-import KnowledgeTreeComponent from '/@/views/question/components/knowledge-tree.vue';
+import KnowledgeTreeComponent from '/@/views/common/knowledge-tree.vue';
 import { useStore } from 'vuex';
 import { ElMessage } from 'element-plus';
 import emitter from '/@/utils/mitt';

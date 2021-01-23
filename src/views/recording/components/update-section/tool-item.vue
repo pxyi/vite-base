@@ -219,7 +219,7 @@ export default {
       dataset.value = cloneData;
     }
 
-    const goBack = () => store.commit('set_checked_index', -1);
+    const goBack = () => store.dispatch('checked_index_change', -1);
 
     const syncLabel = () => {
       let cloneData = cloneDeep(dataset.value);
