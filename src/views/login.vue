@@ -176,7 +176,6 @@ export default {
       }
     }
     p {
-      float: right;
       color: #fff;
     }
   }
