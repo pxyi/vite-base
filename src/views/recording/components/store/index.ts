@@ -21,8 +21,6 @@ export default new Vuex.Store<IState>({
     'set_data_set'(state, payload) {
       state.dataSet = payload
     },
-    'set_is_sync'(state, payload) {
-    },
     'delete_data'(state, payload) {
       state.checkedIndex = -1;
       state.dataSet = state.dataSet.filter((i: {id}) => i.id !== payload);
@@ -55,8 +53,8 @@ export default new Vuex.Store<IState>({
         }).then(res => {
           commit('set_data_set', cloneDeep(state.dataSet.map((d: any) => { d.id === res.json.id && (d.failReason = res.json.failReason); return d;}) ));
         });
-        commit('set_checked_index', payload);
       }
+      commit('set_checked_index', payload);
     }
   }
 });

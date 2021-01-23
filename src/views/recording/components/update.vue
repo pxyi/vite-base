@@ -35,8 +35,6 @@ export default {
 
     let dataset = computed(() => store.state.dataSet);
 
-    let focusData = computed(() => dataset.value[store.state.checkedIndex]);
-
     axios.post<null, AxResponse>('/admin/questionImportLog/queryQuestionByImportId', { importId: props.id }).then(res => {
       if (res.result) {
         let questions = res.json.questionList.map(data => questionFormat(data));

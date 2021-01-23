@@ -63,7 +63,7 @@ export default {
 
     let focusData = computed(() => dataset.value[store.state.checkedIndex]);
 
-    const focusChange = (index) => store.commit('set_checked_index', index);
+    const focusChange = (index) => store.dispatch('checked_index_change', index);
 
     const remove = async (data) => {
       data.loading = true;
