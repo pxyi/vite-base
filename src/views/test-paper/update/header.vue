@@ -49,7 +49,7 @@ export default {
         component: downloadComponent,
         props: { subjectId: paperInfo.value.subjectId }
       }).then((res: any) => {
-        window.open(`${import.meta.env.VITE_APP_BASE_URL}/tiku/paper/downPaper?paperId=${ id }&type=${ res.type }&templateId=${ res.templateId }`);
+        window.open(`${import.meta.env.VITE_APP_BASE_URL}/tiku/paper/downPdfPaper?paperId=${ id }&type=${ res.type }&templateId=${ res.templateId }`);
       });
     }
 
@@ -82,7 +82,7 @@ export default {
     }
 
     const addPaper = () => {
-      Drawer.create({ 
+      Drawer.create({
         title: '选择试题',
         closable: false,
         width: 'calc(100% - 200px)',
