@@ -64,7 +64,7 @@ export default {
   }
 }
 .layout__container {
-  height: 100%;
+  height: calc(100vh - 100px);
   overflow: auto;
 }
 </style>

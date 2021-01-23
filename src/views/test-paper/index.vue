@@ -103,7 +103,7 @@ export default {
     const download = (data) => {
       //1:手动 2:智能 3:上传
       if (data.sourceFrom == 3) {
-        window.open(`${import.meta.env.VITE_APP_BASE_URL}${data.filePath}`);
+        window.open(`http://web365.xiaohe.com:8088/?info=3&furl=${import.meta.env.VITE_APP_BASE_URL}${data.filePath}`);
         axios.post<any, AxResponse>('/tiku/paper/countDownloadPaper', { paperId: data.id }).then(res => res.result && (data.downloadCount = res.json.downloadCount));
       } else {
         Modal.create({
