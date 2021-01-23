@@ -26,7 +26,7 @@ import { useStore } from 'vuex';
 import { ElMessage } from 'element-plus';
 import axios from 'axios';
 import emitter from '/@/utils/mitt';
-import KnowledgeTree from '/@/views/question/components/knowledge-tree.vue';
+import KnowledgeTree from '/@/views/common/knowledge-tree.vue';
 
 export default {
   props: {
