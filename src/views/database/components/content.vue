@@ -20,7 +20,7 @@
         <div class="box" v-if="dataset.length">
           <div class="cell" v-for="data in dataset" :key="data.id">
             <div class="cover"><el-image :src="`${filePathBase}${data.imgPath}`" fit="cover"></el-image></div>
-            <p>{{ data.fileName }}</p>
+            <p><i v-if="data.isPublic === 0 && data.creatorId === userId">【个人库】</i>{{ data.fileName }}</p>
             <div class="mask">
               <el-dropdown placement="bottom-end" trigger="click" @command="cellHandle($event, data)">
                 <i class="el-icon-more" />
@@ -67,9 +67,13 @@ import { useStore } from 'vuex';
 
 export default {
   setup() {
+    let store = useStore();
+
     let dataset = ref([]);
     let loading = ref(true);
     let filePathBase = import.meta.env.VITE_APP_BASE_URL;
+    let userId = store.getters.userInfo.user.id;
+
     let formGroup = reactive({
       type: null,
       fileName: null,
@@ -92,7 +96,7 @@ export default {
 
     const request = async (reset = true) => {
       loading.value = true;
-      let list = [ axios.post<null, AxResponse>('/admin/material/queryPage', { ...formGroup },{ headers: { 'Content-Type': 'application/json' } }) ];
+      let list = [ axios.post<null, AxResponse>('/admin/material/queryPage', { ...formGroup, isPublic: 1 },{ headers: { 'Content-Type': 'application/json' } }) ];
       reset && list.push(axios.post<null, AxResponse>('/admin/material/queryCountByType', { ...formGroup },{ headers: { 'Content-Type': 'application/json' } }));
       let results = await Promise.all(list);
       if (reset) {
@@ -137,7 +141,6 @@ export default {
       request(false);
     }
 
-    let store = useStore();
     let allowPath = store.getters.userInfo.roles.reduce((path, role) => path += role.menuUrls, '');
     const preview = (item) => {
       if(item.mediaType === 'url') {
@@ -203,7 +206,7 @@ export default {
       })
     }
 
-    return { typeList, formGroup, request, loading, dataset, cellHandle, preview, addLesson, filePathBase, sortHandle }
+    return { typeList, formGroup, request, loading, dataset, cellHandle, preview, addLesson, filePathBase, sortHandle, userId }
   }
 }
 </script>
@@ -307,6 +310,9 @@ export default {
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 2;
         overflow: hidden;
+        i {
+          color: #1AAFA7;
+        }
       }
       .mask {
         width: 100%;

@@ -27,6 +27,19 @@
         </div>
       </div>
     </div>
+    <div class="controls">
+      <div class="label">试卷格式</div>
+      <div class="radio-group">
+        <div class="radio-cell" :class="{ 'is__checked': formGroup.format === 1 }" @click="formGroup.format = 1" >
+          <span>Word</span>
+          <i class="el-icon-check" />
+        </div>
+        <div class="radio-cell" :class="{ 'is__checked': formGroup.format === 2 }" v-permissions="'print'" @click="formGroup.format = 2" >
+          <span>PDF</span>
+          <i class="el-icon-check" />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -46,7 +59,8 @@ export default {
 
     let formGroup = reactive({
       type: 2,
-      templateId: null
+      templateId: null,
+      format: 1
     })
     axios.post<null, { json: IAny }>('/system/paperTemplate/queryBySubjectCode', { subjectCode }).then(res => {
       templateList.value = res.json;

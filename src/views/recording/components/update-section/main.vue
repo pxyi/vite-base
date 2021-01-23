@@ -8,7 +8,7 @@
         <a @click.stop="seeFail">查看</a>
       </div>
     </div>
-    <div class="main-content" :class="{ 'is__sync': isSync }">
+    <div class="main-content">
       <div class="item" @click.stop :class="{ 'is__focus': focusData?.id === data.id }" v-for="(data, index) in dataset" :key="data.id">
         <div class="mask" @click.stop="focusChange(index)"></div>
         <div class="title">
@@ -63,8 +63,6 @@ export default {
 
     let focusData = computed(() => dataset.value[store.state.checkedIndex]);
 
-    let isSync = computed(() => store.state.isSync);
-
     const focusChange = (index) => store.commit('set_checked_index', index);
 
     const remove = async (data) => {
@@ -94,7 +92,7 @@ export default {
       dataset.value = dataSet;
     }
 
-    return { dataset, errorList, focusData, focusChange, remove, isSync, seeFail, questExchange, changeHandle }
+    return { dataset, errorList, focusData, focusChange, remove, seeFail, questExchange, changeHandle }
   }
 }
 </script>
@@ -159,9 +157,6 @@ export default {
     flex: auto;
     padding: 10px 80px;
     overflow: auto;
-    &.is__sync .item {
-      border-color: #1AAFA7;
-    }
     .item {
       padding: 20px 20px 30px;
       margin-top: 10px;

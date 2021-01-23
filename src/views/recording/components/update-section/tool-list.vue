@@ -24,7 +24,7 @@ export default {
 
     let setFocusData = (idx) => {
       let top = (document.querySelectorAll('.main-content .item')[idx] as HTMLElement).offsetTop;
-      ScrollTop(document.querySelector('.main-content') as Element, top - 80, 500);
+      ScrollTop(document.querySelector('.main-content') as Element, top - 60, 500);
       store.commit('set_checked_index', idx)
     };
 

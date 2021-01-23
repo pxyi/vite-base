@@ -55,8 +55,8 @@
 import { ref, reactive,toRefs, onMounted, Ref, watch } from 'vue';
 import HeaderRefComponent from './components/header-ref.vue';
 import ContentComponent from './components/content.vue';
-import KnowledgeTree from './components/knowledge-tree.vue';
-import ChapterTreeComponent from './components/chapter-tree.vue';
+import KnowledgeTree from '/@/views/common/knowledge-tree.vue';
+import ChapterTreeComponent from '/@/views/common/chapter-tree.vue';
 import emitter from '/@/utils/mitt';
 import { useStore } from 'vuex';
 import axios from 'axios';

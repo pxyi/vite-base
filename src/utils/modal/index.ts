@@ -3,6 +3,7 @@ import { Component, createApp } from 'vue';
 import createElement from './../createElement';
 import Components, { AppComponents } from './../../components';
 import Store from './../../store';
+import Directives from '/@/utils/directives';
 import './modal.scss';
 const create = (opt: ModalCreate) => {
   let options = {
@@ -72,6 +73,7 @@ const create = (opt: ModalCreate) => {
     };
 
     const app = createApp(options.component, { ...options.props });
+    Directives(app)
     app.use(Components);
     app.use(Store);
     app.use(ElementPlus);

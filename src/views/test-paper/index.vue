@@ -32,7 +32,7 @@
           <div class="list__actions">
             <el-button type="text" @click="preview(data)"><i class="iconfont iconsearch-eye-line" /><span>预览</span></el-button>
             <el-button type="text" v-permissions="'update'" @click="update(data)" v-if="data.sourceFrom !== 3"><i class="iconfont iconfile-edit-line" /><span>编辑</span></el-button>
-            <el-button v-permissions="'download'" type="text" @click="download(data)"><i class="iconfont icondayin" /><span>下载/打印</span></el-button>
+            <el-button v-permissions="['download', 'print']" type="text" @click="download(data)"><i class="iconfont icondayin" /><span>下载/打印</span></el-button>
             <el-popconfirm title="确定要删除此试卷吗？" confirmButtonText='确定' cancelButtonText='取消' @confirm="remove(data.id)">
               <template #reference>
                 <el-button type="text" v-permissions="'delete'"><i class="iconfont iconshanchu" /><span>删除</span></el-button>
@@ -111,7 +111,7 @@ export default {
           width: 640,
           component: downloadComponent
         }).then((res: any) => {
-          window.open(`${import.meta.env.VITE_APP_BASE_URL}/tiku/paper/downPaper?paperId=${ data.id }&type=${ res.type }&templateId=${ res.templateId }`);
+          window.open(`${import.meta.env.VITE_APP_BASE_URL}/tiku/paper/${res.format === 1 ? 'downPaper' : 'downPdfPape'}?paperId=${ data.id }&type=${ res.type }&templateId=${ res.templateId }`);
           data.downloadCount++;
         });
       }
