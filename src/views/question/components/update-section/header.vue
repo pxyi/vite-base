@@ -58,11 +58,10 @@
 
 <script lang="ts">
 import { ref, reactive, computed, Ref } from 'vue'
-import KnowledgeTreeComponent from './../knowledge-tree.vue';
+import KnowledgeTreeComponent from '/@/views/common/knowledge-tree.vue';
 import { useStore } from 'vuex';
 import axios from 'axios';
 import { AxResponse } from '/@/core/axios';
-import { log } from 'util';
 
 export default {
   props: ['loading'],
