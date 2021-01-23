@@ -101,6 +101,9 @@ export default {
       if (e && e[2]) {
         let res = await axios.post<null, AxResponse>('/admin/publicSchool/queryAll', { areaId: e[2] });
         schoolList.value = res.json;
+      } else {
+        schoolList.value = [];
+        params.questionSource.publicSchoolIds = null;
       }
     }
 
