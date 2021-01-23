@@ -1,6 +1,5 @@
 <template>
   <div class="toolbar-container">
-    <div class="title">{{ isItem && isItem.id ? '设置标签' : '题目列表' }}</div>
     <ToolItem />
     <ToolList />
   </div>
@@ -10,14 +9,11 @@
 import { ref, computed } from 'vue';
 import ToolList from './tool-list.vue';
 import ToolItem from './tool-item.vue';
-import store from './../store';
 
 export default {
   components:{ ToolList, ToolItem },
   setup() {
-    let isItem = computed(() => store.state.checkedIndex > -1);
-
-    return { isItem };
+    
   }
 }
 </script>
@@ -28,8 +24,9 @@ export default {
   flex-direction: column;
   height: 100%;
   padding: 20px 0;
-  .title {
-    margin: 0 15px;
+  position: relative;
+  :deep(.title) {
+    margin: 0 15px 12px;
     height: 40px;
     color: #fff;
     font-size: 16px;

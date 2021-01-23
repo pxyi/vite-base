@@ -1,9 +1,10 @@
 <template>
   <div class="tool-item-content" v-if="data">
-    <h4>
-      <i class="el-icon-arrow-left" @click.stop="indexChange(-1)" :class="{ 'is__disabled': index === 0 || isSync }" />
+    <div class="go-back"><span @click="goBack"><i class="el-icon-arrow-left" /><i class="el-icon-arrow-left" /><i class="el-icon-arrow-left" /><span>返回题目列表</span></span></div>
+    <h4 class="title">
+      <i class="el-icon-arrow-left" @click.stop="indexChange(-1)" :class="{ 'is__disabled': index === 0 }" />
       <span>第<i>{{ index + 1 }}</i>题</span>
-      <i class="el-icon-arrow-right" @click.stop="indexChange(1)" :class="{ 'is__disabled': index === dataset.length - 1 || isSync}" />
+      <i class="el-icon-arrow-right" @click.stop="indexChange(1)" :class="{ 'is__disabled': index === dataset.length - 1 }" />
     </h4>
     <div class="tool-item-main" v-if="data && data.id">
       <div class="flex-box">
@@ -14,7 +15,7 @@
         <div class="flex-cell">
           <div class="tool-label">年级</div>
           <div class="tool-control">
-            <el-select size="medium" placeholder="选择年级" v-model="data.gradeId" v-if="selectMap.gradeList.length" @change="syncTag">
+            <el-select size="medium" placeholder="选择年级" v-model="data.gradeId" v-if="selectMap.gradeList.length">
               <el-option v-for="option in selectMap.gradeList" :key="option.id" :value="option.id" :label="option.name" />
             </el-select>
           </div>
@@ -24,7 +25,7 @@
         <div class="flex-cell">
           <div class="tool-label">题型</div>
           <div class="tool-control">
-            <el-select size="medium" placeholder="选择题型" :disabled="isSync" v-model="data.type" v-if="selectMap.questionTypeList.length" @change="typeChange($event)">
+            <el-select size="medium" placeholder="选择题型" v-model="data.type" v-if="selectMap.questionTypeList.length" @change="typeChange($event)">
               <el-option v-for="option in selectMap.questionTypeList" :key="option.jyQuestionType" :value="option.jyQuestionType" :label="option.jyQuestionTypeName" />
             </el-select>
           </div>
@@ -34,7 +35,7 @@
         <div class="flex-cell">
           <div class="tool-label">类别</div>
           <div class="tool-control">
-            <el-select size="medium" placeholder="选择类别" v-model="data.category" v-if="selectMap.categoryList.length" @change="syncTag">
+            <el-select size="medium" placeholder="选择类别" v-model="data.category" v-if="selectMap.categoryList.length">
               <el-option v-for="option in selectMap.categoryList" :key="option.val" :value="option.val" :label="option.name" />
             </el-select>
           </div>
@@ -42,7 +43,7 @@
         <div class="flex-cell">
           <div class="tool-label">难度</div>
           <div class="tool-control">
-            <el-select size="medium" placeholder="选择难度" v-model="data.difficult" v-if="selectMap.difficultyList.length" @change="syncTag">
+            <el-select size="medium" placeholder="选择难度" v-model="data.difficult" v-if="selectMap.difficultyList.length">
               <el-option v-for="option in selectMap.difficultyList" :key="option.id" :value="option.id" :label="option.name" />
             </el-select>
           </div>
@@ -52,7 +53,7 @@
         <div class="flex-cell">
           <div class="tool-label">知识点</div>
           <div class="tool-control">
-            <el-cascader collapse-tags clearable placeholder="选择知识点" size="medium" :show-all-levels="false" @change="syncTag"
+            <el-cascader collapse-tags clearable placeholder="选择知识点" size="medium" :show-all-levels="false"
               v-model="data.knowledgePoints"
               :options="knowledgeList"
               :props="{ children: 'childs', label: 'name', value: 'id', multiple: true, emitPath: false }"
@@ -65,10 +66,10 @@
       <div class="source-section" v-for="(s, idx) in data.questionSources" :key="s">
         <h6><span>来源{{ idx + 1 }}</span><i class="el-icon-circle-close" @click="delSource(idx)" /></h6>
         <div class="source-item">
-          <el-select placeholder="选择年份" size="medium" v-model="s.year" @change="syncTag">
+          <el-select placeholder="选择年份" size="medium" v-model="s.year">
             <el-option v-for="option in selectMap.YEAR" :key="option.id" :value="option.id" :label="option.name" />
           </el-select>
-          <el-select placeholder="试卷类型" size="medium" v-model="s.dictSourceId" @change="syncTag">
+          <el-select placeholder="试卷类型" size="medium" v-model="s.dictSourceId">
             <el-option v-for="option in selectMap.QUES_SOURCE" :key="option.id" :value="option.id" :label="option.name" />
           </el-select>
         </div>
@@ -76,21 +77,25 @@
           <el-cascader placeholder="选择省市区"
             v-model="s.provinceCity"
             :props="{ lazy: true, lazyLoad: getProvinceCity, label: 'name', value: 'id', checkStrictly: true }"
-            @change="getSchoolList($event, s); syncTag"
+            @change="getSchoolList($event, s)"
           />
         </div>
         <div class="source-item">
-          <el-select placeholder="选择学校" filterable size="medium" v-model="s.publicSchoolId" @change="syncTag">
+          <el-select placeholder="选择学校" filterable size="medium" v-model="s.publicSchoolId">
             <el-option v-for="option in s.schoolList" :key="option.id" :value="option.id" :label="option.name" />
           </el-select>
         </div>
       </div>
     </template>
-    <div class="add-source"><el-button icon="el-icon-circle-plus" size="medium" @click="addSource">添加来源</el-button></div>
+    <div class="add-source"><el-button icon="el-icon-circle-plus" size="small" @click="addSource">添加来源</el-button></div>
   </div>
 
   <div class="turn-sync-switch" v-if="data">
-    <span>同步标签设置到所有题目</span><el-switch :modelValue="isSync" @update:modelValue="syncSwitchChange" />
+    <el-popconfirm title="确认同步标签设置到所有题目吗？" confirmButtonText="确定" cancelButtonText="取消" @confirm="syncLabel">
+      <template #reference>
+        <el-button size="mini" type="primary" plain>点击同步标签设置到所有题目</el-button>
+      </template>
+    </el-popconfirm>
   </div>
 </template>
 
@@ -101,6 +106,7 @@ import axios from 'axios';
 import { AxResponse } from '/@/core/axios';
 import { useStore } from 'vuex';
 import { cloneDeep } from 'lodash';
+import { ElMessage } from 'element-plus';
 
 export default {
   setup() {
@@ -111,26 +117,6 @@ export default {
     });
     let data: Ref<any> = computed(() => dataset.value[store.state.checkedIndex]);
     let index: Ref<number> = computed(() => dataset.value.findIndex((i: any) => i.id === data.value.id) );
-
-    let isSync: Ref<boolean> = computed(() => store.state.isSync);
-    const syncTag = () => {
-      if (isSync.value) {
-        let cloneData = cloneDeep(dataset.value);
-        cloneData = cloneData.map(d => {
-          d.gradeId = data.value.gradeId;
-          d.category = data.value.category;
-          d.difficult = data.value.difficult;
-          d.knowledgePoints = cloneDeep(data.value.knowledgePoints);
-          d.questionSources = cloneDeep(data.value.questionSources);
-          return d;
-        });
-        store.commit('set_data_set', cloneData);
-      }
-    }
-    const syncSwitchChange = (e) => {
-      store.commit('set_is_sync', !isSync.value);
-      syncTag();
-    }
 
     const indexChange = (n: number) => {
       store.dispatch('checked_index_change', dataset.value.findIndex(i => i.id === dataset.value[index.value + n].id));
@@ -212,22 +198,57 @@ export default {
       dataset.value = cloneData;
     }
 
-    return { data, dataset, index, indexChange, isSync, syncTag, selectMap, addSource, delSource, knowledgeList, typeChange, getProvinceCity, getSchoolList, syncSwitchChange }
+    const goBack = () => store.commit('set_checked_index', -1);
+
+    const syncLabel = () => {
+      let cloneData = cloneDeep(dataset.value);
+      cloneData = cloneData.map(d => {
+        d.gradeId = data.value.gradeId;
+        d.category = data.value.category;
+        d.difficult = data.value.difficult;
+        d.knowledgePoints = cloneDeep(data.value.knowledgePoints);
+        d.questionSources = cloneDeep(data.value.questionSources);
+        return d;
+      });
+      store.commit('set_data_set', cloneData);
+      ElMessage.success('同步标签至所有题目成功~！');
+    }
+
+    return { data, dataset, index, indexChange, selectMap, addSource, delSource, knowledgeList, typeChange, getProvinceCity, getSchoolList, goBack, syncLabel }
   }
 }
 </script>
 
 <style lang="scss" scoped>
 .tool-item-content {
-  padding: 20px;
+  padding: 10px 20px 20px;
   flex: auto;
   overflow: auto;
-  h4 {
+  .go-back {
+    width: 100%;
+    padding-left: 24px;
+    color: #3D4145;
+    font-size: 12px;
+    line-height: 24px;
+    background: #F5F9FD;
+    position: absolute;
+    top: 0;
+    left: 0;
+    i {
+      margin-left: -6px;
+    }
+    span {
+      cursor: pointer;
+    }
+  }
+  h4.title {
     display: flex;
-    margin-bottom: 30px;
+    padding: 0 10px;
+    margin: 0 0 20px;
     i {
       width: 16px;
       font-size: 16px;
+      line-height: 40px;
       cursor: pointer;
       &.is__disabled {
         opacity: .6;
@@ -239,7 +260,6 @@ export default {
       flex: auto;
       text-align: center;
       i {
-        color: #1AAFA7;
         margin: 0 8px;
       }
     }
@@ -316,8 +336,8 @@ export default {
 }
 .turn-sync-switch {
   padding: 0 20px;
-  .el-switch {
-    float: right;
+  .el-button {
+    width: 100%;
   }
 }
 .knowledge-tree-wrapper {

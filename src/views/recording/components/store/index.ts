@@ -6,26 +6,22 @@ interface IState {
   checkedIndex: number;
   errorList: any[];
   dataSet: any[];
-  isSync: boolean;
 }
 
 export default new Vuex.Store<IState>({
   state: {
     checkedIndex: -1,
     errorList: [],
-    dataSet: [],
-    isSync: false
+    dataSet: []
   },
   mutations: {
     'set_checked_index'(state, payload) {
       state.checkedIndex = payload;
-      state.isSync = false;
     },
     'set_data_set'(state, payload) {
       state.dataSet = payload
     },
     'set_is_sync'(state, payload) {
-      state.isSync = payload;
     },
     'delete_data'(state, payload) {
       state.checkedIndex = -1;
@@ -38,7 +34,6 @@ export default new Vuex.Store<IState>({
       state.checkedIndex = -1;
       state.dataSet = [];
       state.errorList = [];
-      state.isSync = false;
     }
   },
   actions: {

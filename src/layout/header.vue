@@ -2,7 +2,7 @@
   <div class="lay__header__container">
     <el-popover v-model:visible="visible" placement="bottom-start" :width="200" trigger="click">
       <template #reference>
-        <div class="age__class"><span>{{ subject.name }}</span><i class="el-icon-arrow-down" /></div>
+        <div class="age__class" v-show="subjectList && subjectList.length"><span>{{ subject.name }}</span><i class="el-icon-arrow-down" /></div>
       </template>
       <div class="class__container">
         <div v-for="grade in subjectList" :key="grade.id">

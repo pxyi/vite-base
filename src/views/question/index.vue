@@ -4,8 +4,22 @@
     <HeaderRefComponent @type-change="query('dataType', $event)" @search="query('title', $event)" @add-success="contentRef.request()" />
   </template>
   <div class="question-container">
-    <div class="knowledge-tree">
-      <KnowledgeTree @check-change="query('knowledgePoints', $event)" />
+    <div class="left-tree">
+      <div class="tabs">
+        <div class="tabs_cell" 
+          v-for="t in treeTypeList" :key="t.value" 
+          :class="{ 'is__checked': treeType === t.value }" 
+          @click="setTreeType(t.value)"
+        >{{ t.label }}</div>
+      </div>
+      <div class="content">
+        <div v-show="treeType === 1">
+          <KnowledgeTree ref="knowledgeRef" @check-change="query('knowledgePoints', $event)" />
+        </div>
+        <div v-show="treeType === 2">
+          <ChapterTreeComponent ref="chapterRef" @check-node-change="chapterChange" />
+        </div>
+      </div>
     </div>
     <div class="section-main">
       <div>
@@ -42,13 +56,15 @@ import { ref, reactive,toRefs, onMounted, Ref, watch } from 'vue';
 import HeaderRefComponent from './components/header-ref.vue';
 import ContentComponent from './components/content.vue';
 import KnowledgeTree from './components/knowledge-tree.vue';
+import ChapterTreeComponent from './components/chapter-tree.vue';
 import emitter from '/@/utils/mitt';
 import { useStore } from 'vuex';
 import axios from 'axios';
 import { AxResponse } from '/@/core/axios';
+import { useState } from '/@/utils/use';
 
 export default {
-  components: { HeaderRefComponent, KnowledgeTree, ContentComponent },
+  components: { HeaderRefComponent, KnowledgeTree, ContentComponent, ChapterTreeComponent },
   setup() {
     let store = useStore();
     let headerRef = ref();
@@ -75,7 +91,6 @@ export default {
       contentRef.value.request(params); 
     }
 
-
     const getProvinceCity = async ({ data }, resolve) => {
       let res = await axios.post<null, AxResponse>('/system/area/queryByParentId', { parentId: data.id ? data.id : null });
       resolve(res.json);
@@ -88,7 +103,34 @@ export default {
         schoolList.value = res.json;
       }
     }
-    return { headerRef, params, contentRef, query, getProvinceCity, getSchoolList, schoolList }
+
+    let knowledgeRef = ref();
+    let chapterRef = ref();
+    const treeTypeChange = (val) => {
+      let knowledgeTreeRef = knowledgeRef.value.treeRef;
+      let chapterTreeRef = chapterRef.value.treeRef
+      if (val === 1) {
+        let nodes = chapterTreeRef.getCheckedNodes().filter(i => !i.childs || !i.childs.length);
+        let keys = nodes.reduce((arr, node) => { if (node.knowledgePointFlag) { arr.push(node); } return arr }, []).map(i => i.id);
+        keys.length && knowledgeTreeRef.setCheckedKeys([...keys, ...(params.knowledgePoints || [])]);
+      } else {
+        let keys = knowledgeTreeRef.getCheckedNodes().filter(i => !i.childs || !i.childs.length).map(i => i.id);
+        keys.length && chapterTreeRef.setCheckedKeys(keys);
+      }
+    }
+
+    const chapterChange = (nodes) => {
+      let group = nodes.reduce((group, node) => {
+        group[node.knowledgePointFlag ? 'knowledgePoints' : 'chapters'].push(node.id);
+        return group;
+      }, { knowledgePoints: params.knowledgePoints || [], chapters: [] });
+      contentRef.value.request({...params, ...group}); 
+    }
+
+    let [ treeType, setTreeType ] = useState(1, treeTypeChange);
+    let treeTypeList = [{ label: '知识点', value: 1 }, { label: '章节', value: 2 }];
+
+    return { headerRef, params, contentRef, query, getProvinceCity, getSchoolList, schoolList, treeType, setTreeType, treeTypeList, knowledgeRef, chapterRef, chapterChange }
   }
 }
 </script>
@@ -137,12 +179,38 @@ export default {
 
   }
 }
-.knowledge-tree {
+.left-tree {
+  display: flex;
+  flex-direction: column;
   width: 250px;
-  padding: 12px;
   margin-right: 20px;
   background: #fff;
   border-radius: 6px;
+  .tabs {
+    display: flex;
+    height: 42px;
+    margin-bottom: 10px;
+    & > div {
+      flex: 1;
+      color: #77808D;
+      line-height: 42px;
+      text-align: center;
+      cursor: pointer;
+      &.is__checked {
+        color: #fff;
+        background: #1AAFA7;
+      }
+    }
+  }
+  .content {
+    flex: 1 1 42px;
+    padding: 0 12px 12px;
+    overflow: hidden;
+    & > div {
+      height: 100%;
+      overflow: auto;
+    }
+  }
 }
 .section-main {
   display: flex;

@@ -1,5 +1,6 @@
 <template>
   <div class="tool-list-content" v-if="!data">
+    <div class="title">题目列表</div>
     <h4>共解析出 {{ dataset.length }} 题</h4>
     <ul>
       <li v-for="(data, idx) in dataset" :key="data.id" @click.stop="setFocusData(idx)">
@@ -13,7 +14,7 @@
 <script lang="ts">
 import { ref, Ref, computed } from 'vue';
 import store from './../store';
-import { ScrollTop } from "../../../../utils/base";
+import { ScrollTop } from "/@/utils/base";
 
 export default {
   setup() {
@@ -23,7 +24,7 @@ export default {
 
     let setFocusData = (idx) => {
       let top = (document.querySelectorAll('.main-content .item')[idx] as HTMLElement).offsetTop;
-      ScrollTop(document.querySelector('.main-content') as Element, top - 80, 2000);
+      ScrollTop(document.querySelector('.main-content') as Element, top - 80, 500);
       store.commit('set_checked_index', idx)
     };
 
@@ -34,7 +35,6 @@ export default {
 
 <style lang="scss" scoped>
 .tool-list-content {
-  margin-top: 12px;
   overflow: auto;
   h4 {
     padding: 0 16px 20px;

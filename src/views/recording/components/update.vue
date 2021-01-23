@@ -6,7 +6,7 @@
       <el-button round :disabled="!allowGenerate" v-show='!allowGenerate'>已生成试卷</el-button>
     </div>
     <div class="content">
-      <div class="main" @click="blur"><MainComponent @editor-ready="editorReady" /></div>
+      <div class="main"><MainComponent @editor-ready="editorReady" /></div>
       <div class="toolbar"><ToolbarComponent /></div>
     </div>
   </div>
@@ -37,10 +37,7 @@ export default {
 
     let focusData = computed(() => dataset.value[store.state.checkedIndex]);
 
-    const isSync = computed(() => store.state.isSync);
-
     axios.post<null, AxResponse>('/admin/questionImportLog/queryQuestionByImportId', { importId: props.id }).then(res => {
-      loading.close();
       if (res.result) {
         let questions = res.json.questionList.map(data => questionFormat(data));
         store.commit('set_error_list', res.json.failInfo);
@@ -51,8 +48,6 @@ export default {
         ElMessage.warning(res.msg)
       }
     });
-
-    const blur = () => !isSync.value ? store.dispatch('checked_index_change', -1) : false;
 
     let saveLoading = ref(false);
     const save = async () => {
@@ -94,7 +89,7 @@ export default {
       editorReadyNumber === dataset.value.length - 1 ? loading.close() : (editorReadyNumber++);
     }
 
-    return { blur, save, saveLoading, generatePaper, allowGenerate, editorReady };
+    return { save, saveLoading, generatePaper, allowGenerate, editorReady };
 
   }
 }
