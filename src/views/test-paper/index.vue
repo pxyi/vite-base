@@ -111,7 +111,7 @@ export default {
           width: 640,
           component: downloadComponent
         }).then((res: any) => {
-          window.open(`${import.meta.env.VITE_APP_BASE_URL}/tiku/paper/${res.format === 1 ? 'downPaper' : 'downPdfPape'}?paperId=${ data.id }&type=${ res.type }&templateId=${ res.templateId }`);
+          window.open(`${import.meta.env.VITE_APP_BASE_URL}/tiku/paper/${res.format === 1 ? 'downPaper' : 'downPdfPaper'}?paperId=${ data.id }&type=${ res.type }&templateId=${ res.templateId }`);
           data.downloadCount++;
         });
       }
