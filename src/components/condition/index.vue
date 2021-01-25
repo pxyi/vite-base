@@ -66,6 +66,7 @@ import { AxResponse } from './../../core/axios';
 import { reactive, ref, Ref, PropType } from 'vue';
 import { useStore } from 'vuex';
 import { ElInput } from 'element-plus';
+import Storage from '/@/utils/storage';
 
 interface ICondition {
   label : string;
@@ -96,6 +97,10 @@ export default {
     nodeList: {
       type: Array as PropType<ICondition[]>,
       default: () => []
+    },
+    autoGetSubject: {
+      type: Boolean,
+      default: () => false
     }
   },
   components: { ElInput },
@@ -151,7 +156,7 @@ export default {
       list.value = await getCondition(userId, subjectCode, props.nodeList);
       loading.value = false;
     }
-    emitter.emit('effect', getRules);
+    props.autoGetSubject ? getRules(Storage.get<any>('subject').code) : emitter.emit('effect', getRules);
 
     const setQueryValue = (node, val) => {
       formGroup[node.key] = node.multiple ? [val] : val;
@@ -159,10 +164,9 @@ export default {
     }
     const submit = () => {
       let val = props.nodeList.reduce((group, node) => {
-        group[node.key] = node.multiple && multipleGroup[node.key].value.length ? multipleGroup[node.key].value.map(i => i.id) : formGroup[node.key];
+        group[node.key] = node.multiple && multipleGroup[node.key].value.length ? multipleGroup[node.key].value.map(i => i.id) : Array.isArray(formGroup[node.key]) && formGroup[node.key][0] === null ? null : formGroup[node.key];
         return group;
       }, {});
-      console.log(val)
       emit('submit', val);
     }
 
