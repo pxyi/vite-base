@@ -28,24 +28,32 @@
 <script lang="ts">
 import { Ref, ref, watch } from 'vue'
 import { useState } from '/@/utils/use'
-import mitt from '/@/utils/mitt';
+import emitter from '/@/utils/mitt';
 import axios from 'axios';
 import { AxResponse } from '/@/core/axios';
 import { debounce } from 'lodash';
+import Storage from '/@/utils/storage';
 
 export default {
+  props: {
+    autoGetSubject: {
+      type: Boolean,
+      default: () => false
+    }
+  },
   setup(props, { emit }) {
     let [ dataset, setDataset ] = useState([]);
     let [ loading, setLoading ] = useState(false);
 
     let [ jiaocai, setJiaocai ] = useState<any[]>([]);
 
-    mitt.emit('effect', (subject) => axios.post<null, AxResponse>('/tiku/bookVersion/queryUserBookVersion', { subject }).then(res => {
+    const getSubjectHandle = (subject) => axios.post<null, AxResponse>('/tiku/bookVersion/queryUserBookVersion', { subject }).then(res => {
       setDataset(res.json);
       let init = [ res.json[0].id, res.json[0].childs[0].id ];
       setJiaocai(init);
       handle(init);
-    }) );
+    });
+    props.autoGetSubject ? getSubjectHandle(Storage.get<any>('subject').code) : emitter.emit('effect', getSubjectHandle);
     
 
     let [ treeData, setTreeData ] = useState([]);

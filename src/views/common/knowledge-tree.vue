@@ -1,7 +1,7 @@
 <template>
   <el-skeleton :loading="loading">
     <template v-if="dateset.length">
-      <el-input placeholder="按知识点搜索" prefix-icon="el-icon-search" v-model="filterText" class="search-input" size="medium" v-if="!hideSearch" />
+      <el-input placeholder="按知识点搜索" prefix-icon="el-icon-search" v-model="filterText" class="search-input" size="medium" />
 
       <el-tree
         class="knowledge-tree"
@@ -24,20 +24,27 @@ import emitter from '/@/utils/mitt';
 import axios from 'axios';
 import { AxResponse } from '/@/core/axios';
 import { debounce } from 'lodash'
+import Storage from '/@/utils/storage';
 
 export default {
-  props: { hideSearch: { type: Boolean, default: () => false } },
+  props: { 
+    autoGetSubject: {
+      type: Boolean,
+      default: () => false
+    }
+  },
   emits: ['check-change', 'check-node-change'],
   setup(props, { emit }) {
     let loading = ref(false);
 
     let dateset: Ref<any[]> = ref([]);
-    emitter.emit('effect', async (subjectId) => {
+    const getSubjectHandle = async (subjectId) => {
       loading.value = true;
       let res = await axios.post<any, AxResponse>('/tiku/knowledge/queryTree', { subjectId });
       dateset.value = res.json;
       loading.value = false;
-    });
+    }
+    props.autoGetSubject ? getSubjectHandle(Storage.get<any>('subject').code) :emitter.emit('effect', getSubjectHandle);
 
     /* 搜索 */
     let filterText = ref(null);
@@ -49,7 +56,7 @@ export default {
       let nodes = checkedNodes.filter(i => !i.childs || !i.childs.length);
       emit('check-change', nodes.map(i => i.id));
       emit('check-node-change', nodes);
-    } 
+    }
 
     return { filterText, dateset, filterNode, treeRef, checkChange, loading };
   }

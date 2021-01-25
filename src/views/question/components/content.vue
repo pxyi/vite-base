@@ -100,12 +100,15 @@ export default {
     disabledList: {
       type: Array,
       default: () => []
+    },
+    onCheckChange: {
+      type: Function,
+      default: () => (() => {})
     }
   },
   components: { TestBasketComponent },
   directives: { question: QuestionDirective },
-  emits: ['check-change'],
-  setup(props, { emit }) {
+  setup(props) {
     let store = useStore()
     let userId = computed(() => store.getters.userInfo.user.id)
     let dataset: Ref<any[]> = ref([]);
@@ -125,7 +128,7 @@ export default {
     const checkedChange = (data: any) => {
       let index = checkedList.value.findIndex(n => n.id === data.id)
       index > -1 ? checkedList.value.splice(index, 1) : checkedList.value.push(data);
-      emit('check-change', checkedList.value)
+      props.onCheckChange(checkedList.value);
     }
 
     let __params: any = {};

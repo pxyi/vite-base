@@ -59,10 +59,11 @@ export default {
     });
 
     let paperInfo = computed(() => store.state.paperInfo);
+    let paperCharpts = computed(() => store.getters.paperCharpts);
 
     let formGroup: any = reactive({});
 
-    watch(formGroup, (v) => store.commit('set_paper_info', v))
+    watch(formGroup, (v) => store.commit('set_paper_info', { ...v, paperCharpts: paperCharpts.value}))
 
     const getSelectList = (val?) => {
       let userId = computed(() => baseStore.getters.userInfo.user.id).value;

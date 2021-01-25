@@ -99,7 +99,6 @@ export default {
             questions: [ { question: quest, score: 0, questionId: quest.id } ]
           })
         })
-        console.log(currentQuestList)
         store.commit('set_paper_charpts', currentQuestList);
       });
     }

@@ -14,10 +14,10 @@
       </div>
       <div class="content">
         <div v-show="treeType === 1">
-          <KnowledgeTree ref="knowledgeRef" @check-change="query('knowledgePoints', $event)" />
+          <KnowledgeTree :auto-get-subject="isSelected" ref="knowledgeRef" @check-change="query('knowledgePoints', $event)" />
         </div>
         <div v-show="treeType === 2">
-          <ChapterTreeComponent ref="chapterRef" @check-node-change="chapterChange" />
+          <ChapterTreeComponent :auto-get-subject="isSelected" ref="chapterRef" @check-node-change="chapterChange" />
         </div>
       </div>
     </div>
@@ -36,7 +36,7 @@
             </el-select>
           </div>
         </div>
-        <cus-condition :node-list="[
+        <cus-condition :auto-get-subject="isSelected" :node-list="[
           { label: '标题', key: 'title', type: 'input' },
           { label: '题型', key: 'types', multiple: true },
           { label: '难度', key: 'difficults', multiple: true },
@@ -48,7 +48,7 @@
         ]" @submit="query('*', $event)" />
       </div>
 
-      <ContentComponent ref="contentRef" />
+      <ContentComponent ref="contentRef" :is-selected="isSelected" :disabled-list="disabledList" :on-check-change="onCheckChange" />
     </div>
   </div>
 </template>
@@ -63,17 +63,29 @@ import { useStore } from 'vuex';
 import axios from 'axios';
 import { AxResponse } from '/@/core/axios';
 import { useState } from '/@/utils/use';
+import Storage from '/@/utils/storage';
 
 export default {
+  props: {
+    isSelected: {         // true => 选择试题页面  fale => 题库首页
+      type: Boolean,
+      default: () => false
+    },
+    disabledList: {
+      type: Array,
+      default: () => []
+    }
+  },
   components: { HeaderRefComponent, KnowledgeTree, ContentComponent, ChapterTreeComponent },
-  setup() {
+  emits: ['check-change'],
+  setup(props, { emit }) {
     let store = useStore();
     let headerRef = ref();
     let contentRef = ref();
 
     onMounted(() => {
-      emitter.emit('slot', headerRef)
-      emitter.emit('effect', (id) => { query('subject', id) })
+      !props.isSelected && emitter.emit('slot', headerRef);
+      props.isSelected ? query('subject', Storage.get<any>('subject').code) : emitter.emit('effect', (id) => { query('subject', id) });
     });
 
     let params: any = reactive({
@@ -134,7 +146,9 @@ export default {
     let [ treeType, setTreeType ] = useState(1, treeTypeChange);
     let treeTypeList = [{ label: '知识点', value: 1 }, { label: '章节', value: 2 }];
 
-    return { headerRef, params, contentRef, query, getProvinceCity, getSchoolList, schoolList, treeType, setTreeType, treeTypeList, knowledgeRef, chapterRef, chapterChange }
+    const onCheckChange = (list) => emit('check-change', list);
+
+    return { headerRef, params, contentRef, query, getProvinceCity, getSchoolList, schoolList, treeType, setTreeType, treeTypeList, knowledgeRef, chapterRef, chapterChange, onCheckChange }
   }
 }
 </script>

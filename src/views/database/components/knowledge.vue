@@ -1,6 +1,6 @@
 <template>
   <el-skeleton :loading="loading">
-    <el-input placeholder="按教材章节搜索" prefix-icon="el-icon-search" clearable v-model="filterText" class="search-input" size="medium" v-if="!hideSearch" />
+    <el-input placeholder="按教材章节搜索" prefix-icon="el-icon-search" clearable v-model="filterText" class="search-input" size="medium" />
 
     <el-tree
       class="knowledge-tree"
@@ -23,7 +23,6 @@ import { AxResponse } from '/@/core/axios';
 import { debounce } from 'lodash'
 
 export default {
-  props: { hideSearch: { type: Boolean, default: () => false } },
   emits: ['check-change'],
   setup(props, { emit }) {
     let loading = ref(true);
