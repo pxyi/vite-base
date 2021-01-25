@@ -53,7 +53,7 @@ export default {
       var subject = storage.get<any>('subject').code;
       emitter.on('effect', effectHandle);
     } catch (error) {
-      window.location.href = './#/index';
+      window.location.href = './#/home';
       Drawer.closeAll();
     }
     const query = (e = {}) => {

@@ -308,6 +308,7 @@ export default {
       }
       .content {
         margin-bottom: 10px;
+        overflow: hidden;
       }
     }
     .el-icon-plus {

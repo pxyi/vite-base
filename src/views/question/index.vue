@@ -37,6 +37,7 @@
           </div>
         </div>
         <cus-condition :node-list="[
+          { label: '标题', key: 'title', type: 'input' },
           { label: '题型', key: 'types', multiple: true },
           { label: '难度', key: 'difficults', multiple: true },
           { label: '年级', key: 'gradeIds', multiple: true },
