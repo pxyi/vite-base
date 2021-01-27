@@ -21,11 +21,15 @@ export const questToHtml = (data) => {
     let html = `${main}${options}</div>`
     return html
   } else if (data.basicQuestionType === 9) {
-    let child = (c) => `<div>${c.name}.${c.content}</div>`;
-    let cell = (c, idx) => `<div class="e-c-label">${idx + 1}.${c.title}</div>${c.option ? `<div class="e-c-group">${c.option.map(child).join(``)}</div>` : ''}`;
-    let options = `${cellToAttrs(data.optionNum)}${data.childs.map(cell).join(`</div>${cellToAttrs(data.optionNum)}`)}</div>`
-    let html = `<div class="e-main-title" style="display: flex; flex-wrap: wrap">${options}</div>`;
-    return html;
+    if (data.childs) {
+      let child = (c) => `<div>${c.name}.${c.content}</div>`;
+      let cell = (c, idx) => `<div class="e-c-label">${idx + 1}.${c.title}</div>${c.option ? `<div class="e-c-group">${c.option.map(child).join(``)}</div>` : ''}`;
+      let options = `${cellToAttrs(data.optionNum)}${data.childs.map(cell).join(`</div>${cellToAttrs(data.optionNum)}`)}</div>`
+      let html = `<div class="e-main-title" style="display: flex; flex-wrap: wrap">${options}</div>`;
+      return html;
+    } else {
+      return data.title;
+    }
   } else if (data.basicQuestionType === 10) {
     let child = (c) => `${c.name}.${c.content}`;
     let cell = (c) => `<div class="e-c-label">${c.name}.</div><div class="e-c-group"><div class="c-t-item">${c.childs.map(child).join(`</div><div class="c-t-item">`)}</div></div>`;

@@ -4,11 +4,11 @@ import { RouterView } from 'vue-router';
 
 import './index.scss';
 import './element-variables.scss'
-import './setHead';
+import './favicon';
+import './core/axios'
 
 import ElementPlus from 'element-plus';
 
-import Axios from './core/axios';
 import Store from './store';
 
 import Components from './components';
@@ -22,11 +22,9 @@ import Directives from './utils/directives';
 Directives(app)
 
 app.use(ElementPlus)
-.use(Axios)
 .use(router)
 .use(Store)
 .use(Components)
 .mount('#app');
-
 
 // window.addEventListener('unhandledrejection', event => { console.log(event.reason) });

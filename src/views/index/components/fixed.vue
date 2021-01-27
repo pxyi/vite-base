@@ -8,9 +8,9 @@
       </div>
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item icon="el-icon-user" disabled>个人中心</el-dropdown-item>
+          <el-dropdown-item icon="el-icon-user" command="changePassword">修改密码</el-dropdown-item>
           <el-dropdown-item icon="el-icon-setting" disabled>主题设置</el-dropdown-item>
-          <el-dropdown-item divided command="logout">退出登录</el-dropdown-item>
+          <el-dropdown-item icon="el-icon-switch-button" divided command="logout">退出登录</el-dropdown-item>
         </el-dropdown-menu>
       </template>
     </el-dropdown>
@@ -59,6 +59,8 @@ import moment from 'moment';
 import { useStore } from 'vuex';
 import { REMOVE_USER_INFO } from '/@/store/types';
 import { useRouter } from 'vue-router';
+import modal from '/@/utils/modal';
+import ChangePasswordComponent from '/@/layout/components/change-password.vue';
 const monthList = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const dayList = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 export default {
@@ -77,6 +79,9 @@ export default {
       ['logout', () => {
         store.commit(REMOVE_USER_INFO)
         router.push('/login');
+      }],
+      ['changePassword', () => {
+        modal.create({ title: '修改密码', width: 480, component: ChangePasswordComponent })
       }]
     ]);
 

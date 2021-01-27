@@ -1,9 +1,12 @@
 <template>
   <div class="container">
     <div class="header">
-      <el-button :loading="saveLoading" round @click="save">保存并返回</el-button>
-      <el-button round @click="generatePaper" v-show='allowGenerate'>生成试卷</el-button>
-      <el-button round :disabled="!allowGenerate" v-show='!allowGenerate'>已生成试卷</el-button>
+      <div class="title">{{ title }}</div>
+      <div class="btns">
+        <el-button :loading="saveLoading" round @click="save">保存并返回</el-button>
+        <el-button round @click="generatePaper" v-if='allowGenerate'>生成试卷</el-button>
+        <el-button round :disabled="!allowGenerate" v-else>已生成试卷</el-button>
+      </div>
     </div>
     <div class="content">
       <div class="main"><MainComponent @editor-ready="editorReady" /></div>
@@ -27,7 +30,7 @@ import { AxResponse } from '/@/core/axios';
 
 export default {
   components: { MainComponent, ToolbarComponent },
-  props: ['id', 'close'],
+  props: ['id', 'close', 'title'],
   setup(props) {
     let loading = ElLoading.service({ customClass: 'loading-z-index' });
 
@@ -100,11 +103,25 @@ export default {
   display: flex;
   flex-direction: column;
   & > .header {
+    display: flex;
     height: 60px;
     line-height: 60px;
     text-align: right;
     background: #1AAFA7;
     box-shadow: 0px 0px 3px 0px rgba(45, 113, 183, 0.15);
+    .title {
+      flex: auto;
+      padding: 0 40px 0 80px;
+      color: #fff;
+      font-size: 18px;
+      text-align: left;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    .btns {
+      white-space: nowrap;
+    }
     button {
       color: #1AAFA7;
       padding: 10px 23px;

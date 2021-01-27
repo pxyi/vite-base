@@ -3,9 +3,7 @@
  */
 
 import axios, { AxiosRequestConfig } from 'axios';
-import VueAxios from 'vue-axios';
 import { ElMessage, ElLoading } from 'element-plus';
-import { App } from 'vue';
 import Store from '../store';
 import storage from '../utils/storage';
 
@@ -48,10 +46,6 @@ axios.interceptors.response.use(res => {
   }
   return err;
 });
-
-export default {
-  install: (vue: App) => { vue.use(VueAxios, axios) }
-}
 
 const stringify = (obj) => {
   return Object.entries(obj).map(i => i.join('=')).join('&')

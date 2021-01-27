@@ -4,13 +4,13 @@ import CryptoJS from 'crypto-js';
 const key = CryptoJS.enc.Utf8.parse('phuhoang');
 const iv = CryptoJS.enc.Utf8.parse('');
 
-export const encrypt = (word: any) => {
+export const encrypt = (word: string): string => {
   if (import.meta.env.MODE === 'development') { return word }
   let srcs = CryptoJS.enc.Utf8.parse(word);
   let encrypted = CryptoJS.AES.encrypt(srcs, key, { iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 });
   return encrypted.ciphertext.toString().toUpperCase();
 }
-export const decrypt =(word: any) => {
+export const decrypt =(word: string): string => {
   if (import.meta.env.MODE === 'development') { return word }
   let encryptedHexStr = CryptoJS.enc.Hex.parse(word);
   let srcs = CryptoJS.enc.Base64.stringify(encryptedHexStr);

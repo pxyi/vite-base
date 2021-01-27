@@ -35,7 +35,7 @@
       <el-table-column label="操作" width="200">
         <template #default="{ row }">
           <div class="btns">
-            <el-button type="text" @click="setting(row.id)">设置标签</el-button>
+            <el-button type="text" @click="setting(row)">设置标签</el-button>
             <el-button type="text" @click="deleteRecord(row.id)">删除记录</el-button>
           </div>
         </template>
@@ -72,8 +72,8 @@ export default {
 
     onMounted(() => emitter.emit('effect', (subjectId) => tableRef.value.request({ subjectId }) ) );
 
-    const setting = async (id) => {
-      Screen.create(UpdateComponent, { id }).then(() => tableRef.value.request());
+    const setting = async (data) => {
+      Screen.create(UpdateComponent, { id: data.id, title: data.fileName }).then(() => tableRef.value.request());
     }
 
     return { deleteRecord, tableRef, setting, headerRef }

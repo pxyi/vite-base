@@ -21,20 +21,16 @@ export default {
     ]);
     const save = (resolve, reject) => {
       formRef.value.validate(valid => {
-        valid && axios.post<null, AxResponse>('/permission/auth/changePassword', {
+        valid ? axios.post<null, AxResponse>('/permission/auth/changePassword', {
           oldPassword: md5(valid.oldPassword),
           newPassword: md5(valid.newPassword)
         }).then(res => {
           res.result ? resolve() : reject();
           ElMessage[res.result ? 'success' : 'warning'](res.msg);
-        })
+        }) : reject()
       })
     }
     return { nodes, save, formRef }
   }
 }
 </script>
-
-<style lang="scss" scoped>
-
-</style>

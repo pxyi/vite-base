@@ -10,7 +10,7 @@ const Storage: StorageInterface = {
   get<T>(key: string): T | null | string {
     let val = window.localStorage.getItem(encrypt(key));
     try {
-      return JSON.parse(decrypt(val));
+      return JSON.parse(decrypt(val!));
     } catch (error) {
       return val ? decrypt(val) : null;
     }
@@ -24,10 +24,4 @@ const Storage: StorageInterface = {
   }
 };
 
-export default Storage
-
-declare module '@vue/runtime-core' {
-  interface ComponentCustomProperties {
-    $storage: Storage;
-  }
-}
+export default Storage;
