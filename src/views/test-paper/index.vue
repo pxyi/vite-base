@@ -51,7 +51,7 @@ import emitter from '/@/utils/mitt';
 import axios from 'axios';
 import { ElMessage, ElLoading } from 'element-plus'
 import { AxResponse } from '/@/core/axios';
-import createElement from '/@/utils/createElement';
+import $ from '/@/utils/$';
 import Modal from '/@/utils/modal';
 import Screen from '/@/utils/screen';
 import UpdateComponent from './update/index.vue';
@@ -84,14 +84,14 @@ export default {
       if (data.sourceFrom === 3) {
         const loading = ElLoading.service({ lock: true, background: 'rgba(255, 255, 255, .7)', text: '加载中...' })
         let src = `${import.meta.env.VITE_OFFICE_PREVIEW}?furl=${import.meta.env.VITE_APP_BASE_URL}${data.filePath}`;
-        let closeBtn = createElement('div', {
+        let closeBtn = $.element('div', {
           className: 'el-icon-close',
           style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', top: '40px', right: '40px', zIndex: '10', cursor: 'pointer' },
           on: { click: () => { container.remove(); } }
         });
-        let iframe = createElement('iframe', { attrs: { src, width: '100%', height: '100%' }, style: { background: '#f9f9f9' } });
+        let iframe = $.element('iframe', { attrs: { src, width: '100%', height: '100%' }, style: { background: '#f9f9f9' } });
         iframe.onload = loading.close;
-        let container = createElement('div', {
+        let container = $.element('div', {
           style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '9' },
         }, [ closeBtn, iframe ])
         document.body.appendChild(container);

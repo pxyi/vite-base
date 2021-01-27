@@ -1,5 +1,5 @@
 import { SET_SUBJECT, SET_SUBJECT_LIST, REMOVE_SUBJECT_LIST } from '../types';
-import storage from '/@/utils/storage';
+import $ from '/@/utils/$';
 
 const state = {
   subjectList: null,
@@ -10,7 +10,7 @@ const state = {
 }
 const mutations = {
   [ SET_SUBJECT ] (state, payload) {
-    storage.set('subject', payload);
+    $.storage.set('subject', payload);
     state.subject = payload;
   },
   [ SET_SUBJECT_LIST ] (state, payload) {

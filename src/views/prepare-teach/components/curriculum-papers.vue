@@ -69,15 +69,14 @@
   </div>
 </template>
 <script lang="ts">
-import { ref, Ref, inject, watch } from 'vue';
+import { ref, inject } from 'vue';
 import axios from 'axios';
-import { AxResponse } from './../../../core/axios';
-import Modal from './../../../utils/modal';
+import { AxResponse } from '/@/core/axios';
+import Modal from '/@/utils/modal';
 import MyPlanUpload from './my-plan-upload.vue'
 import MyVideoUpload from './my-video-upload.vue'
 import { ElMessage, ElLoading } from 'element-plus'
-import createElement from './../../../utils/createElement';
-import { resolve } from 'url';
+import $ from '/@/utils/$';
 
 export default {
   props: {
@@ -171,29 +170,29 @@ export default {
       }else{
         const loading = ElLoading.service({ lock: true, background: 'rgba(255, 255, 255, .7)', text: '加载中...' })
         let src = `${import.meta.env.VITE_OFFICE_PREVIEW}?furl=${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`;
-        let closeBtn = createElement('div', {
+        let closeBtn = $.element('div', {
           className: 'el-icon-close',
           style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', top: '40px', right: '40px', zIndex: '10', cursor: 'pointer' },
           on: { click: () => { container.remove(); } }
         });
         let container;
         if(item.ext === 'mp4') {
-          let video = createElement('video',
+          let video = $.element('video',
           { attrs: { src:`${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`, width: '100%', height: '100%',controls: true, controlsList: "nodownload" }, style: { background: '#f9f9f9' }});
           video.oncanplay = loading.close;
-          container = createElement('div', {
+          container = $.element('div', {
             style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '2012', background: 'rgba(0,0,0,.8)' },
           }, [ closeBtn, video ])
         }else if (item.ext === null && item.mediaType === 'url'){
           loading.close()
-          let url = createElement('p', { style: { background: '#f9f9f9', width: '100%', height: '100%', padding: '36px', 'font-size':'20px' }}, '链接地址：' + item.filePath);
-          container = createElement('div', {
+          let url = $.element('p', { style: { background: '#f9f9f9', width: '100%', height: '100%', padding: '36px', 'font-size':'20px' }}, '链接地址：' + item.filePath);
+          container = $.element('div', {
             style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '2012', background: 'rgba(0,0,0,.8)' },
           }, [ closeBtn, url ])
         }else {
-          let iframe = createElement('iframe', { attrs: { src, width: '100%', height: '100%' }, style: { background: '#f9f9f9' } });
+          let iframe = $.element('iframe', { attrs: { src, width: '100%', height: '100%' }, style: { background: '#f9f9f9' } });
           iframe.onload = loading.close;
-          container = createElement('div', {
+          container = $.element('div', {
             style: { width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', zIndex: '2012', background: 'rgba(0,0,0,.8)' },
           }, [ closeBtn, iframe, ])
         }

@@ -28,7 +28,7 @@ CKEDITOR.editorConfig = function( config ) {
         //全屏           显示区块
         // ['Maximize']
     ];
-    config.title = '爱学标品';
+    config.title = '编辑器';
     /*开启工具栏“图像”中文件上传功能，后面的url为图片上传要指向的的action或servlet*/
     config.filebrowserImageUploadUrl = "/test/system/ueditor/uploadimage";
 };

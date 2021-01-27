@@ -13,9 +13,6 @@ import Store from './store';
 
 import Components from './components';
 
-import Basics from './utils/base';
-Basics();
-
 const app = createApp(RouterView);
 
 import Directives from './utils/directives';

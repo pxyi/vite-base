@@ -5,13 +5,13 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import { ElMessage, ElLoading } from 'element-plus';
 import Store from '../store';
-import storage from '../utils/storage';
+import $ from '../utils/$';
 
 /* ------------------------- 默认请求格式, 和全局请求地址 ------------------------- */
 axios.defaults.headers['Content-Type'] = 'application/x-www-form-urlencoded';
 axios.defaults.baseURL = import.meta.env.VITE_APP_BASE_URL;
 axios.interceptors.request.use((res: AxiosRequestConfig) => {
-  res.headers['accessToken'] = storage.get('token');
+  res.headers['accessToken'] = $.storage.get('token');
   res.headers['userId'] = Store.getters.userInfo ? Store.getters.userInfo.user.id : null;
 
   /* 设置 request token 该请求可被取消 */

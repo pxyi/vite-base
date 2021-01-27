@@ -6,7 +6,7 @@
  * @param options?: { attrs: object, className: string | string[], style: object, on: Object<EventListener> }
  * @param content?: string | HTMLElement
  */
-const createElement = (tagName, options?, content?) => {
+const element = (tagName, options?, content?): HTMLElement => {
   let { attrs, className, style, on } = options || {};
   let element = document.createElement(tagName);
   attrs && Object.keys(attrs).map(key => element.setAttribute(key, attrs[key]));
@@ -24,4 +24,4 @@ const createElement = (tagName, options?, content?) => {
   }
   return element;
 }
-export default createElement;
+export default element;

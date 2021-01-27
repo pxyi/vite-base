@@ -6,9 +6,6 @@
 			</div>
 			<div class="kont-head-aoto">
 				<div class="save" @click="$notify({title: '成功', message: '保存成功', type: 'success'})"><i class="el-icon-wallet" /><span>自动保存...</span></div>
-<!--				<div class="btns">-->
-<!--					<el-button round>添加课次</el-button>-->
-<!--				</div>-->
 			</div>
 		</div>
 		<div class="kont-content">

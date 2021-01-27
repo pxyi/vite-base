@@ -33,7 +33,7 @@ import store from './../store';
 import { toChinesNum } from './../utils';
 import { cloneDeep } from 'lodash';
 import emitter from '/@/utils/mitt';
-import { ScrollTop } from "/@/utils/base";
+import $ from "/@/utils/$";
 
 export default {
   components: { draggable },
@@ -52,7 +52,7 @@ export default {
 
     const scrollTo = (idx, index) => {
       let top = (document.querySelector(`.paper_content .item[data-uuid="${idx}-${index}"]`) as HTMLElement).offsetTop;
-      ScrollTop(document.querySelector('.paper_content') as HTMLElement, top, 2000);
+      $.scroll(document.querySelector('.paper_content') as HTMLElement, top, 2000);
     }
 
     return { paperCharpts, toChinesNum, sortHandle, sortChange, scrollTo }

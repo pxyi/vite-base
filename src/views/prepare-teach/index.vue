@@ -40,23 +40,17 @@
 </template>
 
 <script lang='ts'>
-  import { ref, onMounted, Ref, reactive, watch } from 'vue';
+  import { ref, onMounted, Ref } from 'vue';
   import HeaderRefComponent from './components/header-ref.vue';
   import NearClass from './near-class/index.vue';
   import PreparePapers from './components/prepare-papers.vue';
-  import emitter from './../../utils/mitt';
-  import axios from 'axios';
-  import { ElMessage, ElLoading } from 'element-plus';
-  import { AxResponse } from './../../core/axios';
-  import createElement from './../../utils/createElement';
-  import Modal from './../../utils/modal';
-  import { useStore } from 'vuex';
+  import emitter from '/@/utils/mitt';
+  import Modal from '/@/utils/modal';
 
   export default {
     components: { HeaderRefComponent, NearClass },
 
     setup(props,{ emit }) {
-      let store = useStore()
       let headerRef = ref();
       onMounted(() => emitter.emit('slot', headerRef));
 

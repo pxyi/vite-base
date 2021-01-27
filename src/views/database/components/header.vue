@@ -42,7 +42,7 @@ import axios from 'axios';
 import { AxResponse } from '/@/core/axios';
 import UploadComponent from './upload.vue';
 import emitter from '/@/utils/mitt';
-import createElement from '/@/utils/createElement'
+import $ from '/@/utils/$'
 
 export default {
   props: ['getKnowledge'],
@@ -54,11 +54,11 @@ export default {
 
     const handle = (type) => {
       props.getKnowledge().then((knowledgeList: any[]) => {
-        let fileDom = createElement('input', { attrs: { type: 'file', multiple: true } });
+        let fileDom = $.element('input', { attrs: { type: 'file', multiple: true } });
         type && fileDom.setAttribute('accept', '.docx,.doc');
         fileDom.click();
         fileDom.onchange = async () =>{
-          let files: File[] = Array.from(fileDom.files || []);
+          let files: File[] = Array.from((fileDom as HTMLInputElement).files || []);
           let res = await Modal.create({ title: type ? '上传标准教案' : '上传资料', width: 480, component: UploadComponent, props: { files, knowledgeList, type } });
           ElMessage.success('上传资料成功~！');
           emitter.emit('dataset-reset');

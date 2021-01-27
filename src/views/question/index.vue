@@ -63,7 +63,7 @@ import { useStore } from 'vuex';
 import axios from 'axios';
 import { AxResponse } from '/@/core/axios';
 import { useState } from '/@/utils/use';
-import Storage from '/@/utils/storage';
+import $ from '/@/utils/$';
 
 export default {
   props: {
@@ -85,7 +85,7 @@ export default {
 
     onMounted(() => {
       !props.isSelected && emitter.emit('slot', headerRef);
-      props.isSelected ? query('subject', Storage.get<any>('subject').code) : emitter.emit('effect', (id) => { query('subject', id) });
+      props.isSelected ? query('subject', $.storage.get<any>('subject').code) : emitter.emit('effect', (id) => { query('subject', id) });
     });
 
     let params: any = reactive({

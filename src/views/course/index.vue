@@ -15,35 +15,29 @@
 		<cus-table :auto-request="false" :default="params" ref="tableRef" url="/course/queryByPageV2">
 			<template #default>
 				<el-table-column label="课程名称" property="courseName">
-					<template v-slot:default="scope">
+					<template #default="{ row }">
 						<div class="courseName">
 							<div class="img-box">
 								<img src="/src/assets/course.png" width="70">
 							</div>
-							<p>{{scope.row.courseName}}</p>
+							<p>{{ row.courseName }}</p>
 						</div>
 					</template>
 				</el-table-column>
 				<el-table-column label="课次数" property="courseIndexNum" width="80">
-					<template v-slot:default="scope">
-						<div class="courseName">
-							<p>{{scope.row.courseIndexNum}}讲</p>
-						</div>
-					</template>
+					<template #default="{ row }"><span>{{ row.courseIndexNum }}讲</span></template>
 				</el-table-column>
 				<el-table-column label="课程分类" property="courseTypeName" width="80"></el-table-column>
 				<el-table-column label="年级" property="gradeName" width="100"></el-table-column>
 				<el-table-column label="学期" property="semesterName" width="80"></el-table-column>
 				<el-table-column label="年份" property="yearName" width="80"></el-table-column>
 				<el-table-column label="操作" width="200">
-					<template v-slot:default="scope">
-						<el-button v-permissions="'update'" @click="openModel( scope.row, '/course/modify')" size="small" type="text">修改</el-button>
+					<template #default="{ row }">
+						<el-button v-permissions="'update'" @click="openModel( row, '/course/modify')" size="small" type="text">修改</el-button>
 						<el-divider direction="vertical" v-permissions="'update'"></el-divider>
-						<el-button size="small" type="text" @click="knotSet(scope.row)">设置课次</el-button>
+						<el-button size="small" type="text" @click="knotSet(row)">设置课次</el-button>
 						<el-divider direction="vertical" v-permissions="'delete'"></el-divider>
-						<el-button size="small" type="text" v-permissions="'delete'" @click="courseDelete(scope.row.id)">删除</el-button>
-						<!--					<el-divider direction="vertical"></el-divider>-->
-						<!--					<el-button size="mini" type="text">备课流程</el-button>-->
+						<el-button size="small" type="text" v-permissions="'delete'" @click="courseDelete(row.id)">删除</el-button>
 					</template>
 				</el-table-column>
 			</template>
@@ -60,7 +54,7 @@
   import Model from '/@/utils/modal';
   import screen from '/@/utils/screen/index';
   import axios, {AxiosResponse} from "axios";
-  import {useStore} from "vuex"
+  import { useStore } from "vuex"
 
   export default defineComponent({
     components: {headerRef},

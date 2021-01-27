@@ -1,6 +1,6 @@
 import ElementPlus from 'element-plus';
 import { Component, createApp } from 'vue';
-import createElement from './../createElement';
+import $ from '/@/utils/$';
 import Components, { AppComponents } from '/@/components';
 import './drawer.scss';
 import Store from '/@/store';
@@ -22,10 +22,10 @@ const create = (opt: DrawerCreate): Promise<any> => {
 
   return new Promise((resolve, reject) => {
 
-    const container = createElement('div', { className: `__drawer__${ Date.now() }` });
+    const container = $.element('div', { className: `__drawer__${ Date.now() }` });
 
-    let drawerBox = createElement('div', { className: 'drawer-box', style: { width: options.width > 0 ? `${options.width}px` : options.width, maxWidth: options.maxWidth > 0 ? `${options.maxWidth}px` : options.maxWidth, zIndex: `${options.zIndex + 1}` } });
-    let drawerBody = createElement('div', { className: 'drawer-body' });
+    let drawerBox = $.element('div', { className: 'drawer-box', style: { width: options.width > 0 ? `${options.width}px` : options.width, maxWidth: options.maxWidth > 0 ? `${options.maxWidth}px` : options.maxWidth, zIndex: `${options.zIndex + 1}` } });
+    let drawerBody = $.element('div', { className: 'drawer-body' });
 
     const remove = (val?) => {
       maskEl.classList.add('active');
@@ -48,13 +48,13 @@ const create = (opt: DrawerCreate): Promise<any> => {
     drawerBox.appendChild(drawerBody);
     container.appendChild(drawerBox);
 
-    let maskEl = createElement('div', { className: 'drawer-mask', style: { zIndex: `${options.zIndex}` }, on: { click: () => options.maskClosable && remove() } })
+    let maskEl = $.element('div', { className: 'drawer-mask', style: { zIndex: `${options.zIndex}` }, on: { click: () => options.maskClosable && remove() } })
     options.mask && container.appendChild(maskEl);
 
     if (options.title) {
-      let titleEl = createElement('div', { className: 'drawer-title' }, createElement('span', {}, options.title));
+      let titleEl = $.element('div', { className: 'drawer-title' }, $.element('span', {}, options.title));
       if (options.closable) {
-        let iconEl = createElement('i', { className: 'el-icon-close' })
+        let iconEl = $.element('i', { className: 'el-icon-close' })
         iconEl.onclick = () => { remove() };
         titleEl.appendChild(iconEl);
       }
@@ -67,7 +67,7 @@ const create = (opt: DrawerCreate): Promise<any> => {
           new Promise((resolve, reject) => {
             vm['save'](resolve, reject);
             saveBtn.classList.add('loading');
-            saveBtn.insertBefore(createElement('i', { className: 'el-icon-loading' }), saveBtn.children[0]);
+            saveBtn.insertBefore($.element('i', { className: 'el-icon-loading' }), saveBtn.children[0]);
           }).then((res) => remove(res || true)).catch(err => {
             saveBtn.querySelector('i')?.remove()
             saveBtn.classList.remove('loading');
@@ -76,10 +76,10 @@ const create = (opt: DrawerCreate): Promise<any> => {
           console.warn(`请在 ${options.component.name} Component 中定义 save 方法`);
         }
       }
-      let closeBtn = createElement('button', { className: 'drawer-close-btn', on: { click: () => remove() } }, createElement('span', {}, '取消'));
-      let saveBtn = createElement('button', { className: 'drawer-save-btn', on: { click: saveOnClick } }, createElement('span', {}, '确定'));
+      let closeBtn = $.element('button', { className: 'drawer-close-btn', on: { click: () => remove() } }, $.element('span', {}, '取消'));
+      let saveBtn = $.element('button', { className: 'drawer-save-btn', on: { click: saveOnClick } }, $.element('span', {}, '确定'));
 
-      let drawerFooter = createElement('div', { className: 'drawer-footer' }, [closeBtn, saveBtn]);
+      let drawerFooter = $.element('div', { className: 'drawer-footer' }, [closeBtn, saveBtn]);
       drawerBox.appendChild(drawerFooter);
     }
 
@@ -93,15 +93,6 @@ const closeAll = () => {
   drawer.forEach(i => i.remove());
 }
 export default { create, closeAll };
-
-/*
- * @Method CreateElement
- *
- * @param tagName: HTMLElementTagNameMap
- * @param options?: { attrs: object, className: string | string[], style: object, on: Object<EventListener> }
- * @param content?: string | HTMLElement
- */
-
 
 interface DrawerCreate {
   title?: string;

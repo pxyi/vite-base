@@ -47,7 +47,7 @@ import { useStore } from 'vuex';
 import axios from 'axios';
 import {REMOVE_SUBJECT_LIST, REMOVE_USER_INFO, SET_SUBJECT, SET_SUBJECT_LIST} from '../store/types';
 import { AxResponse } from '../core/axios';
-import storage from '../utils/storage';
+import $ from '../utils/$';
 import modal from '../utils/modal';
 import ChangePasswordComponent from './components/change-password.vue';
 
@@ -59,7 +59,7 @@ const getSubjectList = (store): Promise<any> => {
       let res = await axios.post<any, AxResponse>('/permission/user/userDataSubjects');
       store.commit(SET_SUBJECT_LIST, res.json);
       try {
-        let subStr = storage.get<any>('subject')
+        let subStr = $.storage.get<any>('subject')
         if (subStr) {
           let subject = subStr;
           let has = res.json.some(l => !!l.child.some(s => s.code === subject.code));

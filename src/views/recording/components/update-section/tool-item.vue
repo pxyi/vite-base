@@ -126,7 +126,7 @@ import { AxResponse } from '/@/core/axios';
 import { useStore } from 'vuex';
 import { cloneDeep } from 'lodash';
 import { ElMessage } from 'element-plus';
-import { ScrollTop } from "/@/utils/base";
+import $ from "/@/utils/$";
 
 export default {
   components: { KnowledgeTreeComponent, ChapterTreeComponent },
@@ -143,7 +143,7 @@ export default {
       store.dispatch('checked_index_change', dataset.value.findIndex(i => i.id === dataset.value[index.value + n].id));
       nextTick(() => {
         let top = (document.querySelector('.main-content .item.is__focus') as HTMLElement).offsetTop;
-        ScrollTop(document.querySelector('.main-content') as Element, top - 60, 300);
+        $.scroll(document.querySelector('.main-content') as Element, top - 60, 300);
       })
     }
 

@@ -24,7 +24,7 @@ import emitter from '/@/utils/mitt';
 import axios from 'axios';
 import { AxResponse } from '/@/core/axios';
 import { debounce } from 'lodash'
-import Storage from '/@/utils/storage';
+import $ from '/@/utils/$';
 
 export default {
   props: { 
@@ -44,7 +44,7 @@ export default {
       dateset.value = res.json;
       loading.value = false;
     }
-    props.autoGetSubject ? getSubjectHandle(Storage.get<any>('subject').code) :emitter.emit('effect', getSubjectHandle);
+    props.autoGetSubject ? getSubjectHandle($.torage.get<any>('subject').code) :emitter.emit('effect', getSubjectHandle);
 
     /* 搜索 */
     let filterText = ref(null);

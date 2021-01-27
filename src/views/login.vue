@@ -38,8 +38,8 @@ import { ElMessage, ElLoading } from "element-plus";
 import { AxResponse } from "/@/core/axios";
 import { useStore } from "vuex";
 import { SET_USER_INFO } from "/@/store/types";
-import { useRoute, useRouter } from "vue-router";
-import storage from '/@/utils/storage';
+import { useRouter } from "vue-router";
+import $ from '/@/utils/$';
 import backgroundImage1 from '/@/assets/login/login-bg-1.jpg';
 import backgroundImage2 from '/@/assets/login/login-bg-2.jpg';
 import backgroundImage3 from '/@/assets/login/login-bg-3.jpg';
@@ -53,7 +53,7 @@ export default {
     let store = useStore();
     let router = useRouter();
     let saveLoading = ref(false);
-    let rememberAccount = storage.get<any>('account') || {};
+    let rememberAccount = $.storage.get<any>('account') || {};
     let formGroup = reactive({
       mobile: rememberAccount.mobile,
       md5Password: rememberAccount.md5Password,
@@ -69,13 +69,13 @@ export default {
         md5Password: md5(formGroup.md5Password),
       };
       saveLoading.value = true;
-      if (remember.value) { storage.set('account', formGroup) } else { storage.remove('account') }
+      if (remember.value) { $.storage.set('account', formGroup) } else { $.storage.remove('account') }
       let res: AxResponse = await axios.post("/permission/auth/login", params);
       saveLoading.value = false;
       if (res && res.result) {
         store.commit(SET_USER_INFO, res.json);
 
-        storage.set('token', res.json.accessToken);
+        $.storage.set('token', res.json.accessToken);
         router.push("/home");
       } else {
         ElMessage.warning(res.msg);

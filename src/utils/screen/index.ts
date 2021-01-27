@@ -1,6 +1,6 @@
 import ElementPlus from 'element-plus';
 import { createApp } from 'vue';
-import createElement from './../createElement';
+import $ from '/@/utils/$';
 import Components from './../../components';
 import Store from './../../store';
 import router from './../../router';
@@ -18,9 +18,9 @@ const create = (component, props = {}) => {
 
     window.addEventListener('popstate', popstateFn);
 
-    let body = createElement('div', { className: `__screen__${ Date.now() }`, style: { overflow: 'auto', height: '100%', background: '#fff' } });
+    let body = $.element('div', { className: `__screen__${ Date.now() }`, style: { overflow: 'auto', height: '100%', background: '#fff' } });
 
-    let closeBtn = createElement('div', { 
+    let closeBtn = $.element('div', { 
       className: 'el-icon-back', 
       style: { fontSize: '28px', position: 'absolute', top: '15px', left: '30px', color: '#fff', cursor: 'pointer', zIndex: 1 },
       on: { click: () => remove() }
@@ -41,7 +41,7 @@ const create = (component, props = {}) => {
     app.use(router)
     const vm = app.mount(body);
 
-    let container = createElement('div', { style: { width: '100%', height: '100%', position: 'fixed', zIndex: '2010', top: '0' } }, [closeBtn, body]);
+    let container = $.element('div', { style: { width: '100%', height: '100%', position: 'fixed', zIndex: '2010', top: '0' } }, [closeBtn, body]);
     document.body.appendChild(container);
   });
 }

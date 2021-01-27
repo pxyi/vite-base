@@ -1,12 +1,12 @@
-import { encrypt, decrypt } from './aes';
+import { encrypt, decrypt } from './crypto';
 
-interface StorageInterface {
+interface IStorage {
   get: <T>(key: string) => null | string | T;
   set: (key: string, value: object | string) => void;
   remove: (key: string) => void;
 }
 
-const Storage: StorageInterface = {
+const Storage: IStorage = {
   get<T>(key: string): T | null | string {
     let val = window.localStorage.getItem(encrypt(key));
     try {

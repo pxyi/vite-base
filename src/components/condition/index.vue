@@ -66,7 +66,7 @@ import { AxResponse } from './../../core/axios';
 import { reactive, ref, Ref, PropType } from 'vue';
 import { useStore } from 'vuex';
 import { ElInput } from 'element-plus';
-import Storage from '/@/utils/storage';
+import $ from '/@/utils/$';
 
 interface ICondition {
   label : string;
@@ -156,7 +156,7 @@ export default {
       list.value = await getCondition(userId, subjectCode, props.nodeList);
       loading.value = false;
     }
-    props.autoGetSubject ? getRules(Storage.get<any>('subject').code) : emitter.emit('effect', getRules);
+    props.autoGetSubject ? getRules($.storage.get<any>('subject').code) : emitter.emit('effect', getRules);
 
     const setQueryValue = (node, val) => {
       formGroup[node.key] = node.multiple ? [val] : val;
