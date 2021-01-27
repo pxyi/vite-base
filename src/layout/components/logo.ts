@@ -4,7 +4,7 @@ import sike from '../../assets/menu/logo-sike.png';
 import logo from '../../assets/menu/logo.png';
 import jinbang from '../../assets/menu/logo-jinbang.png';
 
-const menuLogo = (props, context) => {
+const menuLogo = (props) => {
   return h('div', {
     class: {
       'logo-xinzhou': props.isSike || props.isXinzhou || props.isJinbang,
