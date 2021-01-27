@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import { ref, Ref, reactive, computed, getCurrentInstance, onMounted } from 'vue';
+import { ref, Ref, computed } from 'vue';
 import HeaderComponent from './update-section/header.vue';
 import ContentComponent from './update-section/content.vue';
 import SourceComponent from './update-section/source.vue';
@@ -13,7 +13,7 @@ import axios from 'axios';
 import { AxResponse } from '/@/core/axios';
 import { useStore } from 'vuex';
 import { ElMessage } from 'element-plus';
-import { cloneDeep } from 'lodash';
+import $ from '/@/utils/$';
 
 export default {
   components: { HeaderComponent, ContentComponent, SourceComponent },
@@ -28,8 +28,8 @@ export default {
     let subjectId = computed(() => store.getters.subject.code).value;
     const save = async (resolve, reject) => {
       let contentGroup = contentRef.value.validator();
-      let headerGroup = cloneDeep(headerRef.value.formGroup);
-      let sourceGroup = cloneDeep(sourceRef.value.questionSources);
+      let headerGroup = $.clone(headerRef.value.formGroup);
+      let sourceGroup = $.clone(sourceRef.value.questionSources);
       if (contentGroup) {
          sourceGroup && sourceGroup.map(s => {
           if (s.provinceCity) {

@@ -20,7 +20,7 @@ import { ref, Ref, watch } from 'vue';
 import emitter from '/@/utils/mitt';
 import axios from 'axios';
 import { AxResponse } from '/@/core/axios';
-import { debounce } from 'lodash'
+import $ from '/@/utils/$'
 
 export default {
   emits: ['check-change'],
@@ -38,7 +38,7 @@ export default {
     let filterText = ref(null);
     let knowledgeRef: Ref<any> = ref(null);
     const filterNode = (val, node) => (!val || node.name.includes(val));
-    watch(filterText, debounce(() => knowledgeRef.value.filter(filterText.value) , 300))
+    watch(filterText, $.debounce(() => knowledgeRef.value.filter(filterText.value) , 300))
     
     const checkChange = (target, { checkedKeys }) => {
       emit('check-change', checkedKeys);

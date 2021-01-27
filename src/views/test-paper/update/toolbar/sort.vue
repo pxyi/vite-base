@@ -27,11 +27,10 @@
 </template>
 
 <script lang="ts">
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
 import draggable from 'vuedraggable';
 import store from './../store';
 import { toChinesNum } from './../utils';
-import { cloneDeep } from 'lodash';
 import emitter from '/@/utils/mitt';
 import $ from "/@/utils/$";
 
@@ -44,7 +43,7 @@ export default {
     });
 
     const sortHandle = (type, index) => {
-      let data = cloneDeep(paperCharpts.value);
+      let data = $.clone(paperCharpts.value);
       data[index].questions = data[index].questions.sort((a, b) => (type === 'down' ? (a.question.difficult - b.question.difficult) : (b.question.difficult - a.question.difficult) )  );
       store.commit('set_paper_charpts', data);
     }

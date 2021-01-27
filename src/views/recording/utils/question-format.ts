@@ -1,7 +1,7 @@
-import { cloneDeep } from 'lodash';
+import $ from '/@/utils/$';
 
 export const questionFormat = (quest) => {
-  let data = cloneDeep(quest);
+  let data = $.clone(quest);
   if (data.basicQuestionType === 2 || data.basicQuestionType === 10) {
     let f = data.basicQuestionType === 2 ? ';' : ''
     data.answer = data.rightAnswer ? data.rightAnswer.map(i => i.content).join(f) : '';

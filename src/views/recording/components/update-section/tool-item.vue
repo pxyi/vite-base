@@ -124,7 +124,6 @@ import store from './../store';
 import axios from 'axios';
 import { AxResponse } from '/@/core/axios';
 import { useStore } from 'vuex';
-import { cloneDeep } from 'lodash';
 import { ElMessage } from 'element-plus';
 import $ from "/@/utils/$";
 
@@ -208,7 +207,7 @@ export default {
       data.value.questionTypeName = current.jyQuestionTypeName;
       let focusId = data.value.id;
 
-      let cloneData = cloneDeep(dataset.value);
+      let cloneData = $.clone(dataset.value);
       cloneData = cloneData.map(q => {
         if (q.id === focusId) {
           q.basicQuestionType = current.toolQuestionType;
@@ -222,13 +221,13 @@ export default {
     const goBack = () => store.dispatch('checked_index_change', -1);
 
     const syncLabel = () => {
-      let cloneData = cloneDeep(dataset.value);
+      let cloneData = $.clone(dataset.value);
       cloneData = cloneData.map(d => {
         d.gradeId = data.value.gradeId;
         d.category = data.value.category;
         d.difficult = data.value.difficult;
-        d.knowledgePoints = cloneDeep(data.value.knowledgePoints);
-        d.questionSources = cloneDeep(data.value.questionSources);
+        d.knowledgePoints = $.clone(data.value.knowledgePoints);
+        d.questionSources = $.clone(data.value.questionSources);
         return d;
       });
       store.commit('set_data_set', cloneData);

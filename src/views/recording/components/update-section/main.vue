@@ -39,12 +39,12 @@
 </template>
 
 <script lang="ts">
-import { ref, Ref, computed, nextTick } from 'vue';
+import { Ref, computed, nextTick } from 'vue';
 import store from './../store';
 import axios from 'axios';
 import Modal from '/@/utils/modal';
 import ExchangeComponent from './exchange.vue';
-import { cloneDeep, debounce } from 'lodash';
+import $ from '/@/utils/$'
 import { questionFormat } from './../../utils/question-format';
 
 export default {
@@ -53,8 +53,8 @@ export default {
       get: () => store.state.dataSet,
       set: (val) => store.commit('set_data_set', val)
     });
-    const changeHandle = debounce((index, key, val) => {
-      let data = cloneDeep(dataset.value);
+    const changeHandle = $.debounce((index, key, val) => {
+      let data = $.clone(dataset.value);
       data[index][key] = val;
       dataset.value = data;
     }, 300)
@@ -87,7 +87,7 @@ export default {
       let res: any = await Modal.create({ title: '换题', zIndex: 2010, component: ExchangeComponent, props: { repeatInfos } });
       let data = questionFormat(res);
 
-      let dataSet = cloneDeep(dataset.value);
+      let dataSet = $.clone(dataset.value);
       dataSet[index] = data;
       dataset.value = dataSet;
     }

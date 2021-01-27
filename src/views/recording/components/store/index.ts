@@ -1,6 +1,6 @@
 import Vuex from 'vuex';
 import axios from 'axios';
-import { cloneDeep } from 'lodash';
+import $ from '/@/utils/$';
 
 interface IState {
   checkedIndex: number;
@@ -37,7 +37,7 @@ export default new Vuex.Store<IState>({
   actions: {
     'checked_index_change'({ commit, state }, payload: number) {
       if (state.checkedIndex > -1) {
-        let data = cloneDeep(state.dataSet[state.checkedIndex]);
+        let data = $.clone(state.dataSet[state.checkedIndex]);
         data.operationType = 2;
         data.questionSources && data.questionSources.length && data.questionSources.map(i => {
           if (i.provinceCity && i.provinceCity.length) {
@@ -51,7 +51,7 @@ export default new Vuex.Store<IState>({
           data, 
           { headers: { 'Content-Type': 'application/json' } 
         }).then(res => {
-          commit('set_data_set', cloneDeep(state.dataSet.map((d: any) => { d.id === res.json.id && (d.failReason = res.json.failReason); return d;}) ));
+          commit('set_data_set', $.clone(state.dataSet.map((d: any) => { d.id === res.json.id && (d.failReason = res.json.failReason); return d;}) ));
         });
       }
       commit('set_checked_index', payload);

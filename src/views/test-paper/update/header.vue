@@ -27,7 +27,7 @@ import downloadComponent from './../components/download.vue';
 import store from './store';
 import axios from 'axios';
 import emitter from '/@/utils/mitt';
-import { debounce, cloneDeep } from 'lodash';
+import $ from '/@/utils/$'
 import addPaperComponent from './components/add-paper.vue';
 import { useStore } from 'vuex';
 
@@ -66,7 +66,7 @@ export default {
       });
     }
 
-    const autoSave = debounce(() => save(), 5000)
+    const autoSave = $.debounce(() => save(), 5000)
 
     let paperInfo: any = computed(() => store.state.paperInfo);
     const save = () => {
@@ -89,8 +89,8 @@ export default {
         component: addPaperComponent,
         props: { questionList: paperInfo.value.paperCharpts }
       }).then(res => {
-        let newQuestList = cloneDeep(res);
-        let currentQuestList = cloneDeep(paperInfo.value.paperCharpts);
+        let newQuestList = $.clone(res);
+        let currentQuestList = $.clone(paperInfo.value.paperCharpts);
         newQuestList.map((quest, idx) => {
           let index = currentQuestList.findIndex(node => node.title === quest.questionTypeName);
           index > -1 ? currentQuestList[index].questions.push({ question: quest, score: 0, questionId: quest.id }) : currentQuestList.push({

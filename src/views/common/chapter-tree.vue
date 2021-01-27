@@ -31,7 +31,6 @@ import { useState } from '/@/utils/use'
 import emitter from '/@/utils/mitt';
 import axios from 'axios';
 import { AxResponse } from '/@/core/axios';
-import { debounce } from 'lodash';
 import $ from '/@/utils/$';
 
 export default {
@@ -69,7 +68,7 @@ export default {
     let filterText = ref(null);
     let treeRef: Ref<any> = ref(null);
     const filterNode = (val, node) => (!val || node.name.includes(val));
-    watch(filterText, debounce(() => treeRef.value.filter(filterText.value) , 300))
+    watch(filterText, $.debounce(() => treeRef.value.filter(filterText.value) , 300))
 
 
     const checkChange = (target, { checkedKeys, checkedNodes }) => {

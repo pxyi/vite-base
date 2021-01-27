@@ -53,7 +53,6 @@
 
 <script lang="ts">
 import { ref, Ref, unref, reactive } from 'vue';
-import { cloneDeep } from 'lodash';
 import { ElMessage } from 'element-plus';
 
 export default {

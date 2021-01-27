@@ -23,7 +23,6 @@ import { ref, Ref, watch } from 'vue';
 import emitter from '/@/utils/mitt';
 import axios from 'axios';
 import { AxResponse } from '/@/core/axios';
-import { debounce } from 'lodash'
 import $ from '/@/utils/$';
 
 export default {
@@ -44,13 +43,13 @@ export default {
       dateset.value = res.json;
       loading.value = false;
     }
-    props.autoGetSubject ? getSubjectHandle($.torage.get<any>('subject').code) :emitter.emit('effect', getSubjectHandle);
+    props.autoGetSubject ? getSubjectHandle($.storage.get<any>('subject').code) :emitter.emit('effect', getSubjectHandle);
 
     /* 搜索 */
     let filterText = ref(null);
     let treeRef: Ref<any> = ref(null);
     const filterNode = (val, node) => (!val || node.name.includes(val));
-    watch(filterText, debounce(() => treeRef.value.filter(filterText.value) , 300))
+    watch(filterText, $.debounce(() => treeRef.value.filter(filterText.value) , 300))
     
     const checkChange = (target, { checkedKeys, checkedNodes }) => {
       let nodes = checkedNodes.filter(i => !i.childs || !i.childs.length);

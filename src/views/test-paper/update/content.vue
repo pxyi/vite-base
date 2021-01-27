@@ -91,11 +91,11 @@
 </template>
 
 <script lang="ts">
-import { ref, Ref, computed, inject, watch, nextTick} from 'vue';
+import { Ref, computed, inject } from 'vue';
 import draggable from 'vuedraggable';
 import store from './store';
 import { toChinesNum } from './utils';
-import { cloneDeep } from 'lodash';
+import $ from '/@/utils/$';
 import QuestionDirective from './../../utils/question.directive';
 import Modal from '/@/utils/modal';
 import ExchangeComponent from './components/exchange.vue';
@@ -136,11 +136,11 @@ export default {
       store.commit('set_paper_charpts', data);
     }
     const moveType = (index, arrow) => {
-      store.commit('set_paper_charpts', exchangeArrayIndex(cloneDeep(paperInfo.value.paperCharpts), index, index + arrow));
+      store.commit('set_paper_charpts', exchangeArrayIndex($.clone(paperInfo.value.paperCharpts), index, index + arrow));
     }
     const moveQuestion = (typeId, index, arrow) => {
       let typeIndex = paperInfo.value.paperCharpts.findIndex((p: {id}) => p.id === typeId);
-      let data = cloneDeep(paperInfo.value.paperCharpts);
+      let data = $.clone(paperInfo.value.paperCharpts);
       data[typeIndex].questions = exchangeArrayIndex(data[typeIndex].questions, index, index + arrow);
       store.commit('set_paper_charpts', data);
     }
@@ -153,7 +153,7 @@ export default {
         props: { id }
       }).then((res: any) => {
         if (res) {
-          let data = cloneDeep(paperInfo.value.paperCharpts);
+          let data = $.clone(paperInfo.value.paperCharpts);
           data[typeIndex].questions[index].question = res;
           data[typeIndex].questions[index].questionId = res.id;
           store.commit('set_paper_charpts', data);

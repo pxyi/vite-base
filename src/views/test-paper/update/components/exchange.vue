@@ -21,7 +21,7 @@
 import { ref } from 'vue';
 import axios from 'axios';
 import { questToHtml } from '/@/views/utils/question.directive';
-import { cloneDeep } from 'lodash';
+import $ from '/@/utils/$';
 
 export default {
   props: ['id'],
@@ -43,7 +43,7 @@ export default {
     getQuestionList();
 
     const save = (resolve) => {
-      resolve(cloneDeep(checkedIndex.value > -1 ? dataset.value[checkedIndex.value] : false));
+      resolve($.clone(checkedIndex.value > -1 ? dataset.value[checkedIndex.value] : false));
     }
 
     return { loading, dataset, checkedIndex, getQuestionList, save };

@@ -53,12 +53,12 @@
 </template>
 
 <script lang="ts">
-import { reactive, ref, Ref, watch, computed, nextTick } from 'vue';
-import MenuList, { RouterConf } from './../core/menu-list';
+import { ref, Ref, computed } from 'vue';
+import MenuList, { RouterConf } from '/@/core/menu-list';
 import { useRoute } from 'vue-router';
 import { ElMessageBox } from 'element-plus';
 import { useStore } from 'vuex';
-import { cloneDeep } from 'lodash';
+import $ from '/@/utils/$'
 import menuLogo from "/@/layout/components/logo";
 interface IlistItem extends RouterConf { closed?: boolean };
 
@@ -72,7 +72,7 @@ export default {
 
     let userInfo = computed(() => store.getters.userInfo);
     let allowPath = ref(userInfo.value.roles.reduce((path, role) => path += role.menuUrls, '') || '');
-    let dynamicRoutes = cloneDeep(MenuList).reduce((arr, node: IlistItem) => {
+    let dynamicRoutes = $.clone(MenuList).reduce((arr, node: IlistItem) => {
       node.closed = initPath.includes(node.key);
       if (allowPath.value.includes(node.key)) {
         if (!node.isLeaf) {

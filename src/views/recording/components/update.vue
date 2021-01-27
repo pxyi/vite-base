@@ -16,13 +16,13 @@
 </template>
 
 <script lang="ts">
-import { ref, computed, inject, provide } from 'vue';
+import { ref, computed } from 'vue';
 import { ElMessage, ElLoading } from 'element-plus';
 import store from './store';
 import axios from 'axios';
 import MainComponent from './update-section/main.vue';
 import ToolbarComponent from './update-section/toolbar.vue';
-import { cloneDeep } from 'lodash';
+import $ from '/@/utils/$';
 import Modal from '/@/utils/modal';
 import GeneratingComponent from './update-section/generating.vue';
 import { questionFormat } from './../utils/question-format'
@@ -60,7 +60,7 @@ export default {
     }
 
     const __cloneData = (data) => {
-      let questions = cloneDeep(data).map(data => {
+      let questions = $.clone(data).map(data => {
         data.questionSources && data.questionSources.length && data.questionSources.map(i => {
           if (i.provinceCity && i.provinceCity.length) {
             i.provinceId = i.provinceCity[0];
