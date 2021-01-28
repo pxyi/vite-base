@@ -58,7 +58,7 @@ import MenuList, { RouterConf } from '/@/core/menu-list';
 import { useRoute } from 'vue-router';
 import { ElMessageBox } from 'element-plus';
 import { useStore } from 'vuex';
-import $ from '/@/utils/$'
+import $ from '$'
 import menuLogo from "/@/layout/components/logo";
 interface IlistItem extends RouterConf { closed?: boolean };
 

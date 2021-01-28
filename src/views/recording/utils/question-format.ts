@@ -1,4 +1,4 @@
-import $ from '/@/utils/$';
+import $ from '$';
 
 export const questionFormat = (quest) => {
   let data = $.clone(quest);

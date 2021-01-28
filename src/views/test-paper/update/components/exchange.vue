@@ -21,7 +21,7 @@
 import { ref } from 'vue';
 import axios from 'axios';
 import { questToHtml } from '/@/views/utils/question.directive';
-import $ from '/@/utils/$';
+import $ from '$';
 
 export default {
   props: ['id'],

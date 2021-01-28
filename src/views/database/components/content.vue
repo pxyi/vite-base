@@ -60,7 +60,7 @@ import axios from 'axios';
 import emitter from '/@/utils/mitt';
 import { AxResponse } from '/@/core/axios';
 import { ElMessage, ElLoading } from 'element-plus';
-import $ from '/@/utils/$';
+import $ from '$';
 import Modal from '/@/utils/modal';
 import LessonComponent from './lesson.vue';
 import { useStore } from 'vuex';

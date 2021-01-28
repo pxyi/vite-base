@@ -1,59 +1,59 @@
-/**
- * 判断是否是基本数据类型
- * @param value 
- */
-function isPrimitive(value) {
-  return (typeof value === 'string' ||
-    typeof value === 'number' ||
-    typeof value === 'symbol' ||
-    typeof value === 'boolean')
-}
-
-/**
- * 判断是否是一个js对象
- * @param value 
- */
-function isObject(value) {
-  return Object.prototype.toString.call(value) === "[object Object]"
-}
-
-/**
- * 深拷贝一个值
- * @param value 
- */
-function clone(value) {
-
-  // 记录被拷贝的值，避免循环引用的出现
-  let memo = {};
-
-  function baseClone(value) {
-    let res;
-    // 如果是基本数据类型，则直接返回
-    if (isPrimitive(value)) {
-      return value;
-      // 如果是引用数据类型，我们浅拷贝一个新值来代替原来的值
-    } else if (Array.isArray(value)) {
-      res = [...value];
-    } else if (isObject(value)) {
-      res = { ...value };
-    }
-
-    // 检测我们浅拷贝的这个对象的属性值有没有是引用数据类型。如果是，则递归拷贝
-    Reflect.ownKeys(res).forEach(key => {
-      if (typeof res[key] === "object" && res[key] !== null) {
-        //此处我们用memo来记录已经被拷贝过的引用地址。以此来解决循环引用的问题
-        if (memo[res[key]]) {
-          res[key] = memo[res[key]];
-        } else {
-          memo[res[key]] = res[key];
-          res[key] = baseClone(res[key])
-        }
-      }
-    })
-    return res;
-  }
-
-  return baseClone(value)
-}
+const clone = (data) => JSON.parse(JSON.stringify(data));
 
 export default clone;
+
+
+function isPrimitiveValue(value) {
+  if (
+    typeof value === 'string' ||
+    typeof value === 'number' ||
+    value == null ||
+    typeof value === 'boolean' ||
+    Number.isNaN(value)
+  ) {
+    return true
+  }
+
+  return false
+}
+
+// function cloneDeep(value) {
+//   // 判断拷贝的数据类型，如果为原始类型数据，直接返回其值
+
+//   if (isPrimitiveValue(value)) {
+//     return value
+//   }
+//   // 定义一个保存引用类型的变量,根据 引用数据类型不同的子类型初始化不同的值，以下对象类型的判断和初始化可以根据自身功能的需要做删减。这里列出了所有的引用类型的场景。
+//   let result
+
+//   if (typeof value === 'function') {
+//     // result=value 如果复制函数的时候需要保持同一个引用可以省去新函数的创建，这里用eval创建了一个原函数的副本
+//     result = eval(`(${value.toString()})`)
+//   } else if (Array.isArray(value)) {
+//     result = []
+//   } else if (value instanceof RegExp) {
+//     result = new RegExp(value)
+//   } else if (value instanceof Date) {
+//     result = new Date(value)
+//   } else if (value instanceof Number) {
+//     result = new Number(value)
+//   } else if (value instanceof String) {
+//     result = new String(value)
+//   } else if (value instanceof Boolean) {
+//     result = new Boolean(value)
+//   } else if (typeof value === 'object') {
+//     result = new Object()
+//   }
+
+//   for (let key in value) {
+//     if (value.hasOwnProperty(key)) {
+//       try {
+//         result[key] = cloneObject(value[key]) //属性值为原始类型包装对象的时候，（Number,String,Boolean）这里会抛错，需要加一个错误处理，对运行结果没有影响。
+//       } catch (error) {
+//         // console.error(error)
+//       }
+//     }
+//   }
+
+//   return result
+// }

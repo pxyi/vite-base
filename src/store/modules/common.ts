@@ -1,5 +1,5 @@
 import { SET_SUBJECT, SET_SUBJECT_LIST, REMOVE_SUBJECT_LIST } from '../types';
-import $ from '/@/utils/$';
+import $ from '$';
 
 const state = {
   subjectList: null,

@@ -1,13 +1,11 @@
 import vue from '@vitejs/plugin-vue';
-import { defineConfig } from 'vite'
-const path = require('path');
+import { defineConfig } from 'vite';
+import { resolve } from 'path';
 
 export default defineConfig({
   alias: [
-    { find: '/@', replacement: path.resolve(__dirname, './src') },
-    { find: '/$', replacement: path.resolve(__dirname, './src/utils/$') },
-    { find: '/@u', replacement: path.resolve(__dirname, './src/utils') },
-    { find: '/@a', replacement: path.resolve(__dirname, './src/assets') },,
+    { find: '/@', replacement: resolve(__dirname, './src') },
+    { find: '$', replacement: resolve(__dirname, './src/utils/$/index') },
   ],
   build: {
     commonjsOptions: {

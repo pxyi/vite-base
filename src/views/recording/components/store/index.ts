@@ -1,6 +1,6 @@
 import Vuex from 'vuex';
 import axios from 'axios';
-import $ from '/@/utils/$';
+import $ from '$';
 
 interface IState {
   checkedIndex: number;

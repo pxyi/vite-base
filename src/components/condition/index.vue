@@ -66,7 +66,7 @@ import { AxResponse } from './../../core/axios';
 import { reactive, ref, Ref, PropType } from 'vue';
 import { useStore } from 'vuex';
 import { ElInput } from 'element-plus';
-import $ from '/@/utils/$';
+import $ from '$';
 
 interface ICondition {
   label : string;

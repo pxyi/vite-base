@@ -39,7 +39,7 @@ import { AxResponse } from "/@/core/axios";
 import { useStore } from "vuex";
 import { SET_USER_INFO } from "/@/store/types";
 import { useRouter } from "vue-router";
-import $ from '/@/utils/$';
+import $ from '$';
 import backgroundImage1 from '/@/assets/login/login-bg-1.jpg';
 import backgroundImage2 from '/@/assets/login/login-bg-2.jpg';
 import backgroundImage3 from '/@/assets/login/login-bg-3.jpg';

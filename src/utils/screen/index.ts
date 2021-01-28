@@ -1,6 +1,6 @@
 import ElementPlus from 'element-plus';
 import { createApp } from 'vue';
-import $ from '/@/utils/$';
+import $ from '$';
 import Components from './../../components';
 import Store from './../../store';
 import router from './../../router';

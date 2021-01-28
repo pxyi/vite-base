@@ -31,7 +31,7 @@ import { useState } from '/@/utils/use'
 import emitter from '/@/utils/mitt';
 import axios from 'axios';
 import { AxResponse } from '/@/core/axios';
-import $ from '/@/utils/$';
+import $ from '$';
 
 export default {
   props: {

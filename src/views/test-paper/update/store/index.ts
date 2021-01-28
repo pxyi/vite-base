@@ -1,5 +1,5 @@
 import Vuex from 'vuex';
-import $ from '/@/utils/$';
+import $ from '$';
 import emitter from '/@/utils/mitt'
 
 export default new Vuex.Store({

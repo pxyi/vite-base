@@ -63,7 +63,7 @@ import { useStore } from 'vuex';
 import axios from 'axios';
 import { AxResponse } from '/@/core/axios';
 import { useState } from '/@/utils/use';
-import $ from '/@/utils/$';
+import $ from '$';
 
 export default {
   props: {

@@ -1,5 +1,5 @@
 import { SET_USER_INFO, REMOVE_USER_INFO } from '../types';
-import $ from '/@/utils/$';
+import $ from '$';
 interface UserState {
   userInfo: any;
   accessToken: string;

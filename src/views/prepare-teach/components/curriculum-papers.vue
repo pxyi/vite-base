@@ -76,7 +76,7 @@ import Modal from '/@/utils/modal';
 import MyPlanUpload from './my-plan-upload.vue'
 import MyVideoUpload from './my-video-upload.vue'
 import { ElMessage, ElLoading } from 'element-plus'
-import $ from '/@/utils/$';
+import $ from '$';
 
 export default {
   props: {

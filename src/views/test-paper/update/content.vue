@@ -95,7 +95,7 @@ import { Ref, computed, inject } from 'vue';
 import draggable from 'vuedraggable';
 import store from './store';
 import { toChinesNum } from './utils';
-import $ from '/@/utils/$';
+import $ from '$';
 import QuestionDirective from './../../utils/question.directive';
 import Modal from '/@/utils/modal';
 import ExchangeComponent from './components/exchange.vue';

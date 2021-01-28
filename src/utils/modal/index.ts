@@ -1,6 +1,6 @@
 import ElementPlus from 'element-plus';
 import { Component, createApp } from 'vue';
-import $ from '/@/utils/$';
+import $ from '$';
 import Components, { AppComponents } from './../../components';
 import Store from '/@/store';
 import Directives from '/@/utils/directives';
