@@ -23,7 +23,7 @@
             <p><i v-if="data.isPublic === 0 && data.creatorId === userId">【个人库】</i>{{ data.fileName }}</p>
             <div class="mask">
               <el-dropdown placement="bottom-end" trigger="click" @command="cellHandle($event, data)">
-                <i class="el-icon-more" />
+                <i class="el-icon-more" v-permissions="['rename', 'delete', 'download']" />
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item command="rename"><div v-permissions="'rename'">重命名</div></el-dropdown-item>

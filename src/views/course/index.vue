@@ -50,10 +50,9 @@
   import { ElNotification } from 'element-plus'
   import headerRef from './components/header-ref.vue'
   import knot from './components/knot.vue';
-  import { emitter } from '$';
+  import { emitter, screen } from '$';
   import Model from '/@/utils/modal';
-  import screen from '/@/utils/screen/index';
-  import axios, {AxiosResponse} from "axios";
+  import axios from "axios";
   import { useStore } from "vuex"
 
   export default defineComponent({
@@ -103,7 +102,7 @@
       };
 
       async function courseModifyOrAdd(data, url) {
-        const res: any = await axios.post<any, AxiosResponse>(url, data, {headers: {'Content-Type': 'application/json;charset=UTF-8'}});
+        const res: any = await axios.post(url, data, {headers: {'Content-Type': 'application/json;charset=UTF-8'}});
         res.result && (ElNotification as any).success({title: '成功', message: res.msg}) && tableRef.value.request(params.value);
         !res.result && (ElNotification as any).error({title: '失败', message: res.msg});
       }

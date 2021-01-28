@@ -42,9 +42,9 @@
 		name: "checkHeader",
 		data () {
 		  return {
-        schoolMsg: '',
+        schoolMsg: null,
         schoolOptions: [{}],
-        researchMsg: '',
+        researchMsg: null,
         researchOptions: [{}],
         prepareLessonAvgScore: 0,
         uploadReviewVideoRate: 0,

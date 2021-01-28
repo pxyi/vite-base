@@ -34,7 +34,7 @@
 					<div class="teacher-query">
 						<div class="query-cell">
 							<span>课程课次</span>
-							<el-cascader clearable size="small" filterable v-model="this.course" :options="this.courseOptions" :props="{children: 'courseIndexList', value: 'id'}" @change="this.course !== null ? [this.lessonParam.courseId, this.lessonParam.courseIndex] = this.course : this.lessonParam.courseId = this.lessonParam.courseIndex = null"></el-cascader>
+							<el-cascader placeholder="请选择课程课次" clearable size="small" filterable v-model="this.course" :options="this.courseOptions" :props="{children: 'courseIndexList', value: 'id'}" @change="this.course !== null ? [this.lessonParam.courseId, this.lessonParam.courseIndex] = this.course : this.lessonParam.courseId = this.lessonParam.courseIndex = null"></el-cascader>
 						</div>
 						<div class="query-cell">
 							<span>备课时间</span>

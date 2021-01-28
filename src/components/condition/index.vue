@@ -61,7 +61,7 @@
 </template>
 <script lang="ts">
 import axios from 'axios';
-import { AxResponse } from './../../core/axios';
+import { AxResponse } from '/@/core/axios';
 import { reactive, ref, Ref, PropType } from 'vue';
 import { useStore } from 'vuex';
 import { ElInput } from 'element-plus';

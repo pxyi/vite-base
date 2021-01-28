@@ -46,6 +46,9 @@ import backgroundImage3 from '/@/assets/login/login-bg-3.jpg';
 
 export default {
   setup() {
+    $.drawer.closeAll();
+    $.modal.closeAll();
+    $.screen.closeAll();
     const system = import.meta.env.VITE_IS_BIAOPIN;
     let remember = ref(false);
     let showPassword = ref(false);
@@ -89,7 +92,7 @@ export default {
     let url = [backgroundImage1, backgroundImage2, backgroundImage3][index]
     image.src = url;
     image.onload = () => {
-      loading.close();
+      setTimeout(() => loading.close());
       backgroundRef.value!.style.background = `url(${ url }) center center / cover no-repeat`;
     }
     return { backgroundRef, showPassword, remember, formRef, formGroup, rules, login, saveLoading, system };

@@ -5,7 +5,7 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import { ElMessage, ElLoading } from 'element-plus';
 import Store from '../store';
-import $ from '../utils/$';
+import $ from '$';
 
 /* ------------------------- 默认请求格式, 和全局请求地址 ------------------------- */
 axios.defaults.headers['Content-Type'] = 'application/x-www-form-urlencoded';

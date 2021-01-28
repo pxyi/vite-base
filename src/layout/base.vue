@@ -17,28 +17,18 @@
 <script lang="ts">
 import LayMenu from './menu.vue';
 import LayHeader from './header.vue';
-import TreeItem from '../components/tree/components/tree-item.vue';
-import { ref, computed, Ref, onUnmounted } from 'vue';
+import { ref, computed } from 'vue';
 import { useRoute } from 'vue-router';
 
 export default {
   name: 'lay-base',
-  components: { LayMenu, LayHeader, TreeItem },
+  components: { LayMenu, LayHeader },
   setup() {
     let route = useRoute();
 
     let hideHeader = computed(() => ['/home'].includes(route.path));
 
     let asideWidth = ref(document.body.offsetWidth > 1080 ? '200px' : '54px');
-
-    onUnmounted(() => {
-      let drawer = document.querySelectorAll('[class^=__drawer__]') || [];
-      let modal = document.querySelectorAll('[class^=__modal__]') || [];
-      let screen = document.querySelectorAll('[class^=__screen__]') || [];
-      drawer.forEach(i => i.remove());
-      modal.forEach(i => i.remove());
-      screen.forEach(i => i.remove());
-    })
     
     return { hideHeader, asideWidth }
   }

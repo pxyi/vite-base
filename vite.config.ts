@@ -5,12 +5,11 @@ import { resolve } from 'path';
 export default defineConfig({
   alias: [
     { find: '/@', replacement: resolve(__dirname, './src') },
-    { find: '$', replacement: resolve(__dirname, './src/utils/$/index') },
-    { find: 'use', replacement: resolve(__dirname, './src/utils/use/index') },
+    { find: '$', replacement: resolve(__dirname, './src/utils/$/index') }
   ],
   build: {
     commonjsOptions: {
-      dynamicRequireTargets: ['crypto-js', 'element-plus'],
+      dynamicRequireTargets: ['crypto-js'],
     }
   },
   plugins: [vue()],

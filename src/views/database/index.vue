@@ -26,9 +26,7 @@ export default {
     let headerRef = ref();
     let contentRef = ref();
     let knowledgeRef = ref();
-    onMounted(() => {
-      emitter.emit('slot', headerRef)
-    });
+    onMounted(() => emitter.emit('slot', headerRef) );
 
     const handle = (key, val) => { contentRef.value.formGroup[key] = val; contentRef.value.request(); }
 
