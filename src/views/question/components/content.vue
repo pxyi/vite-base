@@ -80,7 +80,7 @@
 </template>
 
 <script lang="ts">
-import { ref, Ref, reactive, computed, watch } from 'vue';
+import { ref, Ref, reactive, computed } from 'vue';
 import axios from 'axios';
 import { AxResponse } from '/@/core/axios';
 import updateComponent from './update.vue';

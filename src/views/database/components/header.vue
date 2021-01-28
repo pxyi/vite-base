@@ -35,14 +35,11 @@
   </div>
 </template>
 <script lang="ts">
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 import Modal from '/@/utils/modal';
 import { ElMessage } from 'element-plus';
-import axios from 'axios';
-import { AxResponse } from '/@/core/axios';
 import UploadComponent from './upload.vue';
-import emitter from '/@/utils/mitt';
-import $ from '/@/utils/$'
+import $, { emitter } from '$'
 
 export default {
   props: ['getKnowledge'],
@@ -59,7 +56,7 @@ export default {
         fileDom.click();
         fileDom.onchange = async () =>{
           let files: File[] = Array.from((fileDom as HTMLInputElement).files || []);
-          let res = await Modal.create({ title: type ? '上传标准教案' : '上传资料', width: 480, component: UploadComponent, props: { files, knowledgeList, type } });
+          await Modal.create({ title: type ? '上传标准教案' : '上传资料', width: 480, component: UploadComponent, props: { files, knowledgeList, type } });
           ElMessage.success('上传资料成功~！');
           emitter.emit('dataset-reset');
         }

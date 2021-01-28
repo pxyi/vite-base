@@ -61,12 +61,11 @@
 </template>
 <script lang="ts">
 import axios from 'axios';
-import emitter from './../../utils/mitt';
 import { AxResponse } from './../../core/axios';
 import { reactive, ref, Ref, PropType } from 'vue';
 import { useStore } from 'vuex';
 import { ElInput } from 'element-plus';
-import $ from '$';
+import $, { emitter } from '$';
 
 interface ICondition {
   label : string;

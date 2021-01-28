@@ -14,12 +14,7 @@
   </div>
 </template>
 <script lang="ts">
-import { ref, watch } from 'vue';
-import emitter from '/@/utils/mitt';
-import Modal from '/@/utils/modal';
-import { ElMessage } from 'element-plus';
-import axios from 'axios';
-import { AxResponse } from '/@/core/axios';
+import { ref } from 'vue';
 import Drawer from '/@/utils/drawer';
 import UpdateComponent from './update.vue';
 

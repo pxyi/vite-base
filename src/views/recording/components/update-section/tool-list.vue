@@ -12,9 +12,9 @@
 </template>
 
 <script lang="ts">
-import { ref, Ref, computed } from 'vue';
+import { Ref, computed } from 'vue';
 import store from './../store';
-import $ from "/@/utils/$";
+import $ from "$";
 
 export default {
   setup() {

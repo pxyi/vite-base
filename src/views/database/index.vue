@@ -14,7 +14,7 @@
 
 <script lang="ts">
 import { ref, onMounted } from 'vue'
-import emitter from '/@/utils/mitt';
+import { emitter } from '$';
 import HeaderRefComponent from './components/header.vue';
 import KnowledgeTreeComponent from './components/knowledge.vue';
 import ContentComponent from './components/content.vue';

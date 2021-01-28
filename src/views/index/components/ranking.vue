@@ -59,8 +59,7 @@
 </template>
 <script lang="ts">
 import axios, {AxiosResponse} from 'axios';
-import { reactive, ref } from 'vue';
-import { AxResponse } from '/@/core/axios';
+import { reactive } from 'vue';
 import { useStore } from 'vuex';
 
 export default {

@@ -57,10 +57,9 @@
 <script lang="ts">
 import { ref, Ref, reactive } from 'vue';
 import axios from 'axios';
-import emitter from '/@/utils/mitt';
 import { AxResponse } from '/@/core/axios';
 import { ElMessage, ElLoading } from 'element-plus';
-import $ from '$';
+import $, { emitter } from '$';
 import Modal from '/@/utils/modal';
 import LessonComponent from './lesson.vue';
 import { useStore } from 'vuex';
@@ -163,7 +162,7 @@ export default {
         let downloadData = $.element('div', allowPath.includes(`/teaching/database#download`) ? {
           className: 'el-icon-download',
           style: { width: '36px', height: '36px', lineHeight: '36px', textAlign: 'center', background: '#fff', borderRadius: '50%', fontSize: '24px', position: 'fixed', bottom: '100px', right: '40px', zIndex: '10', cursor: 'pointer' },
-          on: { click: () => { let a = $.element('a', { attrs:{ target: '_blank' } });a.download = item.fileName+'.'+item.ext;a.href = `${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`;a.click(); } }
+          on: { click: () => { let a = $.element('a', { attrs:{ target: '_blank' } }) as HTMLAnchorElement; a.download = item.fileName+'.'+item.ext;a.href = `${import.meta.env.VITE_APP_BASE_URL}${item.filePath}`;a.click(); } }
         } : {});
         let container;
         if(item.ext === 'mp4') {

@@ -21,11 +21,8 @@
 import { ref } from 'vue';
 import OrganizingPapers from './organizing-papers.vue';
 import UploadComponent from './upload.vue';
-import emitter from '/@/utils/mitt';
-import Modal from '/@/utils/modal';
+import { emitter, modal } from '$';
 import { ElMessage } from 'element-plus';
-import axios from 'axios';
-import { AxResponse } from '/@/core/axios';
 
 export default {
   setup(props, { emit }) {
@@ -40,7 +37,7 @@ export default {
     emitter.on('queryClass', (e) => queryClass = e);
 
     const addPaper = () => {
-      Modal.create({ title: '组卷', width: 640, component: OrganizingPapers });
+      modal.create({ title: '组卷', width: 640, component: OrganizingPapers });
     }
 
     let uploadRef = ref();
@@ -56,7 +53,7 @@ export default {
       if (!files.length) {
         ElMessage.warning(`请选择指定${accept.join('、')}格式文件`);
       } else {
-        Modal.create({ title: '上传试卷', width: 480, component: UploadComponent, props: { files } }).then(res => {
+        modal.create({ title: '上传试卷', width: 480, component: UploadComponent, props: { files } }).then(res => {
           res && emit('type-change', classType.value);
         })
       }

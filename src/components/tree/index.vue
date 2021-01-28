@@ -5,11 +5,11 @@
 </template>
 
 <script lang="ts">
-import { ref, unref, onMounted, computed, provide, getCurrentInstance } from 'vue';
+import { unref, computed, provide, getCurrentInstance } from 'vue';
 import type { PropType } from 'vue';
 import TreeItem from './components/tree-item.vue';
 import store, { ItemData } from './store';
-import mitt from './../../utils/mitt';
+import { emitter } from '$';
 
 type IDataSet = PropType<ItemData[]>;
 
@@ -54,13 +54,11 @@ export default {
     provide('allowSelect', props.allowSelect);
     provide('showCheckbox', props.showCheckbox);
 
-    mitt.on(`event-${uuid}`, ({ type, data }) => emit(`on-${type}`, data) );
+    emitter.on(`event-${uuid}`, ({ type, data }) => emit(`on-${type}`, data) );
 
     store.commit('set_data', JSON.parse(JSON.stringify(unref(props.dataSet))));
 
     let dataset = computed(() => store.state.data);
-
-    console.log(props.dataSet);
     
     return { dataset }
   }

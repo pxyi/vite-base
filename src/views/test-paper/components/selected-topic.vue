@@ -9,7 +9,7 @@ import QuestionListComponent from '/@/views/question/index.vue';
 import { useStore } from 'vuex';
 import { ElMessage } from 'element-plus';
 import axios from 'axios';
-import emitter from '/@/utils/mitt';
+import { emitter } from '$';
 
 export default {
   props: {

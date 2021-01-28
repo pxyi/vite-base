@@ -53,17 +53,14 @@
   </div>
 </template>
 <script lang="ts">
-import { ref, reactive,toRefs, onMounted, Ref, watch } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
 import HeaderRefComponent from './components/header-ref.vue';
 import ContentComponent from './components/content.vue';
 import KnowledgeTree from '/@/views/common/knowledge-tree.vue';
 import ChapterTreeComponent from '/@/views/common/chapter-tree.vue';
-import emitter from '/@/utils/mitt';
-import { useStore } from 'vuex';
 import axios from 'axios';
 import { AxResponse } from '/@/core/axios';
-import { useState } from '/@/utils/use';
-import $ from '$';
+import $, { useState, emitter } from '$';
 
 export default {
   props: {
@@ -79,7 +76,7 @@ export default {
   components: { HeaderRefComponent, KnowledgeTree, ContentComponent, ChapterTreeComponent },
   emits: ['check-change'],
   setup(props, { emit }) {
-    let store = useStore();
+
     let headerRef = ref();
     let contentRef = ref();
 

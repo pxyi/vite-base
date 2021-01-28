@@ -26,12 +26,10 @@
 </template>
 
 <script lang="ts">
-import { Ref, ref, watch } from 'vue'
-import { useState } from '/@/utils/use'
-import emitter from '/@/utils/mitt';
+import { Ref, ref, watch } from 'vue';
 import axios from 'axios';
 import { AxResponse } from '/@/core/axios';
-import $ from '$';
+import $, { useState, emitter } from '$';
 
 export default {
   props: {

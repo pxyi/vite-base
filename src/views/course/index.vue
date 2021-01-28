@@ -50,7 +50,7 @@
   import { ElNotification } from 'element-plus'
   import headerRef from './components/header-ref.vue'
   import knot from './components/knot.vue';
-  import emitter from '/@/utils/mitt';
+  import { emitter } from '$';
   import Model from '/@/utils/modal';
   import screen from '/@/utils/screen/index';
   import axios, {AxiosResponse} from "axios";

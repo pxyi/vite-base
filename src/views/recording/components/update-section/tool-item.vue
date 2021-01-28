@@ -125,7 +125,7 @@ import axios from 'axios';
 import { AxResponse } from '/@/core/axios';
 import { useStore } from 'vuex';
 import { ElMessage } from 'element-plus';
-import $ from "/@/utils/$";
+import $ from "$";
 
 export default {
   components: { KnowledgeTreeComponent, ChapterTreeComponent },

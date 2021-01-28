@@ -23,10 +23,10 @@
 
 <script lang="ts">
 import type { PropType } from 'vue';
-import { ref, computed, watch, inject } from 'vue';
+import { inject } from 'vue';
 import { ItemData } from './../store';
 import store from './../store';
-import mitt from './../../../utils/mitt';
+import { emitter } from '$';
 
 export default {
   name: 'tree-item',
@@ -44,11 +44,11 @@ export default {
     let allowSelect = inject('allowSelect');
 
     const openedChange = async () => {
-      mitt.emit(event, { type: 'click', data: props.data });
+      emitter.emit(event, { type: 'click', data: props.data });
 
       if (props.data.children) {
         store.commit('set_item_opened', { key: props.data.key });
-        mitt.emit(event, { type: 'fold', data: props.data });
+        emitter.emit(event, { type: 'fold', data: props.data });
       }
 
       if (allowSelect) {
@@ -66,7 +66,7 @@ export default {
 
     const checkHandle = () => {
       store.commit('set_item_checked', { key: props.data?.key });
-      mitt.emit(event, { type: 'check', data: props.data });
+      emitter.emit(event, { type: 'check', data: props.data });
     }
 
     return { openedChange, checkHandle, showCheckbox }

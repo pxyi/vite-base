@@ -6,15 +6,11 @@
 </template>
 
 <script lang="ts">
-import { ref, computed } from 'vue';
 import ToolList from './tool-list.vue';
 import ToolItem from './tool-item.vue';
 
 export default {
-  components:{ ToolList, ToolItem },
-  setup() {
-    
-  }
+  components:{ ToolList, ToolItem }
 }
 </script>
 

@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts">
-import { ref, PropType } from 'vue';
+import { PropType } from 'vue';
 import Modal from '/@/utils/modal';
 import GeneratingComponent from './generating.vue';
 import axios from 'axios';

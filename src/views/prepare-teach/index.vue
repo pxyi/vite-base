@@ -44,8 +44,7 @@
   import HeaderRefComponent from './components/header-ref.vue';
   import NearClass from './near-class/index.vue';
   import PreparePapers from './components/prepare-papers.vue';
-  import emitter from '/@/utils/mitt';
-  import Modal from '/@/utils/modal';
+  import { emitter, modal } from '$';
 
   export default {
     components: { HeaderRefComponent, NearClass },
@@ -66,13 +65,15 @@
       // 课程详情弹窗
       const godetails = (item) => {
         let courseId = item.id
-        Modal.create({ title: item.courseName,
-        width: 640, zIndex:998,
-        footed: false ,
-        component: PreparePapers,
-        props: { courseId },
-        headerStyle: { 'margin-bottom': '20px' },
-        bodyStyle: { padding: '0 20px 28px' }
+        modal.create({ 
+          title: item.courseName,
+          width: 640, 
+          zIndex:998,
+          footed: false ,
+          component: PreparePapers,
+          props: { courseId },
+          headerStyle: { 'margin-bottom': '20px' },
+          bodyStyle: { padding: '0 20px 28px' }
         })
       }
 

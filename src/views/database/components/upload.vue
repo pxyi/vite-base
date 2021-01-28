@@ -21,8 +21,7 @@
   </div>
 </template>
 <script lang="ts">
-import { ref, Ref, PropType, onMounted, inject } from 'vue';
-import { AxResponse } from '/@/core/axios';
+import { ref, Ref, PropType } from 'vue';
 import axios from 'axios';
 import { useStore } from 'vuex';
 import { ElMessage } from 'element-plus';

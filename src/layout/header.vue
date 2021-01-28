@@ -40,14 +40,13 @@
 </template>
 
 <script lang="ts">
-import { computed, ref, onMounted, watch, Ref, isRef} from 'vue';
+import { computed, ref, watch, Ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import emitter from './../utils/mitt';
 import { useStore } from 'vuex';
 import axios from 'axios';
 import {REMOVE_SUBJECT_LIST, REMOVE_USER_INFO, SET_SUBJECT, SET_SUBJECT_LIST} from '../store/types';
 import { AxResponse } from '../core/axios';
-import $ from '../utils/$';
+import $, { emitter } from '../utils/$';
 import modal from '../utils/modal';
 import ChangePasswordComponent from './components/change-password.vue';
 

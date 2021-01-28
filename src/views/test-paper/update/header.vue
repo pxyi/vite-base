@@ -20,14 +20,13 @@
   </div>
 </template>
 <script lang="ts">
-import { ref, Ref, reactive, inject,  computed } from 'vue';
+import { ref, inject,  computed } from 'vue';
 import Modal from '/@/utils/modal';
 import Drawer from '/@/utils/drawer';
 import downloadComponent from './../components/download.vue';
 import store from './store';
 import axios from 'axios';
-import emitter from '/@/utils/mitt';
-import $ from '/@/utils/$'
+import $, { emitter } from '$'
 import addPaperComponent from './components/add-paper.vue';
 import { useStore } from 'vuex';
 

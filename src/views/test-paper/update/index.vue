@@ -9,13 +9,13 @@
 
 </template>
 <script lang="ts">
-import { ref, Ref, reactive, provide } from 'vue';
+import { provide } from 'vue';
 import axios from 'axios';
 import HeaderComponent from './header.vue';
 import ToolbarComponent from './toolbar.vue';
 import ContentComponent from './content.vue';
 import store from './store/index';
-import emitter from '/@/utils/mitt';
+import { emitter } from '$';
 import { ElLoading } from 'element-plus';
 import { useRoute } from 'vue-router';
 

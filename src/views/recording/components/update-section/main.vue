@@ -44,7 +44,7 @@ import store from './../store';
 import axios from 'axios';
 import Modal from '/@/utils/modal';
 import ExchangeComponent from './exchange.vue';
-import $ from '/@/utils/$'
+import $ from '$'
 import { questionFormat } from './../../utils/question-format';
 
 export default {

@@ -31,8 +31,7 @@ import { computed } from 'vue';
 import draggable from 'vuedraggable';
 import store from './../store';
 import { toChinesNum } from './../utils';
-import emitter from '/@/utils/mitt';
-import $ from "/@/utils/$";
+import $, { emitter } from "$";
 
 export default {
   components: { draggable },

@@ -6,6 +6,7 @@ export default defineConfig({
   alias: [
     { find: '/@', replacement: resolve(__dirname, './src') },
     { find: '$', replacement: resolve(__dirname, './src/utils/$/index') },
+    { find: 'use', replacement: resolve(__dirname, './src/utils/use/index') },
   ],
   build: {
     commonjsOptions: {

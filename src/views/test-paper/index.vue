@@ -47,14 +47,11 @@
 <script lang="ts">
 import { ref, onMounted, Ref } from 'vue';
 import HeaderRefComponent from './components/header-ref.vue';
-import emitter from '/@/utils/mitt';
 import axios from 'axios';
 import { ElMessage, ElLoading } from 'element-plus'
 import { AxResponse } from '/@/core/axios';
-import $ from '$';
+import $, { emitter } from '$';
 import Modal from '/@/utils/modal';
-import Screen from '/@/utils/screen';
-import UpdateComponent from './update/index.vue';
 import downloadComponent from './components/download.vue';
 
 export default {

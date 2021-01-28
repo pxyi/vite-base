@@ -100,13 +100,13 @@
 </template>
 
 <script lang="ts">
-import { ref, Ref, reactive, computed, inject } from 'vue';
+import { ref, Ref, reactive, computed } from 'vue';
 import axios from 'axios';
 import { AxResponse } from '/@/core/axios';
 import KnowledgeTreeComponent from '/@/views/common/knowledge-tree.vue';
 import { useStore } from 'vuex';
 import { ElMessage } from 'element-plus';
-import emitter from '/@/utils/mitt';
+import { emitter } from '$';
 
 export default {
   props: {

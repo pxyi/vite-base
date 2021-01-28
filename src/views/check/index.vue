@@ -107,7 +107,7 @@
 	import checkHeader from "./components/header.vue";
 	import score from './components/score.vue'
 	import axios from 'axios';
-	import emitter from "../../utils/mitt";
+	import { emitter } from '$';
 	import headerRef from '/@/views/check/components/header-ref.vue';
 	import pageView from '/@/views/check/components/pageView.vue'
 
@@ -153,9 +153,6 @@
 		  }
 		},
 		computed: {
-		  // subjectParasm() {
-      //   return this.$store.state.nav.navSelectParams
-		  // },
 			filterTeacher() {
 		    let filterList = []
         filterList = this.teacherList.filter(item => item.nickname.indexOf(this.teacherName) !== -1)

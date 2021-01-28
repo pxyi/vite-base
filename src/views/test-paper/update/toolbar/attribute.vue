@@ -43,7 +43,7 @@ import store from './../store/index';
 import axios from 'axios';
 import { AxResponse } from '/@/core/axios'
 import { useStore } from 'vuex';
-import emitter from '/@/utils/mitt';
+import { emitter } from '$';
 
 export default {
   setup() {

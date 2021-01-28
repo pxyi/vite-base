@@ -95,11 +95,10 @@ import { Ref, computed, inject } from 'vue';
 import draggable from 'vuedraggable';
 import store from './store';
 import { toChinesNum } from './utils';
-import $ from '$';
+import $, { emitter } from '$';
 import QuestionDirective from './../../utils/question.directive';
 import Modal from '/@/utils/modal';
 import ExchangeComponent from './components/exchange.vue';
-import emitter from '/@/utils/mitt';
 
 const exchangeArrayIndex = (arr, index1, index2) => {
   arr[index1] = arr.splice(index2, 1, arr[index1])[0];

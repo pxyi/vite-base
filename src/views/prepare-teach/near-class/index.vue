@@ -24,14 +24,13 @@
 </template>
 
 <script lang='ts'>
-import { ref, Ref, watch } from 'vue'
-import Screen from './../../../utils/screen';
+import { ref, Ref } from 'vue'
 import CurriculumPapers from './../components/curriculum-papers.vue';
 import axios from 'axios'
-import { AxResponse } from './../../../core/axios'
-import { ElMessage, ElLoading, locale } from 'element-plus'
+import { AxResponse } from '/@/core/axios'
+import { ElMessage } from 'element-plus'
 import SearchTime from './search-time.vue'
-import emitter from './../../../utils/mitt';
+import { emitter, screen } from '$';
 
 export default {
   props: {
@@ -51,7 +50,7 @@ export default {
     // 查看备课、继续备课
     const courseDetailFileList = (item) => {
       let id = props.listShow === 0 ? item.courseIndex : item.id;
-      Screen.create( CurriculumPapers, { title: item.courseName, id: id }).then((data: any) => {
+      screen.create( CurriculumPapers, { title: item.courseName, id: id }).then((data: any) => {
         if(data) {
           nearList.value.request(params)
         }

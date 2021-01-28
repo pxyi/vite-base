@@ -10,9 +10,7 @@
 </template>
 
 <script lang="ts">
-import { ref } from 'vue';
 import { useStore } from 'vuex';
-import { useRouter } from 'vue-router';
 import IndexContent from './components/content.vue';
 import IndexFixed from './components/fixed.vue';
 

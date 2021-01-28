@@ -20,10 +20,9 @@
 
 <script lang="ts">
 import { ref, Ref, watch } from 'vue';
-import emitter from '/@/utils/mitt';
 import axios from 'axios';
 import { AxResponse } from '/@/core/axios';
-import $ from '$';
+import $, { emitter } from '$';
 
 export default {
   props: { 
@@ -43,7 +42,7 @@ export default {
       dateset.value = res.json;
       loading.value = false;
     }
-    props.autoGetSubject ? getSubjectHandle($.storage.get<any>('subject').code) :emitter.emit('effect', getSubjectHandle);
+    props.autoGetSubject ? getSubjectHandle($.storage.get<any>('subject').code) : emitter.emit('effect', getSubjectHandle);
 
     /* 搜索 */
     let filterText = ref(null);

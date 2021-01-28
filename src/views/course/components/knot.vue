@@ -59,11 +59,10 @@
 </template>
 
 <script lang="ts">
-	import { defineComponent, ref, Ref, onMounted, getCurrentInstance, unref } from 'vue'
+	import { defineComponent, ref, Ref, onMounted } from 'vue'
 	import increaseCourseIndex from "./increaseCourseIndex.vue";
-  import Model from '../../../utils/modal/index';
   import axios from "axios";
-  import emitter from "../../../utils/mitt";
+  import { emitter, modal } from '$';
   import { ElNotification } from 'element-plus'
 
 	export default defineComponent({
@@ -85,7 +84,7 @@
         emitter.emit('effect', getVresion);
       })
       const increaseChapter = ({ id, hasChapters }) => {
-        Model.create({
+        modal.create({
           component: increaseCourseIndex,
 	        title: '添加章节',
           zIndex: 2011,

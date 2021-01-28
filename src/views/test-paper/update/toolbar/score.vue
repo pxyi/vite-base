@@ -31,10 +31,10 @@
 </template>
 
 <script lang="ts">
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
 import store from './../store';
 import { toChinesNum } from './../utils';
-import emitter from '/@/utils/mitt';
+import emitter from '$';
 
 export default {
   setup() {
