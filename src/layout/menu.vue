@@ -92,12 +92,11 @@ export default {
 
     let isXinzhou = import.meta.env.VITE_IS_XINZHOU === 'true';
     let isSike = import.meta.env.VITE_IS_SIKE === 'true';
-    let isJinbang = import.meta.env.VITE_IS_Jinbang === 'true'
+    let isJinbang = import.meta.env.VITE_IS_JINBANG === 'true'
 
     let isIpad = ref(document.body.offsetWidth <= 1080);
 
     let isSlide = ref(false);
-    menuLogo({isXinzhou, isSike});
 
     return { list, initPath, goSystem, isXinzhou, isIpad, isSlide, isSike, isJinbang }
   }
