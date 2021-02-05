@@ -30,11 +30,11 @@
     <div class="controls">
       <div class="label">试卷格式</div>
       <div class="radio-group">
-        <div class="radio-cell" :class="{ 'is__checked': formGroup.format === 1 }" v-permissions="'download'" @click="formGroup.format = 1" >
+        <div class="radio-cell" :class="{ 'is__checked': formGroup.format === 1 }" v-permissions="'teaching/test-paper#download'" @click="formGroup.format = 1" >
           <span>Word</span>
           <i class="el-icon-check" />
         </div>
-        <div class="radio-cell" :class="{ 'is__checked': formGroup.format === 2 }" v-permissions="'print'" @click="formGroup.format = 2" >
+        <div class="radio-cell" :class="{ 'is__checked': formGroup.format === 2 }" v-permissions="'teaching/test-paper#print'" @click="formGroup.format = 2" >
           <span>PDF</span>
           <i class="el-icon-check" />
         </div>

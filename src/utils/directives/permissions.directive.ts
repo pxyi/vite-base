@@ -9,9 +9,9 @@ const handle = (el, binding) => {
   let path = binding.instance.$route.path;
   if (binding.value) {
     if (Array.isArray(binding.value)) {
-      !binding.value.reduce((allow, str) => allow || allowPath.includes(`${path}#${str}`), false) && el.remove()
+      !binding.value.reduce((allow, str) => allow || allowPath.includes(str.includes('#') ? str : `${path}#${str}`), false) && el.remove()
     } else {
-      !allowPath.includes(`${path}#${binding.value}`) && el && el.remove();
+      !allowPath.includes(binding.value.includes('#') ? binding.value : `${path}#${binding.value}`) && el && el.remove();
     }
   } else {
     el && el.remove();
